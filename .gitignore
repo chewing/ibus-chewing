@@ -32,5 +32,5 @@ ltmain.sh
 missing
 stamp-h1
 py-compile
-ibus-tmpl*.tar.*
-ibus-tmpl.spec
+ibus-anthy*.tar.*
+ibus-anthy.spec

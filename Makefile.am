@@ -1,6 +1,6 @@
 # vim:set noet ts=4:
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -29,7 +29,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 	autogen.sh \
-	ibus-tmpl.spec.in \
+	ibus-anthy.spec.in \
 	$(NULL)
 
 noinst_DIST = \
@@ -40,7 +40,7 @@ DISTCLEANFILES = \
 	po/stamp-it \
 	$(NULL)
 
-rpm: dist ibus-tmpl.spec
+rpm: dist ibus-anthy.spec
 	rpmbuild -bb						\
 			--define "_sourcedir `pwd`" \
 			--define "_builddir `pwd`" 	\

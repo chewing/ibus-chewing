@@ -1,6 +1,6 @@
 # vim:set noet ts=4:
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -18,24 +18,61 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-engine_enchant_PYTHON = \
+engine_anthy_PYTHON = \
 	engine.py \
 	factory.py \
 	main.py \
+	tables.py \
+	test.py \
 	$(NULL)
 
-engine_enchantdir = $(datadir)/ibus/engine/enchant
+engine_anthydir = $(datadir)/ibus/engine/anthy
 
-libexec_SCRIPTS = ibus-engine-enchant
-
-CLEANFILES = \
-	*.pyc \
+anthy_DATA = \
+	anthy.py \
 	$(NULL)
 
-EXTRA_DIST = \
-	ibus-engine-enchant.in \
+anthy_LTLIBRARIES = _anthy.la
+
+anthydir = @pyexecdir@
+
+_anthy_la_SOURCES = \
 	$(NULL)
+
+nodist__anthy_la_SOURCES = \
+	anthy_wrap.c \
+	$(NULL)
+
+_anthy_la_CFLAGS = \
+	@ANTHY_CFLAGS@ \
+	@PYTHON_CFLAGS@ \
+	$(NULL)
+
+_anthy_la_LDFLAGS = \
+	@ANTHY_LIBS@ \
+	-rpath $(anthydir) \
+	-avoid-version \
+	-module \
+	$(NULL)
+
+libexec_SCRIPTS = ibus-engine-anthy
+
+anthy.py anthy_wrap.c: anthy.i
+	$(SWIG) -python -I/usr/include -o anthy_wrap.c $(srcdir)/anthy.i
 
 test:
-	$(ENV) PYTHONPATH=$(top_srcdir) $(PYTHON) $(srcdir)/main.py
+	$(ENV) PYTHONPATH=$(builddir)/.libs $(PYTHON) $(srcdir)/main.py
 
+EXTRA_DIST = \
+	anthy.i \
+	ibus-engine-anthy.in \
+	$(NULL)
+
+CLEANFILES = \
+	anthy.py \
+	anthy_wrap.* \
+	*.pyc \
+	$(MULL)
+
+DISTCLEANFILES = \
+	$(MULL)

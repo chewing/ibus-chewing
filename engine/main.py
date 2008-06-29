@@ -1,6 +1,7 @@
 # vim:set noet ts=4:
+# -*- coding: utf-8 -*-
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #

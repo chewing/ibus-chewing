@@ -1,6 +1,7 @@
 # vim:set noet ts=4:
+# -*- coding: utf-8 -*-
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -23,123 +24,460 @@ import gtk
 import pango
 import dbus
 import ibus
-import enchant
+import anthy
+from tables import *
 from ibus import keysyms
-from ibus import modifier
 from ibus import interface
+MODE_HIRAGANA, \
+MODE_KATAKANA, \
+MODE_HALF_WIDTH_KATAKANA, \
+MODE_LATIN, \
+MODE_WIDE_LATIN = range (0, 5)
+
+_ = lambda a: a
 
 class Engine (interface.IEngine):
-	_dict = enchant.Dict ()
 	def __init__ (self, dbusconn, object_path):
 		interface.IEngine.__init__ (self, dbusconn, object_path)
 		self._dbusconn = dbusconn
-		self._is_invalidate = False
-		self._preedit_string = u""
+
+		# create anthy context
+		self._context = anthy.anthy_context ()
+		self._context._set_encoding (anthy.ANTHY_UTF8_ENCODING)
+
+		# init state
+		self._input_mode = MODE_HIRAGANA
+		self._prop_dict = {}
+
 		self._lookup_table = ibus.LookupTable ()
-		self._prop_list = ibus.PropList ()
-		self._prop_list.append (ibus.Property ("test", icon = "ibus-locale"))
+		self._prop_list = self._init_props ()
+
+		# use reset to init values
+		self._reset ()
+
+	def _init_props (self):
+		props = ibus.PropList ()
+
+		# init input mode properties
+		mode_prop = ibus.Property (name = "InputMode",
+							type = ibus.PROP_TYPE_MENU,
+							label = "あ",
+							tooltip = "Switch input mode")
+		self._prop_dict["InputMode"] = mode_prop
+
+		mode_props = ibus.PropList ()
+		mode_props.append (ibus.Property (name = "InputMode.Hiragana",
+										type = ibus.PROP_TYPE_RADIO,
+										label = "Hiragana"))
+		mode_props.append (ibus.Property (name = "InputMode.Katakana",
+										type = ibus.PROP_TYPE_RADIO,
+										label = "Katakana"))
+		mode_props.append (ibus.Property (name = "InputMode.HalfWidthKatakana",
+										type = ibus.PROP_TYPE_RADIO,
+										label = "Half width katakana"))
+		mode_props.append (ibus.Property (name = "InputMode.Latin",
+										type = ibus.PROP_TYPE_RADIO,
+										label = "Latin"))
+		mode_props.append (ibus.Property (name = "InputMode.WideLatin",
+										type = ibus.PROP_TYPE_RADIO,
+										label = "Wide Latin"))
+
+		mode_props[self._input_mode].set_state (ibus.PROP_STATE_CHECKED)
+
+		for prop in mode_props:
+			self._prop_dict[prop.get_name ()] = prop
+
+		mode_prop.set_sub_props (mode_props)
+		props.append (mode_prop)
+
+
+		# init test property
+		test_prop = ibus.Property (name = "TestProp",
+							type = ibus.PROP_TYPE_TOGGLE,
+							label = "あ",
+							tooltip = "test property")
+		self._prop_dict["TestProp"] = test_prop
+		props.append (test_prop)
+
+
+		return props
+
+	# reset values of engine
+	def _reset (self):
+		self._input_chars = u""
+		self._convert_chars = u""
+		self._cursor_pos = 0
+		self._need_update = False
+		self._convert_begined = False
+		self._segments = []
+		self._lookup_table.clean ()
+		self._lookup_table_visible = False
+
+	# begine convert
+	def _begin_convert (self):
+		if self._convert_begined:
+			return
+		self._convert_begined = True
+
+		self._context.set_string (self._input_chars.encode ("utf-8"))
+		conv_stat = anthy.anthy_conv_stat ()
+		self._context.get_stat (conv_stat)
+
+		for i in xrange (0, conv_stat.nr_segment):
+			buf = self._context.get_segment (i, 0)
+			text = unicode (buf, "utf-8")
+			self._segments.append ((0, text))
+
+		self._cursor_pos = 0
+		self._fill_lookup_table ()
+		self._lookup_table_visible = False
+
+	def _fill_lookup_table (self):
+		# get segment stat
+		seg_stat = anthy.anthy_segment_stat ()
+		self._context.get_segment_stat (self._cursor_pos, seg_stat)
+
+		# fill lookup_table
+		self._lookup_table.clean ()
+		for i in xrange (0, seg_stat.nr_candidate):
+			buf = self._context.get_segment (self._cursor_pos, i)
+			candidate = unicode (buf, "utf-8")
+			self._lookup_table.append_candidate (candidate)
+
+
+	def _invalidate (self):
+		if self._need_update:
+			return
+		self._need_update = True
+		gobject.idle_add (self._update, priority = gobject.PRIORITY_LOW)
+
+	def _page_up (self):
+		# only process cursor down in convert mode
+		if not self._convert_begined:
+			return False
+
+		if not self._lookup_table.page_up ():
+			return False
+
+		candidate = self._lookup_table.get_current_candidate ()[0]
+		index = self._lookup_table.get_cursor_pos ()
+		self._segments[self._cursor_pos] = index, candidate
+		self._invalidate ()
+		return True
+
+	def _page_down (self):
+		# only process cursor down in convert mode
+		if not self._convert_begined:
+			return False
+
+		if not self._lookup_table.page_down ():
+			return False
+
+		candidate = self._lookup_table.get_current_candidate ()[0]
+		index = self._lookup_table.get_cursor_pos ()
+		self._segments[self._cursor_pos] = index, candidate
+		self._invalidate ()
+		return True
+
+	def _cursor_up (self):
+		# only process cursor down in convert mode
+		if not self._convert_begined:
+			return False
+
+		if not self._lookup_table.cursor_up ():
+			return False
+
+		candidate = self._lookup_table.get_current_candidate ()[0]
+		index = self._lookup_table.get_cursor_pos ()
+		self._segments[self._cursor_pos] = index, candidate
+		self._invalidate ()
+		return True
+
+	def _cursor_down (self):
+		# only process cursor down in convert mode
+		if not self._convert_begined:
+			return False
+
+		if not self._lookup_table.cursor_down ():
+			return False
+
+		candidate = self._lookup_table.get_current_candidate ()[0]
+		index = self._lookup_table.get_cursor_pos ()
+		self._segments[self._cursor_pos] = index, candidate
+		self._invalidate ()
+		return True
+
+	def _commit_string (self, text):
+		self._reset ()
+		self.CommitString (text)
+		self._invalidate ()
+
+	def _update_input_chars (self):
+		begin, end  = max (self._cursor_pos - 4, 0), self._cursor_pos
+
+		for i in range (begin, end):
+			text = self._input_chars[i:end]
+			romja = romaji_typing_rule.get (text, None)
+			if romja != None:
+				self._input_chars = u"".join ((self._input_chars[:i], romja, self._input_chars[end:]))
+				self._cursor_pos -= len(text)
+				self._cursor_pos += len(romja)
+
+		attrs = ibus.AttrList ()
+		attrs.append (ibus.AttributeUnderline (pango.UNDERLINE_SINGLE, 0, len (self._input_chars.encode ("utf-8"))))
+
+		self.UpdatePreedit (dbus.String (self._input_chars),
+				attrs.to_dbus_value (),
+				dbus.Int32 (self._cursor_pos),
+				len (self._input_chars) > 0)
+		self.UpdateAuxString (u"", ibus.AttrList ().to_dbus_value (), False)
+		self.UpdateLookupTable (self._lookup_table.to_dbus_value (), self._lookup_table_visible)
+
+	def _update_convert_chars (self):
+		self._convert_chars = u""
+		pos = 0
+		i = 0
+		for seg_index, text in self._segments:
+			self._convert_chars += text
+			if i <= self._cursor_pos:
+				pos += len (text)
+			i += 1
+
+		attrs = ibus.AttrList ()
+		attrs.append (ibus.AttributeUnderline (pango.UNDERLINE_SINGLE, 0, len (self._convert_chars)))
+		attrs.append (ibus.AttributeBackground (ibus.RGB (200, 200, 240),
+				pos - len (self._segments[self._cursor_pos][1]),
+				pos))
+		self.UpdatePreedit (dbus.String (self._convert_chars),
+				attrs.to_dbus_value (),
+				dbus.Int32 (pos),
+				True)
+		aux_string = u"( %d / %d )" % (self._lookup_table.get_cursor_pos () + 1, self._lookup_table.get_number_of_candidates())
+		self.UpdateAuxString (aux_string, ibus.AttrList ().to_dbus_value (), self._lookup_table_visible)
+		self.UpdateLookupTable (self._lookup_table.to_dbus_value (), self._lookup_table_visible)
+
+	def _update (self):
+		self._need_update = False
+		if self._convert_begined == False:
+			self._update_input_chars ()
+		else:
+			self._update_convert_chars ()
+
+	def _on_key_return (self):
+		if not self._input_chars:
+			return False
+		if self._convert_begined == False:
+			self._commit_string (self._input_chars)
+		else:
+			i = 0
+			for seg_index, text in self._segments:
+				self._context.commit_segment (i, seg_index)
+			self._commit_string (self._convert_chars)
+		return True
+
+	def _on_key_escape (self):
+		if not self._input_chars:
+			return False
+		self._reset ()
+		self._invalidate ()
+		return True
+
+	def _on_key_back_space (self):
+		if not self._input_chars:
+			return False
+
+		if self._convert_begined:
+			self._convert_begined = False
+			self._cursor_pos = len (self._input_chars)
+			self._lookup_table.clean ()
+			self._lookup_table_visible = False
+		elif self._cursor_pos > 0:
+			self._input_chars = self._input_chars[:self._cursor_pos - 1] + self._input_chars [self._cursor_pos:]
+			self._cursor_pos -= 1
+
+		self._invalidate ()
+		return True
+
+	def _on_key_delete (self):
+		if not self._input_chars:
+			return False
+
+		if self._convert_begined:
+			self._convert_begined = False
+			self._cursor_pos = len (self._input_chars)
+			self._lookup_table.clean ()
+			self._lookup_table_visible = False
+		elif self._cursor_pos < len (self._input_chars):
+			self._input_chars = self._input_chars[:self._cursor_pos] + self._input_chars [self._cursor_pos + 1:]
+
+		self._invalidate ()
+		return True
+
+	def _on_key_space (self):
+		if not self._input_chars:
+			return False
+		if self._convert_begined == False:
+			self._begin_convert ()
+			self._invalidate ()
+		else:
+			self._lookup_table_visible = True
+			self._cursor_down ()
+		return True
+
+	def _on_key_up (self):
+		if not self._input_chars:
+			return False
+		self._lookup_table_visible = True
+		self._cursor_up ()
+		return True
+
+	def _on_key_down (self):
+		if not self._input_chars:
+			return False
+		self._lookup_table_visible = True
+		self._cursor_down ()
+		return True
+
+	def _on_key_page_up (self):
+		if not self._input_chars:
+			return False
+		if self._lookup_table_visible == True:
+			self._page_up ()
+		return True
+
+	def _on_key_page_down (self):
+		if not self._input_chars:
+			return False
+		if self._lookup_table_visible == True:
+			self._page_down ()
+		return True
+
+	def _on_key_left (self):
+		if not self._input_chars:
+			return False
+		if self._cursor_pos == 0:
+			return True
+		self._cursor_pos -= 1
+		self._lookup_table_visible = False
+		self._fill_lookup_table ()
+		self._invalidate ()
+		return True
+
+	def _on_key_right (self):
+		if not self._input_chars:
+			return False
+
+		if self._convert_begined:
+			max_pos = len (self._segments) - 1
+		else:
+			max_pos = len (self._input_chars)
+		if self._cursor_pos == max_pos:
+			return True
+		self._cursor_pos += 1
+		self._lookup_table_visible = False
+		self._fill_lookup_table ()
+		self._invalidate ()
+
+		return True
+
+	def _on_key_number (self, index):
+		if not self._input_chars:
+			return False
+
+		if self._convert_begined and self._lookup_table_visible:
+			candidates = self._lookup_table.get_canidates_in_current_page ()
+			if self._lookup_table.set_cursor_pos_in_current_page (index):
+				index = self._lookup_table.get_cursor_pos ()
+				candidate = self._lookup_table.get_current_candidate ()[0]
+				self._segments[self._cursor_pos] = index, candidate
+				self._lookup_table_visible = False
+				self._on_key_right ()
+				self._invalidate ()
+		return True
+
+
+	def _on_key_common (self, keyval):
+		if self._convert_begined:
+			i = 0
+			for seg_index, text in self._segments:
+				self._context.commit_segment (i, seg_index)
+			self._commit_string (self._convert_chars)
+		self._input_chars += unichr (keyval)
+		self._cursor_pos += 1
+		self._invalidate ()
+		return True
 
 	def _process_key_event (self, keyval, is_press, state):
 		# ignore key release events
 		if not is_press:
 			return False
 
-		if self._preedit_string:
-			if keyval == keysyms.Return:
-				self._commit_string (self._preedit_string)
-				return True
-			elif keyval == keysyms.Escape:
-				self._preedit_string = u""
-				self._update ()
-				return True
-			elif keyval == keysyms.BackSpace:
-				self._preedit_string = self._preedit_string[:-1]
-				self._invalidate ()
-				return True
-			elif keyval == keysyms.space:
-				if self._lookup_table.get_number_of_candidates () > 0:
-					self._commit_string (self._lookup_table.get_current_candidate ()[0])
-				else:
-					self._commit_string (self._preedit_string)
-				return False
-			elif keyval >= keysyms._1 and keyval <= keysyms._9:
-				index = keyval - keysyms._1
-				candidates = self._lookup_table.get_canidates_in_current_page ()
-				if index >= len (candidates):
-					return False
-				candidate = candidates[index][0]
-				self._commit_string (candidate)
-				return True
-			elif keyval == keysyms.Page_Up or keyval == keysyms.KP_Page_Up:
-				if self._lookup_table.page_up ():
-					self._update_lookup_table ()
-				return True
-			elif keyval == keysyms.Up:
-				self._cursor_up ()
-				return True
-			elif keyval == keysyms.Down:
-				self._cursor_down ()
-				return True
-			elif keyval == keysyms.Left or keyval == keysyms.Right:
-				return True
-			elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
-				if self._lookup_table.page_down ():
-					self._update_lookup_table ()
-				return True
-		if keyval in xrange (keysyms.a, keysyms.z + 1) or \
+		if keyval == keysyms.Return:
+			return self._on_key_return ()
+		elif keyval == keysyms.Escape:
+			return self._on_key_escape ()
+		elif keyval == keysyms.BackSpace:
+			return self._on_key_back_space ()
+		elif keyval == keysyms.Delete or keyval == keysyms.KP_Delete:
+			return self._on_key_delete ()
+		elif keyval == keysyms.space:
+			return self._on_key_space ()
+		elif keyval >= keysyms._1 and keyval <= keysyms._9:
+			index = keyval - keysyms._1
+			return self._on_key_number (index)
+		elif keyval == keysyms.Page_Up or keyval == keysyms.KP_Page_Up:
+			return self._on_key_page_up ()
+		elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
+			return self._on_key_page_down ()
+		elif keyval == keysyms.Up:
+			return self._on_key_up ()
+		elif keyval == keysyms.Down:
+			return self._on_key_down ()
+		elif keyval == keysyms.Left:
+			return self._on_key_left ()
+		elif keyval == keysyms.Right:
+			return self._on_key_right ()
+		elif keyval in xrange (keysyms.a, keysyms.z + 1) or \
 			keyval in xrange (keysyms.A, keysyms.Z + 1):
-			if state & (modifier.CONTROL_MASK | modifier.ALT_MASK) == 0:
-				self._preedit_string += unichr (keyval)
-				self._invalidate ()
-				return True
+			return self._on_key_common (keyval)
 		else:
-			if keyval < 128 and self._preedit_string:
-				self._commit_string (self._preedit_string)
-
-		return False
-
-	def _invalidate (self):
-		if self._is_invalidate:
-			return
-		self._is_invalidate = True
-		gobject.idle_add (self._update, priority = gobject.PRIORITY_LOW)
-
-	def _cursor_up (self):
-		if self._lookup_table.cursor_up ():
-			self._update_lookup_table ()
 			return True
+
 		return False
 
-	def _cursor_down (self):
-		if self._lookup_table.cursor_down ():
-			self._update_lookup_table ()
-			return True
-		return False
+	def _property_activate (self, prop_name, state):
+		prop = self._prop_dict[prop_name]
+		prop.set_state (state)
 
-	def _commit_string (self, text):
-		self.CommitString (text)
-		self._preedit_string = u""
-		self._update ()
+		if state == ibus.PROP_STATE_CHECKED:
+			if prop_name == "InputMode.Hiragana":
+				prop = self._prop_dict["InputMode"]
+				prop.set_label (_("あ"))
+				self._input_mode = MODE_HIRAGANA
+				self._update_property (prop)
+			elif prop_name == "InputMode.Katakana":
+				prop = self._prop_dict["InputMode"]
+				prop.set_label (_("ア"))
+				self._input_mode = MODE_KATAKANA
+				self._update_property (prop)
+			elif prop_name == "InputMode.HalfWidthKatakana":
+				prop = self._prop_dict["InputMode"]
+				prop.set_label (_("ｱ"))
+				self._input_mode = MODE_HALF_WIDTH_KATAKANA
+				self._update_property (prop)
+			elif prop_name == "InputMode.Latin":
+				prop = self._prop_dict["InputMode"]
+				self._input_mode = MODE_LATIN
+				prop.set_label (_("A"))
+				self._update_property (prop)
+			elif prop_name == "InputMode.WideLatin":
+				prop = self._prop_dict["InputMode"]
+				prop.set_label (_("Ａ"))
+				self._input_mode = MODE_WIDE_LATIN
+				self._update_property (prop)
 
-	def _update (self):
-		preedit_len = len (self._preedit_string)
-		attrs = ibus.AttrList ()
-		self._lookup_table.clean ()
-		if preedit_len > 0:
-			if not self._dict.check (self._preedit_string):
-				attrs.append (ibus.AttributeForeground (0xff0000, 0, preedit_len))
-				for text in self._dict.suggest (self._preedit_string):
-					self._lookup_table.append_candidate (text)
-		self.UpdateAuxString (self._preedit_string, attrs.to_dbus_value (), preedit_len > 0)
-		attrs.append (ibus.AttributeUnderline (pango.UNDERLINE_SINGLE, 0, preedit_len))
-		self.UpdatePreedit (self._preedit_string, attrs.to_dbus_value (), dbus.Int32 (preedit_len), preedit_len > 0)
-		self._update_lookup_table ()
-		self._is_invalidate = False
-
-	def _update_lookup_table (self):
-		show = self._lookup_table.get_number_of_candidates () > 0
-		self.UpdateLookupTable (self._lookup_table.to_dbus_value (), show)
-
+	def _update_property (self, prop):
+		self.UpdateProperty (prop.to_dbus_value ())
 
 	# methods for dbus rpc
 	def ProcessKeyEvent (self, keyval, is_press, state):
@@ -163,10 +501,10 @@ class Engine (interface.IEngine):
 		print "Reset"
 
 	def PageUp (self):
-		print "PageUp"
+		self._page_up ()
 
 	def PageDown (self):
-		print "PageDown"
+		self._page_down ()
 
 	def CursorUp (self):
 		self._cursor_up ()
@@ -179,12 +517,9 @@ class Engine (interface.IEngine):
 		if self._enable:
 			self.RegisterProperties (self._prop_list.to_dbus_value ())
 
-	def PropertyActivate (self, prop_name):
-		print "PropertyActivate (%s)" % prop_name
+	def PropertyActivate (self, prop_name, prop_state):
+		self._property_activate (prop_name, prop_state)
 
 	def Destroy (self):
 		print "Destroy"
-
-class DemoEngine (Engine):
-	pass
 

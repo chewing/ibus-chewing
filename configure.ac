@@ -1,6 +1,6 @@
 # vim:set noet ts=4:
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -29,7 +29,7 @@ m4_define(ibus_maybe_datestamp,
 m4_define([ibus_version],
 	ibus_major_version.ibus_minor_version.ibus_micro_version[]ibus_maybe_datestamp)
 
-AC_INIT([ibus-tmpl], [ibus_version], [http://code.google.com/p/ibus/issues/entry],[ibus-tmpl])
+AC_INIT([ibus-anthy], [ibus_version], [http://code.google.com/p/ibus/issues/entry],[ibus-anthy])
 AM_INIT_AUTOMAKE([1.10])
 AC_GNU_SOURCE
 
@@ -49,11 +49,38 @@ AC_ISC_POSIX
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
 
-#check python
+# check anthy
+PKG_CHECK_MODULES(ANTHY, [
+	anthy
+])
+
+
+# check swig
+AC_PATH_PROG(SWIG, swig)
+if test x"$SWIG" == x""; then
+	 AC_MSG_ERROR([can not find swig])
+fi
+AC_SUBST(SWIG)
+
+# check env
+AC_PATH_PROG(ENV, env)
+AC_SUBST(ENV)
+
+# check python
 AM_PATH_PYTHON([2.5])
+PYTHON_CONFIG=`type -p python$PYTHON_VERSION-config`
+if test "$PYTHON_CONFIG" != ""; then
+    PYTHON_CFLAGS=`$PYTHON_CONFIG --includes`
+    PYTHON_LIBS=`$PYTHON_CONFIG --libs`
+else
+    PYTHON_CFLAGS=`$PYTHON $srcdir/python-config.py --includes`
+    PYTHON_LIBS=`$PYTHON $srcdir/python-config.py --libs`
+fi
+AC_SUBST(PYTHON_CFLAGS)
+AC_SUBST(PYTHON_LIBS)
 
 # define GETTEXT_* variables
-GETTEXT_PACKAGE=ibus-tmpl
+GETTEXT_PACKAGE=ibus-anthy
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Define to the read-only architecture-independent data directory.])
 
@@ -64,9 +91,9 @@ AM_GNU_GETTEXT_VERSION(0.16.1)
 # OUTPUT files
 AC_CONFIG_FILES([ po/Makefile.in
 Makefile
-ibus-tmpl.spec
+ibus-anthy.spec
 engine/Makefile
-engine/ibus-engine-enchant
+engine/ibus-engine-anthy
 icons/Makefile
 m4/Makefile
 ])

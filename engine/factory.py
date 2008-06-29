@@ -1,6 +1,7 @@
 # vim:set noet ts=4:
+# -*- coding: utf-8 -*-
 #
-# ibus-tmpl - The Input Bus template project
+# ibus-anthy - The Anthy engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -21,13 +22,13 @@
 from ibus import interface
 import engine
 
-FACTORY_PATH = "/com/redhat/IBus/engines/Demo/Factory"
-ENGINE_PATH = "/com/redhat/IBus/engines/Demo/Engine/%d"
+FACTORY_PATH = "/com/redhat/IBus/engines/Anthy/Factory"
+ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/%d"
 
 class DemoEngineFactory (interface.IEngineFactory):
-	NAME = "Enchant"
-	LANG = "en"
-	ICON = "ibus-enchant"
+	NAME = "Anthy"
+	LANG = "ja"
+	ICON = "ibus-anthy"
 	AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
 	CREDITS = "GPLv2"
 
@@ -48,6 +49,6 @@ class DemoEngineFactory (interface.IEngineFactory):
 	def CreateEngine (self):
 		engine_path = ENGINE_PATH % self._max_engine_id
 		self._max_engine_id += 1
-		return engine.DemoEngine (self._dbusconn, engine_path)
+		return engine.Engine (self._dbusconn, engine_path)
 
 

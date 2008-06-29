@@ -1,6 +1,6 @@
-# vim:set noet ts=4:
+#!/bin/sh
 #
-# ibus - The Anthy engine for IBus
+# ibus - The Input Bus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -19,12 +19,5 @@
 # Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA  02111-1307  USA
 
-icons_DATA = \
-	ibus-anthy.png \
-	$(NULL)
+python @prefix@/share/ibus/engine/anthy/main.py $@
 
-iconsdir = $(datadir)/ibus/icons
-
-EXTRA_DIST = \
-	ibus-anthy.png \
-	$(NULL)
