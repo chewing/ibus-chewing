@@ -54,7 +54,6 @@ PKG_CHECK_MODULES(ANTHY, [
 	anthy
 ])
 
-
 # check swig
 AC_PATH_PROG(SWIG, swig)
 if test x"$SWIG" == x""; then
