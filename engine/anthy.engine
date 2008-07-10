@@ -1,0 +1,6 @@
+Exec=/usr/libexec/ibus-engine-anthy
+Name=anthy
+Lang=ja
+Icon=ibus-anthy
+Author=Huang Peng <shawn.p.huang@gmail.com>
+Credits=

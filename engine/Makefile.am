@@ -26,7 +26,7 @@ engine_anthy_PYTHON = \
 	test.py \
 	$(NULL)
 
-engine_anthydir = $(datadir)/ibus/engine/anthy
+engine_anthydir = $(pkgdatadir)
 
 anthy_DATA = \
 	anthy.py \
@@ -56,6 +56,8 @@ _anthy_la_LDFLAGS = \
 	$(NULL)
 
 libexec_SCRIPTS = ibus-engine-anthy
+engine_DATA = anthy.engine
+enginedir = $(datadir)/ibus/engine
 
 anthy.py anthy_wrap.c: anthy.i
 	$(SWIG) -python -I/usr/include -o anthy_wrap.c $(srcdir)/anthy.i
@@ -65,6 +67,7 @@ test:
 
 EXTRA_DIST = \
 	anthy.i \
+	anthy.engine \
 	ibus-engine-anthy.in \
 	$(NULL)
 

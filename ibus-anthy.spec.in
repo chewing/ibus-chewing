@@ -42,8 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 # %dir %{python_sitearch}/ibus
 %{python_sitearch}/anthy.py*
 %{python_sitearch}/_anthy.so
-%dir %{_datadir}/ibus/engine/anthy
-%{_datadir}/ibus/engine/anthy/*
+%dir %{_datadir}/ibus-anthy
+%{_datadir}/ibus-anthy/*
+%{_datadir}/ibus/engine/anthy.engine
 %{_libexecdir}/ibus-engine-anthy
 %{_datadir}/ibus/icons/ibus-anthy.png
 
