@@ -1,4 +1,4 @@
-# vim:set noet ts=4:
+# vim:set et ts=4:
 # -*- coding: utf-8 -*-
 #
 # ibus-anthy - The Anthy engine for IBus
