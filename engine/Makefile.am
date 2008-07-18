@@ -25,15 +25,12 @@ engine_anthy_PYTHON = \
 	tables.py \
 	test.py \
 	$(NULL)
-
 engine_anthydir = $(pkgdatadir)
 
 anthy_DATA = \
 	anthy.py \
 	$(NULL)
-
 anthy_LTLIBRARIES = _anthy.la
-
 anthydir = @pyexecdir@
 
 _anthy_la_SOURCES = \
@@ -67,7 +64,7 @@ test:
 
 EXTRA_DIST = \
 	anthy.i \
-	anthy.engine \
+	anthy.engine.in \
 	ibus-engine-anthy.in \
 	$(NULL)
 

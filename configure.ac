@@ -93,6 +93,7 @@ Makefile
 ibus-anthy.spec
 engine/Makefile
 engine/ibus-engine-anthy
+engine/anthy.engine
 icons/Makefile
 m4/Makefile
 ])
