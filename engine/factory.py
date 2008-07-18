@@ -19,26 +19,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from ibus import interface
+import ibus
 import engine
 
 FACTORY_PATH = "/com/redhat/IBus/engines/Anthy/Factory"
-ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/%d"
+ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/"
 
-class EngineFactory(interface.IEngineFactory):
+class EngineFactory(ibus.EngineFactoryBase):
     NAME = "Anthy"
     LANG = "ja"
     ICON = "ibus-anthy"
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
     CREDITS = "GPLv2"
 
-    def __init__(self, dbusconn):
-        super(EngineFactory, self).__init__(dbusconn, object_path = FACTORY_PATH)
-        self._dbusconn = dbusconn
-        self._max_engine_id = 1
-
-    def GetInfo(self):
-        return [
+    def __init__(self, conn):
+        self.__info = [
             self.NAME,
             self.LANG,
             self.ICON,
@@ -46,9 +41,6 @@ class EngineFactory(interface.IEngineFactory):
             self.CREDITS
             ]
 
-    def CreateEngine(self):
-        engine_path = ENGINE_PATH % self._max_engine_id
-        self._max_engine_id += 1
-        return engine.Engine(self._dbusconn, engine_path)
+        super(EngineFactory, self).__init__(self.__info, engine.Engine, ENGINE_PATH, conn, FACTORY_PATH)
 
 
