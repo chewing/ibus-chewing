@@ -57,7 +57,7 @@ class Engine(ibus.EngineBase):
         # init input mode properties
         mode_prop = ibus.Property(name = "InputMode",
                             type = ibus.PROP_TYPE_MENU,
-                            label = "あ",
+                            label = u"あ",
                             tooltip = "Switch input mode")
         self.__prop_dict["InputMode"] = mode_prop
 
@@ -90,7 +90,7 @@ class Engine(ibus.EngineBase):
         # init test property
         test_prop = ibus.Property(name = "TestProp",
                             type = ibus.PROP_TYPE_TOGGLE,
-                            label = "あ",
+                            label = u"あ",
                             tooltip = "test property")
         self.__prop_dict["TestProp"] = test_prop
         props.append(test_prop)
@@ -215,27 +215,27 @@ class Engine(ibus.EngineBase):
         if state == ibus.PROP_STATE_CHECKED:
             if prop_name == "InputMode.Hiragana":
                 prop = self.__prop_dict["InputMode"]
-                prop.set_label(_("あ"))
+                prop.set_label(_(u"あ"))
                 self.__input_mode = MODE_HIRAGANA
                 self.update_property(prop)
             elif prop_name == "InputMode.Katakana":
                 prop = self.__prop_dict["InputMode"]
-                prop.set_label(_("ア"))
+                prop.set_label(_(u"ア"))
                 self.__input_mode = MODE_KATAKANA
                 self.update_property(prop)
             elif prop_name == "InputMode.HalfWidthKatakana":
                 prop = self.__prop_dict["InputMode"]
-                prop.set_label(_("ｱ"))
+                prop.set_label(_(u"ｱ"))
                 self.__input_mode = MODE_HALF_WIDTH_KATAKANA
                 self.update_property(prop)
             elif prop_name == "InputMode.Latin":
                 prop = self.__prop_dict["InputMode"]
                 self.__input_mode = MODE_LATIN
-                prop.set_label(_("A"))
+                prop.set_label(_(u"A"))
                 self.update_property(prop)
             elif prop_name == "InputMode.WideLatin":
                 prop = self.__prop_dict["InputMode"]
-                prop.set_label(_("Ａ"))
+                prop.set_label(_(u"Ａ"))
                 self.__input_mode = MODE_WIDE_LATIN
                 self.update_property(prop)
 
