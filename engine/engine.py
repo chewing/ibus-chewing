@@ -297,7 +297,7 @@ class Engine(ibus.EngineBase):
                 self.__cursor_pos += len(romja)
 
         attrs = ibus.AttrList()
-        attrs.append(ibus.AttributeUnderline(pango.UNDERLINE_SINGLE, 0, len(self.__input_chars.encode("utf-8"))))
+        attrs.append(ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE, 0, len(self.__input_chars.encode("utf-8"))))
 
         self.update_preedit(self.__input_chars, attrs, self.__cursor_pos, len(self.__input_chars) > 0)
         self.update_aux_string(u"", ibus.AttrList(), False)
@@ -314,7 +314,7 @@ class Engine(ibus.EngineBase):
             i += 1
 
         attrs = ibus.AttrList()
-        attrs.append(ibus.AttributeUnderline(pango.UNDERLINE_SINGLE, 0, len(self.__convert_chars)))
+        attrs.append(ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE, 0, len(self.__convert_chars)))
         attrs.append(ibus.AttributeBackground(ibus.RGB(200, 200, 240),
                 pos - len(self.__segments[self.__cursor_pos][1]),
                 pos))
