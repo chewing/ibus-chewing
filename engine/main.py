@@ -39,7 +39,7 @@ class IMApp:
 
     def __disconnected_cb(self, _ibus):
         print "disconnected"
-        self.__mainloop.main_quit()
+        self.__mainloop.quit()
 
 
 def launch_engine():
