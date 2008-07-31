@@ -29,16 +29,15 @@ import gobject
 class IMApp:
     def __init__(self):
         self.__mainloop = gobject.MainLoop()
-        self.__ibus = ibus.IBus()
-        self.__ibus.call_on_disconnection(self.__disconnected_cb)
-        self.__engine = factory.EngineFactory(self.__ibus)
-        self.__ibus.register_factories([factory.FACTORY_PATH])
+        self.__bus = ibus.Bus()
+        self.__bus.connect("destroy", self.__bus_destroy_cb)
+        self.__engine = factory.EngineFactory(self.__bus)
+        self.__bus.register_factories([factory.FACTORY_PATH])
 
     def run(self):
         self.__mainloop.run()
 
-    def __disconnected_cb(self, _ibus):
-        print "disconnected"
+    def __bus_destroy_cb(self, bus):
         self.__mainloop.quit()
 
 

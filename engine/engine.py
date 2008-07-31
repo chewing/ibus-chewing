@@ -34,8 +34,8 @@ MODE_WIDE_LATIN = range(0, 5)
 _ = lambda a: a
 
 class Engine(ibus.EngineBase):
-    def __init__(self, conn, object_path):
-        super(Engine, self).__init__(conn, object_path)
+    def __init__(self, bus, object_path):
+        super(Engine, self).__init__(bus, object_path)
 
         # create anthy context
         self.__context = anthy.anthy_context()

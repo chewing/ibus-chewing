@@ -32,7 +32,7 @@ class EngineFactory(ibus.EngineFactoryBase):
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
     CREDITS = "GPLv2"
 
-    def __init__(self, conn):
+    def __init__(self, bus):
         self.__info = [
             self.NAME,
             self.LANG,
@@ -41,6 +41,6 @@ class EngineFactory(ibus.EngineFactoryBase):
             self.CREDITS
             ]
 
-        super(EngineFactory, self).__init__(self.__info, engine.Engine, ENGINE_PATH, conn, FACTORY_PATH)
+        super(EngineFactory, self).__init__(self.__info, engine.Engine, ENGINE_PATH, bus, FACTORY_PATH)
 
 
