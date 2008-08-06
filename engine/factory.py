@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import os
 import ibus
 import engine
 
@@ -28,7 +29,7 @@ ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/"
 class EngineFactory(ibus.EngineFactoryBase):
     NAME = "Anthy"
     LANG = "ja"
-    ICON = "ibus-anthy"
+    ICON = os.getenv("IBUS_ANTHY_LOCATION") + "/icons/ibus-anthy.png"
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
     CREDITS = "GPLv2"
 
