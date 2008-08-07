@@ -1,6 +1,6 @@
 Exec=@prefix@/libexec/ibus-engine-anthy
 Name=anthy
 Lang=ja
-Icon=@prefix@/ibus-anthy/ibus-anthy.png
+Icon=@prefix@/share/ibus-anthy/icons/ibus-anthy.png
 Author=Huang Peng <shawn.p.huang@gmail.com>
 Credits=
