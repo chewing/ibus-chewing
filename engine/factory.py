@@ -20,6 +20,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
+from os import path
 import ibus
 import engine
 
@@ -29,7 +30,7 @@ ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/"
 class EngineFactory(ibus.EngineFactoryBase):
     NAME = "Anthy"
     LANG = "ja"
-    ICON = os.getenv("IBUS_ANTHY_LOCATION") + "/icons/ibus-anthy.png"
+    ICON = path.join(os.getenv("IBUS_ANTHY_PKGDATADIR"), "icons/ibus-anthy.png")
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
     CREDITS = "GPLv2"
 
