@@ -23,7 +23,6 @@ engine_anthy_PYTHON = \
 	factory.py \
 	main.py \
 	tables.py \
-	test.py \
 	$(NULL)
 engine_anthydir = $(pkgdatadir)
 
