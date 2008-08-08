@@ -14,7 +14,8 @@ BuildRequires: gettext-devel, libtool, python-devel, perl(XML::Parser), anthy-de
 Requires:   ibus, anthy
 
 %description
-The Anthy engine for IBus input platform.
+The Anthy engine for IBus platform. It provides Japanese input method from
+libanthy.
 
 %prep
 %setup -q
