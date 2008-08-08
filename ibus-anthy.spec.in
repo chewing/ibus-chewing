@@ -10,8 +10,17 @@ URL:        http://code.google.com/p/ibus/
 Source0:    http://ibus.googlecode.com/files/%{name}-%{version}.tar.gz
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: gettext-devel, libtool, python-devel, perl(XML::Parser), anthy-devel, swig, pkgconfig
-Requires:   ibus, anthy
+
+BuildRequires:  gettext-devel
+BuildRequires:  libtool
+BuildRequires:  python-devel
+# BuildRequires:  perl(XML::Parser)
+BuildRequires:  anthy-devel
+BuildRequires:  swig
+BuildRequires:  pkgconfig
+
+Requires:   ibus
+Requires:   anthy
 
 %description
 The Anthy engine for IBus platform. It provides Japanese input method from
@@ -43,10 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/anthy.py*
 %{python_sitearch}/_anthy.so
 %dir %{_datadir}/ibus-anthy
+%{_libexecdir}/ibus-engine-anthy
 %{_datadir}/ibus-anthy/*
 %{_datadir}/ibus/engine/anthy.engine
-%{_libexecdir}/ibus-engine-anthy
-%{_datadir}/ibus-anthy/icons/*
 
 %changelog
 * Fri Aug 08 2008 Huang Peng <shawn.p.huang@gmail.com> - @VERSION@-1
