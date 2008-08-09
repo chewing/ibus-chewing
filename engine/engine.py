@@ -29,7 +29,7 @@ MODE_HIRAGANA, \
 MODE_KATAKANA, \
 MODE_HALF_WIDTH_KATAKANA, \
 MODE_LATIN, \
-MODE_WIDE_LATIN = range(0, 5)
+MODE_WIDE_LATIN = range(5)
 
 _ = lambda a: a
 
@@ -284,17 +284,32 @@ class Engine(ibus.EngineBase):
         self.__need_update = True
         gobject.idle_add(self.__update, priority = gobject.PRIORITY_LOW)
 
-
-    def __update_input_chars(self):
+    def __translate_to_ja(self):
         begin, end  = max(self.__cursor_pos - 4, 0), self.__cursor_pos
 
         for i in range(begin, end):
             text = self.__input_chars[i:end]
             romja = romaji_typing_rule.get(text, None)
             if romja != None:
-                self.__input_chars = u"".join((self.__input_chars[:i], romja, self.__input_chars[end:]))
+                text = romja
+                if self.__input_mode == MODE_HIRAGANA:
+                    text = romja
+                elif self.__input_mode == MODE_KATAKANA:
+                    text = hiragana_katakana_table[romja][0]
+                elif self.__input_mode == MODE_HALF_WIDTH_KATAKANA:
+                    text = hiragana_katakana_table[romja][1]
+
+                self.__input_chars = u"".join((self.__input_chars[:i], text, self.__input_chars[end:]))
                 self.__cursor_pos -= len(text)
-                self.__cursor_pos += len(romja)
+                self.__cursor_pos += len(text)
+
+    def __update_input_chars(self):
+        if self.__input_mode == MODE_LATIN:
+            pass
+        elif self.__input_mode == MODE_WIDE_LATIN:
+            pass
+        else:
+            self.__translate_to_ja()
 
         attrs = ibus.AttrList()
         attrs.append(ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE, 0, len(self.__input_chars.encode("utf-8"))))
