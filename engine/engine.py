@@ -201,7 +201,8 @@ class Engine(ibus.EngineBase):
         elif keyval == keysyms.Right:
             return self.__on_key_right()
         elif keyval in xrange(keysyms.a, keysyms.z + 1) or \
-            keyval in xrange(keysyms.A, keysyms.Z + 1):
+            keyval in xrange(keysyms.A, keysyms.Z + 1) or \
+            unichr(keyval) in symbols_set:
             return self.__on_key_common(keyval)
         else:
             return True

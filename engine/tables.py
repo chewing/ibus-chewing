@@ -260,8 +260,43 @@ romaji_typing_rule = {
     u"_"  : u"＿",
 }
 
+symbols_set = set([
+    u",",
+    u".",
+    u"!",
+    u"\"",
+    u"#",
+    u"$",
+    u"%",
+    u"&",
+    u"'",
+    u"(",
+    u")",
+    u"~",
+    u"-",
+    u"=",
+    u"^",
+    u"\\",
+    u"|",
+    u"`",
+    u"@",
+    u"{",
+    u"[",
+    u"+",
+    u";",
+    u"*",
+    u":",
+    u"}",
+    u"]",
+    u"<",
+    u">",
+    u"?",
+    u"/",
+    u"_",
+])
+
 #hiragana, katakana, half_katakana
-hiragana_katakana_table = { 
+hiragana_katakana_table = {
     u"あ" : (u"ア", u"ｱ"),
     u"い" : (u"イ", u"ｲ"),
     u"う" : (u"ウ", u"ｳ"),
