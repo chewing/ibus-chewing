@@ -1,4 +1,4 @@
-# vim:set noet ts=4:
+# vim:set et ts=4:
 #
 # ibus-anthy - The Anthy engine for IBus
 #
@@ -24,10 +24,10 @@ m4_define([ibus_major_version], [0])
 m4_define([ibus_minor_version], [1])
 m4_define([ibus_micro_version], [0])
 m4_define(ibus_maybe_datestamp,
-	m4_esyscmd([if test x]ibus_released[ != x1; then date +.%Y%m%d | tr -d '\n\r'; fi]))
+    m4_esyscmd([if test x]ibus_released[ != x1; then date +.%Y%m%d | tr -d '\n\r'; fi]))
 
 m4_define([ibus_version],
-	ibus_major_version.ibus_minor_version.ibus_micro_version[]ibus_maybe_datestamp)
+    ibus_major_version.ibus_minor_version.ibus_micro_version[]ibus_maybe_datestamp)
 
 AC_INIT([ibus-anthy], [ibus_version], [http://code.google.com/p/ibus/issues/entry],[ibus-anthy])
 AM_INIT_AUTOMAKE([1.10])
@@ -51,13 +51,13 @@ AM_PROG_LIBTOOL
 
 # check anthy
 PKG_CHECK_MODULES(ANTHY, [
-	anthy
+    anthy
 ])
 
 # check swig
 AC_PATH_PROG(SWIG, swig)
 if test x"$SWIG" == x""; then
-	 AC_MSG_ERROR([can not find swig])
+     AC_MSG_ERROR([can not find swig])
 fi
 AC_SUBST(SWIG)
 
@@ -70,7 +70,7 @@ AM_PATH_PYTHON([2.5])
 
 AC_PATH_PROG(PYTHON_CONFIG, python$PYTHON_VERSION-config)
 if test x"$PYTHON_CONFIG" == x""; then
-AC_PATH_PROG(PYTHON_CONFIG, python-config)
+    AC_PATH_PROG(PYTHON_CONFIG, python-config)
 fi
 if test x"$PYTHON_CONFIG" != x""; then
     PYTHON_CFLAGS=`$PYTHON_CONFIG --includes`
