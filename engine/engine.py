@@ -186,8 +186,7 @@ class Engine(ibus.EngineBase):
         elif keyval == keysyms.space:
             return self.__on_key_space()
         elif keyval >= keysyms._1 and keyval <= keysyms._9:
-            index = keyval - keysyms._1
-            return self.__on_key_number(index)
+            return self.__on_key_number(keyval)
         elif keyval == keysyms.Page_Up or keyval == keysyms.KP_Page_Up:
             return self.__on_key_page_up()
         elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
@@ -219,26 +218,36 @@ class Engine(ibus.EngineBase):
                 prop.set_label(_(u"あ"))
                 self.__input_mode = MODE_HIRAGANA
                 self.update_property(prop)
+                self.__reset()
+                self.__invalidate()
             elif prop_name == "InputMode.Katakana":
                 prop = self.__prop_dict["InputMode"]
                 prop.set_label(_(u"ア"))
                 self.__input_mode = MODE_KATAKANA
                 self.update_property(prop)
+                self.__reset()
+                self.__invalidate()
             elif prop_name == "InputMode.HalfWidthKatakana":
                 prop = self.__prop_dict["InputMode"]
                 prop.set_label(_(u"ｱ"))
                 self.__input_mode = MODE_HALF_WIDTH_KATAKANA
                 self.update_property(prop)
+                self.__reset()
+                self.__invalidate()
             elif prop_name == "InputMode.Latin":
                 prop = self.__prop_dict["InputMode"]
                 self.__input_mode = MODE_LATIN
                 prop.set_label(_(u"A"))
                 self.update_property(prop)
+                self.__reset()
+                self.__invalidate()
             elif prop_name == "InputMode.WideLatin":
                 prop = self.__prop_dict["InputMode"]
                 prop.set_label(_(u"Ａ"))
                 self.__input_mode = MODE_WIDE_LATIN
                 self.update_property(prop)
+                self.__reset()
+                self.__invalidate()
 
     def focus_in(self):
         self.register_properties(self.__prop_list)
@@ -304,12 +313,7 @@ class Engine(ibus.EngineBase):
                 self.__cursor_pos += len(text)
 
     def __update_input_chars(self):
-        if self.__input_mode == MODE_LATIN:
-            pass
-        elif self.__input_mode == MODE_WIDE_LATIN:
-            pass
-        else:
-            self.__translate_to_ja()
+        self.__translate_to_ja()
 
         attrs = ibus.AttrList()
         attrs.append(ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE, 0, len(self.__input_chars.encode("utf-8"))))
@@ -462,10 +466,21 @@ class Engine(ibus.EngineBase):
 
         return True
 
-    def __on_key_number(self, index):
-        if not self.__input_chars:
-            return False
+    def __on_key_number(self, keyval):
+        if self.__input_mode == MODE_LATIN:
+            char = unichr(keyval)
+            self.__commit_string(char)
+            return True
+        elif self.__input_mode == MODE_WIDE_LATIN:
+            char = ibus.unichar_half_to_full(unichr(keyval))
+            self.__commit_string(char)
+            return True
 
+        if not self.__input_chars:
+            self.__commit_string(unichr(keyval))
+            return True
+
+        index = keyval - keysyms._1
         if self.__convert_begined and self.__lookup_table_visible:
             candidates = self.__lookup_table.get_canidates_in_current_page()
             if self.__lookup_table.set_cursor_pos_in_current_page(index):
@@ -479,12 +494,28 @@ class Engine(ibus.EngineBase):
 
 
     def __on_key_common(self, keyval):
+        if self.__input_mode == MODE_LATIN:
+            char = unichr(keyval)
+            self.__commit_string(char)
+            return True
+        elif self.__input_mode == MODE_WIDE_LATIN:
+            char = unichr(keyval)
+            if char in symbols_set:
+                char = romaji_typing_rule[char]
+            else:
+                char = ibus.unichar_half_to_full(char)
+            self.__commit_string(char)
+            return True
+
         if self.__convert_begined:
             i = 0
             for seg_index, text in self.__segments:
                 self.__context.commit_segment(i, seg_index)
             self.__commit_string(self.__convert_chars)
-        self.__input_chars += unichr(keyval)
+        self.__input_chars  = \
+            self.__input_chars[:self.__cursor_pos] + \
+            unichr(keyval) + \
+            self.__input_chars[self.__cursor_pos:]
         self.__cursor_pos += 1
         self.__invalidate()
         return True
