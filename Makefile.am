@@ -30,6 +30,7 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 	autogen.sh \
 	ibus-anthy.spec.in \
+	python-config.py \
 	$(NULL)
 
 noinst_DIST = \
