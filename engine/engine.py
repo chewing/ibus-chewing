@@ -88,12 +88,12 @@ class Engine(ibus.EngineBase):
 
 
         # init test property
-        test_prop = ibus.Property(name = "TestProp",
-                            type = ibus.PROP_TYPE_TOGGLE,
-                            label = u"あ",
-                            tooltip = "test property")
-        self.__prop_dict["TestProp"] = test_prop
-        props.append(test_prop)
+        # test_prop = ibus.Property(name = "TestProp",
+        #                     type = ibus.PROP_TYPE_TOGGLE,
+        #                     label = u"あ",
+        #                     tooltip = "test property")
+        # self.__prop_dict["TestProp"] = test_prop
+        # props.append(test_prop)
 
 
         return props
