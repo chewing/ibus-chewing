@@ -38,13 +38,12 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=${RPM_BUILD_ROOT} install
 rm -f $RPM_BUILD_ROOT%{python_sitearch}/_anthy.la
 
-# %find_lang %{name}
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
-# -f %{name}.lang
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 # %dir %{python_sitearch}/ibus
