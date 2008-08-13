@@ -1,4 +1,4 @@
-Exec=@prefix@/libexec/ibus-engine-anthy
+Exec=@prefix@/bin/ibus-engine-anthy
 Name=anthy
 Lang=ja
 Icon=@prefix@/share/ibus-anthy/icons/ibus-anthy.png

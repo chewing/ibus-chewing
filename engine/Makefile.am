@@ -51,7 +51,7 @@ _anthy_la_LDFLAGS = \
 	-module \
 	$(NULL)
 
-libexec_SCRIPTS = ibus-engine-anthy
+bin_SCRIPTS = ibus-engine-anthy
 engine_DATA = anthy.engine
 enginedir = $(datadir)/ibus/engine
 
