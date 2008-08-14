@@ -54,15 +54,27 @@ typedef struct {} ChewingContext;
         chewing_free (self);
     }
 
-    int Configure (int selectAreaLen, int maxChiSymbolLen,
-            int addPhraseForward, int spaceAsSelection,
-            int escCleanAllBuf) {
+    int Configure (int selectAreaLen = 18,
+            int maxChiSymbolLen = 16,
+            char *selKey = NULL,
+            int addPhraseForward = 0,
+            int spaceAsSelection = 1,
+            int escCleanAllBuf = 0,
+            int hsuSelKeyType = HSU_SELKEY_TYPE1) {
         ChewingConfigData config;
         config.selectAreaLen = selectAreaLen;
         config.maxChiSymbolLen = maxChiSymbolLen;
         config.bAddPhraseForward = addPhraseForward;
         config.bSpaceAsSelection = spaceAsSelection;
         config.bEscCleanAllBuf = escCleanAllBuf;
+        config.hsuSelKeyType = hsuSelKeyType;
+        if (selKey == NULL)
+            selKey = "1234567890";
+        int i;
+        for (i = 0; selKey[i] != '\0' && i <= 9; i++) {
+            config.selKey[i] = selKey[i];
+        }
+        config.selKey[i] = '\0';
         chewing_Configure (self, &config);
     }
 
@@ -174,6 +186,7 @@ typedef struct {} ChewingContext;
     PyObject *dispInterval;
     PyObject *commitStr;
     int keystrokeRtn;
+    PyObject *showMsg;
     /*
     PyObject *preedit_string;
     PyObject *message;
@@ -282,7 +295,7 @@ typedef struct {} ChewingContext;
     }
 
     PyObject *
-    ChewingContext_ShowMsg_get (ChewingContext *self) {
+    ChewingContext_showMsg_get (ChewingContext *self) {
         ChewingOutput *output = self->output;
 
         if (output == NULL ||
