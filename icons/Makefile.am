@@ -20,11 +20,11 @@
 # Boston, MA  02111-1307  USA
 
 icons_DATA = \
-	ibus-anthy.png \
+	ibus-chewing.png \
 	$(NULL)
 
-iconsdir = $(datadir)/ibus-anthy/icons
+iconsdir = $(pkgdatadir)/icons
 
 EXTRA_DIST = \
-	ibus-anthy.png \
+	ibus-chewing.png \
 	$(NULL)

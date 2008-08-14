@@ -1,6 +1,6 @@
 # vim:set et ts=4:
 #
-# ibus-anthy - The Anthy engine for IBus
+# ibus-chewing - The Chewing engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -29,7 +29,7 @@ m4_define(ibus_maybe_datestamp,
 m4_define([ibus_version],
     ibus_major_version.ibus_minor_version.ibus_micro_version[]ibus_maybe_datestamp)
 
-AC_INIT([ibus-anthy], [ibus_version], [http://code.google.com/p/ibus/issues/entry],[ibus-anthy])
+AC_INIT([ibus-chewing], [ibus_version], [http://code.google.com/p/ibus/issues/entry],[ibus-chewing])
 AM_INIT_AUTOMAKE([1.10])
 AC_GNU_SOURCE
 
@@ -49,9 +49,9 @@ AC_ISC_POSIX
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
 
-# check anthy
-PKG_CHECK_MODULES(ANTHY, [
-    anthy
+# check chewing
+PKG_CHECK_MODULES(CHEWING, [
+    chewing
 ])
 
 # check swig
@@ -83,7 +83,7 @@ AC_SUBST(PYTHON_CFLAGS)
 AC_SUBST(PYTHON_LIBS)
 
 # define GETTEXT_* variables
-GETTEXT_PACKAGE=ibus-anthy
+GETTEXT_PACKAGE=ibus-chewing
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Define to the read-only architecture-independent data directory.])
 
@@ -94,10 +94,10 @@ AM_GNU_GETTEXT_VERSION(0.16.1)
 # OUTPUT files
 AC_CONFIG_FILES([ po/Makefile.in
 Makefile
-ibus-anthy.spec
+ibus-chewing.spec
 engine/Makefile
-engine/ibus-engine-anthy
-engine/anthy.engine
+engine/ibus-engine-chewing
+engine/chewing.engine
 icons/Makefile
 m4/Makefile
 ])

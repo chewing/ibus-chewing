@@ -1,6 +1,6 @@
 # vim:set noet ts=4:
 #
-# ibus-anthy - The Anthy engine for IBus
+# ibus-chewing - The Chewing engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
@@ -18,58 +18,58 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-engine_anthy_PYTHON = \
+engine_chewing_PYTHON = \
 	engine.py \
 	factory.py \
 	main.py \
 	tables.py \
 	$(NULL)
-engine_anthydir = $(pkgdatadir)
+engine_chewingdir = $(pkgdatadir)
 
-anthy_DATA = \
-	anthy.py \
+chewing_DATA = \
+	chewing.py \
 	$(NULL)
-anthy_LTLIBRARIES = _anthy.la
-anthydir = @pyexecdir@
+chewing_LTLIBRARIES = _chewing.la
+chewingdir = @pyexecdir@
 
-_anthy_la_SOURCES = \
-	$(NULL)
-
-nodist__anthy_la_SOURCES = \
-	anthy_wrap.c \
+_chewing_la_SOURCES = \
 	$(NULL)
 
-_anthy_la_CFLAGS = \
-	@ANTHY_CFLAGS@ \
+nodist__chewing_la_SOURCES = \
+	chewing_wrap.c \
+	$(NULL)
+
+_chewing_la_CFLAGS = \
+	@CHEWING_CFLAGS@ \
 	@PYTHON_CFLAGS@ \
 	$(NULL)
 
-_anthy_la_LDFLAGS = \
-	@ANTHY_LIBS@ \
-	-rpath $(anthydir) \
+_chewing_la_LDFLAGS = \
+	@CHEWING_LIBS@ \
+	-rpath $(chewingdir) \
 	-avoid-version \
 	-module \
 	$(NULL)
 
-bin_SCRIPTS = ibus-engine-anthy
-engine_DATA = anthy.engine
+bin_SCRIPTS = ibus-engine-chewing
+engine_DATA = chewing.engine
 enginedir = $(datadir)/ibus/engine
 
-anthy.py anthy_wrap.c: anthy.i
-	$(SWIG) -python -I/usr/include -o anthy_wrap.c $(srcdir)/anthy.i
+chewing.py chewing_wrap.c: chewing.i
+	$(SWIG) -python -I/usr/include -o chewing_wrap.c $(srcdir)/chewing.i
 
 test:
 	$(ENV) IBUS_ANTHY_PKGDATADIR=$(abs_top_srcdir) PYTHONPATH=$(builddir)/.libs $(PYTHON) $(srcdir)/main.py
 
 EXTRA_DIST = \
-	anthy.i \
-	anthy.engine.in \
-	ibus-engine-anthy.in \
+	chewing.i \
+	chewing.engine.in \
+	ibus-engine-chewing.in \
 	$(NULL)
 
 CLEANFILES = \
-	anthy.py \
-	anthy_wrap.* \
+	chewing.py \
+	chewing_wrap.* \
 	*.pyc \
 	$(MULL)
 
