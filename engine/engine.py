@@ -32,10 +32,10 @@ class Engine(ibus.EngineBase):
 
         # create anthy context
         self.__context = chewing.ChewingContext()
-        self.__context.Configure(18, 16, "12345")
+        self.__context.Configure(18, 16, "12345678")
 
         # init state
-        self.__lookup_table = ibus.LookupTable()
+        self.__lookup_table = ibus.LookupTable(8)
         self.__lookup_table.show_cursor(False)
 
         # use reset to init values
@@ -124,7 +124,17 @@ class Engine(ibus.EngineBase):
             chiSymbolBuf[:chiSymbolCursor] +
             self.__context.zuinBuf +
             chiSymbolBuf[chiSymbolCursor:])
-        self.update_preedit (preedit_string, None, chiSymbolCursor, True)
+        attrs = ibus.AttrList()
+        attr = ibus.AttributeForeground(0xffffff,
+            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
+        attrs.append(attr)
+        attr = ibus.AttributeBackground(0x0,
+            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
+        attrs.append(attr)
+        attr = ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE,
+            0, len(preedit_string))
+        attrs.append(attr)
+        self.update_preedit (preedit_string, attrs, chiSymbolCursor, True)
 
         # update lookup table
         self.__lookup_table.clean()
@@ -137,6 +147,13 @@ class Engine(ibus.EngineBase):
             self.update_lookup_table (self.__lookup_table, True)
         else:
             self.update_lookup_table (self.__lookup_table, False)
+
+        # update aux string
+        text = u"".join(self.__context.showMsg)
+        if text:
+            self.update_aux_string(text, None, True)
+        else:
+            self.update_aux_string(u"", None, False)
 
         if self.__context.keystrokeRtn & chewing.KEYSTROKE_ABSORB:
             return True
