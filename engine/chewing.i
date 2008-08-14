@@ -60,20 +60,20 @@ typedef struct {} ChewingContext;
         return chewing_get_KBType (self);
     }
 
-    int set_ChiEngMode (int mode) {
-        return chewing_set_ChiEngMose (self, mode);
+    void set_ChiEngMode (int mode) {
+        chewing_set_ChiEngMode (self, mode);
     }
 
     int get_ChiEngMode () {
-        return chewing_get_ChiEngMose (self);
+        return chewing_get_ChiEngMode (self);
     }
 
-    int set_ShapeMode (int mode) {
-        return chewing_set_ShapeMose (self, mode);
+    void set_ShapeMode (int mode) {
+        chewing_set_ShapeMode (self, mode);
     }
 
     int get_ShapeMode () {
-        return chewing_get_ShapeMose (self);
+        return chewing_get_ShapeMode (self);
     }
 
     /* define handle methods */
