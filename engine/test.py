@@ -9,7 +9,7 @@ ctx.set_ChiEngMode(1)
 ctx.handle_Default(ord ("g"))
 ctx.handle_Default(ord ("j"))
 ctx.handle_Space()
-print ctx.chiSymbolBuf
+print u"".join (ctx.chiSymbolBuf)
 ctx.handle_Default(ord ("b"))
 ctx.handle_Default(ord ("j"))
 ctx.handle_Default(ord ("4"))
@@ -17,6 +17,5 @@ ctx.handle_Default(ord ("z"))
 ctx.handle_Default(ord ("8"))
 ctx.handle_Default(ord ("3"))
 ctx.handle_Enter()
-for c in ctx.commitStr:
-	print repr (c)
+print u"".join (ctx.commitStr)
 ctx = None

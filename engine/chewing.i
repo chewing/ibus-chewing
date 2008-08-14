@@ -207,7 +207,7 @@ typedef struct {} ChewingContext;
         for (i = 0; i < output->chiSymbolBufLen; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
                             output->chiSymbolBuf[i].s,
-                            MAX_UTF8_SIZE,
+                            strlen (output->chiSymbolBuf[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
@@ -235,7 +235,7 @@ typedef struct {} ChewingContext;
         for (i = 0; output->zuinBuf[i].s[0] != '\0'; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
                             output->zuinBuf[i].s,
-                            MAX_UTF8_SIZE,
+                            strlen (output->zuinBuf[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
@@ -279,7 +279,7 @@ typedef struct {} ChewingContext;
         for (i = 0; i < output->nCommitStr; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
                             output->commitStr[i].s,
-                            MAX_UTF8_SIZE,
+                            strlen (output->commitStr[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
@@ -309,7 +309,7 @@ typedef struct {} ChewingContext;
         for (i = 0; i < output->showMsgLen; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
                             output->showMsg[i].s,
-                            MAX_UTF8_SIZE,
+                            strlen (output->showMsg[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
