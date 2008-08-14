@@ -49,22 +49,77 @@ class Engine(ibus.EngineBase):
         # use reset to init values
         self.__reset()
 
+    def __commit(self):
+        # commit string
+        if self.__context.keystrokeRtn & chewing.KEYSTROKE_COMMIT:
+            text = u"".join(self.__context.commitStr)
+            self.commit_string(text)
+
+        # update preedit
+        chiSymbolBuf = self.__context.chiSymbolBuf
+        chiSymbolCursor = self.__context.chiSymbolCursor
+        preedit_string = u"".join(
+            chiSymbolBuf[:chiSymbolCursor] +
+            self.__context.zuinBuf +
+            chiSymbolBuf[chiSymbolCursor:])
+        attrs = ibus.AttrList()
+        attr = ibus.AttributeForeground(0xffffff,
+            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
+        attrs.append(attr)
+        attr = ibus.AttributeBackground(0x0,
+            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
+        attrs.append(attr)
+        attr = ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE,
+            0, len(preedit_string))
+        attrs.append(attr)
+        self.update_preedit (preedit_string, attrs, chiSymbolCursor, True)
+
+        # update lookup table
+        self.__lookup_table.clean()
+        ci = self.__context.ci
+        if ci:
+            for i in range(9):
+                candidate = ci.get_candidate(i)
+                if candidate:
+                    self.__lookup_table.append_candidate(candidate)
+            self.update_lookup_table (self.__lookup_table, True)
+        else:
+            self.update_lookup_table (self.__lookup_table, False)
+
+        # update aux string
+        text = u"".join(self.__context.showMsg)
+        if text:
+            self.update_aux_string(text, None, True)
+        else:
+            self.update_aux_string(u"", None, False)
+
+        if self.__context.keystrokeRtn & chewing.KEYSTROKE_ABSORB:
+            return True
+        if self.__context.keystrokeRtn & chewing.KEYSTROKE_IGNORE:
+            return False
+
+        return True
     # reset values of engine
     def __reset(self):
         self.__lookup_table.clean()
         self.__context.Reset()
         self.__commit()
 
-    def __refreash_properties(self):
+    def __refreash_chieng_property(self):
         if self.__context.get_ChiEngMode() == chewing.CHINESE_MODE:
             self.__chieng_property._label = _("Chi")
         else:
             self.__chieng_property._label = _("Eng")
+        self.update_property(self.__chieng_property)
+
+    def __refreash_letter_property(self):
         if self.__context.get_ShapeMode() == chewing.FULLSHAPE_MODE:
             self.__letter_property._label = _("Full")
         else:
             self.__letter_property._label = _("Half")
+        self.update_property(self.__letter_property)
 
+    def __refreash_kbtype_property(self):
         mode = self.__context.get_KBType()
         labels = {
             chewing.DEFAULT_KBTYPE: _("Default"),
@@ -78,9 +133,12 @@ class Engine(ibus.EngineBase):
             chewing.HANYU_KBTYPE: _("Han-Yu"),
         }
         self.__kbtype_property._label = labels.get(mode, _("Default"))
-        self.update_property(self.__chieng_property)
-        self.update_property(self.__letter_property)
         self.update_property(self.__kbtype_property)
+
+    def __refreash_properties(self):
+        self.__refreash_chieng_property()
+        self.__refreash_letter_property()
+        self.__refreash_kbtype_property()
 
     def page_up(self):
         self.__context.handle_PageUp()
@@ -146,53 +204,23 @@ class Engine(ibus.EngineBase):
     def focus_out(self):
         pass
 
-    def __commit(self):
-        # commit string
-        if self.__context.keystrokeRtn & chewing.KEYSTROKE_COMMIT:
-            text = u"".join(self.__context.commitStr)
-            self.commit_string(text)
+    def property_activate(self, prop_name, prop_state = ibus.PROP_STATE_UNCHECKED):
+        if prop_name == "chieng":
+            if self.__context.get_ChiEngMode() == chewing.CHINESE_MODE:
+                self.__context.set_ChiEngMode(chewing.SYMBOL_MODE)
+            else:
+                self.__context.set_ChiEngMode(chewing.CHINESE_MODE)
+        elif prop_name == "letter":
+            if self.__context.get_ShapeMode() == chewing.FULLSHAPE_MODE:
+                self.__context.set_ShapeMode(chewing.HALFSHAPE_MODE)
+            else:
+                self.__context.set_ShapeMode(chewing.FULLSHAPE_MODE)
+        elif prop_name == "kbtype":
+            _type = self.__context.get_KBType()
+            if _type == chewing.LAST_KBTYPE:
+                _type = chewing.FIRST_KBTYPE
+            else:
+                _type += 1
+            self.__context.set_KBType(_type)
+        self.__refreash_properties()
 
-        # update preedit
-        chiSymbolBuf = self.__context.chiSymbolBuf
-        chiSymbolCursor = self.__context.chiSymbolCursor
-        preedit_string = u"".join(
-            chiSymbolBuf[:chiSymbolCursor] +
-            self.__context.zuinBuf +
-            chiSymbolBuf[chiSymbolCursor:])
-        attrs = ibus.AttrList()
-        attr = ibus.AttributeForeground(0xffffff,
-            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
-        attrs.append(attr)
-        attr = ibus.AttributeBackground(0x0,
-            chiSymbolCursor, chiSymbolCursor + len(self.__context.zuinBuf))
-        attrs.append(attr)
-        attr = ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE,
-            0, len(preedit_string))
-        attrs.append(attr)
-        self.update_preedit (preedit_string, attrs, chiSymbolCursor, True)
-
-        # update lookup table
-        self.__lookup_table.clean()
-        ci = self.__context.ci
-        if ci:
-            for i in range(9):
-                candidate = ci.get_candidate(i)
-                if candidate:
-                    self.__lookup_table.append_candidate(candidate)
-            self.update_lookup_table (self.__lookup_table, True)
-        else:
-            self.update_lookup_table (self.__lookup_table, False)
-
-        # update aux string
-        text = u"".join(self.__context.showMsg)
-        if text:
-            self.update_aux_string(text, None, True)
-        else:
-            self.update_aux_string(u"", None, False)
-
-        if self.__context.keystrokeRtn & chewing.KEYSTROKE_ABSORB:
-            return True
-        if self.__context.keystrokeRtn & chewing.KEYSTROKE_IGNORE:
-            return False
-
-        return True
