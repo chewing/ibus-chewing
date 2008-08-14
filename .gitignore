@@ -32,5 +32,5 @@ ltmain.sh
 missing
 stamp-h1
 py-compile
-ibus-anthy*.tar.*
-ibus-anthy.spec
+ibus-chewing*.tar.*
+ibus-chewing.spec
