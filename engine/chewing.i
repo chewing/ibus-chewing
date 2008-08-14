@@ -29,11 +29,17 @@
 
 %init %{
     char *hash_path = NULL;
-    asprintf (&hash_path, "%s/.chewing", getenv ("HOME"));
+    asprintf (&hash_path, "%s/.chewing/", getenv ("HOME"));
     chewing_Init (CHEWING_DATADIR, hash_path);
     free(hash_path);
 %}
 
+/* define typemap PyObject * */
+%typemap (out) PyObject * {
+    $result = $1;
+}
+
+int chewing_Init (const char *, const char *);
 void chewing_Terminate ();
 int chewing_KBStr2Num (char *);
 
@@ -46,6 +52,18 @@ typedef struct {} ChewingContext;
 
     ~ChewingContext () {
         chewing_free (self);
+    }
+
+    int Configure (int selectAreaLen, int maxChiSymbolLen,
+            int addPhraseForward, int spaceAsSelection,
+            int escCleanAllBuf) {
+        ChewingConfigData config;
+        config.selectAreaLen = selectAreaLen;
+        config.maxChiSymbolLen = maxChiSymbolLen;
+        config.bAddPhraseForward = addPhraseForward;
+        config.bSpaceAsSelection = spaceAsSelection;
+        config.bEscCleanAllBuf = escCleanAllBuf;
+        chewing_Configure (self, &config);
     }
 
     int Reset () {
@@ -147,5 +165,36 @@ typedef struct {} ChewingContext;
     int handle_Numlock (int key) {
         return chewing_handle_Numlock (self, key);
     }
+
+/* define properties */
+%immutable;
+    PyObject *commit_string;
+    /*
+    PyObject *preedit_string;
+    PyObject *message;
+    */
+%mutable;
+
+%{
+    PyObject *
+    ChewingContext_commit_string_get (ChewingContext *self) {
+        ChewingOutput *output = self->output;
+
+        if (output == NULL || output->nCommitStr <= 0) {
+            return PyList_New (0);
+        }
+        PyObject *retval = PyList_New (output->nCommitStr);
+        int i;
+        for (i = 0; i < output->nCommitStr; i++) {
+            PyObject *o = PyUnicode_DecodeUTF8 (
+                            output->commitStr[i].s,
+                            MAX_UTF8_SIZE,
+                            NULL);
+            PyList_SetItem (retval, i, o);
+        }
+
+        return retval;
+    }
+%}
 };
 
