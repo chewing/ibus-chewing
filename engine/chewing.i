@@ -43,6 +43,25 @@ int chewing_Init (const char *, const char *);
 void chewing_Terminate ();
 int chewing_KBStr2Num (char *);
 
+/* ChoiceInfo */
+typedef struct {} ChoiceInfo;
+%extend ChoiceInfo {
+    PyObject *
+    get_candidate (int i) {
+        int no = self->pageNo * self->nChoicePerPage + i;
+        if (no >= self->nTotalChoice) {
+            Py_INCREF (Py_None);
+            return Py_None;
+        }
+        return PyUnicode_DecodeUTF8 (self->totalChoiceStr[no],
+                    strlen (self->totalChoiceStr[no]),
+                    NULL);
+    }
+/* define properties */
+%immutable;
+%mutable;
+};
+
 /* ChewingContext */
 typedef struct {} ChewingContext;
 %extend ChewingContext {
@@ -187,6 +206,7 @@ typedef struct {} ChewingContext;
     PyObject *commitStr;
     int keystrokeRtn;
     PyObject *showMsg;
+    ChoiceInfo *ci;
     /*
     PyObject *preedit_string;
     PyObject *message;
@@ -255,9 +275,9 @@ typedef struct {} ChewingContext;
         int i;
         for (i = 0; i < output->nDispInterval; i++) {
             PyObject *o = PyTuple_New (2);
-            PyTuple_SetItem (o, 0, 
+            PyTuple_SetItem (o, 0,
                 PyInt_FromLong (output->dispInterval[i].from));
-            PyTuple_SetItem (o, 1, 
+            PyTuple_SetItem (o, 1,
                 PyInt_FromLong (output->dispInterval[i].to));
             PyList_SetItem (retval, i, o);
         }
@@ -316,6 +336,13 @@ typedef struct {} ChewingContext;
         }
 
         return retval;
+    }
+
+    ChoiceInfo *
+    ChewingContext_ci_get (ChewingContext *self) {
+        if (self->output->pci && self->output->pci->nTotalChoice > 0)
+            return self->output->pci;
+        return NULL;
     }
 %}
 };

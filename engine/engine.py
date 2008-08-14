@@ -32,7 +32,7 @@ class Engine(ibus.EngineBase):
 
         # create anthy context
         self.__context = chewing.ChewingContext()
-        self.__context.Configure()
+        self.__context.Configure(18, 16, "12345")
 
         # init state
         self.__lookup_table = ibus.LookupTable()
@@ -117,10 +117,12 @@ class Engine(ibus.EngineBase):
         gobject.idle_add(self.__update, priority = gobject.PRIORITY_LOW)
 
     def __commit(self):
+        # commit string
         if self.__context.keystrokeRtn & chewing.KEYSTROKE_COMMIT:
             text = u"".join(self.__context.commitStr)
             self.commit_string(text)
 
+        # update preedit
         chiSymbolBuf = self.__context.chiSymbolBuf
         chiSymbolCursor = self.__context.chiSymbolCursor
         preedit_string = u"".join(
@@ -129,8 +131,21 @@ class Engine(ibus.EngineBase):
             chiSymbolBuf[chiSymbolCursor:])
         self.update_preedit (preedit_string, None, chiSymbolCursor, True)
 
+        # update lookup table
+        self.__lookup_table.clean()
+        ci = self.__context.ci
+        if ci:
+            for i in range(9):
+                candidate = ci.get_candidate(i)
+                if candidate:
+                    self.__lookup_table.append_candidate(candidate)
+            self.update_lookup_table (self.__lookup_table, True)
+        else:
+            self.update_lookup_table (self.__lookup_table, False)
+
         if self.__context.keystrokeRtn & chewing.KEYSTROKE_ABSORB:
             return True
         if self.__context.keystrokeRtn & chewing.KEYSTROKE_IGNORE:
             return False
+
         return True
