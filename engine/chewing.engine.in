@@ -1,6 +1,6 @@
-Exec=@prefix@/bin/ibus-engine-anthy
-Name=anthy
-Lang=ja
-Icon=@prefix@/share/ibus-anthy/icons/ibus-anthy.png
+Exec=@prefix@/bin/ibus-engine-chewing
+Name=chewing
+Lang=zh
+Icon=@prefix@/share/@PACKAGE@/icons/@PACKAGE@.png
 Author=Huang Peng <shawn.p.huang@gmail.com>
 Credits=

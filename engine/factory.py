@@ -24,13 +24,13 @@ from os import path
 import ibus
 import engine
 
-FACTORY_PATH = "/com/redhat/IBus/engines/Anthy/Factory"
-ENGINE_PATH = "/com/redhat/IBus/engines/Anthy/Engine/"
+FACTORY_PATH = "/com/redhat/IBus/engines/Chewing/Factory"
+ENGINE_PATH = "/com/redhat/IBus/engines/Chewing/Engine/"
 
 class EngineFactory(ibus.EngineFactoryBase):
-    NAME = "Anthy"
-    LANG = "ja"
-    ICON = path.join(os.getenv("IBUS_ANTHY_PKGDATADIR"), "icons/ibus-anthy.png")
+    NAME = "Chewing"
+    LANG = "zh"
+    ICON = path.join(os.getenv("IBUS_CHEWING_PKGDATADIR"), "icons/ibus-chewing.png")
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
     CREDITS = "GPLv2"
 

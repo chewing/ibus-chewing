@@ -1,7 +1,7 @@
 # vim:set et sts=4 sw=4:
 # -*- coding: utf-8 -*-
 #
-# ibus-anthy - The Anthy engine for IBus
+# ibus-chewing - The Chewing engine for IBus
 #
 # Copyright (c) 2007-2008 Huang Peng <shawn.p.huang@gmail.com>
 #
