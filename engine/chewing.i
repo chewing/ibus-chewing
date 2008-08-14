@@ -168,7 +168,12 @@ typedef struct {} ChewingContext;
 
 /* define properties */
 %immutable;
-    PyObject *commit_string;
+    PyObject *chiSymbolBuf;
+    long chiSymbolCursor;
+    PyObject *zuinBuf;
+    PyObject *dispInterval;
+    PyObject *commitStr;
+    int keystrokeRtn;
     /*
     PyObject *preedit_string;
     PyObject *message;
@@ -177,17 +182,120 @@ typedef struct {} ChewingContext;
 
 %{
     PyObject *
-    ChewingContext_commit_string_get (ChewingContext *self) {
+    ChewingContext_chiSymbolBuf_get (ChewingContext *self) {
+        ChewingOutput *output = self->output;
+
+        if (output == NULL || output->chiSymbolBufLen <= 0) {
+            return PyList_New (0);
+        }
+
+        PyObject *retval = PyList_New (output->chiSymbolBufLen);
+        int i;
+        for (i = 0; i < output->chiSymbolBufLen; i++) {
+            PyObject *o = PyUnicode_DecodeUTF8 (
+                            output->chiSymbolBuf[i].s,
+                            MAX_UTF8_SIZE,
+                            NULL);
+            PyList_SetItem (retval, i, o);
+        }
+
+        return retval;
+    }
+
+    long
+    ChewingContext_chiSymbolCursor_get (ChewingContext *self) {
+        if (!self->output)
+            return 0;
+        return self->output->chiSymbolCursor;
+    }
+
+    PyObject *
+    ChewingContext_zhuinBuf_get (ChewingContext *self) {
+        ChewingOutput *output = self->output;
+
+        if (output == NULL) {
+            return PyList_New (0);
+        }
+
+        PyObject *retval = PyList_New (0);
+        int i;
+        for (i = 0; output->zuinBuf[i].s[0] != '\0'; i++) {
+            PyObject *o = PyUnicode_DecodeUTF8 (
+                            output->zuinBuf[i].s,
+                            MAX_UTF8_SIZE,
+                            NULL);
+            PyList_SetItem (retval, i, o);
+        }
+
+        return retval;
+    }
+
+    PyObject *
+    ChewingContext_dispInterval_get (ChewingContext *self) {
+        ChewingOutput *output = self->output;
+
+        if (output == NULL || output->nDispInterval <= 0) {
+            return PyList_New (0);
+        }
+
+        PyObject *retval = PyList_New (output->nDispInterval);
+        int i;
+        for (i = 0; i < output->nDispInterval; i++) {
+            PyObject *o = PyTuple_New (2);
+            PyTuple_SetItem (o, 0, 
+                PyInt_FromLong (output->dispInterval[i].from));
+            PyTuple_SetItem (o, 1, 
+                PyInt_FromLong (output->dispInterval[i].to));
+            PyList_SetItem (retval, i, o);
+        }
+
+        return retval;
+    }
+
+
+    PyObject *
+    ChewingContext_commitStr_get (ChewingContext *self) {
         ChewingOutput *output = self->output;
 
         if (output == NULL || output->nCommitStr <= 0) {
             return PyList_New (0);
         }
+
         PyObject *retval = PyList_New (output->nCommitStr);
         int i;
         for (i = 0; i < output->nCommitStr; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
                             output->commitStr[i].s,
+                            MAX_UTF8_SIZE,
+                            NULL);
+            PyList_SetItem (retval, i, o);
+        }
+
+        return retval;
+    }
+
+    int
+    ChewingContext_keystrokeRtn_get (ChewingContext *self) {
+        if (!self->output)
+            return 0;
+        return self->output->keystrokeRtn;
+    }
+
+    PyObject *
+    ChewingContext_ShowMsg_get (ChewingContext *self) {
+        ChewingOutput *output = self->output;
+
+        if (output == NULL ||
+            output->showMsgLen <= 0 ||
+            output->bShowMsg == 0) {
+            return PyList_New (0);
+        }
+
+        PyObject *retval = PyList_New (output->showMsgLen);
+        int i;
+        for (i = 0; i < output->showMsgLen; i++) {
+            PyObject *o = PyUnicode_DecodeUTF8 (
+                            output->showMsg[i].s,
                             MAX_UTF8_SIZE,
                             NULL);
             PyList_SetItem (retval, i, o);

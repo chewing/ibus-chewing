@@ -16,6 +16,6 @@ ctx.handle_Default(ord ("z"))
 ctx.handle_Default(ord ("8"))
 ctx.handle_Default(ord ("3"))
 ctx.handle_Enter()
-for c in ctx.commit_string:
+for c in ctx.CommitStr:
 	print c
 ctx = None
