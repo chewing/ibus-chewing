@@ -237,7 +237,7 @@ typedef struct {} ChewingContext;
                             output->zuinBuf[i].s,
                             strlen (output->zuinBuf[i].s),
                             NULL);
-            PyList_SetItem (retval, i, o);
+            PyList_Append (retval, o);
         }
 
         return retval;
@@ -270,7 +270,8 @@ typedef struct {} ChewingContext;
     ChewingContext_commitStr_get (ChewingContext *self) {
         ChewingOutput *output = self->output;
 
-        if (output == NULL || output->nCommitStr <= 0) {
+        if (output == NULL ||
+            output->nCommitStr <= 0) {
             return PyList_New (0);
         }
 
@@ -318,4 +319,9 @@ typedef struct {} ChewingContext;
     }
 %}
 };
+
+#define KEYSTROKE_IGNORE 1
+#define KEYSTROKE_COMMIT 2
+#define KEYSTROKE_BELL 4
+#define KEYSTROKE_ABSORB 8
 

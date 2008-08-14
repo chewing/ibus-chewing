@@ -60,7 +60,12 @@ chewing.py chewing_wrap.c: chewing.i
 	$(SWIG) -python -I/usr/include -o chewing_wrap.c $(srcdir)/chewing.i
 
 test:
-	$(ENV) IBUS_ANTHY_PKGDATADIR=$(abs_top_srcdir) PYTHONPATH=$(builddir)/.libs $(PYTHON) $(srcdir)/main.py
+	$(ENV) \
+		IBUS_CHEWING_PKGDATADIR=$(abs_top_srcdir)\
+		PYTHONPATH=$(builddir)/.libs \
+		DBUS_DEBUG=true \
+		$(PYTHON) \
+		$(srcdir)/main.py
 
 EXTRA_DIST = \
 	chewing.i \
