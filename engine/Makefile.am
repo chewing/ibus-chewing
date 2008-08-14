@@ -22,7 +22,6 @@ engine_chewing_PYTHON = \
 	engine.py \
 	factory.py \
 	main.py \
-	tables.py \
 	$(NULL)
 engine_chewingdir = $(pkgdatadir)
 
