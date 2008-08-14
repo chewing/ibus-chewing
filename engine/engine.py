@@ -36,6 +36,7 @@ class Engine(ibus.EngineBase):
 
         # init state
         self.__lookup_table = ibus.LookupTable()
+        self.__lookup_table.show_cursor(False)
 
         # use reset to init values
         self.__reset()
@@ -85,9 +86,9 @@ class Engine(ibus.EngineBase):
             self.__context.handle_PageUp()
         elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
             self.__context.handle_PageDown()
-        elif keyval == keysyms.Up:
+        elif keyval == keysyms.Up or keyval == keysyms.KP_Up:
             self.__context.handle_Up()
-        elif keyval == keysyms.Down:
+        elif keyval == keysyms.Down or keyval == keysyms.KP_Down:
             self.__context.handle_Down()
         elif keyval == keysyms.Left:
             self.__context.handle_Left()
@@ -109,12 +110,6 @@ class Engine(ibus.EngineBase):
 
     def focus_out(self):
         pass
-
-    def __invalidate(self):
-        if self.__need_update:
-            return
-        self.__need_update = True
-        gobject.idle_add(self.__update, priority = gobject.PRIORITY_LOW)
 
     def __commit(self):
         # commit string

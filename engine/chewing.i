@@ -207,10 +207,6 @@ typedef struct {} ChewingContext;
     int keystrokeRtn;
     PyObject *showMsg;
     ChoiceInfo *ci;
-    /*
-    PyObject *preedit_string;
-    PyObject *message;
-    */
 %mutable;
 
 %{
