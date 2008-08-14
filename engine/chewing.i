@@ -343,8 +343,29 @@ typedef struct {} ChewingContext;
 %}
 };
 
+/* define const values */
+#define IS_USER_PHRASE 1
+#define IS_DICT_PHRASE 0
+#define CHINESE_MODE 1
+#define SYMBOL_MODE 0
+#define FULLSHAPE_MODE 1
+#define HALFSHAPE_MODE 0
+
+#define DEFAULT_KBTYPE 0
+#define HSU_KBTYPE 1
+#define IBM_KBTYPE 2
+#define GINYIEH_KBTYPE 3
+#define ETEN_KBTYPE 4
+#define ETEN26_KBTYPE 5
+#define DVORAK_KBTYPE 6
+#define DVORAKHSU_KBTYPE 7
+#define HANYU_KBTYPE 8
+#define FIRST_KBTYPE DEFAULT_KBTYPE
+#define LAST_KBTYPE HANYU_KBTYPE
+
 #define KEYSTROKE_IGNORE 1
 #define KEYSTROKE_COMMIT 2
 #define KEYSTROKE_BELL 4
 #define KEYSTROKE_ABSORB 8
+
 

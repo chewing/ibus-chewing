@@ -34,9 +34,17 @@ class Engine(ibus.EngineBase):
         self.__context = chewing.ChewingContext()
         self.__context.Configure(18, 16, "12345678")
 
-        # init state
         self.__lookup_table = ibus.LookupTable(8)
         self.__lookup_table.show_cursor(False)
+
+        # init properties
+        self.__chieng_property = ibus.Property("chieng")
+        self.__letter_property = ibus.Property("letter")
+        self.__kbtype_property = ibus.Property("kbtype")
+        self.__prop_list = ibus.PropList()
+        self.__prop_list.append(self.__chieng_property)
+        self.__prop_list.append(self.__letter_property)
+        self.__prop_list.append(self.__kbtype_property)
 
         # use reset to init values
         self.__reset()
@@ -46,6 +54,33 @@ class Engine(ibus.EngineBase):
         self.__lookup_table.clean()
         self.__context.Reset()
         self.__commit()
+
+    def __refreash_properties(self):
+        if self.__context.get_ChiEngMode() == chewing.CHINESE_MODE:
+            self.__chieng_property._label = _("Chi")
+        else:
+            self.__chieng_property._label = _("Eng")
+        if self.__context.get_ShapeMode() == chewing.FULLSHAPE_MODE:
+            self.__letter_property._label = _("Full")
+        else:
+            self.__letter_property._label = _("Half")
+
+        mode = self.__context.get_KBType()
+        labels = {
+            chewing.DEFAULT_KBTYPE: _("Default"),
+            chewing.HSU_KBTYPE: _("Hsu's"),
+            chewing.IBM_KBTYPE: _("IBM"),
+            chewing.GINYIEH_KBTYPE: _("Gin-Yieh"),
+            chewing.ETEN_KBTYPE: _("ETen"),
+            chewing.ETEN26_KBTYPE: _("ETen 26-key"),
+            chewing.DVORAK_KBTYPE: _("Dvorak"),
+            chewing.DVORAKHSU_KBTYPE: _("Dvorak Hsu's"),
+            chewing.HANYU_KBTYPE: _("Han-Yu"),
+        }
+        self.__kbtype_property._label = labels.get(mode, _("Default"))
+        self.update_property(self.__chieng_property)
+        self.update_property(self.__letter_property)
+        self.update_property(self.__kbtype_property)
 
     def page_up(self):
         self.__context.handle_PageUp()
@@ -105,8 +140,8 @@ class Engine(ibus.EngineBase):
         return self.__commit()
 
     def focus_in(self):
-        # self.register_properties(self.__prop_list)
-        pass
+        self.register_properties(self.__prop_list)
+        self.__refreash_properties()
 
     def focus_out(self):
         pass
