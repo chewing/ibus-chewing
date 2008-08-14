@@ -41,6 +41,7 @@ nodist__chewing_la_SOURCES = \
 
 _chewing_la_CFLAGS = \
 	@CHEWING_CFLAGS@ \
+	-DCHEWING_DATADIR=\"@CHEWING_DATADIR@\" \
 	@PYTHON_CFLAGS@ \
 	$(NULL)
 

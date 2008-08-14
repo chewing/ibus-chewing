@@ -54,6 +54,9 @@ PKG_CHECK_MODULES(CHEWING, [
     chewing
 ])
 
+CHEWING_DATADIR=`$PKG_CONFIG --variable=datadir chewing`
+AC_SUBST(CHEWING_DATADIR)
+
 # check swig
 AC_PATH_PROG(SWIG, swig)
 if test x"$SWIG" == x""; then
