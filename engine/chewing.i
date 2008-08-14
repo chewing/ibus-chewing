@@ -210,7 +210,7 @@ typedef struct {} ChewingContext;
     }
 
     PyObject *
-    ChewingContext_zhuinBuf_get (ChewingContext *self) {
+    ChewingContext_zuinBuf_get (ChewingContext *self) {
         ChewingOutput *output = self->output;
 
         if (output == NULL) {
