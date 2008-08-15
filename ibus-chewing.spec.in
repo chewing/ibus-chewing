@@ -19,7 +19,6 @@ BuildRequires:  swig
 BuildRequires:  pkgconfig
 
 Requires:   ibus
-Requires:   libchewing
 
 %description
 The Chewing engine for IBus platform. It provides Chinese input method from
