@@ -54,5 +54,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/ibus/engine/chewing.engine
 
 %changelog
-* Fri Aug 08 2008 Huang Peng <shawn.p.huang@gmail.com> - @VERSION@-1
+* Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - @VERSION@-1
 - The first version.
