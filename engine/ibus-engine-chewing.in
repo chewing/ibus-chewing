@@ -22,6 +22,6 @@
 prefix=@prefix@
 
 export IBUS_PREFIX=@prefix@
-export IBUS_ANTHY_PKGDATADIR=@datarootdir@/@PACKAGE@/icons/ibus-chewing
+export IBUS_CHEWING_PKGDATADIR=@datarootdir@/@PACKAGE@/
 exec python @datarootdir@/@PACKAGE@/main.py $@
 
