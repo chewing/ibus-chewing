@@ -30,7 +30,7 @@ class Engine(ibus.EngineBase):
     def __init__(self, bus, object_path):
         super(Engine, self).__init__(bus, object_path)
 
-        # create anthy context
+        # create chewing context
         self.__context = chewing.ChewingContext()
         self.__context.Configure(18, 16, "12345678")
 
