@@ -22,7 +22,7 @@
 import gobject
 import ibus
 import chewing
-from ibus import keysyms
+from ibus import keysyms, modifier
 
 _ = lambda a: a
 
@@ -164,37 +164,58 @@ class Engine(ibus.EngineBase):
         # ignore key release events
         if not is_press:
             return False
-
-        if keyval == keysyms.Return:
-            self.__context.handle_Enter()
-        elif keyval == keysyms.Escape:
-            self.__context.handle_Esc()
-        elif keyval == keysyms.BackSpace:
-            self.__context.handle_Backspace()
-        elif keyval == keysyms.Delete or keyval == keysyms.KP_Delete:
-            self.__context.handle_Del()
-        elif keyval == keysyms.space:
-            self.__context.handle_Space()
-        elif keyval == keysyms.Page_Up or keyval == keysyms.KP_Page_Up:
-            self.__context.handle_PageUp()
-        elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
-            self.__context.handle_PageDown()
-        elif keyval == keysyms.Up or keyval == keysyms.KP_Up:
-            self.__context.handle_Up()
-        elif keyval == keysyms.Down or keyval == keysyms.KP_Down:
-            self.__context.handle_Down()
-        elif keyval == keysyms.Left:
-            self.__context.handle_Left()
-        elif keyval == keysyms.Right:
-            self.__context.handle_Right()
-        elif keyval == keysyms.Home or keyval == keysyms.KP_Home:
-            self.__context.handle_Home()
-        elif keyval == keysyms.End or keyval == keysyms.KP_End:
-            self.__context.handle_End()
-        elif keyval == keysyms.Tab:
-            self.__context.handle_Tab()
+        state = state & (modifier.SHIFT_MASK | modifier.CONTROL_MASK | modifier.MOD1_MASK)
+        
+        if state == 0:
+            if keyval == keysyms.Return:
+                self.__context.handle_Enter()
+            elif keyval == keysyms.Escape:
+                self.__context.handle_Esc()
+            elif keyval == keysyms.BackSpace:
+                self.__context.handle_Backspace()
+            elif keyval == keysyms.Delete or keyval == keysyms.KP_Delete:
+                self.__context.handle_Del()
+            elif keyval == keysyms.space or keyval == keysyms.KP_Space:
+                self.__context.handle_Space()
+            elif keyval == keysyms.Page_Up or keyval == keysyms.KP_Page_Up:
+                self.__context.handle_PageUp()
+            elif keyval == keysyms.Page_Down or keyval == keysyms.KP_Page_Down:
+                self.__context.handle_PageDown()
+            elif keyval == keysyms.Up or keyval == keysyms.KP_Up:
+                self.__context.handle_Up()
+            elif keyval == keysyms.Down or keyval == keysyms.KP_Down:
+                self.__context.handle_Down()
+            elif keyval == keysyms.Left:
+                self.__context.handle_Left()
+            elif keyval == keysyms.Right:
+                self.__context.handle_Right()
+            elif keyval == keysyms.Home or keyval == keysyms.KP_Home:
+                self.__context.handle_Home()
+            elif keyval == keysyms.End or keyval == keysyms.KP_End:
+                self.__context.handle_End()
+            elif keyval == keysyms.Tab:
+                self.__context.handle_Tab()
+            else:
+                self.__context.handle_Default(keyval)
+        elif state == modifier.SHIFT_MASK:
+            if keyval == keysyms.Shift_L:
+                self.__context.handle_ShiftLeft()
+            elif keyval == keysyms.Shift_R:
+                self.__context.handle_ShiftRight()
+            elif keyval == keysyms.space or keyval == keysyms.KP_Space:
+                self.__context.handle_ShiftSpace()
+                self.property_activate("letter")
+            else:
+                self.__context.handle_Default(keyval)
+        elif state == modifier.CONTROL_MASK:
+            if keyval >= keysyms._0 and keyval <= keysyms._9:
+                self.__context.handle_CtrlNum(keyval)
+            else:
+                return False
         else:
-            self.__context.handle_Default(keyval)
+            return False
+            
+        
         return self.__commit()
 
     def focus_in(self):
