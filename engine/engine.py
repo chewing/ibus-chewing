@@ -72,7 +72,7 @@ class Engine(ibus.EngineBase):
         attr = ibus.AttributeUnderline(ibus.ATTR_UNDERLINE_SINGLE,
             0, len(preedit_string))
         attrs.append(attr)
-        self.update_preedit (preedit_string, attrs, chiSymbolCursor, True)
+        self.update_preedit (preedit_string, attrs, chiSymbolCursor, len(preedit_string) > 0)
 
         # update lookup table
         self.__lookup_table.clean()
@@ -165,7 +165,7 @@ class Engine(ibus.EngineBase):
         if not is_press:
             return False
         state = state & (modifier.SHIFT_MASK | modifier.CONTROL_MASK | modifier.MOD1_MASK)
-        
+
         if state == 0:
             if keyval == keysyms.Return:
                 self.__context.handle_Enter()
@@ -214,8 +214,7 @@ class Engine(ibus.EngineBase):
                 return False
         else:
             return False
-            
-        
+
         return self.__commit()
 
     def focus_in(self):
