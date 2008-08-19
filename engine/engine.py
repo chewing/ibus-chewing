@@ -38,9 +38,9 @@ class Engine(ibus.EngineBase):
         self.__lookup_table.show_cursor(False)
 
         # init properties
-        self.__chieng_property = ibus.Property("chieng")
-        self.__letter_property = ibus.Property("letter")
-        self.__kbtype_property = ibus.Property("kbtype")
+        self.__chieng_property = ibus.Property(u"chieng")
+        self.__letter_property = ibus.Property(u"letter")
+        self.__kbtype_property = ibus.Property(u"kbtype")
         self.__prop_list = ibus.PropList()
         self.__prop_list.append(self.__chieng_property)
         self.__prop_list.append(self.__letter_property)
@@ -107,32 +107,32 @@ class Engine(ibus.EngineBase):
 
     def __refreash_chieng_property(self):
         if self.__context.get_ChiEngMode() == chewing.CHINESE_MODE:
-            self.__chieng_property._label = _("Chi")
+            self.__chieng_property.label = _(u"Chi")
         else:
-            self.__chieng_property._label = _("Eng")
+            self.__chieng_property.label = _(u"Eng")
         self.update_property(self.__chieng_property)
 
     def __refreash_letter_property(self):
         if self.__context.get_ShapeMode() == chewing.FULLSHAPE_MODE:
-            self.__letter_property._label = _("Full")
+            self.__letter_property.label = _(u"Full")
         else:
-            self.__letter_property._label = _("Half")
+            self.__letter_property.label = _(u"Half")
         self.update_property(self.__letter_property)
 
     def __refreash_kbtype_property(self):
         mode = self.__context.get_KBType()
         labels = {
-            chewing.DEFAULT_KBTYPE: _("Default"),
-            chewing.HSU_KBTYPE: _("Hsu's"),
-            chewing.IBM_KBTYPE: _("IBM"),
-            chewing.GINYIEH_KBTYPE: _("Gin-Yieh"),
-            chewing.ETEN_KBTYPE: _("ETen"),
-            chewing.ETEN26_KBTYPE: _("ETen 26-key"),
-            chewing.DVORAK_KBTYPE: _("Dvorak"),
-            chewing.DVORAKHSU_KBTYPE: _("Dvorak Hsu's"),
-            chewing.HANYU_KBTYPE: _("Han-Yu"),
+            chewing.DEFAULT_KBTYPE: _(u"Default"),
+            chewing.HSU_KBTYPE: _(u"Hsu's"),
+            chewing.IBM_KBTYPE: _(u"IBM"),
+            chewing.GINYIEH_KBTYPE: _(u"Gin-Yieh"),
+            chewing.ETEN_KBTYPE: _(u"ETen"),
+            chewing.ETEN26_KBTYPE: _(u"ETen 26-key"),
+            chewing.DVORAK_KBTYPE: _(u"Dvorak"),
+            chewing.DVORAKHSU_KBTYPE: _(u"Dvorak Hsu's"),
+            chewing.HANYU_KBTYPE: _(u"Han-Yu"),
         }
-        self.__kbtype_property._label = labels.get(mode, _("Default"))
+        self.__kbtype_property.label = labels.get(mode, _(u"Default"))
         self.update_property(self.__kbtype_property)
 
     def __refreash_properties(self):
