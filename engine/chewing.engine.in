@@ -1,5 +1,6 @@
 Exec=@prefix@/bin/ibus-engine-chewing
 Name=chewing
+Name.zh=新酷音
 Lang=zh
 Icon=@prefix@/share/@PACKAGE@/icons/@PACKAGE@.png
 Author=Huang Peng <shawn.p.huang@gmail.com>
