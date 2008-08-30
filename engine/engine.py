@@ -24,7 +24,9 @@ import ibus
 import chewing
 from ibus import keysyms, modifier
 
-_ = lambda a: a
+from gettext import dgettext
+_  = lambda a : dgettext("ibus-anthy", a)
+N_ = lambda a : a
 
 class Engine(ibus.EngineBase):
     def __init__(self, bus, object_path):
@@ -225,17 +227,17 @@ class Engine(ibus.EngineBase):
         pass
 
     def property_activate(self, prop_name, prop_state = ibus.PROP_STATE_UNCHECKED):
-        if prop_name == "chieng":
+        if prop_name == u"chieng":
             if self.__context.get_ChiEngMode() == chewing.CHINESE_MODE:
                 self.__context.set_ChiEngMode(chewing.SYMBOL_MODE)
             else:
                 self.__context.set_ChiEngMode(chewing.CHINESE_MODE)
-        elif prop_name == "letter":
+        elif prop_name == u"letter":
             if self.__context.get_ShapeMode() == chewing.FULLSHAPE_MODE:
                 self.__context.set_ShapeMode(chewing.HALFSHAPE_MODE)
             else:
                 self.__context.set_ShapeMode(chewing.FULLSHAPE_MODE)
-        elif prop_name == "kbtype":
+        elif prop_name == u"kbtype":
             _type = self.__context.get_KBType()
             if _type == chewing.LAST_KBTYPE:
                 _type = chewing.FIRST_KBTYPE

@@ -24,11 +24,15 @@ from os import path
 import ibus
 import engine
 
+from gettext import dgettext
+_  = lambda a : dgettext("ibus-anthy", a)
+N_ = lambda a : a
+
 FACTORY_PATH = "/com/redhat/IBus/engines/Chewing/Factory"
 ENGINE_PATH = "/com/redhat/IBus/engines/Chewing/Engine/"
 
 class EngineFactory(ibus.EngineFactoryBase):
-    NAME = "Chewing"
+    NAME = _("Chewing")
     LANG = "zh"
     ICON = path.join(os.getenv("IBUS_CHEWING_PKGDATADIR"), "icons/ibus-chewing.png")
     AUTHORS = "Huang Peng <shawn.p.huang@gmail.com>"
