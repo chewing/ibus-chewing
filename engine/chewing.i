@@ -73,7 +73,7 @@ typedef struct {} ChewingContext;
         chewing_free (self);
     }
 
-    int Configure (int selectAreaLen = 18,
+    int Configure (int candPerPage = 9,
             int maxChiSymbolLen = 16,
             char *selKey = NULL,
             int addPhraseForward = 0,
@@ -81,7 +81,7 @@ typedef struct {} ChewingContext;
             int escCleanAllBuf = 0,
             int hsuSelKeyType = HSU_SELKEY_TYPE1) {
         ChewingConfigData config;
-        config.selectAreaLen = selectAreaLen;
+        config.candPerPage = candPerPage;
         config.maxChiSymbolLen = maxChiSymbolLen;
         config.bAddPhraseForward = addPhraseForward;
         config.bSpaceAsSelection = spaceAsSelection;
@@ -183,9 +183,6 @@ typedef struct {} ChewingContext;
     }
     int handle_CtrlNum (int key) {
         return chewing_handle_CtrlNum (self, key);
-    }
-    int handle_CtrlOption (int key) {
-        return chewing_handle_CtrlOption (self, key);
     }
     int handle_ShiftSpace () {
         return chewing_handle_ShiftSpace (self);
