@@ -29,7 +29,7 @@
 
 %init %{
     char *hash_path = NULL;
-    asprintf (&hash_path, "%s/.chewing/", getenv ("HOME"));
+    (void) asprintf (&hash_path, "%s/.chewing/", getenv ("HOME"));
     chewing_Init (CHEWING_DATADIR, hash_path);
     free(hash_path);
 %}
