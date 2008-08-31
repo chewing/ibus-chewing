@@ -34,7 +34,7 @@ class Engine(ibus.EngineBase):
 
         # create chewing context
         self.__context = chewing.ChewingContext()
-        self.__context.Configure(18, 16, "12345678")
+        self.__context.Configure(18, 16, "1234567890")
 
         self.__lookup_table = ibus.LookupTable(9)
         self.__lookup_table.show_cursor(False)
