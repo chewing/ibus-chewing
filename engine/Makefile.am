@@ -23,7 +23,7 @@ engine_chewing_PYTHON = \
 	factory.py \
 	main.py \
 	$(NULL)
-engine_chewingdir = $(pkgdatadir)
+engine_chewingdir = $(pkgdatadir)/engine
 
 chewing_DATA = \
 	chewing.py \
