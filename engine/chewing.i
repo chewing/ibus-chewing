@@ -53,8 +53,8 @@ typedef struct {} ChoiceInfo;
             Py_INCREF (Py_None);
             return Py_None;
         }
-        return PyUnicode_DecodeUTF8 (self->totalChoiceStr[no],
-                    strlen (self->totalChoiceStr[no]),
+        return PyUnicode_DecodeUTF8 ((const char*)self->totalChoiceStr[no],
+                    strlen ((const char *)self->totalChoiceStr[no]),
                     NULL);
     }
 /* define properties */
@@ -219,8 +219,8 @@ typedef struct {} ChewingContext;
         int i;
         for (i = 0; i < output->chiSymbolBufLen; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
-                            output->chiSymbolBuf[i].s,
-                            strlen (output->chiSymbolBuf[i].s),
+                            (const char *)output->chiSymbolBuf[i].s,
+                            strlen ((const char* )output->chiSymbolBuf[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
@@ -247,8 +247,8 @@ typedef struct {} ChewingContext;
         int i;
         for (i = 0; output->zuinBuf[i].s[0] != '\0'; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
-                            output->zuinBuf[i].s,
-                            strlen (output->zuinBuf[i].s),
+                            (const char*)output->zuinBuf[i].s,
+                            strlen ((const char *)output->zuinBuf[i].s),
                             NULL);
             PyList_Append (retval, o);
         }
@@ -292,8 +292,8 @@ typedef struct {} ChewingContext;
         int i;
         for (i = 0; i < output->nCommitStr; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
-                            output->commitStr[i].s,
-                            strlen (output->commitStr[i].s),
+                            (const char *)output->commitStr[i].s,
+                            strlen ((const char*)output->commitStr[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
@@ -322,8 +322,8 @@ typedef struct {} ChewingContext;
         int i;
         for (i = 0; i < output->showMsgLen; i++) {
             PyObject *o = PyUnicode_DecodeUTF8 (
-                            output->showMsg[i].s,
-                            strlen (output->showMsg[i].s),
+                            (const char *)output->showMsg[i].s,
+                            strlen ((const char*)output->showMsg[i].s),
                             NULL);
             PyList_SetItem (retval, i, o);
         }
