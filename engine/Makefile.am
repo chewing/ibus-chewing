@@ -46,6 +46,7 @@ _chewing_la_CFLAGS = \
 
 _chewing_la_LDFLAGS = \
 	@CHEWING_LIBS@ \
+	@PYTHON_LIBS@ \
 	-rpath $(chewingdir) \
 	-avoid-version \
 	-module \
