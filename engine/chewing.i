@@ -29,9 +29,14 @@
 
 %init %{
     char *hash_path = NULL;
-    (void) asprintf (&hash_path, "%s/.chewing/", getenv ("HOME"));
-    chewing_Init (CHEWING_DATADIR, hash_path);
-    free(hash_path);
+    int retval = asprintf (&hash_path, "%s/.chewing/", getenv ("HOME"));
+    if (retval == -1) {
+        fprintf (stderr, "Out of memory.");
+    }
+    else {
+        chewing_Init (CHEWING_DATADIR, hash_path);
+        free(hash_path);
+    }
 %}
 
 /* define typemap PyObject * */
@@ -94,7 +99,7 @@ typedef struct {} ChewingContext;
             config.selKey[i] = selKey[i];
         }
         config.selKey[i] = '\0';
-        chewing_Configure (self, &config);
+        return chewing_Configure (self, &config);
     }
 
     int Reset () {
