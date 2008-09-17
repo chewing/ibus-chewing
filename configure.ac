@@ -51,7 +51,7 @@ AM_PROG_LIBTOOL
 
 # check chewing
 PKG_CHECK_MODULES(CHEWING, [
-    chewing
+    chewing >= 0.3.0.901
 ])
 
 CHEWING_DATADIR=`$PKG_CONFIG --variable=datadir chewing`
