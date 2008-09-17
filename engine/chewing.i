@@ -353,17 +353,17 @@ typedef struct {} ChewingContext;
 #define FULLSHAPE_MODE 1
 #define HALFSHAPE_MODE 0
 
-#define DEFAULT_KBTYPE 0
-#define HSU_KBTYPE 1
-#define IBM_KBTYPE 2
-#define GINYIEH_KBTYPE 3
-#define ETEN_KBTYPE 4
-#define ETEN26_KBTYPE 5
-#define DVORAK_KBTYPE 6
-#define DVORAKHSU_KBTYPE 7
-#define HANYU_KBTYPE 8
-#define FIRST_KBTYPE DEFAULT_KBTYPE
-#define LAST_KBTYPE HANYU_KBTYPE
+#define KB_TYPE_NUM 10
+#define KB_DEFAULT 0
+#define KB_HSU 1
+#define KB_IBM 2
+#define KB_GIN_YIEH 3
+#define KB_ET 4
+#define KB_ET26 5
+#define KB_DVORAK 6
+#define KB_DVORAK_HSU 7
+#define KB_DACHEN_CP26 8
+#define KB_HANYU_PINYIN 9
 
 #define KEYSTROKE_IGNORE 1
 #define KEYSTROKE_COMMIT 2

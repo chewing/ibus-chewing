@@ -124,15 +124,16 @@ class Engine(ibus.EngineBase):
     def __refreash_kbtype_property(self):
         mode = self.__context.get_KBType()
         labels = {
-            chewing.DEFAULT_KBTYPE: _(u"Default"),
-            chewing.HSU_KBTYPE: _(u"Hsu's"),
-            chewing.IBM_KBTYPE: _(u"IBM"),
-            chewing.GINYIEH_KBTYPE: _(u"Gin-Yieh"),
-            chewing.ETEN_KBTYPE: _(u"ETen"),
-            chewing.ETEN26_KBTYPE: _(u"ETen 26-key"),
-            chewing.DVORAK_KBTYPE: _(u"Dvorak"),
-            chewing.DVORAKHSU_KBTYPE: _(u"Dvorak Hsu's"),
-            chewing.HANYU_KBTYPE: _(u"Han-Yu"),
+            chewing.KB_DEFAULT      : _(u"Default"),
+            chewing.KB_HSU          : _(u"Hsu's"),
+            chewing.KB_IBM          : _(u"IBM"),
+            chewing.KB_GIN_YIEH     : _(u"Gin-Yieh"),
+            chewing.KB_ET           : _(u"ETen"),
+            chewing.KB_ET26         : _(u"ETen 26-key"),
+            chewing.KB_DVORAK       : _(u"Dvorak"),
+            chewing.KB_DVORAK_HSU   : _(u"Dvorak Hsu's"),
+            chewing.KB_DACHEN_CP26  : _(u"Dachen CP26"),
+            chewing.KB_HANYU_PINYIN : _(u"Han-Yu"),
         }
         self.__kbtype_property.label = labels.get(mode, _(u"Default"))
         self.update_property(self.__kbtype_property)
@@ -239,10 +240,9 @@ class Engine(ibus.EngineBase):
                 self.__context.set_ShapeMode(chewing.FULLSHAPE_MODE)
         elif prop_name == u"kbtype":
             _type = self.__context.get_KBType()
-            if _type == chewing.LAST_KBTYPE:
-                _type = chewing.FIRST_KBTYPE
-            else:
-                _type += 1
+            _type += 1
+            if _type >= chewing.KB_TYPE_NUM:
+                _type = chewing.KB_DEFAULT
             self.__context.set_KBType(_type)
         self.__refreash_properties()
 
