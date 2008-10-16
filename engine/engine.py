@@ -163,6 +163,12 @@ class Engine(ibus.EngineBase):
         self.__commit()
         return True
 
+    def enable(self):
+        self.__reset(self)
+
+    def disable(self):
+        pass
+
     def process_key_event(self, keyval, is_press, state):
         # ignore key release events
         if not is_press:
