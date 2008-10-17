@@ -25,7 +25,7 @@ import ibus
 import engine
 
 from gettext import dgettext
-_  = lambda a : dgettext("ibus-anthy", a)
+_  = lambda a : dgettext("ibus-chewing", a)
 N_ = lambda a : a
 
 FACTORY_PATH = "/com/redhat/IBus/engines/Chewing/Factory"

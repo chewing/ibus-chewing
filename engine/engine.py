@@ -25,7 +25,7 @@ import chewing
 from ibus import keysyms, modifier
 
 from gettext import dgettext
-_  = lambda a : dgettext("ibus-anthy", a)
+_  = lambda a : dgettext("ibus-chewing", a)
 N_ = lambda a : a
 
 class Engine(ibus.EngineBase):
