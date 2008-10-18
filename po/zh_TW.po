@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/ibus/issues/entry\n"
 "POT-Creation-Date: 2008-09-17 09:57+0800\n"
-"PO-Revision-Date: 2008-10-14 15:42+0800\n"
+"PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
 "MIME-Version: 1.0\n"
@@ -66,7 +66,7 @@ msgstr "Dvorak許氏"
 
 #: engine/engine.py:135
 msgid "Dachen CP26"
-msgstr ""
+msgstr "大千CP26"
 
 #: engine/engine.py:136
 msgid "Han-Yu"
@@ -74,4 +74,4 @@ msgstr "漢語"
 
 #: engine/factory.py:35
 msgid "Chewing"
-msgstr "中"
+msgstr "新酷音"
