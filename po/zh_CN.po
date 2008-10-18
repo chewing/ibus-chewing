@@ -65,7 +65,7 @@ msgstr "Dvorak许氏"
 
 #: engine/engine.py:135
 msgid "Dachen CP26"
-msgstr ""
+msgstr "大千CP26"
 
 #: engine/engine.py:136
 msgid "Han-Yu"
@@ -73,4 +73,4 @@ msgstr "汉语"
 
 #: engine/factory.py:35
 msgid "Chewing"
-msgstr "中"
+msgstr "新酷音"
