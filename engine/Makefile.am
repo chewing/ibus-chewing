@@ -19,6 +19,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 engine_chewing_PYTHON = \
+	chewing.py \
 	engine.py \
 	factory.py \
 	main.py \
@@ -28,54 +29,50 @@ engine_chewingdir = $(pkgdatadir)/engine
 chewing_DATA = \
 	chewing.py \
 	$(NULL)
-chewing_LTLIBRARIES = _chewing.la
+#chewing_LTLIBRARIES = _chewing.la
 chewingdir = @pyexecdir@
 
-_chewing_la_SOURCES = \
-	$(NULL)
+#_chewing_la_SOURCES = \
+#	$(NULL)
 
-nodist__chewing_la_SOURCES = \
-	chewing_wrap.c \
-	$(NULL)
+#nodist__chewing_la_SOURCES = \
+#	chewing_wrap.c \
+#	$(NULL)
 
-_chewing_la_CFLAGS = \
-	@CHEWING_CFLAGS@ \
-	-DCHEWING_DATADIR=\"@CHEWING_DATADIR@\" \
-	@PYTHON_CFLAGS@ \
-	$(NULL)
+#_chewing_la_CFLAGS = \
+#	@CHEWING_CFLAGS@ \
+#	-DCHEWING_DATADIR=\"@CHEWING_DATADIR@\" \
+#	@PYTHON_CFLAGS@ \
+#	$(NULL)
 
-_chewing_la_LDFLAGS = \
-	@CHEWING_LIBS@ \
-	@PYTHON_LIBS@ \
-	-rpath $(chewingdir) \
-	-avoid-version \
-	-module \
-	$(NULL)
+#_chewing_la_LDFLAGS = \
+#	@CHEWING_LIBS@ \
+#	@PYTHON_LIBS@ \
+#	-rpath $(chewingdir) \
+#	-avoid-version \
+#	-module \
+#	$(NULL)
 
 bin_SCRIPTS = ibus-engine-chewing
 engine_DATA = chewing.engine
 enginedir = $(datadir)/ibus/engine
 
-chewing.py chewing_wrap.c: chewing.i
-	$(SWIG) -python -I/usr/include -o chewing_wrap.c $(srcdir)/chewing.i
+#chewing.py chewing_wrap.c: chewing.i
+#	$(SWIG) -python -I/usr/include -o chewing_wrap.c $(srcdir)/chewing.i
 
 test:
 	$(ENV) \
 		IBUS_CHEWING_PKGDATADIR=$(abs_top_srcdir)\
-		PYTHONPATH=$(builddir)/.libs \
 		DBUS_DEBUG=true \
 		$(PYTHON) \
 		$(srcdir)/main.py
 
 EXTRA_DIST = \
-	chewing.i \
 	chewing.engine.in \
 	ibus-engine-chewing.in \
 	$(NULL)
 
 CLEANFILES = \
-	chewing.py \
-	chewing_wrap.* \
 	*.pyc \
 	$(MULL)
 
