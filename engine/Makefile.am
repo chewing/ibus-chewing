@@ -19,16 +19,15 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 engine_chewing_PYTHON = \
-	chewing.py \
 	engine.py \
 	factory.py \
 	main.py \
 	$(NULL)
 engine_chewingdir = $(pkgdatadir)/engine
 
-chewing_DATA = \
-	chewing.py \
-	$(NULL)
+#chewing_DATA = \
+#	chewing.py \
+#	$(NULL)
 #chewing_LTLIBRARIES = _chewing.la
 chewingdir = @pyexecdir@
 

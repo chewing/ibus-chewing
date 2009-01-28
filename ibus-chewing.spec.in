@@ -46,7 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 # %dir %{python_sitearch}/ibus
-%{python_sitearch}/chewing.py*
+#%{python_sitearch}/chewing.py*
 #%{python_sitearch}/_chewing.so
 %dir %{_datadir}/ibus-chewing
 %{_bindir}/ibus-engine-chewing
@@ -54,7 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/ibus/engine/chewing.engine
 
 %changelog
-* Mon Jan 27 2009 Ding-Yi Chen <dchen at redhat.com> - @VERSION@-1
+* Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - @VERSION@-1
 - Fix the binding with libchewing 0.3.2.
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - @VERSION@-1

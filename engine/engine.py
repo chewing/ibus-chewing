@@ -21,7 +21,6 @@
 
 import gobject
 import ibus
-import chewing
 from ibus import keysyms, modifier
 
 import sys
