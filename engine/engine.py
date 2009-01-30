@@ -30,7 +30,10 @@ from libchewing import chewing
 chewing._libchewing.chewing_cand_String.restype = c_char_p
 chewing._libchewing.chewing_zuin_String.restype = c_char_p
 chewing._libchewing.chewing_aux_String.restype = c_char_p
-_ = lambda a: a
+
+from gettext import dgettext
+_  = lambda a : dgettext("ibus-chewing", a)
+N_ = lambda a : a
 
 #definitions
 IS_USER_PHRASE=1
@@ -280,6 +283,7 @@ class Engine(ibus.EngineBase):
     def focus_in(self):
         self.register_properties(self.__prop_list)
         self.__refreash_properties()
+	self.__commit()
 
     def focus_out(self):
         pass

@@ -14,11 +14,12 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gettext-devel
 BuildRequires:  libtool
 BuildRequires:  python-devel
-BuildRequires:  libchewing-devel >= 0.3.2
+BuildRequires:  libchewing-devel >= 0.3.2-4
 # BuildRequires:  swig
 BuildRequires:  pkgconfig
 # BuildArchitectures: noarch
 Requires:   ibus
+Requires:  libchewing >= 0.3.2-4
 
 %description
 The Chewing engine for IBus platform. It provides Chinese input method from
