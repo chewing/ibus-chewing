@@ -85,20 +85,15 @@ class Engine(ibus.EngineBase):
 
         # use reset to init values
         self.__reset()
-
-    def __commit(self):
-        # commit string
-        if self.__context.commit_Check():
-            text = u"".join(unicode(self.__context.commit_String(),'utf-8'))
-            self.commit_string(text)
-
+	
+    def __refresh_preedit(self):
         # update preedit
         
         chiSymbolBuf=unicode(self.__context.buffer_String(),'utf-8')
         chiSymbolCursor = self.__context.cursor_Current()
 
         zuinBuf = unicode(self.__context.zuin_String(None),'utf-8')
-        preedit_string = u"".join(
+	preedit_string = u"".join(
                 chiSymbolBuf[:chiSymbolCursor] +
                 zuinBuf +
                 chiSymbolBuf[chiSymbolCursor:])
@@ -113,6 +108,16 @@ class Engine(ibus.EngineBase):
                 0, len(preedit_string))
         attrs.append(attr)
         self.update_preedit (preedit_string, attrs, chiSymbolCursor, len(preedit_string) > 0)
+    
+
+    def __commit(self):
+        # commit string
+        if self.__context.commit_Check():
+            text = u"".join(unicode(self.__context.commit_String(),'utf-8'))
+            self.commit_string(text)
+	    
+	self.__refresh_preedit()
+
 
         # update lookup table
         self.__lookup_table.clean()
@@ -283,7 +288,7 @@ class Engine(ibus.EngineBase):
     def focus_in(self):
         self.register_properties(self.__prop_list)
         self.__refreash_properties()
-	self.__commit()
+	self.__refresh_preedit()
 
     def focus_out(self):
         pass
