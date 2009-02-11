@@ -1,0 +1,67 @@
+####################################################################
+# CMake init defintion.
+# 
+# Definition that should run in front of everything else.
+# 
+
+
+if(COMMAND cmake_policy)
+    cmake_policy(SET CMP0003 NEW)
+    cmake_policy(SET CMP0005 OLD)
+endif(COMMAND cmake_policy)
+
+SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
+SET(ENV{LC_ALL} "C")
+
+###==================================================================
+# Find parameters configuration
+#
+#  Note: CMake 2.4 does not support STRING(STRIP ..)
+
+EXECUTE_PROCESS(
+    COMMAND date "+%a %b %d %Y"
+    COMMAND tr \\n \\t
+    COMMAND sed  -e s/\\t//
+    OUTPUT_VARIABLE DATE
+)
+
+EXECUTE_PROCESS(
+	COMMAND date "+%Y%m%d"
+	COMMAND tr \\n \\t
+	COMMAND sed  -e s/\\t//
+	OUTPUT_VARIABLE DATE_SHORT
+)
+
+EXECUTE_PROCESS(
+    COMMAND pwd
+    COMMAND tr \\n \\t
+    COMMAND sed  -e s/\\t//
+    OUTPUT_VARIABLE PWD
+    )
+
+EXECUTE_PROCESS(COMMAND rpm --showrc
+    COMMAND grep -E "dist[[:space:]]*\\."
+    COMMAND sed -e "s/^.*dist\\s*\\.//"
+    COMMAND tr \\n \\t
+    COMMAND sed  -e s/\\t//
+    OUTPUT_VARIABLE FEDORA_RELEASE)
+
+###==================================================================
+# Directories
+#
+
+IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
+    SET(CMAKE_INSTALL_PREFIX /usr)
+    ADD_DEFINITIONS(-DCMAKE_INSTALL_PREFIX='"${CMAKE_INSTALL_PREFIX}"')
+ENDIF()
+
+IF(NOT DEFINED datadir)
+    SET(datadir "${CMAKE_INSTALL_PREFIX}/share")
+    ADD_DEFINITIONS(-Ddatadir='"${datadir}"')
+ENDIF()
+
+IF(NOT DEFINED docdir)
+    SET(docdir "${datadir}/doc")
+    ADD_DEFINITIONS(-Ddocdir='"${docdir}"')
+ENDIF()
+

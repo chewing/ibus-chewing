@@ -1,0 +1,402 @@
+####################################################################
+# CMake common setting.
+# 
+# Project independent setting.
+#
+# Optional Variables:
+# SET(PRJ_VER_TEMPLATE   <template>)
+#       Default: ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}
+# 	Version template to generate tarball.
+#             
+# SET(PRJ_VER_FULL_TEMPLATE <<template>)
+#       Default: ${PRJ_VER)-${PRJ_VER_RELEASE}
+# 	Version template to generate packages, such as rpm.
+#
+# SET(GENERATE_DOXYFILE TRUE)
+#       Generate doxyfile from doxyfile.in
+#
+# SET(ENABLE_GTKDOC TRUE)
+# SET(GTKDOC_OUTPUT_DIR <path>)
+#       Enable gtk-doc
+#
+# SET(GENERATE_UPLOADPKG_BATCH TRUE) 
+#        Generate UploadPkg.batch for Uploading to hosting host
+# 
+# SET(GENERATE_SPEC TRUE) 
+#         Generate SPECS/${PROJECT_NAME}.spec from SPECS/${PROJECT_NAME}.spec.in
+# 
+# SET(RPM_BUILD_TOPDIR <path>)
+#         Default: ${PWD}
+# SET(RPM_BUILD_SPECS <path>) 
+#         Default: ${RPM_BUILD_TOPDIR}/SPECS
+# SET(SPEC_BUILD_SOURCES <path>) 
+#         Default: ${RPM_BUILD_TOPDIR}/SOURCES
+# SET(SPEC_BUILD_SRPMS <path>) 
+#         Default: ${RPM_BUILD_TOPDIR}/SRPMS
+# SET(SPEC_BUILD_RPMS <path>) 
+#         Default: ${RPM_BUILD_TOPDIR}/RPMS
+# SET(SPEC_BUILD_BUILD <path>) 
+#         Default: ${RPM_BUILD_TOPDIR}/BUILD
+#         Specify working directories for rpmbuild
+#
+# SET(IS_NOARCH TRUE) 
+#         Hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
+####################################################################
+
+
+IF(DEFINED PRJ_VER_TEMPLATE)
+    SET(PRJ_VER ${PRJ_VER_TEMPLATE})
+ELSE()
+    SET(PRJ_VER ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH})
+ENDIF()
+
+IF(DEFINED PRJ_VER_FULL_TEMPLATE)
+    SET(PRJ_VER_FULL ${PRJ_VER_FULL_TEMPLATE})
+ELSE()
+    SET(PRJ_VER_FULL  ${PRJ_VER}-${PRJ_VER_RELEASE})
+ENDIF()
+
+SET(PROJECT_DATADIR "${datadir}/${PROJECT_NAME}")
+SET(PROJECT_DOCDIR "${docdir}/${PROJECT_NAME}-${PRJ_VER}")
+
+
+#====================================================================
+#  Developer can edit a DEVELOPER_SETTING file, 
+#  which defines the developer specific information,
+#  So they can upload to hosting service provider.
+#
+#  DEVELOPER_SETTING format
+#  SSH_USER=<user_name>
+#  SSH_ARGS=<additional args>
+#  KOJI_CVS_PATH=<path for koji CVS>
+#
+#  KOJI_CVS_PATH is for Fedora/EPEL users, it has no effect on other systems.
+#
+
+IF(EXISTS  DEVELOPER_SETTING)
+    EXECUTE_PROCESS(COMMAND  grep SSH_USER DEVELOPER_SETTING
+	    COMMAND sed -e "s/SSH_USER=//"
+	    COMMAND tr \\n \\t
+	    COMMAND sed  -e s/\\t//
+	    OUTPUT_VARIABLE SSH_USER
+    )
+
+    EXECUTE_PROCESS(COMMAND  grep SSH_ARGS DEVELOPER_SETTING
+	    COMMAND sed -e "s/SSH_ARGS=//"
+	    COMMAND tr \\n \\t
+	    COMMAND sed  -e s/\\t//
+	    OUTPUT_VARIABLE SSH_ARGS
+	    RESULT_VARIABLE NO_SSH_ARGS
+    )
+    
+    IF(NOT ${NO_SSH_ARGS})
+	IF ("${SSH_ARGS}" STREQUAL "")
+	    SET(SFTP_SSH_ARGS "")
+	ELSE ()
+	    SET(SFTP_SSH_ARGS -F ${SSH_ARGS})
+	    MESSAGE("SFTP_SSH_ARGS=${SFTP_SSH_ARGS}")
+	ENDIF ()
+    ELSE()
+	SET(SFTP_SSH_ARGS "")
+    ENDIF()
+
+    EXECUTE_PROCESS(COMMAND  grep KOJI_CVS_PATH DEVELOPER_SETTING
+	COMMAND sed -e "s/KOJI_CVS_PATH=//"
+	COMMAND tr \\n \\t
+	COMMAND sed  -e s/\\t//
+	OUTPUT_VARIABLE KOJI_CVS_PATH
+	RESULT_VARIABLE NO_KOJI_CVS_PATH
+    )
+
+    IF(NOT DEFINED ${KOJI_CVS_PATH})
+	SET(KOJI_CVS_PATH "./")
+	ELSEIF (${KOJI_CVS_PATH} STREQUAL "")
+	SET(KOJI_CVS_PATH "./")
+    ENDIF()
+
+ENDIF(EXISTS  DEVELOPER_SETTING)
+
+#==================================================================
+# Configure files
+#
+
+IF (GENERATE_DOXYFILE)
+    CONFIGURE_FILE(Doxyfile.in Doxyfile)
+ENDIF()
+
+IF (GENERATE_UPLOADPKG_BATCH)
+    CONFIGURE_FILE(UploadPkg.batch.in UploadPkg.batch)
+ENDIF()
+
+#====================================================================
+# CPack exclusion file pattern
+#
+#
+SET(CPACK_PACKAGE_VERSION_MAJOR ${PRJ_VER_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${PRJ_VER_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${PRJ_VER_PATCH})
+
+SET(COMMON_IGNORE_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
+    ".cmake$"   ".directory$" "CMakeCache.txt$"
+    "/install_manifest.txt$"
+    "/.svn/"  "/CVS/" "~$" ".swp$" ".log$" ".gz$"
+    "/src/config.h$" "NO_PACK" "DEVELOPER_SETTING") 
+
+SET(RPM_IGNORE_FILES "/SOURCES/" "/SRPMS/" "/RPMS/" "/BUILD/")
+SET(CPACK_GENERATOR "TGZ")
+SET(CPACK_SOURCE_GENERATOR "TGZ")
+SET(SOURCE_TARBALL ${PROJECT_NAME}-${PRJ_VER}-Source.tar.gz)
+
+
+ADD_CUSTOM_TARGET(pack_src
+    COMMAND make package_source
+    COMMAND mkdir -p SOURCES
+    COMMAND mv ${SOURCE_TARBALL} SOURCES/${SOURCE_TARBALL}
+    COMMENT "Packaging Source files"
+    VERBATIM
+)
+
+#==================================================================
+# Make uninstall
+#
+CONFIGURE_FILE(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+ADD_CUSTOM_TARGET(uninstall
+    "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    )
+
+#====================================================================
+# RPM targets
+#
+
+SET (SPEC_FILE_WARNING "This file is generated, please modified the .spec.in file instead!")
+SET (SRPM_FILE SRPMS/${PROJECT_NAME}-${PRJ_VER_FULL}.${FEDORA_RELEASE}.src.rpm)
+
+IF(NOT DEFINED RPM_BUILD_TOPDIR)
+    SET(RPM_BUILD_TOPDIR ${PWD})
+ENDIF()
+
+IF(NOT DEFINED RPM_BUILD_SPECS)
+    SET(RPM_BUILD_SPECS "${RPM_BUILD_TOPDIR}/SPECS")
+ENDIF()
+
+IF(NOT DEFINED RPM_BUILD_SOURCES)
+    SET(RPM_BUILD_SOURCES "${RPM_BUILD_TOPDIR}/SOURCES")
+ENDIF()
+    
+IF(NOT DEFINED RPM_BUILD_SRPMS)
+    SET(RPM_BUILD_SRPMS "${RPM_BUILD_TOPDIR}/SRPMS")
+ENDIF()
+
+IF(NOT DEFINED RPM_BUILD_RPMS)
+    SET(RPM_BUILD_RPMS "${RPM_BUILD_TOPDIR}/RPMS")
+ENDIF()
+
+IF(NOT DEFINED RPM_BUILD_BUILD)
+    SET(RPM_BUILD_BUILD "${RPM_BUILD_TOPDIR}/BUILD")
+ENDIF()
+
+IF (GENERATE_SPEC)
+    CONFIGURE_FILE(${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec.in ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
+
+    SET_SOURCE_FILES_PROPERTIES(${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+	    PROPERTIES GENERATED TRUE
+    )
+ENDIF()
+
+
+ADD_CUSTOM_TARGET(srpm
+    COMMAND mkdir -p SRPMS
+    COMMAND rpmbuild -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec 
+        --define "_sourcedir ${RPM_BUILD_SOURCES}" 
+	--define "_builddir ${RPM_BUILD_BUILD}" 
+	--define "_srcrpmdir ${RPM_BUILD_SRPMS}"
+	--define "_rpmdir ${RPM_BUILD_RPMS}"
+	--define "_specdir ${RPM_BUILD_SPECS}" 
+    DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+)
+
+ADD_CUSTOM_TARGET(rpm
+    COMMAND mkdir -p ${RPM_BUILD_SRPMS}
+    COMMAND mkdir -p ${RPM_BUILD_RPMS}/i386
+    COMMAND mkdir -p ${RPM_BUILD_RPMS}/x86_64
+    COMMAND mkdir -p ${RPM_BUILD_RPMS}/noarch
+    COMMAND mkdir -p BUILD
+    COMMAND rpmbuild -ba ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+	--define "_sourcedir ${RPM_BUILD_SOURCES}" 
+	--define "_builddir ${RPM_BUILD_BUILD}" 
+	--define "_srcrpmdir ${RPM_BUILD_SRPMS}"
+	--define "_rpmdir ${RPM_BUILD_RPMS}"
+	--define "_specdir ${RPM_BUILD_SPECS}" 
+    DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+)
+
+
+ADD_DEPENDENCIES(srpm pack_src)
+ADD_DEPENDENCIES(rpm pack_src)
+
+IF(NOT IS_NOARCH)
+    ADD_CUSTOM_TARGET(rpm_mock_i386 
+	COMMAND mkdir -p RPMS/i386
+	COMMAND mock -r  fedora-10-i386 --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
+    )
+
+    ADD_CUSTOM_TARGET(rpm_mock_x86_64
+	COMMAND mkdir -p RPMS/x86_64
+	COMMAND mock -r  fedora-10-x86_64 --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
+    )
+
+    ADD_CUSTOM_TARGET(rpmlint find . 
+	-name '${PROJECT_NAME}*-${PRJ_VER_FULL}.*.rpm' 
+	-print -exec rpmlint '{}' '\\;'
+    )
+
+    ADD_DEPENDENCIES(rpm_mock_i386 srpm)
+    ADD_DEPENDENCIES(rpm_mock_x86_64 srpm)
+ENDIF()
+
+ADD_CUSTOM_TARGET(pkg_remove_old find . 
+    -name '${PROJECT_NAME}*.tar.gz' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.tar.gz'
+    -print -delete
+    COMMAND find . 
+	-name '${PROJECT_NAME}*.rpm' ! -name
+	'${PROJECT_NAME}*-${PRJ_VER_FULL}.*.rpm'
+	-print -delete
+    COMMENT "Removing the old tar.gz and rpms.."
+)
+
+#====================================================================
+# Document generation
+#
+IF (EXISTS Doxyfile)
+    FIND_PACKAGE(Doxygen)
+    ADD_CUSTOM_TARGET(doxygen    
+	    COMMAND "${DOXYGEN}" "Doxyfile"
+	    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+    INSTALL(DIRECTORY doc/html
+	DESTINATION "${docdir}/${PROJECT_NAME}-${PRJ_VER}"
+    )
+ENDIF()
+
+# Gtk-doc
+
+IF (NOT DEFINED GTKDOC_OUTPUT_PATH)
+    SET(GTKDOC_OUTPUT_PATH "docs/reference")
+ENDIF()
+
+IF (ENABLE_GTKDOC)
+    FIND_PACKAGE(PkgConfig)
+    PKG_CHECK_MODULES(GTK2 gtk+-2.0)
+    PKG_CHECK_MODULES(GTKDOC gtk-doc)
+    
+    # Location of library include files
+    INCLUDE_DIRECTORIES(${GTK2_INCLUDE_DIRS})
+    
+    # Location of library for linker
+    LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS})
+
+    ADD_CUSTOM_TARGET(gtkdoc
+	COMMAND gtkdoc-scan --module=${PROJECT_NAME} --source-dir=${PROJECT_SOURCE_DIR}
+	    --output-dir=${GTKDOC_OUTHPUT_PATH}
+	COMMAND gtkdoc-scangobj --module=${PROJECT_NAME} --types=${PROJECT_NAME}.types 
+	    --output-dir=${GTKDOC_OUTHPUT_PATH}
+	COMMAND gtkdoc-mktmpl --module=${PROJECT_NAME}
+	COMMAND gtkdoc-mkdb --module=${PROJECT_NAME} --source-dir=${PROJECT_SOURCE_DIR}
+	     --tmpl-dir=tmpl --output-format=xml --main-sgml-file=${PROJECT_NAME}.sgml 
+	     --sgml-mode --source-suffixes=h,c,cpp
+	COMMAND mkdir -p ${GTKDOC_OUTPUT_PATH}/html
+	COMMAND cd ${GTKDOC_OUTPUT_PATH}/html && 
+	    gtkdoc-mkhtml ${PROJECT_NAME} ${PROJECT_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.sgml
+    )    
+	
+    INSTALL(DIRECTORY ${GTKDOC_OUTPUT_PATH}
+	    DESTINATION "${docdir}/${PROJECT_NAME}-${PRJ_VER}"
+    )
+
+ENDIF()
+
+#====================================================================
+# Koji (Fedora build system)
+#
+
+IF (DEFINED KOJI_CVS_PATH)
+    SET(KOJI_SUBMISSION_CMD "")
+    IF (NOT DEFINED ${KOJI_CVS_PATH})
+	SET(KOJI_BUILD_CMD "")
+    ELSE ()
+	SET(KOJI_BUILD_CMD "cd ${KOJI_CVS_PATH}; ")
+    ENDIF ()
+
+    SET (KOJI_SUBMISSION_CMD
+	"${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -m \"${CHANGE_SUMMARY}\" ${SRPM_FILE}" 
+    )
+
+    SET (KOJI_BUILD_CMD
+	"cd ${KOJI_CVS_PATH}/${PROJECT_NAME} && cd devel && make build && cd .."
+    )
+
+    FOREACH(DIST_TAG ${SUPPORTED_DIST_TAGS})
+	SET (KOJI_SUBMISSION_CMD 
+	    "${KOJI_SUBMISSION_CMD}\; ${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -b ${DIST_TAG} -m \"${CHANGE_SUMMARY}\" ${SRPM_FILE}"
+	)
+
+	SET (KOJI_BUILD_CMD
+	    "${KOJI_BUILD_CMD} && cd ${DIST_TAG} && make build && cd .."
+	)
+    ENDFOREACH(DIST_TAG ${SUPPORTED_DIST_TAGS})
+
+    #MESSAGE(KOJI_SUBMISSION_CMD=${KOJI_SUBMISSION_CMD})
+    ADD_CUSTOM_TARGET(koji_submit
+	COMMAND eval ${KOJI_SUBMISSION_CMD}
+	COMMAND cd ${KOJI_CVS_PATH}/${PROJECT_NAME} &&  cvs up
+	DEPENDS DEVELOPER_SETTING  ${SRPM_FILE} ${KOJI_CVS_PATH}
+	COMMENT "Submitting to Koji"
+	VERBATIM
+    )
+
+    #MESSAGE("KOJI_BUILD_CMD=${KOJI_BUILD_CMD}")
+    ADD_CUSTOM_TARGET(koji_build
+	COMMAND eval "${KOJI_BUILD_CMD}"
+	COMMENT "Building on Koji"
+	VERBATIM
+    )
+
+    FOREACH(BODHI_TAG ${BODHI_DIST_TAGS})
+	IF (DEFINED BODHI_NEW_CMD)
+	    SET (BODHI_NEW_CMD "${BODHI_NEW_CMD} && ")
+	ELSE ()
+	    SET (BODHI_NEW_CMD "")
+	ENDIF ()
+	SET (BODHI_NEW_CMD 
+	    "${BODHI_NEW_CMD} bodhi --new --type=bugfix --comment=\"${CHANGE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${BODHI_TAG}"
+	)
+    ENDFOREACH(BODHI_TAG ${BODHI_DIST_TAGS})
+
+    #MESSAGE(BODHI_NEW_CMD=${BODHI_NEW_CMD})
+    ADD_CUSTOM_TARGET(bodhi_new
+	COMMAND eval "${BODHI_NEW_CMD}"
+	COMMENT "Send the new package to bodhi"
+	VERBATIM
+    )
+ENDIF(DEFINED KOJI_CVS_PATH)
+
+#====================================================================
+# Upload the package releases to hosting service provider (Source forge).
+#
+
+IF(EXISTS UploadPkg.batch)
+    IF(DEFINED ${SSH_USER})
+        SET(UPLOAD_SITE frs.sourceforge.net)
+        SET(HOSTING_SERVICE_PROVIDER "Source forge")
+        ADD_CUSTOM_TARGET(upload_pkg_release
+	    COMMAND sftp -b UploadPkg.batch ${SFTP_SSH_ARGS} ${SSH_USER}@${UPLOAD_SITE}
+	    DEPENDS DEVELOPER_SETTING UploadPkg.batch.in
+	    COMMENT "Uploading the package releases to ${HOSTING_SERVICE_PROVIDER}..."
+	)
+    ENDIF()
+ENDIF()
+
