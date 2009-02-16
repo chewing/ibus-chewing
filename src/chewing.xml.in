@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- filename: hangul.xml -->
+<!-- filename: chewing.xml -->
 <component>
 	<name>org.freedesktop.IBus.Chewing</name>
 	<description>Chewing Component</description>

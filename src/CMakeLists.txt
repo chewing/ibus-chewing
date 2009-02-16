@@ -18,7 +18,6 @@ ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.c
 ADD_EXECUTABLE(ibus-engine-chewing main.c ibus-chewing-engine.c) 
 
 # Link the executable to the library.
-#ADD_LIBRARY(ibus-chewing ibus-chewing-engine.c SHARED ${GTK2_LIBRARIES} ${IBUS_LIBRARIES} ${CHEWING_LIBRARIES})
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES} ${CHEWING_LIBRARIES})
 
 

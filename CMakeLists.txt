@@ -59,6 +59,7 @@ PKG_CHECK_MODULES(CHEWING chewing)
 # Source code subdirectories
 #
 ADD_SUBDIRECTORY(src bin)
+ADD_SUBDIRECTORY(po)
 
 
 #====================================================================

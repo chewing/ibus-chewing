@@ -32,13 +32,6 @@ EXECUTE_PROCESS(
 	OUTPUT_VARIABLE DATE_SHORT
 )
 
-EXECUTE_PROCESS(
-    COMMAND pwd
-    COMMAND tr \\n \\t
-    COMMAND sed  -e s/\\t//
-    OUTPUT_VARIABLE PWD
-    )
-
 EXECUTE_PROCESS(COMMAND rpm --showrc
     COMMAND grep -E "dist[[:space:]]*\\."
     COMMAND sed -e "s/^.*dist\\s*\\.//"

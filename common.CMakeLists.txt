@@ -26,7 +26,7 @@
 #         Generate SPECS/${PROJECT_NAME}.spec from SPECS/${PROJECT_NAME}.spec.in
 # 
 # SET(RPM_BUILD_TOPDIR <path>)
-#         Default: ${PWD}
+#         Default: ${CMAKE_HOME_DIRECTORY}
 # SET(RPM_BUILD_SPECS <path>) 
 #         Default: ${RPM_BUILD_TOPDIR}/SPECS
 # SET(SPEC_BUILD_SOURCES <path>) 
@@ -176,7 +176,7 @@ SET (SPEC_FILE_WARNING "This file is generated, please modified the .spec.in fil
 SET (SRPM_FILE SRPMS/${PROJECT_NAME}-${PRJ_VER_FULL}.${FEDORA_RELEASE}.src.rpm)
 
 IF(NOT DEFINED RPM_BUILD_TOPDIR)
-    SET(RPM_BUILD_TOPDIR ${PWD})
+    SET(RPM_BUILD_TOPDIR ${CMAKE_HOME_DIRECTORY})
 ENDIF()
 
 IF(NOT DEFINED RPM_BUILD_SPECS)
