@@ -1,20 +1,31 @@
-# Find xgettext
-FIND_PROGRAM( XGETTEXT
-        NAMES "xgettext"
-)
+# Translated languages.
+SET(TRANSLATED_PO_FILES zh_CN.po zh_TW.po)
 
-IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
-    MESSAGE(STATUS "xgettext not found.  You will not be able to run 'make extract_messages' and 'make join_messages' in the 'po' directory.")
-ELSE()
-    MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
+
+SET(SOURCES_I18N ${GOB_GENERATED} ${CMAKE_HOME_DIRECTORY}/src/main.c)
+MESSAGE("GOB_GENERATED=${GOB_GENERATED}")
+MESSAGE("SOURCES_I18N=${SOURCES_I18N}")
+
+SET(XGETTEXT_OPTIONS --keyword=_)
+
+IF (XGETTEXT_FOUND)
+    GETTEXT_CREATE_POT(${XGETTEXT_OPTIONS} ${PROJECT_NAME}.pot ${GOB_GENERATED})
+    GETTEXT_CREATE_TRANSLATIONS(${PROJECT_NAME}.pot ALL ${TRANSLATED_PO_FILES}
+	COMMENT "Creating translations.")
+
+    ADD_CUSTOM_TARGET(po_template
+	COMMAND ${XGETTEXT} ${XGETTEXT_OPTIONS} ${SOURCES_I18N}
+	DEPENDS ${SOURCES_I18N} 
+	COMMENT "Extract translatable messages to messages.po"
+	)
+
+
+    ADD_CUSTOM_TARGET(update_pot ALL
+	DEPENDS ${PROJECT_NAME}.pot
+	COMMENT "Update ${PROJECT_NAME}.pot"
+	)
+
+    ADD_DEPENDENCIES(update_pot gob)
+    ADD_DEPENDENCIES(translations update_pot)
 ENDIF()
-
-FILE(GLOB po_files *.po)
-GETTEXT_CREATE_TRANSLATIONS(${PROJECT_NAME}.pot ${po_files})
-
-ADD_CUSTOM_TARGET(extract_messages
-    COMMAND ${XGETTEXT} --keyword=_ ${CMAKE_HOME_DIRECTORY}/src/*.c
-    DEPENDS ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.c
-    COMMENT "Extract translatable messages to messages.po"
-)
 
