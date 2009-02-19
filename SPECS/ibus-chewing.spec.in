@@ -5,18 +5,18 @@ Summary:    The Chewing engine for IBus input platform
 License:    GPLv2+
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
-Source0:    http://ibus.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:    http://ibus.googlecode.com/files/%{name}-%{version}-Source.tar.gz
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gettext-devel
 BuildRequires:  gtk2-devel
-BuildRequires:  ibus-devel
+BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake
 BuildRequires:  gob2
 BuildRequires:  libchewing-devel >= 0.3.2-4
 BuildRequires:  pkgconfig
-Requires:   ibus
+Requires:   ibus >= 1.1
 Requires:  libchewing >= 0.3.2-4
 
 %description
@@ -24,7 +24,7 @@ The Chewing engine for IBus platform. It provides Chinese input method from
 libchewing.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-Source
 
 %build
 %cmake -DCMAKE_INSTALL_PREFIX=%{_usr}
@@ -32,7 +32,7 @@ make VERBOSE=1 C_DEFINES="$RPM_OPT_FLAGS" %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=${RPM_BUILD_ROOT}
+make install DESTDIR=$RPM_BUILD_ROOT
 
 %find_lang %{name}
 
@@ -42,16 +42,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
-# %dir %{python_sitearch}/ibus
-#%{python_sitearch}/chewing.py*
-#%{python_sitearch}/_chewing.so
-%dir %{_datadir}/ibus-chewing
-%{_bindir}/ibus-engine-chewing
-%{_datadir}/ibus-chewing/*
-%{_datadir}/ibus/engine/chewing.engine
+%{_libexecdir}/ibus-engine-chewing
+%{_datadir}/%{name}
+%{_datadir}/ibus/component/chewing.xml
 
 %changelog
-* Wed Feb 11 2009 Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
+* Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
 - First working version for IBus C
 
 * Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - @VERSION@-1

@@ -1,4 +1,4 @@
-# Translation for Simplfied Chinese.
+# Translation to Simplfied Chinese of ibus-chewing
 # Copyright (C) YEAR Huang Peng <shawn.p.huang@gmail.com>
 # This file is distributed under the same license as the PACKAGE package.
 # Peng Huang <shawn.p.huang@gmail.com>, 2008.
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-17 17:40+1000\n"
+"POT-Creation-Date: 2009-02-18 17:35+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,58 +15,65 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:134
+#: ../src/IBusChewingEngine.gob:179
 msgid "Chi"
 msgstr "中"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:54
+#: ../src/IBusChewingEngine.gob:69
 msgid "Dachen CP26"
 msgstr "大千CP26"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:46
+#: ../src/IBusChewingEngine.gob:61
 msgid "Default"
 msgstr "默认"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:52
-msgid "Dvroak"
+#: ../src/IBusChewingEngine.gob:67
+msgid "Dvorak"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:53
-msgid "Dvroak Hsu"
+#: ../src/IBusChewingEngine.gob:68
+msgid "Dvorak Hsu"
 msgstr "Dvorak许氏"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:50
+#: ../src/IBusChewingEngine.gob:65
 msgid "ETen"
 msgstr "倚天"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:51
-msgid "ETen 26-keys"
+#: ../src/IBusChewingEngine.gob:66
+msgid "ETen 26 keys"
 msgstr "倚天26键"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:135
+#: ../src/IBusChewingEngine.gob:180
 msgid "Eng"
 msgstr "英"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:137
+#: ../src/IBusChewingEngine.gob:182
 msgid "Full"
 msgstr "全"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:49
+#: ../src/IBusChewingEngine.gob:64
 msgid "Gin-Yieh"
 msgstr "精业"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:138
+#: ../src/IBusChewingEngine.gob:183
 msgid "Half"
 msgstr "半"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:55
-msgid "Han-Yu"
+#: ../src/IBusChewingEngine.gob:70
+msgid "Hanyu"
 msgstr "汉语"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:47
+#: ../src/IBusChewingEngine.gob:62
 msgid "Hsu"
 msgstr "许氏"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:48
+#: ../src/IBusChewingEngine.gob:63
 msgid "IBM"
 msgstr ""
+
+#: ../src/IBusChewingEngine.gob:177
+msgid "KbType"
+msgstr "键盘"
+
+#~ msgid "Chewing"
+#~ msgstr "新酷音"

@@ -1,5 +1,8 @@
-
+Original Author:
 Peng Huang <shawn.p.huang@gmail.com>
+
+Current Maintainer:
+Ding-Yi Chen <dchen at redhat.com>
 
 Translators:
 -----------
@@ -7,3 +10,8 @@ zh_CN.po:
 Peng Huang <shawn.p.huang@gmail.com>
 zh_TW.po:
 swyear <swyear@gmail.com>
+
+Acknowledge:
+-----------
+input-keyboard.png from Tango project.
+

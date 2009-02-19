@@ -7,12 +7,24 @@ LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS} ${CHEWING_LIBRARY_DIR
 #==================================================================
 # Sources
 #
-ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.h
+SET(GOB_GENERATED ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.c
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.h
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine-private.h)
+
+
+ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED}
     COMMAND gob2 ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS IBusChewingEngine.gob
-    WORKING_DIRECTORY ${PRJECT_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+ADD_CUSTOM_TARGET(gob
+    DEPENDS  ${GOB_GENERATED}
+)
+
+SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
+    PROPERTIES GENERATED TRUE)
+
 
 # executable built from some source
 ADD_EXECUTABLE(ibus-engine-chewing main.c ibus-chewing-engine.c) 

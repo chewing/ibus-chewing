@@ -12,6 +12,9 @@
 #       Default: ${PRJ_VER)-${PRJ_VER_RELEASE}
 # 	Version template to generate packages, such as rpm.
 #
+# SET(ENABLE_GETTEXT TRUE)
+#       Enable gettext support.
+#
 # SET(GENERATE_DOXYFILE TRUE)
 #       Generate doxyfile from doxyfile.in
 #
@@ -43,6 +46,7 @@
 #         Hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
 ####################################################################
 
+ADD_DEFINITIONS(-DPROJECT_NAME='"${PROJECT_NAME}"')
 
 IF(DEFINED PRJ_VER_TEMPLATE)
     SET(PRJ_VER ${PRJ_VER_TEMPLATE})
@@ -94,7 +98,6 @@ IF(EXISTS  DEVELOPER_SETTING)
 	    SET(SFTP_SSH_ARGS "")
 	ELSE ()
 	    SET(SFTP_SSH_ARGS -F ${SSH_ARGS})
-	    MESSAGE("SFTP_SSH_ARGS=${SFTP_SSH_ARGS}")
 	ENDIF ()
     ELSE()
 	SET(SFTP_SSH_ARGS "")
@@ -127,34 +130,6 @@ ENDIF()
 IF (GENERATE_UPLOADPKG_BATCH)
     CONFIGURE_FILE(UploadPkg.batch.in UploadPkg.batch)
 ENDIF()
-
-#====================================================================
-# CPack exclusion file pattern
-#
-#
-SET(CPACK_PACKAGE_VERSION_MAJOR ${PRJ_VER_MAJOR})
-SET(CPACK_PACKAGE_VERSION_MINOR ${PRJ_VER_MINOR})
-SET(CPACK_PACKAGE_VERSION_PATCH ${PRJ_VER_PATCH})
-
-SET(COMMON_IGNORE_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
-    ".cmake$"   ".directory$" "CMakeCache.txt$"
-    "/install_manifest.txt$"
-    "/.svn/"  "/CVS/" "~$" ".swp$" ".log$" ".gz$"
-    "/src/config.h$" "NO_PACK" "DEVELOPER_SETTING") 
-
-SET(RPM_IGNORE_FILES "/SOURCES/" "/SRPMS/" "/RPMS/" "/BUILD/")
-SET(CPACK_GENERATOR "TGZ")
-SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(SOURCE_TARBALL ${PROJECT_NAME}-${PRJ_VER}-Source.tar.gz)
-
-
-ADD_CUSTOM_TARGET(pack_src
-    COMMAND make package_source
-    COMMAND mkdir -p SOURCES
-    COMMAND mv ${SOURCE_TARBALL} SOURCES/${SOURCE_TARBALL}
-    COMMENT "Packaging Source files"
-    VERBATIM
-)
 
 #==================================================================
 # Make uninstall
@@ -211,11 +186,11 @@ ENDIF()
 ADD_CUSTOM_TARGET(srpm
     COMMAND mkdir -p SRPMS
     COMMAND rpmbuild -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec 
-        --define "_sourcedir ${RPM_BUILD_SOURCES}" 
-	--define "_builddir ${RPM_BUILD_BUILD}" 
-	--define "_srcrpmdir ${RPM_BUILD_SRPMS}"
-	--define "_rpmdir ${RPM_BUILD_RPMS}"
-	--define "_specdir ${RPM_BUILD_SPECS}" 
+        --define '_sourcedir ${RPM_BUILD_SOURCES}'
+	--define '_builddir ${RPM_BUILD_BUILD}' 
+	--define '_srcrpmdir ${RPM_BUILD_SRPMS}'
+	--define '_rpmdir ${RPM_BUILD_RPMS}'
+	--define '_specdir ${RPM_BUILD_SPECS}' 
     DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
 )
 
@@ -226,11 +201,11 @@ ADD_CUSTOM_TARGET(rpm
     COMMAND mkdir -p ${RPM_BUILD_RPMS}/noarch
     COMMAND mkdir -p BUILD
     COMMAND rpmbuild -ba ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
-	--define "_sourcedir ${RPM_BUILD_SOURCES}" 
-	--define "_builddir ${RPM_BUILD_BUILD}" 
-	--define "_srcrpmdir ${RPM_BUILD_SRPMS}"
-	--define "_rpmdir ${RPM_BUILD_RPMS}"
-	--define "_specdir ${RPM_BUILD_SPECS}" 
+	--define '_sourcedir ${RPM_BUILD_SOURCES}'
+	--define '_builddir ${RPM_BUILD_BUILD}'
+	--define '_srcrpmdir ${RPM_BUILD_SRPMS}'
+	--define '_rpmdir ${RPM_BUILD_RPMS}'
+	--define '_specdir ${RPM_BUILD_SPECS}'
     DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
 )
 
@@ -267,6 +242,166 @@ ADD_CUSTOM_TARGET(pkg_remove_old find .
 	-print -delete
     COMMENT "Removing the old tar.gz and rpms.."
 )
+
+#====================================================================
+# CPack exclusion file pattern
+#
+#
+SET(CPACK_PACKAGE_VERSION ${PRJ_VER})
+
+SET(COMMON_IGNORE_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
+	".cmake$"   ".directory$" "CMakeCache.txt$"
+	"/install_manifest.txt$"
+	"/.svn/"  "/CVS/" "/.git/"  ".gitignore$"
+	"~$" ".swp$" ".log$" ".bak$"
+	".gz$" ".bz2$"
+	"/src/config.h$" "NO_PACK" "DEVELOPER_SETTING") 
+
+SET(RPM_IGNORE_FILES "/SOURCES/" "/SRPMS/" "/RPMS/" "/BUILD/")
+SET(CPACK_GENERATOR "TGZ")
+SET(CPACK_SOURCE_GENERATOR "TGZ")
+SET(SOURCE_TARBALL ${PROJECT_NAME}-${PRJ_VER}-Source.tar.gz)
+
+
+IF (${RPM_BUILD_SOURCES} STREQUAL ".")
+    ADD_CUSTOM_TARGET(pack_src
+	COMMAND make package_source
+	COMMENT "Packaging Source files"
+	VERBATIM
+    )
+ELSE()
+    ADD_CUSTOM_TARGET(pack_src
+	COMMAND make package_source
+	COMMAND mkdir -p ${RPM_BUILD_SOURCES}
+	COMMAND mv ${SOURCE_TARBALL} ${RPM_BUILD_SOURCES}/${SOURCE_TARBALL}
+	COMMENT "Packaging Source files"
+	VERBATIM
+    )
+ENDIF()
+
+
+#====================================================================
+# Gettext support
+#
+# Most of the gettext support code is from FindGettext.cmake of cmake, 
+# but it is included here because:
+#
+# 1. Some system like RHEL5 does not have FindGettext.cmake
+# 2. Bug of GETTEXT_CREATE_TRANSLATIONS make it unable to be include in 'All'
+# 3. It does not support xgettext
+#
+#
+# Relevant values:
+#  GETTEXT_MSGMERGE_EXECUTABLE: the full path to the msgmerge tool.
+#  GETTEXT_MSGFMT_EXECUTABLE: the full path to the msgfmt tool.
+#  GETTEXT_FOUND: True if gettext has been found.
+#
+# Additionally it provides the following macros:
+# GETTEXT_CREATE_POT(potFile 
+#    [OPTION xgettext_options]
+#    SRC list_of_source_file_that_contains_msgid
+# )
+# Generate .pot file.
+#
+# GETTEXT_CREATE_TRANSLATIONS ( outputFile [ALL] file1 ... fileN 
+#    [COMMENT comment] )
+#    This will create a target "translations" which will convert the 
+#    given input po files into the binary output mo file. If the 
+#    ALL option is used, the translations will also be created when
+#    building the default target.
+
+IF (ENABLE_GETTEXT)
+    FIND_PROGRAM(GETTEXT_MSGMERGE_EXECUTABLE msgmerge)
+
+    FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
+
+    FIND_PROGRAM(XGETTEXT NAMES "xgettext")
+
+    MACRO(GETTEXT_CREATE_POT _potFile _pot_options )
+        SET(_xgettext_options_list)
+	SET(_src_list)
+	SET(_stage "SRC")
+	FOREACH(_pot_option ${_pot_options} ${ARGN})
+	    IF(_pot_option STREQUAL "OPTION")
+	        SET(_stage "OPTION")
+	    ELSEIF(_pot_option STREQUAL "SRC")
+	        SET(_stage "SRC")
+	    ELSE()
+	       IF(_stage STREQUAL "OPTION")
+	           SET(_xgettext_options_list ${_xgettext_options_list} ${_pot_option})
+	       ELSE()
+	           SET(_src_list ${_src_list} ${_pot_option})
+	       ENDIF()
+	    ENDIF()
+	ENDFOREACH()    
+
+	#MESSAGE("${XGETTEXT} ${_xgettext_options_list} -o ${_potFile} ${_src_list}")
+	ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
+	    COMMAND ${XGETTEXT} ${_xgettext_options_list} -o ${_potFile} ${_src_list}
+	    DEPENDS ${_src_list}
+	    VERBATIM
+	)
+    ENDMACRO()
+
+
+    MACRO(GETTEXT_CREATE_TRANSLATIONS _potFile _firstPoFile)
+        SET(_gmoFiles)
+	GET_FILENAME_COMPONENT(_potBasename ${_potFile} NAME_WE)
+	GET_FILENAME_COMPONENT(_absPotFile ${_potFile} ABSOLUTE)
+
+	SET(_addToAll)
+	SET(_is_comment FALSE)
+
+	FOREACH (_currentPoFile ${_firstPoFile} ${ARGN})
+	    IF(_currentPoFile STREQUAL "ALL")
+	     	SET(_addToAll "ALL")
+	    ELSEIF(_currentPoFile STREQUAL "COMMENT")
+   	        SET(_is_comment TRUE)
+	    ELSEIF(_is_comment)
+	        SET(_is_comment FALSE)
+		SET(_comment ${_currentPoFile})
+	    ELSE()
+		GET_FILENAME_COMPONENT(_absFile ${_currentPoFile} ABSOLUTE)
+		GET_FILENAME_COMPONENT(_abs_PATH ${_absFile} PATH)
+		GET_FILENAME_COMPONENT(_lang ${_absFile} NAME_WE)
+		SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
+
+		ADD_CUSTOM_COMMAND( 
+		    OUTPUT ${_gmoFile} 
+		    COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --quiet --update --backup=none -s ${_absFile} ${_absPotFile}
+		    COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_gmoFile} ${_absFile}
+		    DEPENDS ${_absPotFile} ${_absFile} 
+		)
+
+		INSTALL(FILES ${_gmoFile} DESTINATION share/locale/${_lang}/LC_MESSAGES RENAME ${_potBasename}.mo) 
+		SET(_gmoFiles ${_gmoFiles} ${_gmoFile})
+	    ENDIF()
+	ENDFOREACH (_currentPoFile )
+
+        IF(DEFINED _comment)
+	    ADD_CUSTOM_TARGET(translations ${_addToAll} DEPENDS ${_gmoFiles} COMMENT ${_comment})
+	ELSE()
+	    ADD_CUSTOM_TARGET(translations ${_addToAll} DEPENDS ${_gmoFiles})
+	ENDIF()
+    ENDMACRO(GETTEXT_CREATE_TRANSLATIONS )
+
+    IF (GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE )
+	SET(GETTEXT_FOUND TRUE)
+    ELSE ()
+	SET(GETTEXT_FOUND FALSE)
+	IF (GetText_REQUIRED)
+	    MESSAGE(FATAL_ERROR "GetText not found")
+	ENDIF (GetText_REQUIRED)
+    ENDIF (GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE )
+
+    IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
+         MESSAGE(STATUS "xgettext not found.")
+	 SET(XGETTEXT_FOUND FALSE)
+    ELSE()
+         SET(XGETTEXT_FOUND TRUE)
+    ENDIF()
+ENDIF(ENABLE_GETTEXT)
+
 
 #====================================================================
 # Document generation
@@ -322,6 +457,8 @@ ENDIF()
 #====================================================================
 # Koji (Fedora build system)
 #
+
+
 
 IF (DEFINED KOJI_CVS_PATH)
     SET(KOJI_SUBMISSION_CMD "")

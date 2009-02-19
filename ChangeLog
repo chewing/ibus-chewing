@@ -1,0 +1,3 @@
+* Wed Feb 18 2009 - Peng Huang (shawn.p.huang@gmail.com), Ding-Yi Chen (dchen at redhat.com) <> - 1.0.0.20090218-1
+This is a barely working version for with IBus C.
+The build system is converted from autotool to CMake.

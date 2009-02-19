@@ -34,7 +34,8 @@ SET(BODHI_DIST_TAGS fc9 fc10)
 #
 
 SET(GENERATE_SPEC TRUE)
-SET(PRJ_VER_TEMPLATE ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}-${DATE_SHORT})
+SET(ENABLE_GETTEXT TRUE)
+SET(PRJ_VER_TEMPLATE ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}.${DATE_SHORT})
 INCLUDE(common.CMakeLists.txt)
 
 
@@ -43,12 +44,12 @@ INCLUDE(common.CMakeLists.txt)
 ####################################################################
 ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER_FULL}"')
 ADD_DEFINITIONS(-DPKGDATADIR='"${PROJECT_DATADIR}"')
+ADD_DEFINITIONS(-DSYSTEMDIR='"${PROJECT_DATADIR}"')
 CONFIGURE_FILE(src/chewing.xml.in src/chewing.xml)
 
 #==================================================================
 # Required packages
 #
-FIND_PACKAGE(Gettext)
 FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 gtk+-2.0)
 PKG_CHECK_MODULES(IBUS ibus-1.0)
@@ -60,7 +61,6 @@ PKG_CHECK_MODULES(CHEWING chewing)
 #
 ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(po)
-
 
 #====================================================================
 # Files to be install.
@@ -84,10 +84,11 @@ SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES ${COMMON_IGNORE_FILES} ${RPM_IGNORE_FILES}
     "/docs/"  "/BUILD/" "/SOURCES/" "/SRPMS/" "/RPMS/"
+    ".cache$" ".pot$" ".gmo$" ".spec$" "ibus-chewing-engine.*[ch]$"
 )
 
 SET(CPACK_SOURCE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/bin/" 
-    ".cache$")
+    ".xml$")
 SET(CPACK_PACKAGE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/src/" 
     ".spec$" ".in$" )
 

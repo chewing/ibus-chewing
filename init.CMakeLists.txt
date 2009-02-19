@@ -50,11 +50,11 @@ ENDIF()
 
 IF(NOT DEFINED datadir)
     SET(datadir "${CMAKE_INSTALL_PREFIX}/share")
-    ADD_DEFINITIONS(-Ddatadir='"${datadir}"')
+    ADD_DEFINITIONS(-DDATADIR='"${datadir}"')
 ENDIF()
 
 IF(NOT DEFINED docdir)
     SET(docdir "${datadir}/doc")
-    ADD_DEFINITIONS(-Ddocdir='"${docdir}"')
+    ADD_DEFINITIONS(-DDOCDIR='"${docdir}"')
 ENDIF()
 
