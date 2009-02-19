@@ -54,7 +54,11 @@ FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 gtk+-2.0)
 PKG_CHECK_MODULES(IBUS ibus-1.0)
 PKG_CHECK_MODULES(CHEWING chewing)
+FIND_PROGRAM(GOB2 gob2)
 
+IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
+    MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
+ENDIF()
 
 #==================================================================
 # Source code subdirectories
