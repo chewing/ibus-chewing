@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- filename: chewing.xml -->
 <component>
-	<name>org.freedesktop.IBus.Chewing</name>
-	<description>Chewing Component</description>
-	<exec>@CMAKE_INSTALL_PREFIX@/libexec/ibus-engine-chewing --ibus</exec>
-	<version>@PRJ_VER_FULL@</version>
-	<author>@AUTHORS@</author>
-	<license>GPL</license>
-	<homepage>http://code.google.com/p/ibus</homepage>
-	<textdomain>ibus-chewing</textdomain>
+    <name>org.freedesktop.IBus.Chewing</name>
+    <description>Chewing Component</description>
+    <exec>@CMAKE_INSTALL_PREFIX@/libexec/ibus-engine-chewing --ibus</exec>
+    <version>@PRJ_VER_FULL@</version>
+    <author>@AUTHORS@</author>
+    <license>GPL</license>
+    <homepage>http://code.google.com/p/ibus</homepage>
+    <textdomain>ibus-chewing</textdomain>
 
-	<engines>
-		<engine>
-			<name>chewing</name>
-			<language>zh</language>
-			<license>GPL</license>
-			<author>@AUTHORS@</author>
-			<icon>@PROJECT_DATADIR@/icons/@PROJECT_NAME@.png</icon>
-			<layout>us</layout>
-			<longname>Chewing</longname>
-			<description>Chewing Input Method</description>
-		</engine>
-	</engines>
-
+    <engines>
+        <engine>
+	    <name>chewing</name>
+	    <language>zh</language>
+	    <license>GPL</license>
+	    <author>@AUTHORS@</author>
+            <icon>@PROJECT_DATADIR@/icons/@PROJECT_NAME@.png</icon>
+	    <layout>us</layout>
+	    <longname>Chewing</longname>
+	    <description>Chewing Input Method</description>
+        </engine>
+    </engines>
 </component>

@@ -6,6 +6,7 @@
 #include <chewing.h>
 #include "ibus-chewing-engine.h"
 
+
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
@@ -42,7 +43,8 @@ start_component (void)
 
     component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
 
-    factory = ibus_factory_new (ibus_bus_get_connection (bus));
+    IBusConnection *iConnection=ibus_bus_get_connection (bus);
+    factory = ibus_factory_new (iConnection);
     ibus_factory_add_engine (factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-18 17:35+1000\n"
+"POT-Creation-Date: 2009-02-20 16:29+1000\n"
 "PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
@@ -16,63 +16,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/IBusChewingEngine.gob:179
+#: ../src/IBusChewingEngine.gob:182
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine.gob:69
+#: ../src/IBusChewingEngine.gob:85
 msgid "Dachen CP26"
 msgstr "大千CP26"
 
-#: ../src/IBusChewingEngine.gob:61
+#: ../src/IBusChewingEngine.gob:77
 msgid "Default"
 msgstr "預設"
 
-#: ../src/IBusChewingEngine.gob:67
+#: ../src/IBusChewingEngine.gob:83
 msgid "Dvorak"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:68
+#: ../src/IBusChewingEngine.gob:84
 msgid "Dvorak Hsu"
 msgstr "Dvorak許氏"
 
-#: ../src/IBusChewingEngine.gob:65
+#: ../src/IBusChewingEngine.gob:81
 msgid "ETen"
 msgstr "倚天"
 
-#: ../src/IBusChewingEngine.gob:66
+#: ../src/IBusChewingEngine.gob:82
 msgid "ETen 26 keys"
 msgstr "倚天26鍵"
 
-#: ../src/IBusChewingEngine.gob:180
+#: ../src/IBusChewingEngine.gob:183
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine.gob:182
+#: ../src/IBusChewingEngine.gob:185
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:64
+#: ../src/IBusChewingEngine.gob:80
 msgid "Gin-Yieh"
 msgstr "精業"
 
-#: ../src/IBusChewingEngine.gob:183
+#: ../src/IBusChewingEngine.gob:186
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine.gob:70
+#: ../src/IBusChewingEngine.gob:86
 msgid "Hanyu"
 msgstr "漢語"
 
-#: ../src/IBusChewingEngine.gob:62
+#: ../src/IBusChewingEngine.gob:78
 msgid "Hsu"
 msgstr "許氏"
 
-#: ../src/IBusChewingEngine.gob:63
+#: ../src/IBusChewingEngine.gob:79
 msgid "IBM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:177
+#: ../src/IBusChewingEngine.gob:180
 msgid "KbType"
 msgstr "鍵盤"
 

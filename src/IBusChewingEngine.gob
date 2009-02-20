@@ -31,9 +31,26 @@ requires 2.0.0
 #include <glib/gi18n.h>
 %}
 
+enum CHEWING_KBTYPE{
+    INVALID=-1,
+    DEFAULT,
+    HSU,
+    IBM,
+    GIN_YIEH,
+    ETEN,
+    ETEN26,
+    DVORAK,
+    DVORAK_HSU,
+    DACHEN_CP26,
+    HAN_YU
+} Chewing:KbType;
+
+
 
 %{
 extern gboolean ibus_chewing_verbose;
+extern IBusConfig *iConfig;
+
 #define G_DEBUG_MSG(msg, args...) if (ibus_chewing_verbose) g_debug(msg, ##args)
 const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 const char *kbType_ids[]={
@@ -49,7 +66,6 @@ const char *kbType_ids[]={
     "chewing_kbtype_hanyu",
     NULL
 };
-
 
 /*============================================
  * Supporting functions
@@ -73,14 +89,14 @@ static IBusText** kbTypes_to_iBusTexts(){
 }
 
 
-static gint kbType_id_get_index(const gchar *kbType_id){
+static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
     gint i=0;
     for(i=0;kbType_ids[i]!=NULL;i++){
 	if (strcmp(kbType_id,kbType_ids[i])==0){
 	    return i;
 	}
     }
-    return -1;
+    return CHEWING_KBTYPE_INVALID;
 }
 
 
@@ -120,20 +136,6 @@ static gunichar *preedit_string_make(ChewingContext *context,
 
 %}
 
-enum CHEWING_KBTYPE{
-    INVALID=-1,
-    DEFAULT,
-    HSU,
-    IBM,
-    GIN_YIEH,
-    ETEN,
-    ETEN26,
-    DVORAK,
-    DVORAK_HSU,
-    DACHEN_CP26,
-    HAN_YU
-} Chewing:KbType;
-
 
 class IBus:Chewing:Engine from IBus:Engine{
     public ChewingContext *context=NULL
@@ -170,9 +172,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 	       	NULL, TRUE, 
 		TRUE, 0, self->kbType_prop_subList);
     };
-    public IBusPropList    *prop_list={ibus_prop_list_new()};
+    public IBusPropList   *prop_list={ibus_prop_list_new()};
 
-//    public IBusConfig  *config={ibus_config_new(IBUS_ENGINE(self))};
+    public IBusConfig *config=NULL;
+
 
     classwide IBusText *kbType_prop_label={ibus_text_new_from_static_string(_("KbType"))};
 
@@ -334,6 +337,23 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
+    /**
+     * save_kbType:
+     * @self: this instances.
+     * @kbType: kbType to be set.
+     * @returns: TRUE if successful, FALSE otherwise.
+     *
+     * Set and save the kbtype setting.
+     */
+    public gboolean save_kbType(self, Chewing:KbType kbType){
+	if (kbType==CHEWING_KBTYPE_INVALID)
+	    return FALSE;
+	GValue kbTypeValue={0};
+	g_value_init(&kbTypeValue,G_TYPE_STRING);
+	g_value_set_static_string (&kbTypeValue,kbType_ids[kbType]);
+	return ibus_config_set_value (self->config,"engine/Chewing","KbType",&kbTypeValue);
+    }
+
 
 
     /*============================================
@@ -487,7 +507,35 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
+	Self *selfObj=SELF(self);
 	G_DEBUG_MSG("*** enable 1");
+
+	/* connections_list is not avail in init, so we put it here */
+	GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
+	g_assert(connections_list);
+	g_assert(connections_list->data);
+	IBusConnection *iConnection=(IBusConnection *) connections_list->data;
+	selfObj->config=ibus_config_new(iConnection);
+
+	/* Load/Set kbType */
+	ChewingKbType kbType_set=0;
+        GValue kbTypeValue={0};
+        g_value_init(&kbTypeValue,G_TYPE_STRING);
+        if (ibus_config_get_value (selfObj->config,"engine/Chewing","KbType",&kbTypeValue)){
+            /* Config exists, loading */
+            kbType_set=kbType_id_get_index(g_value_get_string(&kbTypeValue));
+        }else{
+             /* Config does not exist, initialing  */
+	    kbType_set=CHEWING_KBTYPE_DEFAULT;
+	    self_save_kbType(selfObj, kbType_set);
+        }
+	G_DEBUG_MSG("*** enable(): kbType=%d(%s)",kbType_set,kbType_ids[kbType_set]);
+
+	ChewingKbType kbType_curr=chewing_get_KBType(selfObj->context);
+	if (kbType_curr!=kbType_set){
+	    chewing_set_KBType(selfObj->context,kbType_set);
+	    self_refresh_property(selfObj,kbType_ids[kbType_set]);
+	}
     }
 
     override (IBus:Engine) void
@@ -514,7 +562,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     property_activate(IBus:Engine *self, const gchar  *prop_name, guint  prop_state){
 	G_DEBUG_MSG("*** property_activate(-, %s, %u) 1", prop_name, prop_state);
 	Self *selfObj=SELF(self);
-	guint kbType;
+	ChewingKbType kbType;
 	gboolean needRefresh=TRUE;
 
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
@@ -527,8 +575,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    if (prop_state==PROP_STATE_CHECKED){
 		if (chewing_set_KBType(selfObj->context,kbType)){
 		    /* Unsuccessfully, set to default */
-		    chewing_set_KBType(selfObj->context,0);
+		    kbType=CHEWING_KBTYPE_DEFAULT;
+		    chewing_set_KBType(selfObj->context,kbType);
 		}
+		self_save_kbType(selfObj, kbType);
 	    }
   	    needRefresh=FALSE;
 	}
