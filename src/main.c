@@ -77,6 +77,7 @@ main (gint argc, gchar **argv)
         exit (-1);
     }
 
+    g_option_context_free (context);
     start_component ();
     return 0;
 }

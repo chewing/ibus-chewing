@@ -11,14 +11,14 @@ PROJECT(ibus-chewing)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(PRJ_VER_MAJOR "1")
 SET(PRJ_VER_MINOR "0")
-SET(PRJ_VER_PATCH "0")
+SET(PRJ_VER_PATCH "1")
 SET(PRJ_VER_RELEASE "1")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
-SET(AUTHORS "Peng Huang (shawn.p.huang@gmail.com), Ding-Yi Chen (dchen at redhat.com)")
+SET(AUTHORS "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "First working version for iBus C version.")
+SET(CHANGE_SUMMARY "Checking memory leak using vargrind.")
 
 SET(SUPPORTED_DIST_TAGS F-9 F-10) 
 SET(BODHI_DIST_TAGS fc9 fc10)

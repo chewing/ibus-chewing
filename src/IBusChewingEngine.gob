@@ -248,12 +248,14 @@ class IBus:Chewing:Engine from IBus:Engine{
         glong item_written;
 
 	if (chewing_commit_Check(self->context)){
-	    text=g_utf8_to_ucs4_fast(chewing_commit_String(self->context),-1, &item_written);
+	    gchar *commit_string=chewing_commit_String(self->context);
+	    text=g_utf8_to_ucs4_fast(commit_string,-1, &item_written);
 	    iText=ibus_text_new_from_ucs4(text);
 	    ibus_engine_commit_text(IBUS_ENGINE(self),iText);
 	    ibus_engine_update_lookup_table(IBUS_ENGINE(self),self->table,FALSE);
 	    ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
 	    g_free(text);
+	    g_free(commit_string);
 	    g_object_unref(iText);
 	}
 	self_refresh_preedit(self);
@@ -286,7 +288,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
 
         /* update aux string */
-	text=g_utf8_to_ucs4_fast(chewing_aux_String(self->context),-1,&item_written);
+	gchar *aux_string=chewing_aux_String(self->context);
+	text=g_utf8_to_ucs4_fast(aux_string,-1,&item_written);
 	if (item_written>0){
             iText=ibus_text_new_from_ucs4 (text);
 	    ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),iText,TRUE);
@@ -296,9 +299,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
 	}
 
-        if (text){
-	    g_free(text);
-        }
+	g_free(aux_string);
+	g_free(text);
 
         if (chewing_keystroke_CheckAbsorb(self->context))
             return TRUE;
