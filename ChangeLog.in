@@ -1,4 +1,5 @@
-Memory leaking checked.
+  KbType Setting moved to Setting.
+  Memory leaking checked.
 
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220-1
 This is a barely working version for with IBus C.

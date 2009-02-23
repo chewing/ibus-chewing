@@ -41,17 +41,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README
+%doc AUTHORS README ChangeLog NEWS COPYING
 %{_libexecdir}/ibus-engine-chewing
 %{_datadir}/%{name}
 %{_datadir}/ibus/component/chewing.xml
 
 %changelog
-* Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
+* @DATE@ Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
 - First working version for IBus C
 
-* Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - @VERSION@-1
+* Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090220-1
+- First working version for IBus C
+
+* Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090128-1
 - Fix the binding with libchewing 0.3.2.
 
-* Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - @VERSION@-1
+* Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.

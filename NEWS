@@ -1,0 +1,3 @@
+==== 2009-02-23 ====
+Now ibus-chewing is implemented by C/GOB2, and built by CMake.
+
