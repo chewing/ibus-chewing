@@ -1,4 +1,4 @@
-* Mon Feb 23 2009 - Ding-Yi Chen <dchen at redhat.com> <> - 1.0.1.20090223-1
+* Tue Feb 24 2009 - Ding-Yi Chen <dchen at redhat.com> <> - 1.0.1.20090224-1
   KbType Setting moved to Setting.
   Memory leaking checked.
 

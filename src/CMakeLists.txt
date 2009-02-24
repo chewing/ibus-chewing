@@ -1,8 +1,10 @@
 # Location of library include files
-INCLUDE_DIRECTORIES(${GTK2_INCLUDE_DIRS} ${IBUS_INCLUDE_DIRS} ${CHEWING_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${GTK2_INCLUDE_DIRS} ${IBUS_INCLUDE_DIRS}
+    ${CHEWING_INCLUDE_DIRS} ${GCONF2_INCLUDE_DIRS})
 
 # Library location for the linker
-LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS} ${CHEWING_LIBRARY_DIRS})
+LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS}
+    ${CHEWING_LIBRARY_DIRS} ${GCONF2_LIBRARY_DIRS})
 
 #==================================================================
 # Sources
@@ -30,7 +32,8 @@ SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
 ADD_EXECUTABLE(ibus-engine-chewing main.c ibus-chewing-engine.c) 
 
 # Link the executable to the library.
-TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES} ${CHEWING_LIBRARIES})
+TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
+    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES})
 
 
 IF(NOT DEFINED LIB_INSTALL_DIR)
@@ -52,5 +55,7 @@ INSTALL(TARGETS ibus-engine-chewing
 INSTALL(FILES chewing.xml
     DESTINATION "${datadir}/ibus/component")
 
+INSTALL(FILES ibus-chewing.schema
+    DESTINATION "${SYSCONF_INSTALL_DIR}/gconf/schemas")
 
 

@@ -6,7 +6,7 @@
 #include <chewing.h>
 #include "ibus-chewing-engine.h"
 
-
+GConfClient *gConfClient=NULL;
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
@@ -53,7 +53,6 @@ start_component (void)
         ibus_bus_register_component (bus, component);
     }
 
-    g_object_unref (component);
     ibus_main ();
 }
 

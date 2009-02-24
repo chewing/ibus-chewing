@@ -54,6 +54,7 @@ FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 gtk+-2.0)
 PKG_CHECK_MODULES(IBUS ibus-1.0)
 PKG_CHECK_MODULES(CHEWING chewing)
+PKG_CHECK_MODULES(GCONF2 gconf-2.0)
 FIND_PROGRAM(GOB2 gob2)
 
 IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
@@ -88,13 +89,14 @@ SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES ${COMMON_IGNORE_FILES} ${RPM_IGNORE_FILES}
     "/docs/"  "/BUILD/" "/SOURCES/" "/SRPMS/" "/RPMS/"
-    ".cache$" ".pot$" ".gmo$" ".spec$" "ibus-chewing-engine.*[ch]$"
+    ".cache$"  ".gmo$" ".spec$" "ibus-chewing-engine.*[ch]$"
+    "messages.po$"
 )
 
 SET(CPACK_SOURCE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/bin/" 
     ".xml$")
 SET(CPACK_PACKAGE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/src/" 
-    ".spec$" ".in$" )
+    ".spec$" ".in$" ".pot$")
 
 INCLUDE(CPack)
 
@@ -112,6 +114,6 @@ ADD_CUSTOM_TARGET(ChangeLog
     )
 
 ADD_DEPENDENCIES(pack_src ChangeLog)
-
+ADD_DEPENDENCIES(pack_src pot_file)
 
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-23 16:58+1000\n"
+"POT-Creation-Date: 2009-02-24 16:02+1000\n"
 "PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
@@ -16,69 +16,69 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/IBusChewingEngine.gob:192
+#: ../src/IBusChewingEngine.gob:195
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine.gob:85
+#: ../src/IBusChewingEngine.gob:88
 msgid "Dachen CP26"
 msgstr "大千CP26"
 
-#: ../src/IBusChewingEngine.gob:77
+#: ../src/IBusChewingEngine.gob:80
 msgid "Default"
 msgstr "預設"
 
-#: ../src/IBusChewingEngine.gob:83
+#: ../src/IBusChewingEngine.gob:86
 msgid "Dvorak"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:84
+#: ../src/IBusChewingEngine.gob:87
 msgid "Dvorak Hsu"
 msgstr "Dvorak許氏"
 
-#: ../src/IBusChewingEngine.gob:81
+#: ../src/IBusChewingEngine.gob:84
 msgid "ETen"
 msgstr "倚天"
 
-#: ../src/IBusChewingEngine.gob:82
+#: ../src/IBusChewingEngine.gob:85
 msgid "ETen 26 keys"
 msgstr "倚天26鍵"
 
-#: ../src/IBusChewingEngine.gob:193
+#: ../src/IBusChewingEngine.gob:196
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine.gob:195
+#: ../src/IBusChewingEngine.gob:198
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:80
+#: ../src/IBusChewingEngine.gob:83
 msgid "Gin-Yieh"
 msgstr "精業"
 
-#: ../src/IBusChewingEngine.gob:196
+#: ../src/IBusChewingEngine.gob:199
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine.gob:86
+#: ../src/IBusChewingEngine.gob:89
 msgid "Hanyu"
 msgstr "漢語"
 
-#: ../src/IBusChewingEngine.gob:78
+#: ../src/IBusChewingEngine.gob:81
 msgid "Hsu"
 msgstr "許氏"
 
-#: ../src/IBusChewingEngine.gob:79
+#: ../src/IBusChewingEngine.gob:82
 msgid "IBM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:190
+#: ../src/IBusChewingEngine.gob:193
 msgid "KbType"
 msgstr "鍵盤"
 
-#: ../src/IBusChewingEngine.gob:198
+#: ../src/IBusChewingEngine.gob:201
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 #~ msgid "Chewing"
 #~ msgstr "新酷音"

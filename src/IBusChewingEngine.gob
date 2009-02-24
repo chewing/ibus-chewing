@@ -29,7 +29,9 @@ requires 2.0.0
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib/gi18n.h>
+#include <gconf/gconf-client.h>
 %}
+
 
 enum CHEWING_KBTYPE{
     INVALID=-1,
@@ -45,11 +47,12 @@ enum CHEWING_KBTYPE{
     HAN_YU
 } Chewing:KbType;
 
-
+%headertop{
+#define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
+%}
 
 %{
 extern gboolean ibus_chewing_verbose;
-extern IBusConfig *iConfig;
 
 #define G_DEBUG_MSG(msg, args...) if (ibus_chewing_verbose) g_debug(msg, ##args)
 const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
@@ -65,6 +68,28 @@ const char *kbType_ids[]={
     "chewing_kbtype_dachen_26",
     "chewing_kbtype_hanyu",
     NULL
+};
+
+typedef gint (*ChewingSettingFunc)(ChewingContext *ctx, int mode);
+
+typedef struct{
+    GConfValueType type;
+    gchar key[30];
+    gchar defaultValue[30];
+    ChewingSettingFunc func;
+} ChewingParameter;
+
+const ChewingParameters parameters[]={
+    {GCONF_VALUE_STRING, "KBType","chewing_kbtype_default",chewing_set_KBType},
+    {GCONF_VALUE_BOOL, "autoShiftCur","0",chewing_set_autoShiftCur},
+    {GCONF_VALUE_BOOL, "addPhraseDirection","0",chewing_set_addPhraseDirection},
+    {GCONF_VALUE_INT, "candPerPage","10",chewing_set_candPerPage},
+    {GCONF_VALUE_BOOL, "escCleanAllBuf","0",chewing_set_escCleanAllBuf},
+    {GCONF_VALUE_INT, "hsuSelKeyType","1",chewing_set_hsuSelKeyType},
+    {GCONF_VALUE_INT, "maxChiSymbolLen","16",chewing_set_maxChiSymbolLen},
+    {GCONF_VALUE_STRING, "selKeys","1234567890",NULL},
+    {GCONF_VALUE_BOOL, "spaceAsSelection","1",spaceAsSelection},
+    {GCONF_VALUE_INVALID, "","", NULL, NULL}
 };
 
 /*============================================
@@ -186,7 +211,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     public IBusConfig *config=NULL;
 
-
+    classwide GConfClient *gConfClient={gconf_client_get_default ()};
     classwide IBusText *kbType_prop_label={ibus_text_new_from_static_string(_("KbType"))};
 
     classwide IBusText *chieng_prop_label_chi={ibus_text_new_from_static_string(_("Chi"))};
@@ -202,19 +227,16 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 
     init (self) {
+	GError *err=NULL;
           /* initialize the object here */
 	G_DEBUG_MSG("*** init 1");
 
 	chewing_Init("/usr/share/chewing","/tmp");
 
 	self->context=chewing_new();
-	chewing_set_candPerPage(self->context,18);
-	chewing_set_maxChiSymbolLen(self->context,16);
-	chewing_set_addPhraseDirection(self->context,0);
-	chewing_set_spaceAsSelection(self->context,1);
-	chewing_set_KBType(self->context,0);
 
-	chewing_set_selKey(self->context,(int *) selKeys_default,10);
+	self_context_load_parameters(self);
+
         chewing_set_ChiEngMode(self->context,CHINESE_MODE);
 
 	/* set kbtype property */
@@ -237,6 +259,61 @@ class IBus:Chewing:Engine from IBus:Engine{
 	ibus_prop_list_append(self->prop_list,self->kbType_prop);
 
 	ibus_lookup_table_clear(self->table);
+    }
+
+    private void context_load_parameters(self){
+	int i;
+	gchar key[200];
+	GError *err=NULL;
+	for (i=0; parameters[i].type!=GCONF_VALUE_INVALID;i++){
+	    g_strlcpy(key,GCONF_KEY_PREFIX,200);
+	    g_strlcat(key,parameters[i].key,200);
+	    if (strcmp(parameters[i].key,"KBType")==0){
+		gchar *kbType_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
+		ChewingKbType kbType;
+		if (err){
+		    staticString=TRUE;
+		    g_warning("Warning: cannot load key %s because %s %s %s",
+			    key,
+			    err->message,
+			    _("Use default value:"),
+			    parameters[i].defaultValue);
+		    g_error_free (err);
+		    kbType=kbType_id_get_index(parameters[i].defaultValue);
+		}else{
+		    kbType=kbType_id_get_index(kbType_str);
+		    g_free(kbType_str);
+		}
+		parameters[i].func(self->context,kbType);
+	    }else if (strcmp(parameters[i].key,"selKeys")==0){
+		gchar *selKeys_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
+		gboolean staticString=FALSE;
+		int len;
+		if (err){
+		    g_warning("Warning: cannot load key %s because %s %s %s",
+			    key,
+			    err->message,
+			    _("Use default value:"),
+			    parameters[i].defaultValue);
+		    g_error_free (err);
+		    selKeys_str=parameters[i].defaultValue;
+		    staticString=TRUE;
+		}
+		int len=strlen(selKeys_str);
+		int *selKeys=g_new(int, len);
+		int j;
+		for (j=0;j<len;j++){
+		    selKeys[j]=(int) selKeys_str[j];
+		}
+		chewing_set_selKey(self->context, selKeys,len);
+		if (!staticString){
+		    g_free(selKeys_str);
+		}
+	    }else if (parameters[i].type==GCONF_VALUE_BOOL){
+	    }else if (parameters[i].type==GCONF_VALUE_INT){
+	    }
+	}
+
     }
 
     protected gboolean commit(self){
