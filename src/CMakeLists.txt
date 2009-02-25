@@ -55,7 +55,30 @@ INSTALL(TARGETS ibus-engine-chewing
 INSTALL(FILES chewing.xml
     DESTINATION "${datadir}/ibus/component")
 
-INSTALL(FILES ibus-chewing.schema
-    DESTINATION "${SYSCONF_INSTALL_DIR}/gconf/schemas")
+SET(GCONF_CONFIG_SOURCE "xml:merged:/etc/gconf/gconf.xml.defaults")
+#EXECUTE_PROCESS(
+#    COMMAND gconftool-2 --get-default-source
+#    COMMAND tr \\n \\t
+#    COMMAND sed  -e s/\\t//
+#    OUTPUT_VARIABLE ${GCONF_CONFIG_SOURCE}
+#    )
+
+SET(ENV{GCONF_CONFIG_SOURCE} ${GCONF_CONFIG_SOURCE})
+
+ADD_CUSTOM_TARGET(uninstall_schema
+    COMMAND gconftool-2 --makefile-uninstall-rule ${SYSCONF_INSTALL_DIR}/gconf/schemas/${PROJECT_NAME}.schema
+    DEPENDS ${SYSCONF_INSTALL_DIR}/gconf/schemas/${PROJECT_NAME}.schema
+    COMMENT "Install_schema"
+    )
+
+ADD_CUSTOM_TARGET(install_schema
+    COMMAND gconftool-2 --makefile-install-rule ${SYSCONF_INSTALL_DIR}/gconf/schemas/${PROJECT_NAME}.schema
+    DEPENDS ${PROJECT_NAME}.schema
+    COMMENT "Install_schema"
+    )
+    
+
+#INSTALL(FILES ibus-chewing.schema
+#    DESTINATION "${SYSCONF_INSTALL_DIR}/gconf/schemas")
 
 

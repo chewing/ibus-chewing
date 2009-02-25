@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-24 16:02+1000\n"
+"POT-Creation-Date: 2009-02-25 17:04+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,68 +15,73 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:195
+#: ../src/IBusChewingEngine.gob:220
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine.gob:88
+#: ../src/IBusChewingEngine.gob:113
 msgid "Dachen CP26"
 msgstr "大千CP26"
 
-#: ../src/IBusChewingEngine.gob:80
+#: ../src/IBusChewingEngine.gob:105
 msgid "Default"
 msgstr "默认"
 
-#: ../src/IBusChewingEngine.gob:86
+#: ../src/IBusChewingEngine.gob:111
 msgid "Dvorak"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:87
+#: ../src/IBusChewingEngine.gob:112
 msgid "Dvorak Hsu"
 msgstr "Dvorak许氏"
 
-#: ../src/IBusChewingEngine.gob:84
+#: ../src/IBusChewingEngine.gob:109
 msgid "ETen"
 msgstr "倚天"
 
-#: ../src/IBusChewingEngine.gob:85
+#: ../src/IBusChewingEngine.gob:110
 msgid "ETen 26 keys"
 msgstr "倚天26键"
 
-#: ../src/IBusChewingEngine.gob:196
+#: ../src/IBusChewingEngine.gob:221
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine.gob:198
+#: ../src/IBusChewingEngine.gob:223
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:83
+#: ../src/IBusChewingEngine.gob:108
 msgid "Gin-Yieh"
 msgstr "精业"
 
-#: ../src/IBusChewingEngine.gob:199
+#: ../src/IBusChewingEngine.gob:224
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine.gob:89
+#: ../src/IBusChewingEngine.gob:114
 msgid "Hanyu"
 msgstr "汉语"
 
-#: ../src/IBusChewingEngine.gob:81
+#: ../src/IBusChewingEngine.gob:106
 msgid "Hsu"
 msgstr "许氏"
 
-#: ../src/IBusChewingEngine.gob:82
+#: ../src/IBusChewingEngine.gob:107
 msgid "IBM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:193
+#: ../src/IBusChewingEngine.gob:218
 msgid "KbType"
 msgstr "键盘"
 
-#: ../src/IBusChewingEngine.gob:201
+#: ../src/IBusChewingEngine.gob:226
 msgid "Settings"
+msgstr ""
+
+#: ../src/IBusChewingEngine.gob:280 ../src/IBusChewingEngine.gob:296
+#: ../src/IBusChewingEngine.gob:318 ../src/IBusChewingEngine.gob:331
+msgid "Use default value:"
 msgstr ""
 
 #~ msgid "Chewing"

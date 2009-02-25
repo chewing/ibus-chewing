@@ -28,14 +28,15 @@ SET(BODHI_DIST_TAGS fc9 fc10)
 ####################################################################
 # Includes
 ####################################################################
+SET(PRJ_VER ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}.${DATE_SHORT})
+INCLUDE(Version)
+SET(GENERATE_SPEC SPECS/${PROJECT_NAME}.spec.in)
+INCLUDE(RPM)
+INCLUDE(Gettext)
 
 #==================================================================
 # Include common.CMakeLists.txt
 #
-
-SET(GENERATE_SPEC TRUE)
-SET(ENABLE_GETTEXT TRUE)
-SET(PRJ_VER_TEMPLATE ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}.${DATE_SHORT})
 INCLUDE(common.CMakeLists.txt)
 
 
@@ -87,8 +88,8 @@ SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
-SET(PRJ_COMMON_IGNORE_FILES ${COMMON_IGNORE_FILES} ${RPM_IGNORE_FILES}
-    "/docs/"  "/BUILD/" "/SOURCES/" "/SRPMS/" "/RPMS/"
+SET(PRJ_COMMON_IGNORE_FILES ${CMAKE_GENERATED_FILES} ${COMMON_IGNORE_FILES} ${RPM_IGNORE_FILES}
+    "/docs/"  
     ".cache$"  ".gmo$" ".spec$" "ibus-chewing-engine.*[ch]$"
     "messages.po$"
 )
@@ -100,11 +101,6 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/src/"
 
 INCLUDE(CPack)
 
-
-#====================================================================
-# Upload the package releases to hosting service provider (Source forge).
-#
-
 ADD_CUSTOM_TARGET(ChangeLog
     COMMAND echo "* ${DATE} - ${AUTHORS} <${MAINTAINER_EMAIL}> - ${PRJ_VER_FULL}" > ChangeLog
     COMMAND cat ChangeLog.in >> ChangeLog
@@ -115,5 +111,4 @@ ADD_CUSTOM_TARGET(ChangeLog
 
 ADD_DEPENDENCIES(pack_src ChangeLog)
 ADD_DEPENDENCIES(pack_src pot_file)
-
 

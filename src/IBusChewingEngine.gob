@@ -2,26 +2,26 @@ requires 2.0.0
 
 %alltop{
 /*
- * Copyright © 2008  Red Hat, Inc. All rights reserved.
- * Copyright © 2008  Ding-Yi Chen <dchen at redhat dot com>
+ * Copyright © 2009  Red Hat, Inc. All rights reserved.
+ * Copyright © 2009  Ding-Yi Chen <dchen at redhat.com>
  *
- * This file is part of the libUnihan Project.
+ * This file is part of the ibus-chewing Project.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */ 
+#include <stdlib.h>
 #include <libintl.h>
 #include <ibus.h>
 #include <chewing.h>
@@ -29,6 +29,7 @@ requires 2.0.0
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib/gi18n.h>
+#include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
 %}
 
@@ -70,7 +71,7 @@ const char *kbType_ids[]={
     NULL
 };
 
-typedef gint (*ChewingSettingFunc)(ChewingContext *ctx, int mode);
+typedef void (*ChewingSettingFunc)(ChewingContext *ctx, int mode);
 
 typedef struct{
     GConfValueType type;
@@ -79,17 +80,19 @@ typedef struct{
     ChewingSettingFunc func;
 } ChewingParameter;
 
-const ChewingParameters parameters[]={
-    {GCONF_VALUE_STRING, "KBType","chewing_kbtype_default",chewing_set_KBType},
-    {GCONF_VALUE_BOOL, "autoShiftCur","0",chewing_set_autoShiftCur},
+const ChewingParameter parameters[]={
+    {GCONF_VALUE_STRING, "KBType",      "chewing_kbtype_default", NULL},
+    {GCONF_VALUE_BOOL,   "autoShiftCur","0",                      chewing_set_autoShiftCur},
     {GCONF_VALUE_BOOL, "addPhraseDirection","0",chewing_set_addPhraseDirection},
     {GCONF_VALUE_INT, "candPerPage","10",chewing_set_candPerPage},
+    {GCONF_VALUE_BOOL, "easySymbolInput","0",chewing_set_easySymbolInput},
     {GCONF_VALUE_BOOL, "escCleanAllBuf","0",chewing_set_escCleanAllBuf},
     {GCONF_VALUE_INT, "hsuSelKeyType","1",chewing_set_hsuSelKeyType},
     {GCONF_VALUE_INT, "maxChiSymbolLen","16",chewing_set_maxChiSymbolLen},
+    {GCONF_VALUE_BOOL, "phraseChoiceRearward","1",chewing_set_phraseChoiceRearward},
     {GCONF_VALUE_STRING, "selKeys","1234567890",NULL},
-    {GCONF_VALUE_BOOL, "spaceAsSelection","1",spaceAsSelection},
-    {GCONF_VALUE_INVALID, "","", NULL, NULL}
+    {GCONF_VALUE_BOOL, "spaceAsSelection","1",chewing_set_spaceAsSelection},
+    {GCONF_VALUE_INVALID, "","", NULL}
 };
 
 /*============================================
@@ -227,7 +230,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 
     init (self) {
-	GError *err=NULL;
           /* initialize the object here */
 	G_DEBUG_MSG("*** init 1");
 
@@ -272,7 +274,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		gchar *kbType_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
 		ChewingKbType kbType;
 		if (err){
-		    staticString=TRUE;
 		    g_warning("Warning: cannot load key %s because %s %s %s",
 			    key,
 			    err->message,
@@ -284,11 +285,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    kbType=kbType_id_get_index(kbType_str);
 		    g_free(kbType_str);
 		}
-		parameters[i].func(self->context,kbType);
+		chewing_set_KBType(self->context,kbType);
 	    }else if (strcmp(parameters[i].key,"selKeys")==0){
 		gchar *selKeys_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
 		gboolean staticString=FALSE;
-		int len;
 		if (err){
 		    g_warning("Warning: cannot load key %s because %s %s %s",
 			    key,
@@ -296,7 +296,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 			    _("Use default value:"),
 			    parameters[i].defaultValue);
 		    g_error_free (err);
-		    selKeys_str=parameters[i].defaultValue;
+		    selKeys_str=(gchar *) parameters[i].defaultValue;
 		    staticString=TRUE;
 		}
 		int len=strlen(selKeys_str);
@@ -310,7 +310,32 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    g_free(selKeys_str);
 		}
 	    }else if (parameters[i].type==GCONF_VALUE_BOOL){
+		gboolean bValue=gconf_client_get_bool(SELF_GET_CLASS(self)->gConfClient, key, &err);
+		if (err){
+		    g_warning("Warning: cannot load key %s because %s %s %s",
+			    key,
+			    err->message,
+			    _("Use default value:"),
+			    parameters[i].defaultValue);
+		    g_error_free (err);
+		    bValue=(parameters[i].defaultValue[0]=='0') ? FALSE: TRUE;
+		}
+		parameters[i].func(self->context,(bValue)? 1:0);
+
 	    }else if (parameters[i].type==GCONF_VALUE_INT){
+		gint iValue=gconf_client_get_int(SELF_GET_CLASS(self)->gConfClient, key, &err);
+		if (err){
+		    g_warning("Warning: cannot load key %s because %s %s %s",
+			    key,
+			    err->message,
+			    _("Use default value:"),
+			    parameters[i].defaultValue);
+		    g_error_free (err);
+		    iValue=atoi(parameters[i].defaultValue);
+		}
+		parameters[i].func(self->context,iValue);
+	    }else{
+		g_error("Invalid parameter type!");
 	    }
 	}
 
@@ -467,7 +492,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	GValue kbTypeValue={0};
 	g_value_init(&kbTypeValue,G_TYPE_STRING);
 	g_value_set_static_string (&kbTypeValue,kbType_ids[kbType]);
-	return ibus_config_set_value (self->config,"engine/Chewing","KbType",&kbTypeValue);
+	return ibus_config_set_value (self->config,"engine/Chewing","KBType",&kbTypeValue);
     }
 
     private IBusProperty* get_iBusProperty(self, const gchar *prop_name){
@@ -640,37 +665,37 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
-	Self *selfObj=SELF(self);
 	G_DEBUG_MSG("*** enable 1");
+//        Self *selfObj=SELF(self);
 
-	/* connections_list is not avail in init, so we put it here */
-	GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
-	g_assert(connections_list);
-	g_assert(connections_list->data);
-	if (!selfObj->config){
-	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
-	    selfObj->config=ibus_config_new(iConnection);
-	}
+//        /* connections_list is not avail in init, so we put it here */
+//        GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
+//        g_assert(connections_list);
+//        g_assert(connections_list->data);
+//        if (!selfObj->config){
+//            IBusConnection *iConnection=(IBusConnection *) connections_list->data;
+//            selfObj->config=ibus_config_new(iConnection);
+//        }
 
-	/* Load/Set kbType */
-	ChewingKbType kbType_set=0;
-        GValue kbTypeValue={0};
-        g_value_init(&kbTypeValue,G_TYPE_STRING);
-        if (ibus_config_get_value (selfObj->config,"engine/Chewing","KbType",&kbTypeValue)){
-            /* Config exists, loading */
-            kbType_set=kbType_id_get_index(g_value_get_string(&kbTypeValue));
-        }else{
-             /* Config does not exist, initialing  */
-	    kbType_set=CHEWING_KBTYPE_DEFAULT;
-	    self_save_kbType(selfObj, kbType_set);
-        }
-	G_DEBUG_MSG("*** enable(): kbType=%d(%s)",kbType_set,kbType_ids[kbType_set]);
+//        /* Load/Set kbType */
+//        ChewingKbType kbType_set=0;
+//        GValue kbTypeValue={0};
+//        g_value_init(&kbTypeValue,G_TYPE_STRING);
+//        if (ibus_config_get_value (selfObj->config,"engine/Chewing","KbType",&kbTypeValue)){
+//            /* Config exists, loading */
+//            kbType_set=kbType_id_get_index(g_value_get_string(&kbTypeValue));
+//        }else{
+//             /* Config does not exist, initialing  */
+//            kbType_set=CHEWING_KBTYPE_DEFAULT;
+//            self_save_kbType(selfObj, kbType_set);
+//        }
+//        G_DEBUG_MSG("*** enable(): kbType=%d(%s)",kbType_set,kbType_ids[kbType_set]);
 
-	ChewingKbType kbType_curr=chewing_get_KBType(selfObj->context);
-	if (kbType_curr!=kbType_set){
-	    chewing_set_KBType(selfObj->context,kbType_set);
-	    self_refresh_property(selfObj,kbType_ids[kbType_set]);
-	}
+//        ChewingKbType kbType_curr=chewing_get_KBType(selfObj->context);
+//        if (kbType_curr!=kbType_set){
+//            chewing_set_KBType(selfObj->context,kbType_set);
+//            self_refresh_property(selfObj,kbType_ids[kbType_set]);
+//        }
     }
 
     override (IBus:Engine) void

@@ -4,33 +4,23 @@
 # Definition that should run in front of everything else.
 # 
 
-
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 OLD)
 endif(COMMAND cmake_policy)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_modules)
 SET(ENV{LC_ALL} "C")
+INCLUDE(DateFormat)
 
 ###==================================================================
 # Find parameters configuration
 #
 #  Note: CMake 2.4 does not support STRING(STRIP ..)
 
-EXECUTE_PROCESS(
-    COMMAND date "+%a %b %d %Y"
-    COMMAND tr \\n \\t
-    COMMAND sed  -e s/\\t//
-    OUTPUT_VARIABLE DATE
-)
-
-EXECUTE_PROCESS(
-	COMMAND date "+%Y%m%d"
-	COMMAND tr \\n \\t
-	COMMAND sed  -e s/\\t//
-	OUTPUT_VARIABLE DATE_SHORT
-)
+DATE_FORMAT(DATE "+%a %b %d %Y")
+DATE_FORMAT(DATE_SHORT "+%Y%m%d")
 
 EXECUTE_PROCESS(COMMAND rpm --showrc
     COMMAND grep -E "dist[[:space:]]*\\."
@@ -63,5 +53,11 @@ IF(NOT DEFINED SYSCONF_INSTALL_DIR)
     ADD_DEFINITIONS(-DSYSCONFDIR='"${SYSCONF_INSTALL_DIR}"')
 ENDIF()
 
+###==================================================================
+# CPack Generator
+# RPM and pack need them, so declare here.
+#
+SET(CPACK_GENERATOR "TGZ")
+SET(CPACK_SOURCE_GENERATOR "TGZ")
 
 

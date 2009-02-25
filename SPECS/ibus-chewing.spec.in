@@ -16,8 +16,13 @@ BuildRequires:  cmake
 BuildRequires:  gob2
 BuildRequires:  libchewing-devel >= 0.3.2-4
 BuildRequires:  pkgconfig
+BuildRequires:  GConf2-devel
 Requires:   ibus >= 1.1
 Requires:  libchewing >= 0.3.2-4
+Requires:  gconf2
+Requires(pre): GConf2
+Requires(post): GConf2
+Requires(preun): GConf2
 
 %description
 The Chewing engine for IBus platform. It provides Chinese input method from
@@ -33,8 +38,27 @@ make VERBOSE=1 C_DEFINES="$RPM_OPT_FLAGS" %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
 %find_lang %{name}
+
+%pre
+if [ "$1" -gt 1 ] ; then
+export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+gconftool-2 --makefile-uninstall-rule \
+%{_sysconfdir}/gconf/schemas/%{name}.schema >/dev/null || :
+fi
+
+%post
+export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+gconftool-2 --makefile-install-rule \
+%{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null |||
+%find_lang %{name}
+
+%preun
+if [ "$1" -eq 0 ] ; then
+export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+gconftool-2 --makefile-uninstall-rule \
+%{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null || :
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,6 +69,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libexecdir}/ibus-engine-chewing
 %{_datadir}/%{name}
 %{_datadir}/ibus/component/chewing.xml
+%{_sysconfdir}/gconf/schemas/%{name}.schemas
 
 %changelog
 * @DATE@ Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
