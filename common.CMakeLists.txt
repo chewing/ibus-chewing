@@ -129,17 +129,17 @@ ADD_CUSTOM_TARGET(uninstall
 
 SET(CPACK_PACKAGE_VERSION ${PRJ_VER})
 SET(CMAKE_GENERATED_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
-	".directory$" "CMakeCache.txt$" 
+	"\\\\.directory$" "CMakeCache\\\\.txt$" 
 	"/install_manifest.txt$"
-	"/cmake_.*install.cmake$" "/CPack.*.cmake$" "/CTestTestfile.cmake$"
+	"/cmake_.*install\\\\.cmake$" "/CPack.*\\\\.cmake$" "/CTestTestfile\\\\.cmake$"
 	"Makefile$"
 	)
 
 SET(COMMON_IGNORE_FILES
-	"/.svn/"  "/CVS/" "/.git/"  ".gitignore$"
-	"~$" ".swp$" ".log$" ".bak$"
-	".gz$" ".bz2$"
-	"/src/config.h$" "NO_PACK" "DEVELOPER_SETTING") 
+	"/\\\\.svn/"  "/CVS/" "/\\\\.git/"  "\\\\.gitignore$"
+	"~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$"
+	"\\\\.gz$" "\\\\.bz2$"
+	"/src/config\\\\.h$" "NO_PACK" "DEVELOPER_SETTING") 
 
 #====================================================================
 # Document generation

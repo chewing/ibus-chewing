@@ -50,7 +50,7 @@ fi
 %post
 export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
 gconftool-2 --makefile-install-rule \
-%{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null |||
+%{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null || :
 %find_lang %{name}
 
 %preun
@@ -69,17 +69,39 @@ rm -rf $RPM_BUILD_ROOT
 %{_libexecdir}/ibus-engine-chewing
 %{_datadir}/%{name}
 %{_datadir}/ibus/component/chewing.xml
-%{_sysconfdir}/gconf/schemas/%{name}.schemas
+%config(noreplace) %{_sysconfdir}/gconf/schemas/%{name}.schema
 
 %changelog
-* @DATE@ Ding-Yi Chen <dchen at redhat.com> - @PRJ_VER@-@PRJ_VER_RELEASE@
-- First working version for IBus C
+* @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
+- Setting shows/hides KBType, selKeys, and various settings.
+- Add gconf schema.
+- Fix some memory leaking checked.
+- Move some function to cmake_modules.
+- Fix Google code issue 281
 
 * Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090220-1
 - First working version for IBus C
 
 * Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090128-1
 - Fix the binding with libchewing 0.3.2.
+
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1.20081023-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.1.1.20081023-2
+- Rebuild for Python 2.6
+
+* Thu Oct 23 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080923-1
+- Update to 0.1.1.20080923.
+
+* Wed Sep 17 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080917-1
+- Update to 0.1.1.20080917.
+
+* Tue Sep 16 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080916-1
+- Update to 0.1.1.20080916.
+
+* Mon Sep 09 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080901-1
+- Update to 0.1.1.20080901.
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.

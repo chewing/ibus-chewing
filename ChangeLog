@@ -1,8 +1,9 @@
-* Wed Feb 25 2009 - Ding-Yi Chen <dchen at redhat.com> <> - 1.0.1.20090225-1
-  KbType Setting moved to Setting.
+* Fri Feb 27 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227-1
+  Setting shows/hides KBType, selKeys, and various settings.
   Add gconf schema.
-  Memory leaking checked.
+  Fix some memory leaking checked.
   Move some function to cmake_modules.
+  Fix Google code issue 281
   
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220-1
 This is a barely working version for with IBus C.

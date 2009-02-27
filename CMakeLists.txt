@@ -15,10 +15,11 @@ SET(PRJ_VER_PATCH "1")
 SET(PRJ_VER_RELEASE "1")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
-SET(AUTHORS "Ding-Yi Chen <dchen at redhat.com>")
+SET(AUTHORS "Peng Huang, Ding-Yi Chen")
+SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Checking memory leak using vargrind.")
+SET(CHANGE_SUMMARY "Most setting options revealed, fix google code issue 281.")
 
 SET(SUPPORTED_DIST_TAGS F-9 F-10) 
 SET(BODHI_DIST_TAGS fc9 fc10)
@@ -90,21 +91,21 @@ SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES ${CMAKE_GENERATED_FILES} ${COMMON_IGNORE_FILES} ${RPM_IGNORE_FILES}
     "/docs/"  
-    ".cache$"  ".gmo$" ".spec$" "ibus-chewing-engine.*[ch]$"
+    "\\\\.cache$"  "\\\\.gmo$" "\\\\.spec$" "ibus-chewing-engine.*\\\\.[ch]$"
     "messages.po$"
 )
 
 SET(CPACK_SOURCE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/bin/" 
-    ".xml$")
+    "\\\\.xml$")
 SET(CPACK_PACKAGE_IGNORE_FILES ${PRJ_COMMON_IGNORE_FILES} "/src/" 
-    ".spec$" ".in$" ".pot$")
+    "\\\\.spec$" "\\\\.in$" "\\\\.pot$")
 
 INCLUDE(CPack)
 
 ADD_CUSTOM_TARGET(ChangeLog
-    COMMAND echo "* ${DATE} - ${AUTHORS} <${MAINTAINER_EMAIL}> - ${PRJ_VER_FULL}" > ChangeLog
-    COMMAND cat ChangeLog.in >> ChangeLog
-    DEPENDS ChangeLog.in
+    COMMAND echo "* ${DATE} - ${MAINTAINER} - ${PRJ_VER_FULL}" > ${CMAKE_SOURCE_DIR}/ChangeLog
+    COMMAND cat ${CMAKE_SOURCE_DIR}/ChangeLog.in >> ${CMAKE_SOURCE_DIR}/ChangeLog
+    DEPENDS ${CMAKE_SOURCE_DIR}/ChangeLog.in
     COMMENT "Making ChangeLog"
     VERBATIM
     )

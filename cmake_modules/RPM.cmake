@@ -98,7 +98,13 @@ IF(NOT DEFINED SRPM_FILE)
     SET (SRPM_FILE ${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER_FULL}.${DIST_TAG}.src.rpm)
 ENDIF(NOT DEFINED SRPM_FILE)
 
-SET(RPM_IGNORE_FILES "/${RPM_BUILD_SOURCES}" "/${RPM_BUILD_SRPMS}" "/${RPM_BUILD_RPMS}" "/${RPM_BUILD_BUILD}")
+GET_FILENAME_COMPONENT(rpm_build_sources_basename ${RPM_BUILD_SOURCES} NAME)
+GET_FILENAME_COMPONENT(rpm_build_srpms_basename ${RPM_BUILD_SRPMS} NAME)
+GET_FILENAME_COMPONENT(rpm_build_rpms_basename ${RPM_BUILD_RPMS} NAME)
+GET_FILENAME_COMPONENT(rpm_build_build_basename ${RPM_BUILD_BUILD} NAME)
+SET(RPM_IGNORE_FILES "\\\\.rpm$"
+    "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/")
+#MESSAGE("RPM_IGNORE_FILES=${RPM_IGNORE_FILES}")
 SET(SOURCE_TARBALL ${PROJECT_NAME}-${PRJ_VER}-Source.tar.gz)
 
 #-------------------------------------------------------------------

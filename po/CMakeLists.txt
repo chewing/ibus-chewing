@@ -1,9 +1,9 @@
 # Translated languages.
 SET(TRANSLATED_PO_FILES zh_CN.po zh_TW.po)
 
-SET(SOURCES_I18N ../src/IBusChewingEngine.gob ../src/main.c)
+SET(SOURCES_I18N ../src/IBusChewingEngine.gob ../src/IBusChewingEngine-def.c ../src/main.c)
 
-SET(XGETTEXT_OPTIONS --language=C --keyword=_)
+SET(XGETTEXT_OPTIONS --language=C --keyword=_ --keyword=N_)
 
 IF (XGETTEXT_FOUND)
     GETTEXT_CREATE_POT(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pot OPTION ${XGETTEXT_OPTIONS} SRC ${SOURCES_I18N})

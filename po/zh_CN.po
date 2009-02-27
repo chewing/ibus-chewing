@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-25 17:04+1000\n"
+"POT-Creation-Date: 2009-02-27 17:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,74 +15,123 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:220
+#: ../src/IBusChewingEngine.gob:137
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine.gob:113
+#: ../src/IBusChewingEngine-def.c:131
+msgid "Custom"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:119
 msgid "Dachen CP26"
 msgstr "大千CP26"
 
-#: ../src/IBusChewingEngine.gob:105
+#: ../src/IBusChewingEngine-def.c:111
 msgid "Default"
 msgstr "默认"
 
-#: ../src/IBusChewingEngine.gob:111
+#: ../src/IBusChewingEngine-def.c:117
+#, fuzzy
 msgid "Dvorak"
-msgstr ""
+msgstr "Dvorak"
 
-#: ../src/IBusChewingEngine.gob:112
+#: ../src/IBusChewingEngine-def.c:118
 msgid "Dvorak Hsu"
 msgstr "Dvorak许氏"
 
-#: ../src/IBusChewingEngine.gob:109
+#: ../src/IBusChewingEngine-def.c:115
 msgid "ETen"
 msgstr "倚天"
 
-#: ../src/IBusChewingEngine.gob:110
+#: ../src/IBusChewingEngine-def.c:116
 msgid "ETen 26 keys"
 msgstr "倚天26键"
 
-#: ../src/IBusChewingEngine.gob:221
+#: ../src/IBusChewingEngine.gob:138
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine.gob:223
+#: ../src/IBusChewingEngine.gob:140
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:108
+#: ../src/IBusChewingEngine-def.c:114
 msgid "Gin-Yieh"
 msgstr "精业"
 
-#: ../src/IBusChewingEngine.gob:224
+#: ../src/IBusChewingEngine.gob:141
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine.gob:114
+#: ../src/IBusChewingEngine-def.c:120
 msgid "Hanyu"
 msgstr "汉语"
 
-#: ../src/IBusChewingEngine.gob:106
+#: ../src/IBusChewingEngine-def.c:112
 msgid "Hsu"
 msgstr "许氏"
 
-#: ../src/IBusChewingEngine.gob:107
+#: ../src/IBusChewingEngine-def.c:113
 msgid "IBM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:218
+#: ../src/IBusChewingEngine.gob:144
 msgid "KbType"
 msgstr "键盘"
 
-#: ../src/IBusChewingEngine.gob:226
+#: ../src/IBusChewingEngine.gob:145
+msgid "SelKeys"
+msgstr ""
+
+#: ../src/IBusChewingEngine.gob:143
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:280 ../src/IBusChewingEngine.gob:296
-#: ../src/IBusChewingEngine.gob:318 ../src/IBusChewingEngine.gob:331
+#: ../src/IBusChewingEngine.gob:194 ../src/IBusChewingEngine.gob:222
+#: ../src/IBusChewingEngine.gob:268 ../src/IBusChewingEngine.gob:288
 msgid "Use default value:"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:45
+msgid "addPhraseDirection"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:44
+msgid "autoShiftCur"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:46
+msgid "candPerPage"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:47
+msgid "easySymbolInput"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:48
+msgid "escCleanAllBuf"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:49
+msgid "hsuSelKeyType"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:50
+msgid "maxChiSymbolLen"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:51
+msgid "phraseChoiceRearward"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:52
+msgid "spaceAsSelection"
 msgstr ""
 
 #~ msgid "Chewing"
 #~ msgstr "新酷音"
+
+#, fuzzy
+#~ msgid "KBType"
+#~ msgstr "键盘"
