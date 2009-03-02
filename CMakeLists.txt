@@ -19,7 +19,7 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Most setting options revealed, fix google code issue 281.")
+SET(CHANGE_SUMMARY "Fix rpm install issues.")
 
 SET(SUPPORTED_DIST_TAGS F-9 F-10) 
 SET(BODHI_DIST_TAGS fc9 fc10)
