@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-27 17:48+1000\n"
+"POT-Creation-Date: 2009-03-02 12:45+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,3 @@ msgstr ""
 
 #~ msgid "Chewing"
 #~ msgstr "新酷音"
-
-#, fuzzy
-#~ msgid "KBType"
-#~ msgstr "键盘"

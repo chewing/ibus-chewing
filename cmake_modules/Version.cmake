@@ -1,6 +1,6 @@
-# Version: Set version varibles.
+# Version: Set version variables.
 #
-# Include: INCLUDE(DateFormat)
+# To use: INCLUDE(Version)
 #
 #===================================================================
 # Variables: 

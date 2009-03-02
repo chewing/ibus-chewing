@@ -1,6 +1,6 @@
 # Gettext support: Create/Update pot file and 
 #
-# Include: INCLUDE(Gettext)
+# To use: INCLUDE(Gettext)
 #
 # Most of the gettext support code is from FindGettext.cmake of cmake, 
 # but it is included here because:

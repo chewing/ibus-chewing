@@ -1,4 +1,7 @@
-  Setting shows/hides KBType, selKeys, and various settings.
+  Required gconf2 -> GConf2.
+  Fix RPM scriptlet.
+
+* Fri Feb 27 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227-1
   Add gconf schema.
   Fix some memory leaking checked.
   Move some function to cmake_modules.

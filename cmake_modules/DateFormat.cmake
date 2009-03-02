@@ -1,6 +1,6 @@
 # Date format: Get date in specified format and locale.
 #
-# Include: INCLUDE(DateFormat)
+# To use: INCLUDE(DateFormat)
 #
 #===================================================================
 # Macros:

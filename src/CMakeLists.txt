@@ -56,12 +56,6 @@ INSTALL(FILES chewing.xml
     DESTINATION "${datadir}/ibus/component")
 
 SET(GCONF_CONFIG_SOURCE "")
-#EXECUTE_PROCESS(
-#    COMMAND gconftool-2 --get-default-source
-#    COMMAND tr \\n \\t
-#    COMMAND sed  -e s/\\t//
-#    OUTPUT_VARIABLE GCONF_CONFIG_SOURCE
-#    )
 
 SET(ENV{GCONF_CONFIG_SOURCE} ${GCONF_CONFIG_SOURCE})
 

@@ -1,6 +1,7 @@
 # RPM generation, maintaining (remove old rpm) and verification (rpmlint).
 #
-# Include: INCLUDE(RPM)
+# To use: INCLUDE(RPM)
+# Include: SourceTarball
 # 
 #===================================================================
 # Variables: 
@@ -31,10 +32,30 @@
 #         hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
 #
 #===================================================================
+# Targets:
+# pack_src: Make source tarball for rpm packaging.
+#
+# srpm: Build srpm (rpmbuild -bs).
+#     Depends on pack_src.
 # 
+# rpm: Build rpm and srpm (rpmbuild -ba)
+#     Depends on pack_src.
 # 
+# rpmlint: Run rpmlint to generated rpms.
+#
+# rpm_mock_i386: Use mock to build i386 rpms.
+#     Depends on srpm.
+#
+# rpm_mock_x86_64: Use mock to build x86_64 rpms.
+#     Depends on srpm.
+#
+# rpm_remove_old: Remove old rpms.
+#
+# pkg_remove_old: Remove old source tarballs and rpms.
+#     Depends on rpm_remove_old
 #
 
+INCLUDE(SourceTarball)
 SET (SPEC_FILE_WARNING "This file is generated, please modified the .spec.in file instead!")
 
 IF(NOT DEFINED DIST_TAG)
@@ -80,17 +101,7 @@ IF (DEFINED GENERATE_SPEC)
 ENDIF(DEFINED GENERATE_SPEC)
 
 IF(NOT DEFINED RPM_SOURCE_FILES)
-    SET(RPM_SOURCE_FILES)
-    SET(RPM_SOURCE_FILES_PREFIX "${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source")
-    IF(CPACK_SOURCE_GENERATOR STREQUAL "TGZ")
-	SET(RPM_SOURCE_FILES ${RPM_SOURCE_FILES_PREFIX}.tar.gz)
-    ELSEIF(CPACK_SOURCE_GENERATOR STREQUAL "TBZ2")
-	SET(RPM_SOURCE_FILES ${RPM_SOURCE_FILES_PREFIX}.tar.bz2)
-    ELSEIF(CPACK_SOURCE_GENERATOR STREQUAL "TZ")
-	SET(RPM_SOURCE_FILES ${RPM_SOURCE_FILES_PREFIX}.tar.Z)
-    ELSEIF(CPACK_SOURCE_GENERATOR STREQUAL "ZIP")
-	SET(RPM_SOURCE_FILES ${RPM_SOURCE_FILES_PREFIX}.zip)
-    ENDIF(CPACK_SOURCE_GENERATOR STREQUAL "TGZ")
+    SET(RPM_SOURCE_FILES ${SOURCE_TARBALL_OUTPUT})
     #MESSAGE("RPM_SOURCE_FILES=${RPM_SOURCE_FILES}")
 ENDIF(NOT DEFINED RPM_SOURCE_FILES)
 
@@ -104,30 +115,12 @@ GET_FILENAME_COMPONENT(rpm_build_rpms_basename ${RPM_BUILD_RPMS} NAME)
 GET_FILENAME_COMPONENT(rpm_build_build_basename ${RPM_BUILD_BUILD} NAME)
 SET(RPM_IGNORE_FILES "\\\\.rpm$"
     "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/")
-#MESSAGE("RPM_IGNORE_FILES=${RPM_IGNORE_FILES}")
-SET(SOURCE_TARBALL ${PROJECT_NAME}-${PRJ_VER}-Source.tar.gz)
 
-#-------------------------------------------------------------------
-# Move source tarball
-#
-# Target pack_src is here because it is for and basically only for rpm
-#
-GET_FILENAME_COMPONENT(_rpm_build_source ${RPM_BUILD_SOURCES} ABSOLUTE)
-IF (${_rpm_build_source} STREQUAL ${CMAKE_BINARY_DIR})
-    ADD_CUSTOM_TARGET(pack_src}
-	COMMAND make package_source
-	COMMENT "Packaging Source files"
-	VERBATIM
-	)
-ELSE(${_rpm_build_source} STREQUAL ${CMAKE_BINARY_DIR})
-    ADD_CUSTOM_TARGET(pack_src
-	COMMAND make package_source
-	COMMENT "Packaging Source files"
-	COMMAND mkdir -p ${RPM_BUILD_SOURCES}
-	COMMAND mv ${SOURCE_TARBALL} ${RPM_BUILD_SOURCES}/${SOURCE_TARBALL}
-	VERBATIM
-	)
-ENDIF(${_rpm_build_source} STREQUAL ${CMAKE_BINARY_DIR})
+SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES}
+    ${RPM_IGNORE_FILES})
+SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_PACKAGE_IGNORE_FILES}
+    ${RPM_IGNORE_FILES})
+#MESSAGE("RPM_IGNORE_FILES=${RPM_IGNORE_FILES}")
 
 
 #-------------------------------------------------------------------
@@ -192,7 +185,7 @@ ADD_CUSTOM_TARGET(rpm_remove_old
 
 ADD_CUSTOM_TARGET(pkg_remove_old 
     COMMAND find . 
-    -name '${PROJECT_NAME}*.tar.[bg]z*' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.tar.[bg]z*'
+    -name '${PROJECT_NAME}*.tar.[bg]z*' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${SOURCE_TARBALL_POSTFIX}'
     -print -delete
     COMMENT "Removing the old tarballs .."
     )

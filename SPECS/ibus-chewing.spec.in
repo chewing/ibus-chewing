@@ -19,7 +19,7 @@ BuildRequires:  pkgconfig
 BuildRequires:  GConf2-devel
 Requires:   ibus >= 1.1
 Requires:  libchewing >= 0.3.2-4
-Requires:  gconf2
+Requires:  GConf2
 Requires(pre): GConf2
 Requires(post): GConf2
 Requires(preun): GConf2
@@ -42,20 +42,19 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %pre
 if [ "$1" -gt 1 ] ; then
-export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-uninstall-rule \
 %{_sysconfdir}/gconf/schemas/%{name}.schema >/dev/null || :
 fi
 
 %post
-export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule \
 %{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null || :
-%find_lang %{name}
 
 %preun
 if [ "$1" -eq 0 ] ; then
-export GCONF_CONFIG_SOURCE=gconftool-2 --get-default-source
+export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-uninstall-rule \
 %{_sysconfdir}/gconf/schemas/%{name}.schema > /dev/null || :
 fi
@@ -73,20 +72,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
+- Required gconf2 -> GConf2.
+- Fix RPM install issues.
+
+* Fri Feb 27 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227-1
 - Setting shows/hides KBType, selKeys, and various settings.
 - Add gconf schema.
 - Fix some memory leaking checked.
 - Move some function to cmake_modules.
 - Fix Google code issue 281
 
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1.20081023-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090220-1
 - First working version for IBus C
 
 * Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090128-1
 - Fix the binding with libchewing 0.3.2.
-
-* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1.20081023-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
 * Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.1.1.20081023-2
 - Rebuild for Python 2.6
