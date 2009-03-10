@@ -5,7 +5,7 @@
 # 
 #===================================================================
 # Variables: 
-# DIST_TAG: Distribution tag such as el5, fc10.
+# DIST_TAG: Current distribution tag such as el5, fc10.
 #         Default: Distribution tag from rpm --showrc
 #
 # RPM_BUILD_TOPDIR: Directory of  the rpm topdir.

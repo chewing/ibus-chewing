@@ -196,3 +196,37 @@ static void miscOption_array_hide(gpointer data,  gpointer user_data){
     IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),prop->key);
 }
 
+/* 
+ * From http://www.thelinuxpimp.com/files/keylockx.c
+ */
+static int key_get_state(KeySym key, Display *pDisplay){
+    guint     keyMask = 0;
+    Window    root_retrun, child_retrun;
+    int     root_x_return, root_y_return, win_x_return, win_y_return;
+    guint     mask_return;
+    XModifierKeymap* map = XGetModifierMapping(pDisplay);
+    KeyCode keyCode = XKeysymToKeycode(pDisplay,key);
+    if(keyCode == NoSymbol) return 0;
+    int i = 0;
+    while(i < 8) {
+	if( map->modifiermap[map->max_keypermod * i] == keyCode) {
+	    keyMask = 1 << i;
+	}
+	i++;
+    }
+    XQueryPointer(pDisplay, DefaultRootWindow(pDisplay), &root_retrun, &child_retrun,
+	    &root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return );
+    XFreeModifiermap(map);
+    return (mask_return & keyMask) != 0;
+} 
+
+/* 
+ * From send_fake_key_eve() eve.c gcin
+ */
+void key_sent_fake_event(guint key, Display *pDisplay)
+{
+    KeyCode keyCode = XKeysymToKeycode(pDisplay, key);
+    XTestFakeKeyEvent(pDisplay, keyCode, True, CurrentTime);
+    XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
+}
+

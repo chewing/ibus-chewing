@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-02 12:45+1000\n"
+"POT-Creation-Date: 2009-03-10 17:22+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:137
+#: ../src/IBusChewingEngine.gob:143
 msgid "Chi"
 msgstr "中"
 
@@ -48,11 +48,11 @@ msgstr "倚天"
 msgid "ETen 26 keys"
 msgstr "倚天26键"
 
-#: ../src/IBusChewingEngine.gob:138
+#: ../src/IBusChewingEngine.gob:144
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine.gob:140
+#: ../src/IBusChewingEngine.gob:146
 msgid "Full"
 msgstr "全"
 
@@ -60,7 +60,7 @@ msgstr "全"
 msgid "Gin-Yieh"
 msgstr "精业"
 
-#: ../src/IBusChewingEngine.gob:141
+#: ../src/IBusChewingEngine.gob:147
 msgid "Half"
 msgstr "半"
 
@@ -76,20 +76,20 @@ msgstr "许氏"
 msgid "IBM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:144
+#: ../src/IBusChewingEngine.gob:150
 msgid "KbType"
 msgstr "键盘"
 
-#: ../src/IBusChewingEngine.gob:145
+#: ../src/IBusChewingEngine.gob:151
 msgid "SelKeys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:143
+#: ../src/IBusChewingEngine.gob:149
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:194 ../src/IBusChewingEngine.gob:222
-#: ../src/IBusChewingEngine.gob:268 ../src/IBusChewingEngine.gob:288
+#: ../src/IBusChewingEngine.gob:199 ../src/IBusChewingEngine.gob:227
+#: ../src/IBusChewingEngine.gob:272 ../src/IBusChewingEngine.gob:292
 msgid "Use default value:"
 msgstr ""
 

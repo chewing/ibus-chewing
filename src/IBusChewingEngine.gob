@@ -31,6 +31,9 @@ requires 2.0.0
 #include <glib/gi18n.h>
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
+#include <X11/extensions/XTest.h>
+#include <X11/Xlib.h>
+
 %}
 
 
@@ -67,7 +70,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     protected gint selKeys[MAX_SELKEY];
 
-    protected IBusLookupTable *table={ibus_lookup_table_new(8,0,FALSE,TRUE)}
+    protected IBusLookupTable *table=NULL
 	destroy {
 	    if (VAR) {
 		ibus_lookup_table_clear(VAR);
@@ -132,6 +135,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     public IBusConfig *config=NULL;
 
+    private Display* pDisplay = {XOpenDisplay( NULL )}
+          destroywith XCloseDisplay;
+
     classwide GConfClient *gConfClient={gconf_client_get_default ()};
 
     classwide IBusText *chieng_prop_label_chi={ibus_text_new_from_static_string(_("Chi"))};
@@ -148,12 +154,11 @@ class IBus:Chewing:Engine from IBus:Engine{
     classwide IBusText **selKeys_prop_labels={selKeys_to_iBusTexts()};
 
 
-
     init (self) {
           /* initialize the object here */
 	G_DEBUG_MSG("*** init 1");
 
-	chewing_Init("/usr/share/chewing","/tmp");
+	chewing_Init(CHEWING_DATADIR, "/tmp");
 
 	self->context=chewing_new();
 	chewing_set_ChiEngMode(self->context,CHINESE_MODE);
@@ -167,7 +172,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	self_context_load_parameters(self);
 
-
+	self->table=ibus_lookup_table_new(chewing_get_candPerPage(self->context),0,FALSE,TRUE);
 	ibus_lookup_table_clear(self->table);
     }
 
@@ -231,7 +236,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* Add selKeys property */
 		gboolean selKeys_found=FALSE;
 		for(j=0; j<SELKEYS_ARRAY_SIZE ;j++){
-		    g_debug("context_load_parameters() 7 j=%d",j);
 		    IBusPropState pState;
 		    g_snprintf(prop_buf,200,"chewing_selKeys_%s_prop",selKeys_array[j]);
 		    if (j<SELKEYS_ARRAY_SIZE-1){
@@ -450,9 +454,13 @@ class IBus:Chewing:Engine from IBus:Engine{
      */
     public void refresh_property_list(self){
 	gchar prop_buf[200];
-	g_snprintf(prop_buf,200,"chewing_KBType_%s_prop",kbType_ids[chewing_get_KBType(self->context)]);
-	/* Need this line to restore kbtype */
+	/* Need these lines to refresh language bar */
+	g_strlcpy(prop_buf,"chewing_chieng_prop",200);
 	self_refresh_property(self,prop_buf);
+
+	g_snprintf(prop_buf,200,"chewing_KBType_%s_prop",kbType_ids[chewing_get_KBType(self->context)]);
+	self_refresh_property(self,prop_buf);
+
 	g_snprintf(prop_buf,200,"chewing_selKeys_1234567890_prop");
 	self_refresh_property(self,prop_buf);
 	ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
@@ -610,10 +618,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) gboolean
     process_key_event(IBus:Engine *self, guint  keyval,  guint  modifiers){
 	Self *selfObj=SELF(self);
-	if (modifiers & IBUS_RELEASE_MASK){
-//            G_DEBUG_MSG("*** process_key_event(-, %u(%c), %u) ...ignored",keyval, keyval, modifiers);
-	    return FALSE;
-	}
+
 	G_DEBUG_MSG("*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
 	guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
 	if (state==0){
@@ -745,36 +750,17 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
 	G_DEBUG_MSG("*** enable 1");
-        Self *selfObj=SELF(self);
+	Self *selfObj=SELF(self);
 
-        /* connections_list is not avail in init, so we put it here */
-        GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
-        g_assert(connections_list);
-        g_assert(connections_list->data);
         if (!selfObj->config){
-            IBusConnection *iConnection=(IBusConnection *) connections_list->data;
+	    /* connections_list is not avail in init, so we put it here */
+	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
+	    g_assert(connections_list);
+	    g_assert(connections_list->data);
+	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
             selfObj->config=ibus_config_new(iConnection);
         }
 
-//        /* Load/Set kbType */
-//        ChewingKbType kbType_set=0;
-//        GValue kbTypeValue={0};
-//        g_value_init(&kbTypeValue,G_TYPE_STRING);
-//        if (ibus_config_get_value (selfObj->config,"engine/Chewing","KbType",&kbTypeValue)){
-//            /* Config exists, loading */
-//            kbType_set=kbType_id_get_index(g_value_get_string(&kbTypeValue));
-//        }else{
-//             /* Config does not exist, initialing  */
-//            kbType_set=CHEWING_KBTYPE_DEFAULT;
-//            self_save_kbType(selfObj, kbType_set);
-//        }
-//        G_DEBUG_MSG("*** enable(): kbType=%d(%s)",kbType_set,kbType_ids[kbType_set]);
-
-//        ChewingKbType kbType_curr=chewing_get_KBType(selfObj->context);
-//        if (kbType_curr!=kbType_set){
-//            chewing_set_KBType(selfObj->context,kbType_set);
-//            self_refresh_property(selfObj,kbType_ids[kbType_set]);
-//        }
     }
 
     override (IBus:Engine) void
@@ -786,6 +772,24 @@ class IBus:Chewing:Engine from IBus:Engine{
     focus_in(IBus:Engine *self){
 	G_DEBUG_MSG("*** focus_in 1");
 	Self *selfObj=SELF(self);
+	
+	/* Sync Caps_Lock and ChiEngMode */
+	G_DEBUG_MSG("*** focus_in(): Caps %d",key_get_state(IBUS_Caps_Lock,selfObj->_priv->pDisplay));
+	if (key_get_state(IBUS_Caps_Lock,selfObj->_priv->pDisplay)){
+	    G_DEBUG_MSG("*** focus_in(): Caps on");
+	    if (chewing_get_ChiEngMode(selfObj->context)){
+		key_sent_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
+		G_DEBUG_MSG("*** focus_in(): Fake Caps_Lock event sent");
+	    }
+	}else{
+	    G_DEBUG_MSG("*** focus_in(): Caps off");
+	    if (!chewing_get_ChiEngMode(selfObj->context)){
+		key_sent_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
+		G_DEBUG_MSG("*** focus_in(): Fake Caps_Lock event sent");
+	    }
+	}
+	/* Caps_Lock does not agree which current chi/eng mode */
+	/* Set Caps_Lock to Chinese mode*/
 
 	self_refresh_property_list(selfObj);
         self_refresh_preedit(selfObj);
@@ -794,7 +798,6 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     focus_out(IBus:Engine *self){
 	G_DEBUG_MSG("*** focus_out 1");
-	;
     }
 
     override (IBus:Engine) void

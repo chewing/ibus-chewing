@@ -11,7 +11,7 @@ PROJECT(ibus-chewing)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(PRJ_VER_MAJOR "1")
 SET(PRJ_VER_MINOR "0")
-SET(PRJ_VER_PATCH "2")
+SET(PRJ_VER_PATCH "3")
 SET(PRJ_VER_RELEASE "1")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
@@ -19,12 +19,9 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Fix rpm install issues.")
+SET(CHANGE_SUMMARY "Fix Google issue 305, 306, 307, Sync chewing candPerPage and IBusTable->page_size")
 
-SET(SUPPORTED_DIST_TAGS F-9 F-10) 
-SET(BODHI_DIST_TAGS fc9 fc10)
-
-
+SET(CVS_DIST_TAGS F-10) 
 
 ####################################################################
 # Includes
@@ -54,13 +51,23 @@ CONFIGURE_FILE(src/chewing.xml.in src/chewing.xml)
 FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 gtk+-2.0)
 PKG_CHECK_MODULES(IBUS ibus-1.0)
-PKG_CHECK_MODULES(CHEWING chewing)
 PKG_CHECK_MODULES(GCONF2 gconf-2.0)
+PKG_CHECK_MODULES(X11 x11)
+PKG_CHECK_MODULES(XTST xtst)
 FIND_PROGRAM(GOB2 gob2)
 
 IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
     MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
 ENDIF()
+
+PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
+EXECUTE_PROCESS(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing
+    COMMAND tr \\n \\t
+    COMMAND sed  -e s/\\t//
+    OUTPUT_VARIABLE CHEWING_DATADIR
+    )
+ADD_DEFINITIONS(-DCHEWING_DATADIR='"${CHEWING_DATADIR}"')
+
 
 #==================================================================
 # Source code subdirectories
