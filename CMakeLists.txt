@@ -19,7 +19,7 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Fix Google issue 305, 306, 307, Sync chewing candPerPage and IBusTable->page_size")
+SET(CHANGE_SUMMARY "Fix Google issue 305, 307; Sync chewing candPerPage and IBusTable->page_size; Sync between IM and keyboard (Experimental)")
 
 SET(CVS_DIST_TAGS F-10) 
 

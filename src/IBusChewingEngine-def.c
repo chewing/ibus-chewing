@@ -196,37 +196,76 @@ static void miscOption_array_hide(gpointer data,  gpointer user_data){
     IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),prop->key);
 }
 
-/* 
- * From http://www.thelinuxpimp.com/files/keylockx.c
- */
-static int key_get_state(KeySym key, Display *pDisplay){
-    guint     keyMask = 0;
+//static KeySym modifiers[]={
+//    IBUS_Scroll_Lock,
+//    IBUS_Num_Lock
+//    IBUS_Caps_Lock,
+//    IBUS_Shift_L,
+//    IBUS_Shift_R,
+//    IBUS_Control_L,
+//    IBUS_Control_R,
+//    IBUS_Shift_Lock,
+//    IBUS_Meta_L,
+//    IBUS_Meta_R,
+//    IBUS_Alt_L, 
+//    IBUS_Alt_R,
+//    IBUS_Super_L,
+//    IBUS_Super_R,
+//    IBUS_Hyper_L,
+//    IBUS_Hyper_R,
+//    IBUS_VoidSymbol
+//};
+
+static guint keyModifier_get(Display *pDisplay){
     Window    root_retrun, child_retrun;
     int     root_x_return, root_y_return, win_x_return, win_y_return;
     guint     mask_return;
-    XModifierKeymap* map = XGetModifierMapping(pDisplay);
-    KeyCode keyCode = XKeysymToKeycode(pDisplay,key);
-    if(keyCode == NoSymbol) return 0;
-    int i = 0;
-    while(i < 8) {
-	if( map->modifiermap[map->max_keypermod * i] == keyCode) {
-	    keyMask = 1 << i;
-	}
-	i++;
-    }
     XQueryPointer(pDisplay, DefaultRootWindow(pDisplay), &root_retrun, &child_retrun,
 	    &root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return );
-    XFreeModifiermap(map);
-    return (mask_return & keyMask) != 0;
+    return mask_return;
 } 
+
+
+/* 
+ * From http://www.thelinuxpimp.com/files/keylockx.c
+ */
+//static guint key_get_state(KeySym key, Display *pDisplay){
+//    guint     keyMask = 0;
+//    XModifierKeymap* map = XGetModifierMapping(pDisplay);
+//    KeyCode keyCode = XKeysymToKeycode(pDisplay,key);
+//    if(keyCode == NoSymbol) return 0;
+//    int i = 0;
+//    while(i < 8) {
+//        if( map->modifiermap[map->max_keypermod * i] == keyCode) {
+//            keyMask = 1 << i;
+//        }
+//        i++;
+//    }
+//    XFreeModifiermap(map);
+//    guint mask_return=keyModifier_get(pDisplay);
+
+//    return (mask_return & keyMask) != 0;
+//} 
 
 /* 
  * From send_fake_key_eve() eve.c gcin
  */
-void key_sent_fake_event(guint key, Display *pDisplay)
+static void key_send_fake_event(KeySym key, Display *pDisplay)
 {
     KeyCode keyCode = XKeysymToKeycode(pDisplay, key);
+    G_DEBUG_MSG("key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
     XTestFakeKeyEvent(pDisplay, keyCode, True, CurrentTime);
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
+    
 }
 
+//static gboolean key_ignore_skip(guint  keyval){
+//    switch(keyval){
+//	case IBUS_Caps_Lock:
+//	    return TRUE;
+//	default:
+//	    break;
+//
+//    }
+//    return FALSE;
+//}

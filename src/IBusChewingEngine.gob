@@ -51,6 +51,12 @@ enum CHEWING_KBTYPE{
     HAN_YU
 } Chewing:KbType;
 
+enum CHEWING_MODIFIER_SYNC{
+    NONE,
+    FROM_KEYBOARD,
+    FROM_IM
+} Chewing:Modifier:Sync;
+
 %headertop{
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
 extern gboolean ibus_chewing_verbose;
@@ -66,7 +72,11 @@ class IBus:Chewing:Engine from IBus:Engine{
     public ChewingContext *context=NULL
 	destroywith chewing_delete;
 
-    public gboolean showSetting=FALSE;
+    public Chewing:Modifier:Sync sync_CapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
+
+    private gboolean showSetting=FALSE;
+    /* Number of event to be skipped */
+    private guint event_skipCount=0;
 
     protected gint selKeys[MAX_SELKEY];
 
@@ -135,7 +145,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     public IBusConfig *config=NULL;
 
-    private Display* pDisplay = {XOpenDisplay( NULL )}
+    private Display *pDisplay = {XOpenDisplay( NULL )}
           destroywith XCloseDisplay;
 
     classwide GConfClient *gConfClient={gconf_client_get_default ()};
@@ -389,14 +399,16 @@ class IBus:Chewing:Engine from IBus:Engine{
 	int index;
 	IBusProperty *prop;
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
-	    if (chewing_get_ChiEngMode(self->context)){
-		/* Chinese  */
-		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
-	    }else{
-		/* English */
-		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
-	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
+//	    if (self->_priv->event_skipCount==0){
+		if (chewing_get_ChiEngMode(self->context)){
+		    /* Chinese  */
+		    ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
+		}else{
+		    /* English */
+		    ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
+		}
+		ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
+//	    }
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    if (chewing_get_ShapeMode(self->context)){
 		/* Full-Sized Shape */
@@ -409,7 +421,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
 	    G_DEBUG_MSG("*** refresh_property(-, %s) 2, self->settings_prop->state=%u kbType->visible=%u ",
 		    prop_name, self->settings_prop->state, self->kbType_prop->visible);
-	    if (self->showSetting){
+	    if (self->_priv->showSetting){
 		self->settings_prop->state=PROP_STATE_CHECKED;
 	    }else{
 		self->settings_prop->state=PROP_STATE_UNCHECKED;
@@ -615,11 +627,18 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_commit(selfObj);
     }
 
+
     override (IBus:Engine) gboolean
     process_key_event(IBus:Engine *self, guint  keyval,  guint  modifiers){
 	Self *selfObj=SELF(self);
+	gboolean result=TRUE;
+	if (modifiers & IBUS_RELEASE_MASK){
+	    /* Skip release event */
+	    return TRUE;
+	}
 
-	G_DEBUG_MSG("*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
+	
+        G_DEBUG_MSG("*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
 	guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
 	if (state==0){
 	    switch (keyval){
@@ -677,9 +696,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    chewing_handle_Tab(selfObj->context);
 		    break;
 		case IBUS_Caps_Lock:
-		    chewing_handle_Capslock(selfObj->context);
-		    self_refresh_property(selfObj,"chewing_chieng_prop");
-		    break;
+                    chewing_handle_Capslock(selfObj->context);
+                    self_refresh_property(selfObj,"chewing_chieng_prop");
+                    break;
 		default:
 		    chewing_handle_Default(selfObj->context,keyval);
 		    break;
@@ -708,10 +727,13 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }else if (keyval==IBUS_v || keyval==IBUS_V){
 		chewing_handle_Right(selfObj->context);
 	    }else{
-		return FALSE;
+		result=FALSE;
 	    }
 
 	}else{
+	    result=FALSE;
+	}
+	if (!result){
 	    return FALSE;
 	}
 	return self_commit(selfObj);
@@ -749,7 +771,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
-	G_DEBUG_MSG("*** enable 1");
+	G_DEBUG_MSG("*** enable");
 	Self *selfObj=SELF(self);
 
         if (!selfObj->config){
@@ -765,32 +787,35 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     disable(IBus:Engine  *self){
-	G_DEBUG_MSG("*** disable 1");
+	G_DEBUG_MSG("*** disable");
     }
 
     override (IBus:Engine) void
     focus_in(IBus:Engine *self){
-	G_DEBUG_MSG("*** focus_in 1");
+	G_DEBUG_MSG("*** focus_in");
 	Self *selfObj=SELF(self);
 	
 	/* Sync Caps_Lock and ChiEngMode */
-	G_DEBUG_MSG("*** focus_in(): Caps %d",key_get_state(IBUS_Caps_Lock,selfObj->_priv->pDisplay));
-	if (key_get_state(IBUS_Caps_Lock,selfObj->_priv->pDisplay)){
-	    G_DEBUG_MSG("*** focus_in(): Caps on");
-	    if (chewing_get_ChiEngMode(selfObj->context)){
-		key_sent_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
-		G_DEBUG_MSG("*** focus_in(): Fake Caps_Lock event sent");
-	    }
-	}else{
-	    G_DEBUG_MSG("*** focus_in(): Caps off");
-	    if (!chewing_get_ChiEngMode(selfObj->context)){
-		key_sent_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
-		G_DEBUG_MSG("*** focus_in(): Fake Caps_Lock event sent");
+	guint modifiers=keyModifier_get(selfObj->_priv->pDisplay);
+	gint caps_is_lock=(modifiers & IBUS_LOCK_MASK)!=0;
+	G_DEBUG_MSG("focus_in(): ChiEng=%d IBUS_LOCK=%d",
+		chewing_get_ChiEngMode(selfObj->context),caps_is_lock);
+	if (chewing_get_ChiEngMode(selfObj->context)==caps_is_lock){
+	    /* Caps_lock and ChiEngMode does not agree each other */
+	    switch(selfObj->sync_CapsLock_local){
+		case CHEWING_MODIFIER_SYNC_FROM_KEYBOARD:
+		    chewing_set_ChiEngMode(selfObj->context,!caps_is_lock);
+		    break;
+		case CHEWING_MODIFIER_SYNC_FROM_IM:
+		    /* fake event won't go through process_key_event */
+		    key_send_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
+		    break;
+		default:
+		    g_warning("Caps_lock and ChiEngMode does not agree each other!");
+		    break;
+
 	    }
 	}
-	/* Caps_Lock does not agree which current chi/eng mode */
-	/* Set Caps_Lock to Chinese mode*/
-
 	self_refresh_property_list(selfObj);
         self_refresh_preedit(selfObj);
     }
@@ -816,12 +841,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    chewing_set_ShapeMode(selfObj->context, !chewing_get_ShapeMode(selfObj->context));
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
 	    if (prop_state==PROP_STATE_CHECKED){
-		selfObj->showSetting=TRUE;
+		selfObj->_priv->showSetting=TRUE;
 		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_KBType_prop");
 		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_selKeys_prop");
 		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_show,selfObj);
 	    }else{
-		selfObj->showSetting=FALSE;
+		selfObj->_priv->showSetting=FALSE;
 		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_KBType_prop");
 		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_selKeys_prop");
 		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_hide,selfObj);

@@ -74,6 +74,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
+- IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
+- IBus Google issue 307:  hardcoded chewing datadir
+- Sync chewing candPerPage and IBusTable->page_size
+- Sync between IM and keyboard (Experimental)
+
 - ibus-chewing.schema -> ibus-chewing.schemas
 
 * Tue Mar 03 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.2.20090303-1
