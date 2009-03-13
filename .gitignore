@@ -35,4 +35,12 @@ py-compile
 ibus-chewing*.tar.*
 ibus-chewing.spec
 DEVELOPER_SETTING
+BUILD/
+CMakeFiles/
+CVS/
+RPMS/
+SRPMS/
+_CPack_Packages/
+bin/
+po/CMakeFiles/
 

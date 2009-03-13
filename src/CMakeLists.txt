@@ -11,12 +11,17 @@ LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS}
 #
 SET(GOB_GENERATED ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.c
     ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.h
-    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine-private.h)
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine-private.h
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog.c
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog.h
+    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog-private.h
+    )
 
 
 ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED}
     COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS IBusChewingEngine.gob IBusChewingEngine-def.c
+    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS IBusChewingEngine.gob IBusChewingDialog.gob IBusChewingEngine-def.c
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -29,7 +34,10 @@ SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
 
 
 # executable built from some source
-ADD_EXECUTABLE(ibus-engine-chewing main.c ibus-chewing-engine.c) 
+ADD_EXECUTABLE(ibus-engine-chewing main.c 
+    ibus-chewing-engine.c 
+    ibus-chewing-dialog.c
+    ) 
 
 # Link the executable to the library.
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}

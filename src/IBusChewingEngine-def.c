@@ -34,23 +34,38 @@ typedef struct{
     GConfValueType type;
     gchar key[30];
     gchar defaultValue[30];
+    
+    gint min;
+    gint max;
     ChewingSettingFunc func;
     ChewingGettingFunc getFunc;
 } ChewingParameter;
 
 const ChewingParameter parameters[]={
-    {GCONF_VALUE_STRING, "KBType",    "default", NULL,NULL},
-    {GCONF_VALUE_STRING, "selKeys","1234567890",NULL,NULL},
-    {GCONF_VALUE_BOOL,   N_("autoShiftCur"),"0", chewing_set_autoShiftCur,chewing_get_autoShiftCur},
-    {GCONF_VALUE_BOOL, N_("addPhraseDirection"),"0",chewing_set_addPhraseDirection,chewing_get_addPhraseDirection},
-    {GCONF_VALUE_INT, N_("candPerPage"),"10",chewing_set_candPerPage,chewing_get_candPerPage},
-    {GCONF_VALUE_BOOL, N_("easySymbolInput"),"0",chewing_set_easySymbolInput,chewing_get_easySymbolInput},
-    {GCONF_VALUE_BOOL, N_("escCleanAllBuf"),"0",chewing_set_escCleanAllBuf,chewing_get_escCleanAllBuf},
-    {GCONF_VALUE_INT, N_("hsuSelKeyType"),"1",chewing_set_hsuSelKeyType,chewing_get_hsuSelKeyType},
-    {GCONF_VALUE_INT, N_("maxChiSymbolLen"),"16",chewing_set_maxChiSymbolLen,chewing_get_maxChiSymbolLen},
-    {GCONF_VALUE_BOOL, N_("phraseChoiceRearward"),"1",chewing_set_phraseChoiceRearward,chewing_get_phraseChoiceRearward},
-    {GCONF_VALUE_BOOL, N_("spaceAsSelection"),"1",chewing_set_spaceAsSelection,chewing_get_spaceAsSelection},
-    {GCONF_VALUE_INVALID, "","", NULL}
+    {GCONF_VALUE_STRING, "KBType",    "default", 0, 0,
+	NULL,NULL},
+    {GCONF_VALUE_STRING, "selKeys","1234567890", 0, 0,
+	NULL,NULL},
+    {GCONF_VALUE_BOOL,   N_("autoShiftCur"),"0", 0, 1,
+	chewing_set_autoShiftCur,chewing_get_autoShiftCur},
+    {GCONF_VALUE_BOOL, N_("addPhraseDirection"),"0", 0, 1,
+	chewing_set_addPhraseDirection,chewing_get_addPhraseDirection},
+    {GCONF_VALUE_INT, N_("candPerPage"),"10", 8, 10,
+	chewing_set_candPerPage,chewing_get_candPerPage},
+    {GCONF_VALUE_BOOL, N_("easySymbolInput"),"0", 0, 1,
+	chewing_set_easySymbolInput,chewing_get_easySymbolInput},
+    {GCONF_VALUE_BOOL, N_("escCleanAllBuf"),"0", 0, 1,
+	chewing_set_escCleanAllBuf,chewing_get_escCleanAllBuf},
+    {GCONF_VALUE_INT, N_("hsuSelKeyType"),"1", 1, 2,
+	chewing_set_hsuSelKeyType,chewing_get_hsuSelKeyType},
+    {GCONF_VALUE_INT, N_("maxChiSymbolLen"),"16", 8, 30,
+	chewing_set_maxChiSymbolLen,chewing_get_maxChiSymbolLen},
+    {GCONF_VALUE_BOOL, N_("phraseChoiceRearward"),"1", 0, 1,
+	chewing_set_phraseChoiceRearward,chewing_get_phraseChoiceRearward},
+    {GCONF_VALUE_BOOL, N_("spaceAsSelection"),"1", 0, 1,
+	chewing_set_spaceAsSelection,chewing_get_spaceAsSelection},
+    {GCONF_VALUE_INVALID, "","",  0, 0, 
+	NULL, NULL}
 };
 
 

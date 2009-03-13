@@ -33,7 +33,8 @@ requires 2.0.0
 #include <gconf/gconf-client.h>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
-
+#include <gtk/gtk.h>
+#include "ibus-chewing-dialog.h"
 %}
 
 
@@ -65,6 +66,7 @@ extern gboolean ibus_chewing_verbose;
 %{
 #define G_DEBUG_MSG(msg, args...) if (ibus_chewing_verbose) g_debug(msg, ##args)
 #include "IBusChewingEngine-def.c"
+
 %}
 
 
@@ -73,6 +75,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 	destroywith chewing_delete;
 
     public Chewing:Modifier:Sync sync_CapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
+
+    public GtkWidget *setting_dialog={
+	GTK_WIDGET(ibus_chewing_dialog_new_default())};
 
     private gboolean showSetting=FALSE;
     /* Number of event to be skipped */
