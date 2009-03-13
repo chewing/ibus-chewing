@@ -30,12 +30,12 @@
 # 
 #-------------------------------------------------------------------
 # GETTEXT_CREATE_TRANSLATIONS ( outputFile [ALL] file1 ... fileN 
-#    [COMMENT comment] )
+#     [COMMENT comment] )
 #
-#    This will create a target "translations" which will convert the 
-#    given input po files into the binary output mo file. If the 
-#    ALL option is used, the translations will also be created when
-#    building the default target.
+#     This will create a target "translations" which will convert the 
+#     given input po files into the binary output mo file. If the 
+#     ALL option is used, the translations will also be created when
+#     building the default target.
 #
 # * Produced targets: translations 
 #-------------------------------------------------------------------

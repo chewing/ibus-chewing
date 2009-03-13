@@ -23,61 +23,23 @@ ADD_DEFINITIONS(-DPROJECT_NAME='"${PROJECT_NAME}"')
 SET(PROJECT_DATADIR "${datadir}/${PROJECT_NAME}")
 SET(PROJECT_DOCDIR "${docdir}/${PROJECT_NAME}-${PRJ_VER}")
 
+# Load developer targets if DEVELOPER_SETTING_FILE exists
 SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING")
-
-#====================================================================
-#  Developer can edit a DEVELOPER_SETTING file, 
-#  which defines the developer specific information,
-#  So they can upload to hosting service provider.
-#
-#  DEVELOPER_SETTING format
-#  SSH_USER=<user_name>
-#  SSH_ARGS=<additional args>
-#  KOJI_CVS_PATH=<path for koji CVS>
-#
-#  KOJI_CVS_PATH is for Fedora/EPEL users, it has no effect on other systems.
-#
-
 IF(EXISTS ${DEVELOPER_SETTING_FILE})
-    EXECUTE_PROCESS(COMMAND  grep SSH_USER ${DEVELOPER_SETTING_FILE}
-	    COMMAND sed -e "s/SSH_USER=//"
-	    COMMAND tr \\n \\t
-	    COMMAND sed  -e s/\\t//
-	    OUTPUT_VARIABLE SSH_USER
-    )
+    SET(DEVELOPER_DEPENDS UploadPkg.batch.in)
+    SET(HOSTING_SERVICE_PROVIDER "Source forge")
+    INCLUDE(Developer)
+    DEVELOPER_GET_ATTRIBUTE(SSH_USER SSH_USER ${DEVELOPER_SETTING_FILE})
+    DEVELOPER_GET_ATTRIBUTE(SSH_ARGS SSH_ARGS ${DEVELOPER_SETTING_FILE})
+    DEVELOPER_GET_ATTRIBUTE(KOJI_CVS_PATH KOJI_CVS_PATH ${DEVELOPER_SETTING_FILE})
 
-    EXECUTE_PROCESS(COMMAND  grep SSH_ARGS ${DEVELOPER_SETTING_FILE}
-	    COMMAND sed -e "s/SSH_ARGS=//"
-	    COMMAND tr \\n \\t
-	    COMMAND sed  -e s/\\t//
-	    OUTPUT_VARIABLE SSH_ARGS
-	    RESULT_VARIABLE NO_SSH_ARGS
+    DEVELOPER_UPLOAD(SERVER_TYPE sftp
+        USER ${SSH_USER}
+	BATCH UploadPkg.batch
+	OPTIONS ${SSH_ARGS}
+	SITE frs.sourceforge.net
     )
-    
-    IF(NOT ${NO_SSH_ARGS})
-	IF ("${SSH_ARGS}" STREQUAL "")
-	    SET(SFTP_SSH_ARGS "")
-	ELSE ()
-	    SET(SFTP_SSH_ARGS -F ${SSH_ARGS})
-	ENDIF ()
-    ELSE()
-	SET(SFTP_SSH_ARGS "")
-    ENDIF()
-
-    EXECUTE_PROCESS(COMMAND  grep KOJI_CVS_PATH ${DEVELOPER_SETTING_FILE}
-	COMMAND sed -e "s/KOJI_CVS_PATH=//"
-	COMMAND tr \\n \\t
-	COMMAND sed  -e s/\\t//
-	OUTPUT_VARIABLE KOJI_CVS_PATH
-	RESULT_VARIABLE NO_KOJI_CVS_PATH
-    )
-
-    IF(NOT DEFINED KOJI_CVS_PATH)
-	SET(KOJI_CVS_PATH "./")
-    ELSEIF (KOJI_CVS_PATH STREQUAL "")
-	SET(KOJI_CVS_PATH "./")
-    ENDIF()
-ENDIF(EXISTS  ${DEVELOPER_SETTING_FILE})
+ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 
 #==================================================================
 # Configure files
@@ -135,19 +97,4 @@ IF (EXISTS Doxyfile)
 ENDIF()
 
 
-#====================================================================
-# Upload the package releases to hosting service provider (Source forge).
-#
-
-IF(EXISTS UploadPkg.batch)
-    IF(DEFINED ${SSH_USER})
-        SET(UPLOAD_SITE frs.sourceforge.net)
-        SET(HOSTING_SERVICE_PROVIDER "Source forge")
-        ADD_CUSTOM_TARGET(upload_pkg_release
-	    COMMAND sftp -b UploadPkg.batch ${SFTP_SSH_ARGS} ${SSH_USER}@${UPLOAD_SITE}
-	    DEPENDS ${DEVELOPER_SETTING_FILE} UploadPkg.batch.in
-	    COMMENT "Uploading the package releases to ${HOSTING_SERVICE_PROVIDER}..."
-	)
-    ENDIF()
-ENDIF()
 

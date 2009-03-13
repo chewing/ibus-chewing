@@ -1,3 +1,6 @@
+
+
+* Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311-1
   IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
   IBus Google issue 307:  hardcoded chewing datadir
   Sync chewing candPerPage and IBusTable->page_size
