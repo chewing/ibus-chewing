@@ -12,22 +12,19 @@ LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS}
 SET(GOB_GENERATED ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.c
     ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine.h
     ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-engine-private.h
-    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog.c
-    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog.h
-    ${CMAKE_HOME_DIRECTORY}/src/ibus-chewing-dialog-private.h
+    ${CMAKE_HOME_DIRECTORY}/src/maker-dialog.c
+    ${CMAKE_HOME_DIRECTORY}/src/maker-dialog.h
+    ${CMAKE_HOME_DIRECTORY}/src/maker-dialog-private.h
     )
 
 
 ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED}
     COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS IBusChewingEngine.gob IBusChewingDialog.gob IBusChewingEngine-def.c
+    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS IBusChewingEngine.gob MakerDialog.gob IBusChewingEngine-def.c
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-ADD_CUSTOM_TARGET(gob
-    DEPENDS  ${GOB_GENERATED}
-)
 
 SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
     PROPERTIES GENERATED TRUE)
@@ -36,12 +33,19 @@ SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
 # executable built from some source
 ADD_EXECUTABLE(ibus-engine-chewing main.c 
     ibus-chewing-engine.c 
-    ibus-chewing-dialog.c
+    maker-dialog.c
+    ) 
+ADD_EXECUTABLE(dialogTest dialogTest.c 
+    maker-dialog.c
     ) 
 
 # Link the executable to the library.
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
     ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
+
+TARGET_LINK_LIBRARIES(dialogTest ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
+    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
+
 
 
 IF(NOT DEFINED LIB_INSTALL_DIR)

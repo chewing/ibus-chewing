@@ -1,3 +1,22 @@
+const gchar *page_labels[]={
+    N_("Preference"),
+    N_("Look & Feel"),
+    N_("Keyboard"),
+    NULL
+};
+
+const gchar *button_labels[]={
+    GTK_STOCK_APPLY,
+    GTK_STOCK_CANCEL,
+    GTK_STOCK_OK,
+    NULL
+};
+
+GtkResponseType button_responses[]={
+    GTK_RESPONSE_APPLY,
+    GTK_RESPONSE_CANCEL,
+    GTK_RESPONSE_OK
+};
 
 const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 const char *kbType_ids[]={

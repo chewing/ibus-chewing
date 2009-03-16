@@ -57,7 +57,7 @@ start_component (void)
 {
     IBusComponent *component;
 
-    ibus_init ();
+//    ibus_init ();
     
     bus = ibus_bus_new ();
     g_signal_connect (bus, "disconnected", G_CALLBACK (ibus_disconnected_cb), NULL);
@@ -73,15 +73,17 @@ start_component (void)
     }else {
         ibus_bus_register_component (bus, component);
     }
+    gtk_main ();
 
-    ibus_main ();
+//    ibus_main ();
 }
 
 int
-main (gint argc, gchar **argv)
+main (gint argc, gchar *argv[])
 {
     GError *error = NULL;
     GOptionContext *context;
+    gtk_init(&argc,&argv);
 
     /* Init i18n messages */
     setlocale (LC_ALL, "");

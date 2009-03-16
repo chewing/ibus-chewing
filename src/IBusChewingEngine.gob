@@ -34,7 +34,6 @@ requires 2.0.0
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <gtk/gtk.h>
-#include "ibus-chewing-dialog.h"
 %}
 
 
@@ -59,11 +58,12 @@ enum CHEWING_MODIFIER_SYNC{
 } Chewing:Modifier:Sync;
 
 %headertop{
+#include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
-extern gboolean ibus_chewing_verbose;
 %}
 
 %{
+extern gboolean ibus_chewing_verbose;
 #define G_DEBUG_MSG(msg, args...) if (ibus_chewing_verbose) g_debug(msg, ##args)
 #include "IBusChewingEngine-def.c"
 
@@ -77,7 +77,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     public Chewing:Modifier:Sync sync_CapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
 
     public GtkWidget *setting_dialog={
-	GTK_WIDGET(ibus_chewing_dialog_new_default())};
+	GTK_WIDGET(maker_dialog_new_full("_(Setting)",3,page_labels,3,button_labels,button_responses))};
 
     private gboolean showSetting=FALSE;
     /* Number of event to be skipped */
@@ -137,14 +137,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		g_ptr_array_free(VAR,TRUE);
 	    }
 	};
-
-
-//    public IBusProperty    *settings_misc_prop={
-//        ibus_property_new("chewing_settings_misc_prop",PROP_TYPE_MENU, 
-//                SELF_GET_CLASS(self)->settings_misc_prop_label,
-//                NULL, NULL, TRUE, FALSE, 
-//                PROP_STATE_UNCHECKED, self->settings_misc_prop_subList);
-//    };
 
     public IBusPropList   *prop_list={ibus_prop_list_new()};
 
@@ -404,16 +396,14 @@ class IBus:Chewing:Engine from IBus:Engine{
 	int index;
 	IBusProperty *prop;
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
-//	    if (self->_priv->event_skipCount==0){
-		if (chewing_get_ChiEngMode(self->context)){
-		    /* Chinese  */
-		    ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
-		}else{
-		    /* English */
-		    ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
-		}
-		ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
-//	    }
+	    if (chewing_get_ChiEngMode(self->context)){
+		/* Chinese  */
+		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
+	    }else{
+		/* English */
+		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
+	    }
+	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    if (chewing_get_ShapeMode(self->context)){
 		/* Full-Sized Shape */
@@ -837,6 +827,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	ChewingKbType kbType;
 	gboolean needRefresh=TRUE;
 	int index;
+	GtkResponseType response;
 
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    /* Toggle Chinese <-> English */
@@ -850,11 +841,17 @@ class IBus:Chewing:Engine from IBus:Engine{
 		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_KBType_prop");
 		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_selKeys_prop");
 		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_show,selfObj);
+	        response=gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog));
+		G_DEBUG_MSG("*** property_activate(-, %s, %u) response=%d", prop_name, prop_state,response);
+		self_refresh_property_list(selfObj);
+//		gtk_widget_show(selfObj->setting_dialog);
 	    }else{
 		selfObj->_priv->showSetting=FALSE;
 		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_KBType_prop");
 		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_selKeys_prop");
 		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_hide,selfObj);
+//		gtk_widget_hide(selfObj->setting_dialog);
+		self_refresh_property_list(selfObj);
 	    }
 	}else if ((kbType=KBType_property_get_index(prop_name))>=0){
 	    if (prop_state==PROP_STATE_CHECKED){
@@ -898,16 +895,14 @@ class IBus:Chewing:Engine from IBus:Engine{
 	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
 	ibus_property_set_visible(prop,TRUE);
 	ibus_engine_update_property(self,prop);
-	self_refresh_property_list(selfObj);
     }
 
     override (IBus:Engine) void
     property_hide(IBus:Engine *self, const gchar  *prop_name){
-	G_DEBUG_MSG("*** property_hide, %s)",prop_name);
+	G_DEBUG_MSG("*** property_hide(-, %s)",prop_name);
 	Self *selfObj=SELF(self);
 	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
 	ibus_property_set_visible(prop,FALSE);
 	ibus_engine_update_property(self,prop);
-	self_refresh_property_list(selfObj);
     }
 }
