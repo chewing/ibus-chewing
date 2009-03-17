@@ -22,6 +22,7 @@ requires 2.0.0
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */ 
 #include <stdlib.h>
+#include <strings.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
@@ -30,62 +31,104 @@ requires 2.0.0
 %headertop{
 #ifndef MAKER_DIALOG_H_
 #define MAKER_DIALOG_H_
-typedef void (*AttributeSettingFunc)(gpointer attribute, gpointer value);
-typedef gpointer (*AttributeGettingFunc)(gpointer attribute);
-
 #define STRING_BUFFER_SIZE_DEFAULT 1000
+%}
 
+enum MAKER_DIALOG_PROPERTY_FLAG{
+    INVISIBLE   =0x1,
+    INSENSITIVE =0x2,
+    INEDITABLE =0x4,
+} Maker:Dialog:Property:Flag;
+
+
+%headertop{
+typedef guint MakerDialogPropertyFlags;
+
+typedef struct _PropertyContext PropertyContext;
+typedef GValue *(* CallbackGetFunc)(PropertyContext *ctx);
+typedef void(* CallbackSetFunc)(PropertyContext *ctx, GValue *value);
 
 typedef struct{
     GType valueType;
     gchar key[30];
     gchar pageName[50];
     gchar label[200];
-    gchar *defaultValue;
-    gchar **validValues;
+    gchar defaultValue[100];
+    const gchar **validValues;
 
     gint min;
     gint max;
-    AttributeSettingFunc *setFunc;
-    AttributeGettingFunc *getFunc;
-} AttributeSpec;
+
+    CallbackGetFunc getFunc;
+    CallbackSetFunc setFunc;
+
+    MakerDialogPropertyFlags propertyFlags;
+    gint width;
+    gint height;
+    gchar *toolTips;
+
+} PropertySpec;
+
+struct _PropertyContext{
+    PropertySpec *spec;
+    GValue value;
+    gpointer obj;  //<! Object to be manipulate.
+    gpointer userdata;  //<! User data to be used in callback.
+};
 
 #ifndef WIDGET_ID_PREFIX
 #define WIDGET_ID_PREFIX "+"
 #endif
+
+%}
+
+%privateheader{
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 3
+#endif
+
+#define G_DEBUG_MSG(level, msg, args...) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
 %}
 
 
 %{
 
-gboolean maker_dialog_delete_event(GtkWidget *self, GdkEvent  *event,  gpointer   data ){
-    /* If you return FALSE in the "delete_event" signal handler,
-     * GTK will emit the "destroy" signal. Returning TRUE means
-     * you don't want the window to be destroyed.
-     * This is useful for popping up 'are you sure you want to quit?'
-     * type dialogs. */
+static PropertyContext *propertyContext_new(PropertySpec *spec, gpointer obj,gpointer userdata){
+    PropertyContext *ctx=g_new(PropertyContext,1);
+    memset(&ctx->value,0,sizeof(GValue));
+    ctx->spec=spec;
+    ctx->obj=obj;
+    ctx->userdata=userdata;
+    return ctx;
+}
 
-    GtkResponseType response=*((GtkResponseType *) data);
-    switch(response){
-	case GTK_RESPONSE_DELETE_EVENT:
-	case GTK_RESPONSE_CANCEL:
-	case GTK_RESPONSE_OK:
-	default:
+static void propertyContext_free(PropertyContext *ctx){
+    g_value_unset(&ctx->value);
+    g_free(ctx);
+}
+
+static gint combo_find_string(GtkComboBox *combo, const gchar *str, PropertyContext *ctx){
+    g_assert(str);
+    int i,index=-1;
+    const gchar **stringArray=NULL;
+    stringArray=ctx->spec->validValues;
+    for(i=0;stringArray[i]!=NULL;i++){
+	if (strcmp(str,stringArray[i])==0 ){
+	    index= i;
 	    break;
+	}
     }
-
-
-    g_print ("delete event occurred\n");
-
-    /* Change TRUE to FALSE and the main window will be destroyed with
-     * a "delete_event". */
-
-    return FALSE;
+    if (index<0 && !(ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE)){
+	/* Add new item*/
+	gtk_combo_box_insert_text(combo,i,str);
+	index=i;
+    }
+    return index;
 }
 
 
-static void  ptrArray_free_deep_callback(gpointer data, gpointer user_data){
-    g_free(data);
+static void  propList_free_deep_callback(gpointer data, gpointer user_data){
+    propertyContext_free((PropertyContext *)data);
 }
 
 static gchar *widget_get_id(gchar *buffer, gint buffer_size, 
@@ -95,7 +138,37 @@ static gchar *widget_get_id(gchar *buffer, gint buffer_size,
     return buffer;
 }
 
+/**
+ * atob:
+ * @string: A string.
+ * @returns: Boolean value represented by @string.
+ *
+ * String to boolean.
+ * It returns FALSE if:
+ *    1. @string is NULL or have 0 length.
+ *    2. @string starts with 'F', 'f', 'N' or 'n'.
+ *    3. @string can be converted to a numeric 0.
+ *
+ * Everything else is TRUE.
+ */
+gboolean atob(const gchar *string){
+    if (!string)
+	return FALSE;
+    if (strlen(string)<=0)
+	return FALSE;
+    if (string[0]=='F' || string[0]=='f' || string[0]=='N' ||  string[0]=='n')
+	return FALSE;
+    char *endPtr=NULL;
+    long int longValue=strtol(string, &endPtr, 10);
+    g_debug("string %s longValue %ld",string,longValue);
 
+    if (longValue==0 && *endPtr=='\0'){
+	// 0
+	g_debug("*endPtr=='\\0'");
+	return FALSE;
+    }
+    return TRUE;
+}
 %}
 
 
@@ -107,22 +180,14 @@ class Maker:Dialog from Gtk:Dialog{
 
     private GHashTable *widgetTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)};
     private GStringChunk *widgetIds={g_string_chunk_new(STRING_BUFFER_SIZE_DEFAULT)};
-
-    public GPtrArray *settingParameters={g_ptr_array_new()}
-    destroy{ 
-	if (VAR) {
-	    g_ptr_array_foreach(VAR,ptrArray_free_deep_callback, NULL);
+    private GPtrArray *propList={g_ptr_array_new()}
+    destroy {
+	if (VAR){
+	    g_ptr_array_foreach(VAR,propList_free_deep_callback,NULL);
 	    g_ptr_array_free(VAR,TRUE);
 	}
     };
 
-    private GPtrArray *settingWidgets={g_ptr_array_new()}
-    destroy{
-	if (VAR) {
-	    g_ptr_array_foreach(VAR,ptrArray_free_deep_callback, NULL);
-	    g_ptr_array_free(VAR,TRUE);
-	}
-    };
 
     init(self){
     }
@@ -168,59 +233,111 @@ class Maker:Dialog from Gtk:Dialog{
 	return G_OBJECT(self);
     }
 
-    public gboolean add_attribute(self, AttributeSpec *aSpec){
-	GtkWidget *vbox=self_get_base_vbox(self, aSpec->pageName);
+    public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue){
+	return self_add_property_full(self, pSpec, initValue, NULL, NULL);
+    }
+
+    public gboolean add_property_full(self, PropertySpec *pSpec, const gchar *initValue, 
+	    gpointer obj, gpointer user_data){
+	GtkWidget *vbox=self_get_base_vbox(self, pSpec->pageName);
 	g_assert(vbox);
 
 	GtkWidget *hbox=gtk_hbox_new(FALSE,self->hbox_spacing);
-	self_widget_register(self, hbox, aSpec->key, "hbox");
-	GtkWidget *label=gtk_label_new(aSpec->label);
+	self_widget_register(self, hbox, pSpec->key, "hbox");
+	GtkWidget *label=gtk_label_new(pSpec->label);
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-	self_widget_register(self, label, aSpec->label, "label");
+	self_widget_register(self, label, pSpec->key, "label");
 	gtk_widget_show(label);	
-	gtk_box_pack_start (GTK_BOX(hbox), label, TRUE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *widget=NULL;
         GtkAdjustment *gAdjust=NULL;
+	PropertyContext *ctx=propertyContext_new(pSpec,obj,user_data);
+	g_value_init(&ctx->value,pSpec->valueType);
 
-	switch(aSpec->valueType){
+	switch(pSpec->valueType){
 	    case G_TYPE_BOOLEAN:
 		widget = gtk_check_button_new();
-		self_widget_register(self, widget, aSpec->key, "check");
-		if (aSpec->setFunc){
+		self_widget_register(self, widget, pSpec->key, NULL);
+
+		if(initValue){
+		    g_value_set_boolean(&ctx->value,atob(initValue));
+		}else if (pSpec->defaultValue){
+		    g_value_set_boolean(&ctx->value,atob(pSpec->defaultValue));
+		}
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),g_value_get_boolean(&ctx->value));
+		if (pSpec->setFunc){
 		    g_signal_connect (widget, "toggled",
-			    G_CALLBACK (aSpec->setFunc), aSpec->key);
+			    G_CALLBACK (pSpec->setFunc), ctx);
 		}
 		break;
 	    case G_TYPE_UINT:
 	    case G_TYPE_INT:
-		 gAdjust = (GtkAdjustment *)gtk_adjustment_new (atoi(aSpec->defaultValue), 
-			     aSpec->min, aSpec->max, 1.0, 5.0, 5.0);
+		 gAdjust = (GtkAdjustment *)gtk_adjustment_new (atoi(pSpec->defaultValue), 
+			     pSpec->min, pSpec->max, 1.0, 0.0, 0.0);
 		 widget = gtk_spin_button_new (gAdjust, 1.0, 0);
-		 self_widget_register(self, widget, aSpec->key, "spinner");
-		 if (aSpec->setFunc){
+		 self_widget_register(self, widget, pSpec->key, NULL);
+
+		 if(initValue){
+		     gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),atoi(initValue));
+		 }else if (pSpec->defaultValue){
+		     gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),atoi(pSpec->defaultValue));
+		 }
+
+		 if (pSpec->setFunc){
 		     g_signal_connect (widget, "value-changed",
-			     G_CALLBACK (aSpec->setFunc), aSpec->key);
+			     G_CALLBACK (pSpec->setFunc), pSpec);
 		 }
 		 break;
 	    case G_TYPE_STRING:
-		if (aSpec->validValues){
-		    widget=gtk_combo_box_new_text ();
-		    int i,default_i=-1;
-		    for(i=0;aSpec->validValues[i]!=NULL;i++){
-			if (aSpec->defaultValue && strcmp(aSpec->defaultValue,aSpec->validValues[i])==0 ){
-			    default_i=i;
-			}
-			gtk_combo_box_append_text(GTK_COMBO_BOX(widget),aSpec->validValues[i]);
+		if (pSpec->validValues){
+		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE){
+			widget=gtk_combo_box_new_text ();
+		    }else{
+			widget=gtk_combo_box_entry_new_text ();
 		    }
-		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget),default_i);
+		    self_widget_register(self, widget, pSpec->key, NULL);
+		    int i,counter=0;
+		    for(i=0;pSpec->validValues[i]!=NULL;i++){
+			gtk_combo_box_append_text(GTK_COMBO_BOX(widget),pSpec->validValues[i]);
+			counter++;
+		    }
+
+		    int index=-1;
+		    if (initValue){
+			index=combo_find_string(GTK_COMBO_BOX(widget),initValue,ctx);
+		    }
+		    if (index<0 && pSpec->defaultValue){
+			index=combo_find_string(GTK_COMBO_BOX(widget),pSpec->defaultValue,ctx);
+		    }
+		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
+		    g_value_set_string(&ctx->value,gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
+
+
+		    if (pSpec->setFunc){
+			g_signal_connect (widget, "changed",
+				G_CALLBACK (pSpec->setFunc), NULL);
+		    }
+
 		}else{
 		    widget=gtk_entry_new();
-		    if (aSpec->max>=0){
-			gtk_entry_set_max_length(GTK_ENTRY(widget),aSpec->max);
+		    self_widget_register(self, widget, pSpec->key, NULL);
+		    if (pSpec->max>=0){
+			gtk_entry_set_max_length(GTK_ENTRY(widget),pSpec->max);
 		    }
-		    if (aSpec->defaultValue){
-			gtk_entry_set_text(GTK_ENTRY(widget),aSpec->defaultValue);
+
+		    if(initValue){
+			g_value_set_string(&ctx->value,initValue);
+		    }else if (pSpec->defaultValue){
+			g_value_set_string(&ctx->value,pSpec->defaultValue);
+		    }
+		    gtk_entry_set_text(GTK_ENTRY(widget),g_value_get_string(&ctx->value));
+		    gtk_editable_set_editable (GTK_EDITABLE(widget), 
+			    !(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
+
+		    if (pSpec->setFunc){
+			g_signal_connect (widget, "activate",
+				G_CALLBACK (pSpec->setFunc), pSpec);
 		    }
 		}
 		break;
@@ -235,23 +352,164 @@ class Maker:Dialog from Gtk:Dialog{
 	gtk_box_pack_start (GTK_BOX(hbox), widget, FALSE, FALSE, 0);
 	gtk_widget_show(hbox);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
+	g_ptr_array_add(self->_priv->propList,ctx);
 	return TRUE;
     }
 
-    public void close(self, gboolean restore_parameter){
-	if (restore_parameter){
+    public void reload_property_value(self, const gchar *key){
+	gboolean boolValue;
+	gint intValue;
+	gint uintValue;
+	const gchar *stringValue;
 
+	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
+	PropertySpec *pSpec=ctx->spec;
+	GtkWidget *widget=self_get_widget_by_key(self,pSpec->key);
+	GValue *gValue;
+
+	if (pSpec->getFunc){
+	    gValue=pSpec->getFunc(ctx);
+
+	    switch(pSpec->valueType){
+		case G_TYPE_BOOLEAN:
+		    boolValue=g_value_get_boolean(gValue);
+		    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),boolValue);
+		    break;
+		case G_TYPE_INT:
+		    intValue=g_value_get_int(gValue);
+		    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),(gdouble) intValue);
+		    break;
+		case G_TYPE_UINT:
+		    uintValue=g_value_get_uint(gValue);
+		    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),(gdouble) uintValue);
+		    break;
+		case G_TYPE_STRING:
+		    stringValue=g_value_get_string(gValue);
+		    if (pSpec->validValues){
+			int index=-1;
+			if (stringValue){
+			    index=combo_find_string(GTK_COMBO_BOX(widget),stringValue,ctx);
+			}
+			if (index<0 && pSpec->defaultValue){
+			    index=combo_find_string(GTK_COMBO_BOX(widget),pSpec->defaultValue,ctx);
+			}
+			gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
+
+		    }else{
+			gtk_entry_set_text(GTK_ENTRY(widget),stringValue);
+		    }
+		    break;
+		default:
+		    break;
+	    }
 	}
-
-
     }
+
+    public GValue *get_value(self, const gchar *key, GValue *value){
+	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
+	if (!ctx){
+	    /* Not found */
+	    return NULL;
+	}
+	g_value_init(value,ctx->spec->valueType);
+	GtkWidget *widget=self_get_widget_by_key(self,key);
+	switch(ctx->spec->valueType){
+	    case G_TYPE_BOOLEAN:
+		g_value_set_boolean(value, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
+		break;
+	    case G_TYPE_INT:
+		g_value_set_int(value, (gint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
+		break;
+	    case G_TYPE_UINT:
+		g_value_set_uint(value, (guint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
+		break;
+	    case G_TYPE_STRING:
+		if (ctx->spec->validValues){
+		    g_value_set_string(value, gtk_combo_box_get_active_text (GTK_COMBO_BOX(widget)));
+		}else{
+		    g_value_set_string(value, gtk_entry_get_text (GTK_ENTRY(widget)));
+		}
+
+		break;
+	    default:
+		break;
+	}
+	return value;
+    }
+
+    public void set_value(self, const gchar *key, GValue *value){
+	int index;
+	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
+	if (!ctx){
+	    /* Not found */
+	    return;
+	}
+	GtkWidget *widget=self_get_widget_by_key(self,key);
+	switch(ctx->spec->valueType){
+	    case G_TYPE_BOOLEAN:
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(widget),g_value_get_boolean(value));
+		break;
+	    case G_TYPE_INT:
+		gtk_spin_button_set_value (GTK_SPIN_BUTTON(widget),(gdouble) g_value_get_int(value));
+		break;
+	    case G_TYPE_UINT:
+		gtk_spin_button_set_value (GTK_SPIN_BUTTON(widget),(gdouble) g_value_get_uint(value));
+		break;
+	    case G_TYPE_STRING:
+		if (ctx->spec->validValues){
+		    const gchar *str=g_value_get_string(value);
+		    index=combo_find_string(GTK_COMBO_BOX(widget),str,ctx);
+		    gtk_combo_box_set_active (GTK_COMBO_BOX(widget),index);
+		}else{
+		    g_value_set_string(value, gtk_entry_get_text (GTK_ENTRY(widget)));
+		}
+		break;
+	    default:
+		break;
+	}
+    }
+
+
+    public GtkWidget *get_widget(self, 
+	    const gchar *widget_key, const gchar *widget_type){
+	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
+	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_key, widget_type);
+	return self_get_widget_by_id(self, buf);
+    }
+
+    public GtkWidget *get_widget_by_key(self, const gchar *key){
+	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
+	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, key, NULL);
+	return self_get_widget_by_id(self, buf);
+    }
+
+    public GtkWidget *get_widget_by_id(self, const gchar *id){
+	return (GtkWidget *) g_hash_table_lookup (self->_priv->widgetTable, id);
+    }
+
+    public PropertyContext *get_propertyContext_by_key(self,const gchar *key){
+	int i=0;
+	PropertyContext *ctx=NULL;
+	for(i=0; i<self->_priv->propList->len;i++){
+	    ctx=g_ptr_array_index(self->_priv->propList,i);
+	    if (strcmp(ctx->spec->key,key)==0){
+		break;
+	    }
+	}
+	if (i>=self->_priv->propList->len){
+	    /* Not found */
+	    return NULL;
+	}
+	return ctx;
+    }
+
 
     protected GtkWidget *get_base_vbox(self, const gchar *notebook_page_label){
 	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
 	GtkWidget *ret;
 	if (notebook_page_label){
 	    widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, notebook_page_label, "vbox");
-	    ret=self_widget_lookup(self, notebook_page_label, "vbox");
+	    ret=self_get_widget(self, notebook_page_label, "vbox");
 	}else{
 	    ret=GTK_DIALOG(self)->vbox;
 	}
@@ -261,21 +519,17 @@ class Maker:Dialog from Gtk:Dialog{
 	return ret;
     }
 
-    public GtkWidget *widget_lookup(self, 
-	    const gchar *widget_label, const gchar *widget_type){
-	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
-	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, widget_type);
-	return (GtkWidget *) g_hash_table_lookup (self->_priv->widgetTable, buf);
-    }
 
-    private void widget_register(self, GtkWidget *widget, 
+    private void widget_register(self,  GtkWidget *widget, 
 	    const gchar *widget_label, const gchar *widget_type){
 	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
-	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, widget_type);
+	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, (widget_type)? (widget_type) : "");
 	gchar *chunk_ret=g_string_chunk_insert(self->_priv->widgetIds,buf);
-	g_hash_table_insert(self->_priv->widgetTable, chunk_ret, widget);
+	g_hash_table_insert(self->_priv->widgetTable, chunk_ret,widget);
 
     }
+
+    
 
 
 }

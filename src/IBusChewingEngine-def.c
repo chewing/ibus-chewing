@@ -1,6 +1,6 @@
 const gchar *page_labels[]={
-    N_("Preference"),
-    N_("Look & Feel"),
+    N_("Editing"),
+    N_("Selecting"),
     N_("Keyboard"),
     NULL
 };
@@ -18,8 +18,8 @@ GtkResponseType button_responses[]={
     GTK_RESPONSE_OK
 };
 
-const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
-const char *kbType_ids[]={
+//const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+const gchar *kbType_ids[]={
     "default",
     "hsu",
     "ibm",
@@ -34,14 +34,13 @@ const char *kbType_ids[]={
 };
 
 #define SELKEYS_ARRAY_SIZE 7
-const char *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
+const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     "1234567890",
     "asdfghjkl;",
     "asdfzxcv89",   
     "asdfjkl789",
     "aoeuhtn789",
     "1234qweras",
-    "Custom",
     NULL
 };
 

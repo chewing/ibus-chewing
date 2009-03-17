@@ -29,11 +29,11 @@ requires 2.0.0
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
-#include <gtk/gtk.h>
 %}
 
 
