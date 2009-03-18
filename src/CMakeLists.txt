@@ -35,16 +35,16 @@ ADD_EXECUTABLE(ibus-engine-chewing main.c
     ibus-chewing-engine.c 
     maker-dialog.c
     ) 
-ADD_EXECUTABLE(dialogTest dialogTest.c 
-    maker-dialog.c
-    ) 
+#ADD_EXECUTABLE(dialogTest dialogTest.c 
+#    maker-dialog.c
+#    ) 
 
 # Link the executable to the library.
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
     ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
 
-TARGET_LINK_LIBRARIES(dialogTest ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
-    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
+#TARGET_LINK_LIBRARIES(dialogTest ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
+#    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
 
 
 

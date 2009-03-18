@@ -64,7 +64,11 @@ enum CHEWING_MODIFIER_SYNC{
 
 %{
 extern gboolean ibus_chewing_verbose;
-#define G_DEBUG_MSG(msg, args...) if (ibus_chewing_verbose) g_debug(msg, ##args)
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 3
+#endif
+
+#define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
 #include "IBusChewingEngine-def.c"
 
 %}
@@ -77,9 +81,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     public Chewing:Modifier:Sync sync_CapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
 
     public GtkWidget *setting_dialog={
-	GTK_WIDGET(maker_dialog_new_full("_(Setting)",3,page_labels,3,button_labels,button_responses))};
+	GTK_WIDGET(maker_dialog_new_full(_("Setting"),3,page_labels,1,button_labels,button_responses))};
 
-    private gboolean showSetting=FALSE;
     /* Number of event to be skipped */
     private guint event_skipCount=0;
 
@@ -107,36 +110,12 @@ class IBus:Chewing:Engine from IBus:Engine{
     };
 
     public IBusProperty    *settings_prop={
-	ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
+	ibus_property_new("chewing_settings_prop",PROP_TYPE_NORMAL,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
 		PKGDATADIR "/icons/settings.png", NULL, TRUE, TRUE, 
 		PROP_STATE_UNCHECKED, NULL);
     };
 
-    protected IBusPropList    *kbType_prop_subList={ibus_prop_list_new()};
-
-    public IBusProperty    *kbType_prop={
-        ibus_property_new("chewing_KBType_prop",PROP_TYPE_MENU, 
-		SELF_GET_CLASS(self)->kbType_prop_label,
-                PKGDATADIR "/icons/input-keyboard.png",	NULL, TRUE, FALSE,
-	       	PROP_STATE_UNCHECKED, self->kbType_prop_subList);
-    };
-
-    protected IBusPropList    *selKeys_prop_subList={ibus_prop_list_new()};
-
-    public IBusProperty    *selKeys_prop={
-	ibus_property_new("chewing_selKeys_prop",PROP_TYPE_MENU, 
-		SELF_GET_CLASS(self)->selKeys_prop_label,
-		PKGDATADIR "/icons/key_bindings.png",	NULL, TRUE, FALSE,
-		PROP_STATE_UNCHECKED, self->selKeys_prop_subList);
-    };
-
-    public GPtrArray *miscOption_array={g_ptr_array_new();}
-        destroy {
-	    if (VAR) {
-		g_ptr_array_free(VAR,TRUE);
-	    }
-	};
 
     public IBusPropList   *prop_list={ibus_prop_list_new()};
 
@@ -154,16 +133,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     classwide IBusText *alnumSize_prop_label_half={ibus_text_new_from_static_string(_("Half"))};
 
     classwide IBusText *settings_prop_label={ibus_text_new_from_static_string(_("Settings"))};
-    classwide IBusText *kbType_prop_label={ibus_text_new_from_static_string(_("KbType"))};
-    classwide IBusText *selKeys_prop_label={ibus_text_new_from_static_string(_("SelKeys"))};
-
-    classwide IBusText **kbType_prop_labels={kbTypes_to_iBusTexts()};
-    classwide IBusText **selKeys_prop_labels={selKeys_to_iBusTexts()};
-
 
     init (self) {
           /* initialize the object here */
-	G_DEBUG_MSG("*** init 1");
+	G_DEBUG_MSG(2,"*** init()");
 
 	chewing_Init(CHEWING_DATADIR, "/tmp");
 
@@ -174,9 +147,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	ibus_prop_list_append(self->prop_list,self->chieng_prop);
 	ibus_prop_list_append(self->prop_list,self->alnumSize_prop);
 	ibus_prop_list_append(self->prop_list,self->settings_prop);
-	ibus_prop_list_append(self->prop_list,self->kbType_prop);
-	ibus_prop_list_append(self->prop_list,self->selKeys_prop);
-
 	self_context_load_parameters(self);
 
 	self->table=ibus_lookup_table_new(chewing_get_candPerPage(self->context),0,FALSE,TRUE);
@@ -184,132 +154,51 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void context_load_parameters(self){
-	int i,j;
-	gchar key[200];
-	IBusProperty *prop=NULL;
-	gchar prop_buf[200];
+	G_DEBUG_MSG(3,"*** context_load_parameters()");
+	int i;
+	gchar confKey[200];
 
-	int keyPrefix_len=strlen(GCONF_KEY_PREFIX);
+	int confKeyPrefix_len=strlen(GCONF_KEY_PREFIX);
 	GError *err=NULL;
-	g_strlcpy(key,GCONF_KEY_PREFIX,200);
+	g_strlcpy(confKey,GCONF_KEY_PREFIX,200);
+	gboolean staticString;
  
-	for (i=0; parameters[i].type!=GCONF_VALUE_INVALID;i++){
-	    key[keyPrefix_len]='\0';
-	    g_strlcat(key,parameters[i].key,200);
-	    if (strcmp(parameters[i].key,"KBType")==0){
-		gchar *kbType_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
-		ChewingKbType kbType;
-		if (err){
-		    g_warning("Warning: cannot load key %s because %s %s %s",
-			    key,
-			    err->message,
-			    _("Use default value:"),
-			    parameters[i].defaultValue);
-		    g_error_free (err);
-		    kbType=kbType_id_get_index(parameters[i].defaultValue);
+	for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
+	    G_DEBUG_MSG(3,"*** context_load_parameters(), i=%d",i);
+	    confKey[confKeyPrefix_len]='\0';
+	    g_strlcat(confKey,propSpecs[i].key,200);
+	    staticString=FALSE;
+
+	    gchar *valueStr=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, confKey, &err);
+	    if (err){
+		g_warning("Warning: cannot load confKey %s because %s %s %s",
+			confKey,
+			err->message,
+			(propSpecs[i].defaultValue)? _(" Use default value:") : _(" No default value, skipped.") ,
+			(propSpecs[i].defaultValue)? propSpecs[i].defaultValue : ""
+			);
+		staticString=TRUE;
+		g_free(valueStr);
+		g_error_free (err);
+		if (propSpecs[i].defaultValue){
+		    valueStr=propSpecs[i].defaultValue;
 		}else{
-		    kbType=kbType_id_get_index(kbType_str);
-		    g_free(kbType_str);
+		    continue;
 		}
-		chewing_set_KBType(self->context,kbType);
-
-		/* Add kbtype property */
-		ChewingKbType kbType_tmp;
-		for(kbType_tmp=0;kbType_ids[kbType_tmp]!=NULL;kbType_tmp++){
-		    g_snprintf(prop_buf,200,"chewing_KBType_%s_prop",kbType_ids[kbType_tmp]);
-		    prop=ibus_property_new(prop_buf,PROP_TYPE_RADIO, 
-			    SELF_GET_CLASS(self)->kbType_prop_labels[kbType_tmp],
-			    NULL, NULL, TRUE, 
-			    TRUE, 
-			    (kbType_tmp==kbType)? PROP_STATE_CHECKED :PROP_STATE_UNCHECKED, NULL);
-		    ibus_prop_list_append(self->kbType_prop_subList,prop);
-		}
-	    }else if (strcmp(parameters[i].key,"selKeys")==0){
-		gchar *selKeys_str=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, key, &err);
-		gboolean staticString=FALSE;
-		if (err){
-		    g_warning("Warning: cannot load key %s because %s %s %s",
-			    key,
-			    err->message,
-			    _("Use default value:"),
-			    parameters[i].defaultValue);
-		    g_error_free (err);
-		    err=NULL;
-		    selKeys_str=(gchar *) parameters[i].defaultValue;
-		    staticString=TRUE;
-		}
-		self_set_selKeys_string(self,selKeys_str);
-
-		/* Add selKeys property */
-		gboolean selKeys_found=FALSE;
-		for(j=0; j<SELKEYS_ARRAY_SIZE ;j++){
-		    IBusPropState pState;
-		    g_snprintf(prop_buf,200,"chewing_selKeys_%s_prop",selKeys_array[j]);
-		    if (j<SELKEYS_ARRAY_SIZE-1){
-			if (!selKeys_found && strcmp(selKeys_array[j],selKeys_str)==0){
-			    pState=PROP_STATE_CHECKED;
-			    selKeys_found=TRUE;
-			}else{
-			    pState=PROP_STATE_UNCHECKED;
-			}
-		    }else{
-			if (selKeys_found){
-			    pState=PROP_STATE_UNCHECKED;
-			}else{
-			    pState=PROP_STATE_CHECKED;
-			}
-		    }
-		    prop=ibus_property_new(prop_buf,PROP_TYPE_RADIO, 
-			    SELF_GET_CLASS(self)->selKeys_prop_labels[j],
-			    NULL, NULL, TRUE, TRUE, 
-			    pState, NULL);
-
-		    ibus_prop_list_append(self->selKeys_prop_subList,prop);
-		}
-
-		if (!staticString){
-		    g_free(selKeys_str);
-		}
-	    }else if (parameters[i].type==GCONF_VALUE_BOOL){
-		gboolean bValue=gconf_client_get_bool(SELF_GET_CLASS(self)->gConfClient, key, &err);
-		if (err){
-		    g_warning("Warning: cannot load key %s because %s %s %s",
-			    key,
-			    err->message,
-			    _("Use default value:"),
-			    parameters[i].defaultValue);
-		    g_error_free (err);
-		    bValue=(parameters[i].defaultValue[0]=='0') ? FALSE: TRUE;
-		}
-		parameters[i].func(self->context,(bValue)? 1:0);
-		IBusText *iText=ibus_text_new_from_static_string(_(parameters[i].key));
-		g_snprintf(prop_buf,200,"chewing_%s_prop",parameters[i].key);
-		prop=ibus_property_new(prop_buf,PROP_TYPE_TOGGLE, 
-			iText,
-			NULL, NULL, TRUE,  FALSE, 
-			(bValue)? PROP_STATE_CHECKED: PROP_STATE_UNCHECKED, NULL);
-		g_ptr_array_add(self->miscOption_array,prop);
-		ibus_prop_list_append(self->prop_list,prop);
-	    }else if (parameters[i].type==GCONF_VALUE_INT){
-		gint iValue=gconf_client_get_int(SELF_GET_CLASS(self)->gConfClient, key, &err);
-		if (err){
-		    g_warning("Warning: cannot load key %s because %s %s %s",
-			    key,
-			    err->message,
-			    _("Use default value:"),
-			    parameters[i].defaultValue);
-		    g_error_free (err);
-		    iValue=atoi(parameters[i].defaultValue);
-		}
-		parameters[i].func(self->context,iValue);
-	    }else{
-		g_error("Invalid parameter type!");
 	    }
+
+	    /* Add property to dialog */
+	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],valueStr,self);
+	    maker_dialog_apply_widget_value(MAKER_DIALOG(self->setting_dialog),propSpecs[i].key);
+	    if (!staticString)
+		g_free(valueStr);
 	}
     }
 
     protected gboolean commit(self){
 	/* commit string */
+	G_DEBUG_MSG(2,"*** commit()");
+
 	gunichar *text=NULL;
 	IBusText *iText=NULL;
 	glong item_written;
@@ -377,24 +266,22 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     protected void refresh_preedit(self){
-        glong zhuyin_item_written, item_written;
-        gunichar *preeditBuf=preedit_string_make(self->context, &zhuyin_item_written, &item_written);
-        IBusText *iText=ibus_text_new_from_ucs4(preeditBuf);
+	glong zhuyin_item_written, item_written;
+	gunichar *preeditBuf=preedit_string_make(self->context, &zhuyin_item_written, &item_written);
+	IBusText *iText=ibus_text_new_from_ucs4(preeditBuf);
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
-        ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff, 
-                chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
-        ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00000000,
-                chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
-        ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, IBUS_ATTR_UNDERLINE_SINGLE,
-                0, -1);
+	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff, 
+		chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
+	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00000000,
+		chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
+	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, IBUS_ATTR_UNDERLINE_SINGLE,
+		0, -1);
 	ibus_engine_update_preedit_text (IBUS_ENGINE(self),iText, chiSymbolCursor, TRUE);
-        g_object_unref (iText);
+	g_object_unref (iText);
     }
 
     protected void refresh_property(self,const gchar  *prop_name){
-	G_DEBUG_MSG("*** refresh_property(-, %s) 1",prop_name);
-	int index;
-	IBusProperty *prop;
+	G_DEBUG_MSG(2,"*** refresh_property(%s)",prop_name);
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    if (chewing_get_ChiEngMode(self->context)){
 		/* Chinese  */
@@ -413,43 +300,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		ibus_property_set_label(self->alnumSize_prop,SELF_GET_CLASS(self)->alnumSize_prop_label_half);
 	    }
 	    ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
-	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
-	    G_DEBUG_MSG("*** refresh_property(-, %s) 2, self->settings_prop->state=%u kbType->visible=%u ",
-		    prop_name, self->settings_prop->state, self->kbType_prop->visible);
-	    if (self->_priv->showSetting){
-		self->settings_prop->state=PROP_STATE_CHECKED;
-	    }else{
-		self->settings_prop->state=PROP_STATE_UNCHECKED;
-	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->settings_prop);
-	}else if (KBType_property_get_index(prop_name)>=0){
-	    ChewingKbType kbType;
-	    ChewingKbType kbType_now=chewing_get_KBType(self->context);
-	    for(kbType=0;kbType_ids[kbType]!=NULL;kbType++){
-		prop=ibus_prop_list_get(self->kbType_prop_subList,kbType);
-		prop->state=(kbType==kbType_now)? PROP_STATE_CHECKED: PROP_STATE_UNCHECKED;
-		ibus_engine_update_property(IBUS_ENGINE(self),prop);
-	    }
-	}else if (selKeys_property_get_index(prop_name)>=0){
-	    index=self_get_selKeys_index(self);
-	    int i;
-	    for(i=0;i<SELKEYS_ARRAY_SIZE;i++){
-		IBusProperty *prop=ibus_prop_list_get(self->selKeys_prop_subList,i);
-		prop->state=(i==index)? PROP_STATE_CHECKED: PROP_STATE_UNCHECKED;
-		ibus_engine_update_property(IBUS_ENGINE(self),prop);
-	    }
-	}else if ((index=property_get_index(prop_name))>=0){
-	    /* Misc options */
-	    gint intValue;
-	    if (parameters[index].getFunc){
-		intValue=parameters[index].getFunc(self->context);
-		prop=self_get_iBusProperty_miscOption(self, prop_name);
-		g_assert(prop);
-		prop->state=(intValue)? PROP_STATE_CHECKED: PROP_STATE_UNCHECKED;
-		ibus_engine_update_property(IBUS_ENGINE(self),prop);
-	    }else{
-		return;
-	    }
 	}
     }
 
@@ -460,30 +310,26 @@ class IBus:Chewing:Engine from IBus:Engine{
      * Refresh the property list (language bar).
      */
     public void refresh_property_list(self){
-	gchar prop_buf[200];
-	/* Need these lines to refresh language bar */
-	g_strlcpy(prop_buf,"chewing_chieng_prop",200);
-	self_refresh_property(self,prop_buf);
+	G_DEBUG_MSG(1,"*** refresh_property_list()");
+	self_refresh_property(self,"chewing_chieng_prop");
 
-	g_snprintf(prop_buf,200,"chewing_KBType_%s_prop",kbType_ids[chewing_get_KBType(self->context)]);
-	self_refresh_property(self,prop_buf);
+	self_refresh_property(self,"chewing_alnumSize_prop");
 
-	g_snprintf(prop_buf,200,"chewing_selKeys_1234567890_prop");
-	self_refresh_property(self,prop_buf);
+	self_refresh_property(self,"chewing_settings_prop");
 	ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
     }
 
     /**
      * save_config:
      * @self: this instances.
-     * @key_suffix: key to be set
-     * @configValue: value for key
+     * @key_suffix: key to be set.
+     * @configValue: Key value.
      * @returns: TRUE if successful, FALSE otherwise.
      *
-     * Set and save the kbtype setting.
+     * Set and save the property value.
      */
     public gboolean save_config(self, const gchar *key_suffix, gpointer configValue){
-	G_DEBUG_MSG("*** save_config(-,%s,-) 1",key_suffix);
+	G_DEBUG_MSG(1,"*** save_config(%s,-)",key_suffix);
 	int index=parameter_get_index(key_suffix);
 	GValue gValue={0};
 	g_assert(index>=0);
@@ -491,19 +337,19 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    case GCONF_VALUE_STRING:
 		g_value_init(&gValue,G_TYPE_STRING);
 		g_value_set_static_string (&gValue,(gchar *) configValue);
-		G_DEBUG_MSG("*** save_config(-,%s,%s) str",key_suffix,(gchar *) configValue);
+		G_DEBUG_MSG(4,"*** save_config(-,%s,%s) str",key_suffix,(gchar *) configValue);
 		break;
 	    case GCONF_VALUE_INT:
 		g_value_init(&gValue,G_TYPE_INT);
 		gint *int_p=(gint *) configValue;
 		g_value_set_int (&gValue, *int_p);
-		G_DEBUG_MSG("*** save_config(-,%s,%d) int",key_suffix,*int_p);
+		G_DEBUG_MSG(4,"*** save_config(-,%s,%d) int",key_suffix,*int_p);
 		break;
 	    case GCONF_VALUE_BOOL:
 		g_value_init(&gValue,G_TYPE_BOOLEAN);
 		gboolean *bool_p=(gboolean *) configValue;
 		g_value_set_boolean (&gValue, *bool_p);
-		G_DEBUG_MSG("*** save_config(-,%s,%d) int",key_suffix,*bool_p);
+		G_DEBUG_MSG(4,"*** save_config(-,%s,%d) int",key_suffix,*bool_p);
 		break;
 	    default:
 		g_error("Invalid conf value type!");
@@ -512,41 +358,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	return ibus_config_set_value (self->config,"engine/Chewing",key_suffix,&gValue);
     }
 
-    /**
-     * save_kbType:
-     * @self: this instances.
-     * @kbType: kbType to be set.
-     * @returns: TRUE if successful, FALSE otherwise.
-     *
-     * Set and save the kbtype setting.
-     */
-    public gboolean save_kbType(self, Chewing:KbType kbType){
-	if (kbType==CHEWING_KBTYPE_INVALID)
-	    return FALSE;
-	return self_save_config(self,"KBType",(gchar *) kbType_ids[kbType]);
-    }
-
-    public gint get_selKeys_index(self){
-	int *selKeys=self->selKeys;
-	int i,j;
-	gboolean clean;
-	for(i=0;i<SELKEYS_ARRAY_SIZE-1;i++){
-	    clean=TRUE;
-	    for (j=0;j< MAX_SELKEY;j++){
-		if (selKeys[j]!= (int) selKeys_array[i][j]){
-		    clean=FALSE;
-		    break;
-		}else if (selKeys[j]==0){
-		    break;
-		}
-	    }
-	    if (clean)
-		return i;
-	}
-	return SELKEYS_ARRAY_SIZE-1;
-    }
-
-    public void set_selKeys_string(self,const gchar* selKeys_str){
+    protected void set_selKeys_string(self,const gchar* selKeys_str){
 	int j;
 	int len_min= MIN(strlen(selKeys_str), MAX_SELKEY);
 	for (j=0;j< len_min;j++){
@@ -555,58 +367,17 @@ class IBus:Chewing:Engine from IBus:Engine{
 	chewing_set_selKey(self->context, self->selKeys,len_min);
     }
 
-    /**
-     * save_selKeys_string:
-     * @self: this instances.
-     * @kbType: kbType to be set.
-     * @returns: TRUE if successful, FALSE otherwise.
-     *
-     * Set and save the kbtype setting.
-     */
-    public gboolean save_selKeys_string(self, const gchar *selKeys_str){
-	GValue gValue={0};
-	g_value_init(&gValue,G_TYPE_STRING);
-	g_value_set_string (&gValue,selKeys_str);
-	return ibus_config_set_value (self->config,"engine/Chewing","selKeys",&gValue);
-    }
-
-    private IBusProperty* get_iBusProperty_miscOption(self, const gchar *prop_name){
-	int i;
-	for (i=0;i<self->miscOption_array->len;i++){
-	    IBusProperty *prop=(IBusProperty *) g_ptr_array_index(self->miscOption_array,i);
-	    if (strcmp(prop->key,prop_name)==0)
-		return prop;
-	}
-	return NULL;
-    }
-
     private IBusProperty* get_iBusProperty(self, const gchar *prop_name){
-	int index;
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    return self->chieng_prop;
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    return self->alnumSize_prop;
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
 	    return self->settings_prop;
-	}else if (strcmp(prop_name,"chewing_KBType_prop")==0){
-	    return self->kbType_prop;
-	}else if (strcmp(prop_name,"chewing_selKeys_prop")==0){
-	    return self->selKeys_prop;
-	}else if ((index=KBType_property_get_index(prop_name))>=0){
-	    return ibus_prop_list_get(self->kbType_prop_subList,index);
-	}else if ((index=selKeys_property_get_index(prop_name))>=0){
-	    return ibus_prop_list_get(self->selKeys_prop_subList,index);
-	}else{
-	    IBusProperty *prop=self_get_iBusProperty_miscOption(self, prop_name);
-	    if (prop)
-		return prop;
 	}
-	G_DEBUG_MSG("*** get_iBusProperty(0,%s): NULL is returned",prop_name);
+	G_DEBUG_MSG(2,"*** get_iBusProperty(%s): NULL is returned",prop_name);
 	return NULL;
     }
-
-
-
 
     /*============================================
      * Overridden Parent (IBusEngine) methods
@@ -614,7 +385,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     reset(IBus:Engine *self){
-	G_DEBUG_MSG("*** reset 1");
+	G_DEBUG_MSG(2,"*** reset 1");
 	Self *selfObj=SELF(self);
 	ibus_lookup_table_clear(selfObj->table);
 	chewing_Reset(selfObj->context);
@@ -633,7 +404,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
 
 	
-        G_DEBUG_MSG("*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
+	G_DEBUG_MSG(3,"*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
 	guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
 	if (state==0){
 	    switch (keyval){
@@ -691,9 +462,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    chewing_handle_Tab(selfObj->context);
 		    break;
 		case IBUS_Caps_Lock:
-                    chewing_handle_Capslock(selfObj->context);
-                    self_refresh_property(selfObj,"chewing_chieng_prop");
-                    break;
+		    chewing_handle_Capslock(selfObj->context);
+		    self_refresh_property(selfObj,"chewing_chieng_prop");
+		    break;
 		default:
 		    chewing_handle_Default(selfObj->context,keyval);
 		    break;
@@ -737,7 +508,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void 
     page_up(IBus:Engine *self){
-        Self *selfObj=SELF(self);
+	Self *selfObj=SELF(self);
 	chewing_handle_PageUp(selfObj->context);
 	self_commit(selfObj);
     }
@@ -745,14 +516,14 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     page_down(IBus:Engine *self){
-        Self *selfObj=SELF(self);
+	Self *selfObj=SELF(self);
 	chewing_handle_PageDown(selfObj->context);
 	self_commit(selfObj);
     }
 
     override (IBus:Engine) void
     cursor_up(IBus:Engine *self){
-        Self *selfObj=SELF(self);
+	Self *selfObj=SELF(self);
 	chewing_handle_Up(selfObj->context);
 	self_commit(selfObj);
     }
@@ -766,34 +537,34 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
-	G_DEBUG_MSG("*** enable");
+	G_DEBUG_MSG(2,"*** enable");
 	Self *selfObj=SELF(self);
 
-        if (!selfObj->config){
+	if (!selfObj->config){
 	    /* connections_list is not avail in init, so we put it here */
 	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
 	    g_assert(connections_list);
 	    g_assert(connections_list->data);
 	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
-            selfObj->config=ibus_config_new(iConnection);
-        }
+	    selfObj->config=ibus_config_new(iConnection);
+	}
 
     }
 
     override (IBus:Engine) void
     disable(IBus:Engine  *self){
-	G_DEBUG_MSG("*** disable");
+	G_DEBUG_MSG(2,"*** disable");
     }
 
     override (IBus:Engine) void
     focus_in(IBus:Engine *self){
-	G_DEBUG_MSG("*** focus_in");
+	G_DEBUG_MSG(2,"*** focus_in");
 	Self *selfObj=SELF(self);
 	
 	/* Sync Caps_Lock and ChiEngMode */
 	guint modifiers=keyModifier_get(selfObj->_priv->pDisplay);
 	gint caps_is_lock=(modifiers & IBUS_LOCK_MASK)!=0;
-	G_DEBUG_MSG("focus_in(): ChiEng=%d IBUS_LOCK=%d",
+	G_DEBUG_MSG(2,"focus_in(): ChiEng=%d IBUS_LOCK=%d",
 		chewing_get_ChiEngMode(selfObj->context),caps_is_lock);
 	if (chewing_get_ChiEngMode(selfObj->context)==caps_is_lock){
 	    /* Caps_lock and ChiEngMode does not agree each other */
@@ -812,23 +583,19 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	}
 	self_refresh_property_list(selfObj);
-        self_refresh_preedit(selfObj);
+	self_refresh_preedit(selfObj);
     }
 
     override (IBus:Engine) void
     focus_out(IBus:Engine *self){
-	G_DEBUG_MSG("*** focus_out 1");
+	G_DEBUG_MSG(2,"*** focus_out 1");
     }
 
     override (IBus:Engine) void
     property_activate(IBus:Engine *self, const gchar  *prop_name, guint  prop_state){
-	G_DEBUG_MSG("*** property_activate(-, %s, %u)", prop_name, prop_state);
+	G_DEBUG_MSG(2,"*** property_activate(-, %s, %u)", prop_name, prop_state);
 	Self *selfObj=SELF(self);
-	ChewingKbType kbType;
 	gboolean needRefresh=TRUE;
-	int index;
-	GtkResponseType response;
-
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    /* Toggle Chinese <-> English */
 	    chewing_set_ChiEngMode(selfObj->context, !chewing_get_ChiEngMode(selfObj->context));
@@ -836,53 +603,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    /* Toggle Full <-> Half */
 	    chewing_set_ShapeMode(selfObj->context, !chewing_get_ShapeMode(selfObj->context));
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
-	    if (prop_state==PROP_STATE_CHECKED){
-		selfObj->_priv->showSetting=TRUE;
-		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_KBType_prop");
-		IBUS_ENGINE_GET_CLASS(self)->property_show(self,"chewing_selKeys_prop");
-		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_show,selfObj);
-	        response=gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog));
-		G_DEBUG_MSG("*** property_activate(-, %s, %u) response=%d", prop_name, prop_state,response);
-		self_refresh_property_list(selfObj);
-//		gtk_widget_show(selfObj->setting_dialog);
-	    }else{
-		selfObj->_priv->showSetting=FALSE;
-		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_KBType_prop");
-		IBUS_ENGINE_GET_CLASS(self)->property_hide(self,"chewing_selKeys_prop");
-		g_ptr_array_foreach(selfObj->miscOption_array,miscOption_array_hide,selfObj);
-//		gtk_widget_hide(selfObj->setting_dialog);
-		self_refresh_property_list(selfObj);
-	    }
-	}else if ((kbType=KBType_property_get_index(prop_name))>=0){
-	    if (prop_state==PROP_STATE_CHECKED){
-		if (chewing_set_KBType(selfObj->context,kbType)){
-		    /* Unsuccessfully, set to default */
-		    kbType=CHEWING_KBTYPE_DEFAULT;
-		    chewing_set_KBType(selfObj->context,kbType);
-		}
-		self_save_kbType(selfObj, kbType);
-	    }
-  	    needRefresh=FALSE;
-	}else if ((index=selKeys_property_get_index(prop_name))>=0){
-	    if (prop_state==PROP_STATE_CHECKED){
-		if (index==SELKEYS_ARRAY_SIZE-1){
-		    /* FixMe: Custom */
-		}else{
-		    self_set_selKeys_string(selfObj,selKeys_array[index]);
-		    self_save_selKeys_string(selfObj, selKeys_array[index]);
-		}
-	    }
+	    gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog));
+	    gtk_widget_hide(selfObj->setting_dialog);
 	    needRefresh=FALSE;
-	}else if ((index=property_get_index(prop_name))>=0){
-	    if (parameters[index].func){
-		parameters[index].func(selfObj->context,(prop_state==PROP_STATE_CHECKED)? 1: 0);
-		if (parameters[index].type==GCONF_VALUE_BOOL){
-		    gboolean bValue=(prop_state==PROP_STATE_CHECKED)? TRUE: FALSE;
-		    self_save_config(selfObj,parameters[index].key,&bValue);
-		}
-	    }
 	}else{
-	    G_DEBUG_MSG("*** property_activate(-, %s, %u) not recognized",prop_name, prop_state);
+	    G_DEBUG_MSG(2,"*** property_activate(-, %s, %u) not recognized",prop_name, prop_state);
+	    needRefresh=FALSE;
 	}
 	if (needRefresh)
 	    self_refresh_property(selfObj,prop_name);
@@ -890,7 +616,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_show(IBus:Engine *self, const gchar  *prop_name){
-	G_DEBUG_MSG("*** property_show(-, %s)",prop_name);
+	G_DEBUG_MSG(2,"*** property_show(-, %s)",prop_name);
 	Self *selfObj=SELF(self);
 	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
 	ibus_property_set_visible(prop,TRUE);
@@ -899,7 +625,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_hide(IBus:Engine *self, const gchar  *prop_name){
-	G_DEBUG_MSG("*** property_hide(-, %s)",prop_name);
+	G_DEBUG_MSG(2,"*** property_hide(-, %s)",prop_name);
 	Self *selfObj=SELF(self);
 	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
 	ibus_property_set_visible(prop,FALSE);

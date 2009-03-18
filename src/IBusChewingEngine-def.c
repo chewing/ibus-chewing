@@ -6,30 +6,26 @@ const gchar *page_labels[]={
 };
 
 const gchar *button_labels[]={
-    GTK_STOCK_APPLY,
-    GTK_STOCK_CANCEL,
-    GTK_STOCK_OK,
+    GTK_STOCK_CLOSE,
     NULL
 };
 
 GtkResponseType button_responses[]={
-    GTK_RESPONSE_APPLY,
-    GTK_RESPONSE_CANCEL,
-    GTK_RESPONSE_OK
+    GTK_RESPONSE_CLOSE,
 };
 
 //const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 const gchar *kbType_ids[]={
-    "default",
-    "hsu",
-    "ibm",
-    "gin_yieh",
-    "eten",
-    "eten26",
-    "dvorak",
-    "dvorak_hsu",
-    "dachen_26",
-    "hanyu",
+    N_("default"),
+    N_("hsu"),
+    N_("ibm"),
+    N_("gin_yieh"),
+    N_("eten"),
+    N_("eten26"),
+    N_("dvorak"),
+    N_("dvorak_hsu"),
+    N_("dachen_26"),
+    N_("hanyu"),
     NULL
 };
 
@@ -44,47 +40,154 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     NULL
 };
 
+static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
+    ChewingKbType i=0;
+    for(i=0;kbType_ids[i]!=NULL;i++){
+	if (strcmp(kbType_id,kbType_ids[i])==0){
+	    return i;
+	}
+    }
+    return CHEWING_KBTYPE_INVALID;
+}
 
-typedef void (*ChewingSettingFunc)(ChewingContext *ctx, int mode);
-typedef int (*ChewingGettingFunc)(ChewingContext *ctx);
+/*===== Callback functions =====*/
 
-typedef struct{
-    GConfValueType type;
-    gchar key[30];
-    gchar defaultValue[30];
-    
-    gint min;
-    gint max;
-    ChewingSettingFunc func;
-    ChewingGettingFunc getFunc;
-} ChewingParameter;
+static void KBType_set_callback(PropertyContext *ctx, GValue *value){
+    ChewingKbType kbType=kbType_id_get_index(g_value_get_string(value));
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_KBType(engine->context,kbType);
+}
 
-const ChewingParameter parameters[]={
-    {GCONF_VALUE_STRING, "KBType",    "default", 0, 0,
-	NULL,NULL},
-    {GCONF_VALUE_STRING, "selKeys","1234567890", 0, 0,
-	NULL,NULL},
-    {GCONF_VALUE_BOOL,   N_("autoShiftCur"),"0", 0, 1,
-	chewing_set_autoShiftCur,chewing_get_autoShiftCur},
-    {GCONF_VALUE_BOOL, N_("addPhraseDirection"),"0", 0, 1,
-	chewing_set_addPhraseDirection,chewing_get_addPhraseDirection},
-    {GCONF_VALUE_INT, N_("candPerPage"),"10", 8, 10,
-	chewing_set_candPerPage,chewing_get_candPerPage},
-    {GCONF_VALUE_BOOL, N_("easySymbolInput"),"0", 0, 1,
-	chewing_set_easySymbolInput,chewing_get_easySymbolInput},
-    {GCONF_VALUE_BOOL, N_("escCleanAllBuf"),"0", 0, 1,
-	chewing_set_escCleanAllBuf,chewing_get_escCleanAllBuf},
-    {GCONF_VALUE_INT, N_("hsuSelKeyType"),"1", 1, 2,
-	chewing_set_hsuSelKeyType,chewing_get_hsuSelKeyType},
-    {GCONF_VALUE_INT, N_("maxChiSymbolLen"),"16", 8, 30,
-	chewing_set_maxChiSymbolLen,chewing_get_maxChiSymbolLen},
-    {GCONF_VALUE_BOOL, N_("phraseChoiceRearward"),"1", 0, 1,
-	chewing_set_phraseChoiceRearward,chewing_get_phraseChoiceRearward},
-    {GCONF_VALUE_BOOL, N_("spaceAsSelection"),"1", 0, 1,
-	chewing_set_spaceAsSelection,chewing_get_spaceAsSelection},
-    {GCONF_VALUE_INVALID, "","",  0, 0, 
-	NULL, NULL}
+static void selKeys_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    ibus_chewing_engine_set_selKeys_string(engine,g_value_get_string(value));
+}
+
+static void hsuSelKeyType_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_hsuSelKeyType(engine->context,g_value_get_int(value));
+}
+
+static void autoShiftCur_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_autoShiftCur(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+static void addPhraseDirection_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_addPhraseDirection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_easySymbolInput(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+static void escCleanAllBuf_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_escCleanAllBuf(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_maxChiSymbolLen(engine->context,g_value_get_int(value));
+}
+
+static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_candPerPage(engine->context,g_value_get_int(value));
+}
+
+static void phraseChoiceRearward_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_phraseChoiceRearward(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    chewing_set_spaceAsSelection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+}
+
+/*===== End of Callback functions =====*/
+
+PropertySpec propSpecs[]={
+    {G_TYPE_STRING, "KBType", "Keyboard",  N_("Keyboard Type"), 
+	"default", kbType_ids,	0, 0, 
+	NULL, KBType_set_callback,
+	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE, 0, 0, 
+	NULL,
+    },
+    {G_TYPE_STRING, "selKeys", "Keyboard",  N_("Selection keys"), 
+	"1234567890", selKeys_array, 0, 0,
+	NULL, selKeys_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_INT, "hsuSelKeyType", "Keyboard", N_("Hsu's selection key"),
+	"1", NULL, 1, 2, 
+	NULL, hsuSelKeyType_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+
+    {G_TYPE_BOOLEAN, "autoShiftCur", "Editing", N_("Auto move cursor"),
+	"0", NULL, 0, 1,
+	NULL, autoShiftCur_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_BOOLEAN, "addPhraseDirection", "Editing", N_("Add phrase in front"),
+	"0", NULL, 0, 1, 
+	NULL, addPhraseDirection_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_BOOLEAN, "easySymbolInput", "Editing", N_("Easy symbol input"),
+	"0", NULL, 0, 1,
+	NULL, easySymbolInput_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_BOOLEAN, "escCleanAllBuf", "Editing", N_("Esc clean all buffer"),
+	"0", NULL, 0, 1, 
+	NULL, escCleanAllBuf_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_INT, "maxChiSymbolLen", "Editing", N_("Maximum Chinese characters"), 
+	"16", NULL, 4, 30,
+	NULL, maxChiSymbolLen_set_callback,
+	0, 0, 0,
+	N_("Maximum Chinese characters in pre-edit buffer"),
+    },
+
+    {G_TYPE_INT, "candPerPage", "Selecting", N_("Candidate per page"), 
+	"10", NULL, 8, 10,
+	NULL, candPerPage_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_BOOLEAN, "phraseChoiceRearward", "Selecting", N_("Choice phrase from the end"),
+	"1", NULL, 0, 1, 
+	NULL, phraseChoiceRearward_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space as selection key"),
+	"1", NULL, 0, 1, 
+	NULL, spaceAsSelection_set_callback,
+	0, 0, 0,
+	NULL,
+    },
+    {G_TYPE_INVALID, "", "", "",
+	"", NULL, 0, 0, 
+	NULL, NULL,
+	0, 0, 0,
+	NULL,
+    },
+
 };
+
 
 
 /*============================================
@@ -99,86 +202,6 @@ static gint parameter_get_index(const char *key){
     }
     return -1;
 }
-
-static int property_get_index(const gchar *prop_name){
-    int i=0;
-    size_t prefix_len=strlen("chewing_");
-    const gchar *ptr=prop_name+prefix_len;
-    size_t len=strlen(ptr)-5;
-    for(i=0;parameters[i].type!=GCONF_VALUE_INVALID;i++){
-	if (strncmp(ptr,parameters[i].key,len)==0){
-	    return i;
-	}
-    }
-    return -1;
-}
-
-
-static ChewingKbType KBType_property_get_index(const gchar *prop_name){
-    ChewingKbType i=0;
-    size_t prefix_len=strlen("chewing_KBType_");
-    const gchar *ptr=prop_name+prefix_len;
-    size_t len=strlen(ptr)-5;
-    for(i=0;kbType_ids[i]!=NULL;i++){
-	if (strncmp(ptr,kbType_ids[i],len)==0){
-	    return i;
-	}
-    }
-    return CHEWING_KBTYPE_INVALID;
-}
-
-static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
-    ChewingKbType i=0;
-    for(i=0;kbType_ids[i]!=NULL;i++){
-	if (strcmp(kbType_id,kbType_ids[i])==0){
-	    return i;
-	}
-    }
-    return CHEWING_KBTYPE_INVALID;
-}
-
-
-static IBusText** kbTypes_to_iBusTexts(){
-    IBusText **kbTypeTexts=g_new(IBusText *,10+1);
-    int i=0;
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Default"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Hsu"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("IBM"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Gin-Yieh"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("ETen"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("ETen 26 keys"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Dvorak"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Dvorak Hsu"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Dachen CP26"));
-    kbTypeTexts[i++]=ibus_text_new_from_static_string(_("Hanyu"));
-    kbTypeTexts[i]=NULL;
-    return kbTypeTexts;
-}
-
-static IBusText** selKeys_to_iBusTexts(){
-    IBusText **selKeysTexts=g_new(IBusText *,SELKEYS_ARRAY_SIZE+1);
-    int i;
-    for(i=0;i<SELKEYS_ARRAY_SIZE-1;i++){
-	selKeysTexts[i]=ibus_text_new_from_static_string(selKeys_array[i]);
-    }
-    selKeysTexts[i++]=ibus_text_new_from_static_string(_("Custom"));
-    selKeysTexts[i]=NULL;
-    return selKeysTexts;
-}
-
-static int selKeys_property_get_index(const gchar *prop_name){
-    int i=0;
-    size_t prefix_len=strlen("chewing_selKeys_");
-    const gchar *ptr=prop_name+prefix_len;
-    size_t len=strlen(ptr)-5;
-    for(i=0;i<SELKEYS_ARRAY_SIZE;i++){
-	if (strncmp(ptr,selKeys_array[i],len)==0){
-	    return i;
-	}
-    }
-    return -1;
-}
-
 
 
 static gunichar *preedit_string_make(ChewingContext *context, 
@@ -217,38 +240,6 @@ static gunichar *preedit_string_make(ChewingContext *context,
 /*--------------------------------------------
  * Foreach functions
  */
-static void miscOption_array_show(gpointer data,  gpointer user_data){
-    IBusProperty *prop = (IBusProperty *) data;
-    IBusChewingEngine *self= (IBusChewingEngine *) user_data;
-    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),prop->key);
-}
-
-static void miscOption_array_hide(gpointer data,  gpointer user_data){
-    IBusProperty *prop = (IBusProperty *) data;
-    IBusChewingEngine *self= (IBusChewingEngine *) user_data;
-    IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),prop->key);
-}
-
-//static KeySym modifiers[]={
-//    IBUS_Scroll_Lock,
-//    IBUS_Num_Lock
-//    IBUS_Caps_Lock,
-//    IBUS_Shift_L,
-//    IBUS_Shift_R,
-//    IBUS_Control_L,
-//    IBUS_Control_R,
-//    IBUS_Shift_Lock,
-//    IBUS_Meta_L,
-//    IBUS_Meta_R,
-//    IBUS_Alt_L, 
-//    IBUS_Alt_R,
-//    IBUS_Super_L,
-//    IBUS_Super_R,
-//    IBUS_Hyper_L,
-//    IBUS_Hyper_R,
-//    IBUS_VoidSymbol
-//};
-
 static guint keyModifier_get(Display *pDisplay){
     Window    root_retrun, child_retrun;
     int     root_x_return, root_y_return, win_x_return, win_y_return;
@@ -286,19 +277,10 @@ static guint keyModifier_get(Display *pDisplay){
 static void key_send_fake_event(KeySym key, Display *pDisplay)
 {
     KeyCode keyCode = XKeysymToKeycode(pDisplay, key);
-    G_DEBUG_MSG("key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
+    G_DEBUG_MSG(2,"key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
     XTestFakeKeyEvent(pDisplay, keyCode, True, CurrentTime);
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
     
 }
 
-//static gboolean key_ignore_skip(guint  keyval){
-//    switch(keyval){
-//	case IBUS_Caps_Lock:
-//	    return TRUE;
-//	default:
-//	    break;
-//
-//    }
-//    return FALSE;
-//}
+

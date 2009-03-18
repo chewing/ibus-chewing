@@ -31,7 +31,6 @@ requires 2.0.0
 %headertop{
 #ifndef MAKER_DIALOG_H_
 #define MAKER_DIALOG_H_
-#define STRING_BUFFER_SIZE_DEFAULT 1000
 %}
 
 enum MAKER_DIALOG_PROPERTY_FLAG{
@@ -65,19 +64,21 @@ typedef struct{
     MakerDialogPropertyFlags propertyFlags;
     gint width;
     gint height;
-    gchar *toolTips;
-
+    gchar *tooltip;
 } PropertySpec;
 
 struct _PropertyContext{
     PropertySpec *spec;
-    GValue value;
-    gpointer obj;  //<! Object to be manipulate.
-    gpointer userdata;  //<! User data to be used in callback.
+    gpointer userData;  //<! User data to be used in callback.
+
 };
 
 #ifndef WIDGET_ID_PREFIX
 #define WIDGET_ID_PREFIX "+"
+#endif
+
+#ifndef STRING_BUFFER_SIZE_DEFAULT
+#define STRING_BUFFER_SIZE_DEFAULT 1000
 #endif
 
 %}
@@ -93,20 +94,34 @@ struct _PropertyContext{
 
 %{
 
-static PropertyContext *propertyContext_new(PropertySpec *spec, gpointer obj,gpointer userdata){
+static PropertyContext *propertyContext_new(PropertySpec *spec, gpointer userData){
     PropertyContext *ctx=g_new(PropertyContext,1);
-    memset(&ctx->value,0,sizeof(GValue));
     ctx->spec=spec;
-    ctx->obj=obj;
-    ctx->userdata=userdata;
+    ctx->userData=userData;
     return ctx;
 }
 
-static void propertyContext_free(PropertyContext *ctx){
-    g_value_unset(&ctx->value);
+
+static void propertyContext_free(gpointer ctx_ptr){
+    PropertyContext *ctx=(PropertyContext *) ctx_ptr;
     g_free(ctx);
 }
 
+/* Deal with i18n */
+static const gchar *combo_get_activate_text_original(GtkComboBox *combo, PropertyContext *ctx){
+    const gchar **stringArray=ctx->spec->validValues;
+    gint len;
+    for(len=0;stringArray[len]!=NULL;len++){
+    }
+    gint index=gtk_combo_box_get_active(combo);
+    if (index<len || index>=0){
+	return stringArray[index];
+    }
+    return gtk_combo_box_get_active_text(combo);
+}
+
+
+/* Both str and stringArray need to be untranslated! */
 static gint combo_find_string(GtkComboBox *combo, const gchar *str, PropertyContext *ctx){
     g_assert(str);
     int i,index=-1;
@@ -126,17 +141,79 @@ static gint combo_find_string(GtkComboBox *combo, const gchar *str, PropertyCont
     return index;
 }
 
-
 static void  propList_free_deep_callback(gpointer data, gpointer user_data){
-    propertyContext_free((PropertyContext *)data);
+    propertyContext_free(data);
 }
 
 static gchar *widget_get_id(gchar *buffer, gint buffer_size, 
 	const gchar *widget_label, const gchar *widget_type){
-    g_snprintf(buffer,buffer_size,"%s%s_%s",
-	    WIDGET_ID_PREFIX, widget_label, widget_type); 
+    g_snprintf(buffer,buffer_size,"%s%s%s%s",
+	    WIDGET_ID_PREFIX, widget_label,
+	    (widget_type)? "_" : "",
+	    (widget_type)? widget_type : ""
+	    ); 
     return buffer;
 }
+
+/*===== Widget Callback function wraps =====*/
+
+static void on_comboBox_changed_wrap (GtkComboBox *comboBox, gpointer    user_data)
+{
+    PropertyContext *ctx=(PropertyContext *)user_data;
+    GValue value={0};
+    g_value_init(&value, ctx->spec->valueType);
+    g_value_set_string(&value,gtk_combo_box_get_active_text(comboBox));
+    G_DEBUG_MSG(2,"on_comboBox_changed_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    ctx->spec->setFunc(ctx,&value);
+}
+
+static void on_entry_activate_wrap (GtkEntry *entry, gpointer    user_data)
+{
+    PropertyContext *ctx=(PropertyContext *)user_data;
+    GValue value={0};
+    g_value_init(&value, ctx->spec->valueType);
+    g_value_set_string(&value,gtk_entry_get_text(entry));
+    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    ctx->spec->setFunc(ctx,&value);
+}
+
+static void on_spinButton_value_changed_wrap (GtkSpinButton *button, gpointer    user_data)
+{
+    PropertyContext *ctx=(PropertyContext *)user_data;
+    GValue value={0};
+    g_value_init(&value, ctx->spec->valueType);
+    switch(ctx->spec->valueType){
+	case G_TYPE_INT:
+	    g_value_set_int(&value,(gint) gtk_spin_button_get_value(button));
+	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%d",
+		    ctx->spec->key,g_value_get_int(&value));
+	    break;
+	case G_TYPE_UINT:
+	    g_value_set_uint(&value,(guint) gtk_spin_button_get_value(button));
+	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%u",
+		    ctx->spec->key,g_value_get_uint(&value));
+	    break;
+	case G_TYPE_DOUBLE:
+	    g_value_set_uint(&value, gtk_spin_button_get_value(button));
+	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%g",
+		    ctx->spec->key,g_value_get_double(&value));
+	    break;
+	default:
+	    break;
+    }
+    ctx->spec->setFunc(ctx,&value);
+}
+
+static void on_toggleButton_toggled_wrap (GtkToggleButton *button, gpointer    user_data)
+{
+    PropertyContext *ctx=(PropertyContext *)user_data;
+    GValue value={0};
+    g_value_init(&value, ctx->spec->valueType);
+    g_value_set_boolean(&value, gtk_toggle_button_get_active(button));
+    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    ctx->spec->setFunc(ctx,&value);
+}
+/*===== End of Widget Callback function wraps =====*/
 
 /**
  * atob:
@@ -160,11 +237,9 @@ gboolean atob(const gchar *string){
 	return FALSE;
     char *endPtr=NULL;
     long int longValue=strtol(string, &endPtr, 10);
-    g_debug("string %s longValue %ld",string,longValue);
 
     if (longValue==0 && *endPtr=='\0'){
 	// 0
-	g_debug("*endPtr=='\\0'");
 	return FALSE;
     }
     return TRUE;
@@ -188,7 +263,7 @@ class Maker:Dialog from Gtk:Dialog{
 	}
     };
 
-
+    
     init(self){
     }
 
@@ -233,27 +308,28 @@ class Maker:Dialog from Gtk:Dialog{
 	return G_OBJECT(self);
     }
 
-    public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue){
-	return self_add_property_full(self, pSpec, initValue, NULL, NULL);
-    }
+    public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue, gpointer user_data){
+	G_DEBUG_MSG(2,"*** add_property(%s,%s,-)",pSpec->key,initValue);
 
-    public gboolean add_property_full(self, PropertySpec *pSpec, const gchar *initValue, 
-	    gpointer obj, gpointer user_data){
 	GtkWidget *vbox=self_get_base_vbox(self, pSpec->pageName);
 	g_assert(vbox);
 
 	GtkWidget *hbox=gtk_hbox_new(FALSE,self->hbox_spacing);
 	self_widget_register(self, hbox, pSpec->key, "hbox");
-	GtkWidget *label=gtk_label_new(pSpec->label);
+	GtkWidget *label=gtk_label_new(_(pSpec->label));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 	self_widget_register(self, label, pSpec->key, "label");
+	if (pSpec->tooltip){
+	    gtk_widget_set_tooltip_text (label,_(pSpec->tooltip));
+	}
 	gtk_widget_show(label);	
 	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *widget=NULL;
         GtkAdjustment *gAdjust=NULL;
-	PropertyContext *ctx=propertyContext_new(pSpec,obj,user_data);
-	g_value_init(&ctx->value,pSpec->valueType);
+	PropertyContext *ctx=propertyContext_new(pSpec,user_data);
+	GValue gValue={0};
+	g_value_init(&gValue,pSpec->valueType);
 
 	switch(pSpec->valueType){
 	    case G_TYPE_BOOLEAN:
@@ -261,14 +337,13 @@ class Maker:Dialog from Gtk:Dialog{
 		self_widget_register(self, widget, pSpec->key, NULL);
 
 		if(initValue){
-		    g_value_set_boolean(&ctx->value,atob(initValue));
+		    g_value_set_boolean(&gValue,atob(initValue));
 		}else if (pSpec->defaultValue){
-		    g_value_set_boolean(&ctx->value,atob(pSpec->defaultValue));
+		    g_value_set_boolean(&gValue,atob(pSpec->defaultValue));
 		}
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),g_value_get_boolean(&ctx->value));
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),g_value_get_boolean(&gValue));
 		if (pSpec->setFunc){
-		    g_signal_connect (widget, "toggled",
-			    G_CALLBACK (pSpec->setFunc), ctx);
+		    g_signal_connect(widget, "toggled", G_CALLBACK(on_toggleButton_toggled_wrap),ctx);
 		}
 		break;
 	    case G_TYPE_UINT:
@@ -285,8 +360,7 @@ class Maker:Dialog from Gtk:Dialog{
 		 }
 
 		 if (pSpec->setFunc){
-		     g_signal_connect (widget, "value-changed",
-			     G_CALLBACK (pSpec->setFunc), pSpec);
+		     g_signal_connect(widget, "value-changed", G_CALLBACK(on_spinButton_value_changed_wrap),ctx);
 		 }
 		 break;
 	    case G_TYPE_STRING:
@@ -299,7 +373,7 @@ class Maker:Dialog from Gtk:Dialog{
 		    self_widget_register(self, widget, pSpec->key, NULL);
 		    int i,counter=0;
 		    for(i=0;pSpec->validValues[i]!=NULL;i++){
-			gtk_combo_box_append_text(GTK_COMBO_BOX(widget),pSpec->validValues[i]);
+			gtk_combo_box_append_text(GTK_COMBO_BOX(widget),_(pSpec->validValues[i]));
 			counter++;
 		    }
 
@@ -311,12 +385,11 @@ class Maker:Dialog from Gtk:Dialog{
 			index=combo_find_string(GTK_COMBO_BOX(widget),pSpec->defaultValue,ctx);
 		    }
 		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
-		    g_value_set_string(&ctx->value,gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
+		    g_value_set_string(&gValue,gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
 
 
 		    if (pSpec->setFunc){
-			g_signal_connect (widget, "changed",
-				G_CALLBACK (pSpec->setFunc), NULL);
+			g_signal_connect(widget, "changed", G_CALLBACK(on_comboBox_changed_wrap),ctx);
 		    }
 
 		}else{
@@ -327,17 +400,16 @@ class Maker:Dialog from Gtk:Dialog{
 		    }
 
 		    if(initValue){
-			g_value_set_string(&ctx->value,initValue);
+			g_value_set_string(&gValue,initValue);
 		    }else if (pSpec->defaultValue){
-			g_value_set_string(&ctx->value,pSpec->defaultValue);
+			g_value_set_string(&gValue,pSpec->defaultValue);
 		    }
-		    gtk_entry_set_text(GTK_ENTRY(widget),g_value_get_string(&ctx->value));
+		    gtk_entry_set_text(GTK_ENTRY(widget),g_value_get_string(&gValue));
 		    gtk_editable_set_editable (GTK_EDITABLE(widget), 
 			    !(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
 
 		    if (pSpec->setFunc){
-			g_signal_connect (widget, "activate",
-				G_CALLBACK (pSpec->setFunc), pSpec);
+			g_signal_connect(widget, "activate", G_CALLBACK(on_entry_activate_wrap),ctx);
 		    }
 		}
 		break;
@@ -405,7 +477,62 @@ class Maker:Dialog from Gtk:Dialog{
 	}
     }
 
-    public GValue *get_value(self, const gchar *key, GValue *value){
+    /**
+     * apply_widget_value:
+     * @self: A MakerDialog.
+     * @key: The key of a property.
+     * @value: Value for the property identified by @key. 
+     *
+     * Apply the value shown in widget to the property.
+     * Note that a set callback function is needed in PropertySpec to apply the value to property.
+     *
+     * @see_also: set_widget_value()
+     */
+    public void apply_widget_value(self, const gchar *key){
+	G_DEBUG_MSG(2,"*** apply_widget_value(%s)",key);
+	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
+	if (!ctx){
+	    /* Not found */
+	    g_warning("%s: no such PropertyContext",key);
+	    return;
+	}
+	GtkWidget *widget=self_get_widget_by_key(self,key);
+	if (!widget){
+	    /* Not found */
+	    g_warning("%s: no such widget",key);
+	    return;
+	}
+	GValue gValue={0};
+	g_value_init(&gValue,ctx->spec->valueType);
+	switch(ctx->spec->valueType){
+	    case G_TYPE_BOOLEAN:
+		g_value_set_boolean(&gValue, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
+		break;
+	    case G_TYPE_INT:
+		g_value_set_int(&gValue, (gint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
+		break;
+	    case G_TYPE_UINT:
+		g_value_set_uint(&gValue, (guint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
+		break;
+	    case G_TYPE_STRING:
+		if (ctx->spec->validValues){
+		    g_value_set_string(&gValue, gtk_combo_box_get_active_text (GTK_COMBO_BOX(widget)));
+		}else{
+		    g_value_set_string(&gValue, gtk_entry_get_text (GTK_ENTRY(widget)));
+		}
+		break;
+	    default:
+		break;
+	}
+
+	if (ctx->spec->setFunc){
+	    ctx->spec->setFunc(ctx,&gValue);
+	}
+	g_value_unset(&gValue);
+    }
+
+
+    public GValue *get_widget_value(self, const gchar *key, GValue *value){
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
@@ -437,7 +564,18 @@ class Maker:Dialog from Gtk:Dialog{
 	return value;
     }
 
-    public void set_value(self, const gchar *key, GValue *value){
+    /**
+     * set_widget_value:
+     * @self: A MakerDialog.
+     * @key: The key of a property.
+     * @value: Value to be shown in widget. 
+     *
+     * Set value for widget display.
+     * However, the property value is not set.
+     * Use set_property_value() to do it.
+     * @see_also: set_property_value()
+     */
+    public void set_widget_value(self, const gchar *key, GValue *value){
 	int index;
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
@@ -478,12 +616,11 @@ class Maker:Dialog from Gtk:Dialog{
     }
 
     public GtkWidget *get_widget_by_key(self, const gchar *key){
-	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
-	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, key, NULL);
-	return self_get_widget_by_id(self, buf);
+	return self_get_widget(self,key,NULL);
     }
 
     public GtkWidget *get_widget_by_id(self, const gchar *id){
+	G_DEBUG_MSG(3,"*** get_widget_by_id(%s)",id);
 	return (GtkWidget *) g_hash_table_lookup (self->_priv->widgetTable, id);
     }
 
@@ -523,10 +660,11 @@ class Maker:Dialog from Gtk:Dialog{
     private void widget_register(self,  GtkWidget *widget, 
 	    const gchar *widget_label, const gchar *widget_type){
 	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
-	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, (widget_type)? (widget_type) : "");
+	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, widget_type);
 	gchar *chunk_ret=g_string_chunk_insert(self->_priv->widgetIds,buf);
 	g_hash_table_insert(self->_priv->widgetTable, chunk_ret,widget);
-
+	G_DEBUG_MSG(3,"*** widget_register(-,%s,%s) widget registered as %s",
+		widget_label,(widget_type)? (widget_type) : "", chunk_ret);
     }
 
     
