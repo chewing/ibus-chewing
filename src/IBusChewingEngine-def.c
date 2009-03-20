@@ -6,12 +6,12 @@ const gchar *page_labels[]={
 };
 
 const gchar *button_labels[]={
-    GTK_STOCK_CLOSE,
+    GTK_STOCK_SAVE,
     NULL
 };
 
 GtkResponseType button_responses[]={
-    GTK_RESPONSE_CLOSE,
+    GTK_RESPONSE_OK,
 };
 
 //const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
@@ -40,6 +40,7 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     NULL
 };
 
+#ifndef DIALOG_TEST
 static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
     ChewingKbType i=0;
     for(i=0;kbType_ids[i]!=NULL;i++){
@@ -49,63 +50,87 @@ static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
     }
     return CHEWING_KBTYPE_INVALID;
 }
+#endif
 
 /*===== Callback functions =====*/
 
 static void KBType_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     ChewingKbType kbType=kbType_id_get_index(g_value_get_string(value));
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_KBType(engine->context,kbType);
+#endif    
 }
 
 static void selKeys_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     ibus_chewing_engine_set_selKeys_string(engine,g_value_get_string(value));
+#endif    
 }
 
 static void hsuSelKeyType_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_hsuSelKeyType(engine->context,g_value_get_int(value));
+#endif    
 }
 
 static void autoShiftCur_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_autoShiftCur(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+#endif    
 }
 
 static void addPhraseDirection_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_addPhraseDirection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+#endif    
 }
 
 static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_easySymbolInput(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+    engine->_priv->easySymbolInput=g_value_get_boolean(value);
+#endif    
 }
 
 static void escCleanAllBuf_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_escCleanAllBuf(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+#endif    
 }
 
 static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_maxChiSymbolLen(engine->context,g_value_get_int(value));
+#endif    
 }
 
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_candPerPage(engine->context,g_value_get_int(value));
+#endif    
 }
 
 static void phraseChoiceRearward_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_phraseChoiceRearward(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+#endif    
 }
 
 static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_spaceAsSelection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
+#endif    
 }
 
 /*===== End of Callback functions =====*/
@@ -114,7 +139,7 @@ PropertySpec propSpecs[]={
     {G_TYPE_STRING, "KBType", "Keyboard",  N_("Keyboard Type"), 
 	"default", kbType_ids,	0, 0, 
 	NULL, KBType_set_callback,
-	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE, 0, 0, 
+	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION, 0, 0, 
 	NULL,
     },
     {G_TYPE_STRING, "selKeys", "Keyboard",  N_("Selection keys"), 
@@ -194,16 +219,16 @@ PropertySpec propSpecs[]={
  * Supporting functions
  */
 
-static gint parameter_get_index(const char *key){
-    int i;
-    for (i=0;parameters[i].type!=GCONF_VALUE_INVALID;i++){
-	if (strcmp(parameters[i].key,key)==0)
-	    return i;
-    }
-    return -1;
-}
-
-
+//static const PropertySpec *propertySpec_find_by_key(const gchar *key){
+//    int i;
+//    for(i=0;propSpecs[i].valueType!=G_TYPE_INVALID;i++){
+//        if (strcmp(propSpecs[i].key,key)==0){
+//            return &propSpecs[i];
+//        }
+//    }
+//    return NULL;
+//}
+#ifndef DIALOG_TEST
 static gunichar *preedit_string_make(ChewingContext *context, 
 	glong *zhuyin_item_written_ptr,  glong *item_written_ptr){
     glong chiSymbol_item_written=0;
@@ -240,6 +265,11 @@ static gunichar *preedit_string_make(ChewingContext *context,
 /*--------------------------------------------
  * Foreach functions
  */
+
+/*--------------------------------------------
+ * Key modifier functions
+ */
+
 static guint keyModifier_get(Display *pDisplay){
     Window    root_retrun, child_retrun;
     int     root_x_return, root_y_return, win_x_return, win_y_return;
@@ -282,5 +312,6 @@ static void key_send_fake_event(KeySym key, Display *pDisplay)
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
     
 }
+#endif    
 
 

@@ -60,6 +60,7 @@ enum CHEWING_MODIFIER_SYNC{
 %headertop{
 #include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
+#define EASY_SYMBOL_INPUT_WORK_AROUND
 %}
 
 %{
@@ -87,6 +88,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     private guint event_skipCount=0;
 
     protected gint selKeys[MAX_SELKEY];
+
+    /* For easy symbol input work around */
+    private gboolean easySymbolInput;
+
 
     protected IBusLookupTable *table=NULL
 	destroy {
@@ -137,8 +142,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     init (self) {
           /* initialize the object here */
 	G_DEBUG_MSG(2,"*** init()");
+	gchar buf[100];
+	g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	chewing_Init(CHEWING_DATADIR, "/tmp");
+	chewing_Init(CHEWING_DATADIR, buf);
 
 	self->context=chewing_new();
 	chewing_set_ChiEngMode(self->context,CHINESE_MODE);
@@ -154,22 +161,41 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void context_load_parameters(self){
+#define BUFFER_SIZE_LOCAL 200
 	G_DEBUG_MSG(3,"*** context_load_parameters()");
 	int i;
 	gchar confKey[200];
+	gchar buf[BUFFER_SIZE_LOCAL];
 
 	int confKeyPrefix_len=strlen(GCONF_KEY_PREFIX);
 	GError *err=NULL;
 	g_strlcpy(confKey,GCONF_KEY_PREFIX,200);
-	gboolean staticString;
+	gchar *str_ptr=NULL;
  
 	for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
 	    G_DEBUG_MSG(3,"*** context_load_parameters(), i=%d",i);
 	    confKey[confKeyPrefix_len]='\0';
 	    g_strlcat(confKey,propSpecs[i].key,200);
-	    staticString=FALSE;
 
-	    gchar *valueStr=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, confKey, &err);
+	    switch(propSpecs[i].valueType){
+		case G_TYPE_BOOLEAN:
+		    buf[0]=(gconf_client_get_bool(SELF_GET_CLASS(self)->gConfClient, confKey, &err))? '1' : '0';
+		    buf[1]='\0';
+		    break;
+		case G_TYPE_UINT:
+		case G_TYPE_INT:
+		    g_snprintf(buf,BUFFER_SIZE_LOCAL,"%d",
+			    gconf_client_get_int(SELF_GET_CLASS(self)->gConfClient, confKey, &err));
+		    break;
+		case G_TYPE_STRING:
+		    str_ptr=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, confKey, &err);
+		    g_strlcpy(buf,str_ptr, BUFFER_SIZE_LOCAL);
+		    g_free(str_ptr);
+		    break;
+		default:
+		    break;
+
+	    }
 	    if (err){
 		g_warning("Warning: cannot load confKey %s because %s %s %s",
 			confKey,
@@ -177,22 +203,19 @@ class IBus:Chewing:Engine from IBus:Engine{
 			(propSpecs[i].defaultValue)? _(" Use default value:") : _(" No default value, skipped.") ,
 			(propSpecs[i].defaultValue)? propSpecs[i].defaultValue : ""
 			);
-		staticString=TRUE;
-		g_free(valueStr);
 		g_error_free (err);
 		if (propSpecs[i].defaultValue){
-		    valueStr=propSpecs[i].defaultValue;
+		    g_strlcpy(buf,propSpecs[i].defaultValue, BUFFER_SIZE_LOCAL);
 		}else{
 		    continue;
 		}
 	    }
 
 	    /* Add property to dialog */
-	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],valueStr,self);
+	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],buf,self);
 	    maker_dialog_apply_widget_value(MAKER_DIALOG(self->setting_dialog),propSpecs[i].key);
-	    if (!staticString)
-		g_free(valueStr);
 	}
+#undef BUFFER_SIZE_LOCAL
     }
 
     protected gboolean commit(self){
@@ -318,44 +341,38 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_refresh_property(self,"chewing_settings_prop");
 	ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
     }
-
     /**
      * save_config:
      * @self: this instances.
      * @key_suffix: key to be set.
-     * @configValue: Key value.
      * @returns: TRUE if successful, FALSE otherwise.
      *
-     * Set and save the property value.
+     * Save the property value to disk.
      */
-    public gboolean save_config(self, const gchar *key_suffix, gpointer configValue){
+    public gboolean save_config(self, const gchar *key_suffix){
 	G_DEBUG_MSG(1,"*** save_config(%s,-)",key_suffix);
-	int index=parameter_get_index(key_suffix);
 	GValue gValue={0};
-	g_assert(index>=0);
-	switch(parameters[index].type){
-	    case GCONF_VALUE_STRING:
-		g_value_init(&gValue,G_TYPE_STRING);
-		g_value_set_static_string (&gValue,(gchar *) configValue);
-		G_DEBUG_MSG(4,"*** save_config(-,%s,%s) str",key_suffix,(gchar *) configValue);
-		break;
-	    case GCONF_VALUE_INT:
-		g_value_init(&gValue,G_TYPE_INT);
-		gint *int_p=(gint *) configValue;
-		g_value_set_int (&gValue, *int_p);
-		G_DEBUG_MSG(4,"*** save_config(-,%s,%d) int",key_suffix,*int_p);
-		break;
-	    case GCONF_VALUE_BOOL:
-		g_value_init(&gValue,G_TYPE_BOOLEAN);
-		gboolean *bool_p=(gboolean *) configValue;
-		g_value_set_boolean (&gValue, *bool_p);
-		G_DEBUG_MSG(4,"*** save_config(-,%s,%d) int",key_suffix,*bool_p);
-		break;
-	    default:
-		g_error("Invalid conf value type!");
-		break;
-	}
+	maker_dialog_get_widget_value(MAKER_DIALOG(self->setting_dialog),key_suffix,&gValue);
 	return ibus_config_set_value (self->config,"engine/Chewing",key_suffix,&gValue);
+    }
+
+    /**
+     * save_config_all:
+     * @self: this instances.
+     * @key_suffix: key to be set.
+     * @returns: TRUE if all successful, FALSE otherwise.
+     *
+     * Save alll property values to disk.
+     */
+    public gboolean save_config_all(self){
+	int i;
+	gboolean success=TRUE;
+	for(i=0;propSpecs[i].valueType!=G_TYPE_INVALID;i++){
+	    if (!self_save_config(self,propSpecs[i].key)){
+		success=FALSE;
+	    }
+	}
+	return success;
     }
 
     protected void set_selKeys_string(self,const gchar* selKeys_str){
@@ -466,6 +483,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    self_refresh_property(selfObj,"chewing_chieng_prop");
 		    break;
 		default:
+#ifdef EASY_SYMBOL_INPUT_WORK_AROUND
+		    if (selfObj->_priv->easySymbolInput){
+			/* Temporarily turn off easySymbolInput*/
+			chewing_set_easySymbolInput(selfObj->context,0);
+		    }
+#endif
 		    chewing_handle_Default(selfObj->context,keyval);
 		    break;
 	    }
@@ -484,6 +507,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    self_refresh_property(selfObj,"chewing_alnumSize_prop");
 		    break;
 		default:
+#ifdef EASY_SYMBOL_INPUT_WORK_AROUND
+		    if (selfObj->_priv->easySymbolInput){
+			/* Temporarily turn back on  easySymbolInput*/
+			chewing_set_easySymbolInput(selfObj->context,1);
+		    }
+#endif
 		    chewing_handle_Default(selfObj->context,keyval);
 		    break;
 	    }
@@ -603,7 +632,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    /* Toggle Full <-> Half */
 	    chewing_set_ShapeMode(selfObj->context, !chewing_get_ShapeMode(selfObj->context));
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
-	    gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog));
+	    if (gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog))==GTK_RESPONSE_OK){
+		self_save_config_all(selfObj);
+	    }
 	    gtk_widget_hide(selfObj->setting_dialog);
 	    needRefresh=FALSE;
 	}else{

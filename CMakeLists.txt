@@ -11,7 +11,7 @@ PROJECT(ibus-chewing)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(PRJ_VER_MAJOR "1")
 SET(PRJ_VER_MINOR "0")
-SET(PRJ_VER_PATCH "3")
+SET(PRJ_VER_PATCH "4")
 SET(PRJ_VER_RELEASE "1")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
@@ -97,7 +97,8 @@ SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES 
     "/docs/"  
-    "\\\\.cache$"  "\\\\.gmo$" "\\\\.spec$" "ibus-chewing-engine.*\\\\.[ch]$"
+    "\\\\.cache$"  "\\\\.gmo$" "\\\\.spec$" 
+    "ibus-chewing-engine.*\\\\.[ch]$" "maker-dialog.*\\\\.[ch]$"
     "messages.po$"
 )
 

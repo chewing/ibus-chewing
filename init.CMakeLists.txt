@@ -53,6 +53,12 @@ IF(NOT DEFINED SYSCONF_INSTALL_DIR)
     ADD_DEFINITIONS(-DSYSCONFDIR='"${SYSCONF_INSTALL_DIR}"')
 ENDIF()
 
+IF(NOT DEFINED LIBEXEC_DIR)
+    SET(LIBEXEC_DIR "${CMAKE_INSTALL_PREFIX}/libexec")
+    ADD_DEFINITIONS(-DLIBEXEC_DIR='"${LIBEXEC_DIR}"')
+ENDIF()
+
+
 ###==================================================================
 # CPack Generator
 # RPM and pack need them, so declare here.

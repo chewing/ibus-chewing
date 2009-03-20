@@ -37,6 +37,7 @@ enum MAKER_DIALOG_PROPERTY_FLAG{
     INVISIBLE   =0x1,
     INSENSITIVE =0x2,
     INEDITABLE =0x4,
+    HAS_TRANSLATION =0x8,
 } Maker:Dialog:Property:Flag;
 
 
@@ -107,39 +108,67 @@ static void propertyContext_free(gpointer ctx_ptr){
     g_free(ctx);
 }
 
-/* Deal with i18n */
-static const gchar *combo_get_activate_text_original(GtkComboBox *combo, PropertyContext *ctx){
-    const gchar **stringArray=ctx->spec->validValues;
-    gint len;
-    for(len=0;stringArray[len]!=NULL;len++){
+static void listStore_append(GtkListStore *listStore,const gchar *str,
+	MakerDialogPropertyFlags propertyFlags){
+    GtkTreeIter iter;
+    gtk_list_store_append (listStore, &iter);
+
+    if (propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
+	printf("*** str=%s, _(str)=%s\n",str,_(str));
+	gtk_list_store_set (listStore, &iter,
+		0, str,
+		1, _(str),
+		-1);
+    }else{
+	printf("*** str=%s\n",str);
+	gtk_list_store_set (listStore, &iter,
+		0, str,
+		-1);
     }
-    gint index=gtk_combo_box_get_active(combo);
-    if (index<len || index>=0){
-	return stringArray[index];
-    }
-    return gtk_combo_box_get_active_text(combo);
+
 }
 
-
-/* Both str and stringArray need to be untranslated! */
-static gint combo_find_string(GtkComboBox *combo, const gchar *str, PropertyContext *ctx){
+static gint listStore_find_string(GtkListStore *listStore,const gchar *str,
+       	MakerDialogPropertyFlags propertyFlags){
     g_assert(str);
-    int i,index=-1;
-    const gchar **stringArray=NULL;
-    stringArray=ctx->spec->validValues;
-    for(i=0;stringArray[i]!=NULL;i++){
-	if (strcmp(str,stringArray[i])==0 ){
-	    index= i;
-	    break;
-	}
+    int i=0,index=-1;
+    GtkTreeIter iter;
+    GValue gValue={0};
+    if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(listStore), &iter)){
+	do{
+	    gtk_tree_model_get_value (GTK_TREE_MODEL(listStore), &iter,0,&gValue);
+	    if (strcmp(str,g_value_get_string(&gValue))==0){
+		index= i;
+		break;
+	    }
+	    i++;
+	}while(gtk_tree_model_iter_next (GTK_TREE_MODEL(listStore), &iter));
     }
-    if (index<0 && !(ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE)){
+    if (index<0 && !(propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE)){
 	/* Add new item*/
-	gtk_combo_box_insert_text(combo,i,str);
+	listStore_append(listStore, str,propertyFlags);
 	index=i;
     }
+    printf("*** listStore_find_string(%s,%u) index=%d\n",str,propertyFlags,index);
     return index;
 }
+
+static gint combo_find_string_index(GtkComboBox *combo,const gchar *str,
+	MakerDialogPropertyFlags propertyFlags){
+    GtkListStore *listStore=GTK_LIST_STORE(gtk_combo_box_get_model(combo));
+    return listStore_find_string(listStore,str, propertyFlags);
+}
+
+static char *combo_get_active_text(GtkComboBox *combo,GValue *gValue){
+    GtkTreeIter iter;
+    if (!gtk_combo_box_get_active_iter(combo,&iter)){
+	return NULL;
+    }
+    GtkListStore *listStore=GTK_LIST_STORE(gtk_combo_box_get_model(combo));
+    gtk_tree_model_get_value (GTK_TREE_MODEL(listStore), &iter,0,gValue);
+    return g_strdup(g_value_get_string(gValue));
+}
+
 
 static void  propList_free_deep_callback(gpointer data, gpointer user_data){
     propertyContext_free(data);
@@ -162,7 +191,7 @@ static void on_comboBox_changed_wrap (GtkComboBox *comboBox, gpointer    user_da
     PropertyContext *ctx=(PropertyContext *)user_data;
     GValue value={0};
     g_value_init(&value, ctx->spec->valueType);
-    g_value_set_string(&value,gtk_combo_box_get_active_text(comboBox));
+    combo_get_active_text(comboBox, &value);
     G_DEBUG_MSG(2,"on_comboBox_changed_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
     ctx->spec->setFunc(ctx,&value);
 }
@@ -295,7 +324,7 @@ class Maker:Dialog from Gtk:Dialog{
 	    gtk_widget_show (self->dialog_notebook);
 	    gtk_box_pack_start (GTK_BOX(dialog_vbox), self->dialog_notebook, TRUE, TRUE, 0);
 	    for (i=0;i<notebook_pages;i++){
-		GtkWidget *label=gtk_label_new(notebook_page_labels[i]);
+		GtkWidget *label=gtk_label_new(_(notebook_page_labels[i]));
 		self_widget_register(self, label, notebook_page_labels[i], "label");
 		gtk_widget_show(label);
 
@@ -365,29 +394,46 @@ class Maker:Dialog from Gtk:Dialog{
 		 break;
 	    case G_TYPE_STRING:
 		if (pSpec->validValues){
-		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE){
-			widget=gtk_combo_box_new_text ();
+		    GtkListStore *listStore=NULL;
+		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
+			listStore=gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
 		    }else{
-			widget=gtk_combo_box_entry_new_text ();
+			listStore=gtk_list_store_new (1, G_TYPE_STRING);
 		    }
-		    self_widget_register(self, widget, pSpec->key, NULL);
-		    int i,counter=0;
+		    int i;
 		    for(i=0;pSpec->validValues[i]!=NULL;i++){
-			gtk_combo_box_append_text(GTK_COMBO_BOX(widget),_(pSpec->validValues[i]));
-			counter++;
+			/* Add new item*/
+			listStore_append(listStore, pSpec->validValues[i],pSpec->propertyFlags);
 		    }
-
 		    int index=-1;
 		    if (initValue){
-			index=combo_find_string(GTK_COMBO_BOX(widget),initValue,ctx);
+			index=listStore_find_string(listStore,initValue,pSpec->propertyFlags);
 		    }
 		    if (index<0 && pSpec->defaultValue){
-			index=combo_find_string(GTK_COMBO_BOX(widget),pSpec->defaultValue,ctx);
+			index=listStore_find_string(listStore,pSpec->defaultValue,pSpec->propertyFlags);
 		    }
+
+		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE){
+			widget=gtk_combo_box_new_with_model (GTK_TREE_MODEL(listStore));
+			GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget), renderer, FALSE);
+			if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
+			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), renderer,
+				    "text", 1,
+				    NULL); 		    
+			}else{
+			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), renderer,
+				    "text", 0,
+				    NULL); 		    
+			}
+
+		    }else{
+			widget=gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL(listStore),
+				(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION)? 1:0);
+		    }
+		    self_widget_register(self, widget, pSpec->key, NULL);
 		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
-		    g_value_set_string(&gValue,gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
-
-
+		    
 		    if (pSpec->setFunc){
 			g_signal_connect(widget, "changed", G_CALLBACK(on_comboBox_changed_wrap),ctx);
 		    }
@@ -421,7 +467,7 @@ class Maker:Dialog from Gtk:Dialog{
 	}
 
 	gtk_widget_show(widget);	
-	gtk_box_pack_start (GTK_BOX(hbox), widget, FALSE, FALSE, 0);
+	gtk_box_pack_end (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
 	g_ptr_array_add(self->_priv->propList,ctx);
@@ -460,10 +506,12 @@ class Maker:Dialog from Gtk:Dialog{
 		    if (pSpec->validValues){
 			int index=-1;
 			if (stringValue){
-			    index=combo_find_string(GTK_COMBO_BOX(widget),stringValue,ctx);
+			    index=combo_find_string_index(GTK_COMBO_BOX(widget),stringValue,
+				    ctx->spec->propertyFlags);
 			}
 			if (index<0 && pSpec->defaultValue){
-			    index=combo_find_string(GTK_COMBO_BOX(widget),pSpec->defaultValue,ctx);
+			    index=combo_find_string_index(GTK_COMBO_BOX(widget),pSpec->defaultValue,
+				    ctx->spec->propertyFlags);
 			}
 			gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
 
@@ -481,7 +529,6 @@ class Maker:Dialog from Gtk:Dialog{
      * apply_widget_value:
      * @self: A MakerDialog.
      * @key: The key of a property.
-     * @value: Value for the property identified by @key. 
      *
      * Apply the value shown in widget to the property.
      * Note that a set callback function is needed in PropertySpec to apply the value to property.
@@ -496,34 +543,9 @@ class Maker:Dialog from Gtk:Dialog{
 	    g_warning("%s: no such PropertyContext",key);
 	    return;
 	}
-	GtkWidget *widget=self_get_widget_by_key(self,key);
-	if (!widget){
-	    /* Not found */
-	    g_warning("%s: no such widget",key);
-	    return;
-	}
 	GValue gValue={0};
-	g_value_init(&gValue,ctx->spec->valueType);
-	switch(ctx->spec->valueType){
-	    case G_TYPE_BOOLEAN:
-		g_value_set_boolean(&gValue, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
-		break;
-	    case G_TYPE_INT:
-		g_value_set_int(&gValue, (gint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
-		break;
-	    case G_TYPE_UINT:
-		g_value_set_uint(&gValue, (guint) gtk_spin_button_get_value (GTK_SPIN_BUTTON(widget)));
-		break;
-	    case G_TYPE_STRING:
-		if (ctx->spec->validValues){
-		    g_value_set_string(&gValue, gtk_combo_box_get_active_text (GTK_COMBO_BOX(widget)));
-		}else{
-		    g_value_set_string(&gValue, gtk_entry_get_text (GTK_ENTRY(widget)));
-		}
-		break;
-	    default:
-		break;
-	}
+
+	self_get_widget_value(self,key,&gValue);
 
 	if (ctx->spec->setFunc){
 	    ctx->spec->setFunc(ctx,&gValue);
@@ -533,13 +555,14 @@ class Maker:Dialog from Gtk:Dialog{
 
 
     public GValue *get_widget_value(self, const gchar *key, GValue *value){
+	G_DEBUG_MSG(2,"*** get_widget_value(%s)",key);
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
 	    return NULL;
 	}
-	g_value_init(value,ctx->spec->valueType);
 	GtkWidget *widget=self_get_widget_by_key(self,key);
+	g_value_init(value,ctx->spec->valueType);
 	switch(ctx->spec->valueType){
 	    case G_TYPE_BOOLEAN:
 		g_value_set_boolean(value, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
@@ -552,7 +575,7 @@ class Maker:Dialog from Gtk:Dialog{
 		break;
 	    case G_TYPE_STRING:
 		if (ctx->spec->validValues){
-		    g_value_set_string(value, gtk_combo_box_get_active_text (GTK_COMBO_BOX(widget)));
+		    combo_get_active_text (GTK_COMBO_BOX(widget),value);
 		}else{
 		    g_value_set_string(value, gtk_entry_get_text (GTK_ENTRY(widget)));
 		}
@@ -572,8 +595,8 @@ class Maker:Dialog from Gtk:Dialog{
      *
      * Set value for widget display.
      * However, the property value is not set.
-     * Use set_property_value() to do it.
-     * @see_also: set_property_value()
+     * Use apply_widget_value() to do it.
+     * @see_also: apply_widget_value()
      */
     public void set_widget_value(self, const gchar *key, GValue *value){
 	int index;
@@ -596,7 +619,7 @@ class Maker:Dialog from Gtk:Dialog{
 	    case G_TYPE_STRING:
 		if (ctx->spec->validValues){
 		    const gchar *str=g_value_get_string(value);
-		    index=combo_find_string(GTK_COMBO_BOX(widget),str,ctx);
+		    index=combo_find_string_index(GTK_COMBO_BOX(widget),str,ctx->spec->propertyFlags);
 		    gtk_combo_box_set_active (GTK_COMBO_BOX(widget),index);
 		}else{
 		    g_value_set_string(value, gtk_entry_get_text (GTK_ENTRY(widget)));
