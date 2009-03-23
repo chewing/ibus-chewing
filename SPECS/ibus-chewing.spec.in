@@ -74,10 +74,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
-  Various Setting is now on dialog.
-  Integer setting is now revealed.
-  MakerDialog.gob is now available.
-  Work around of easy symbol input.
+- Various Setting is now on dialog.
+- Integer setting is now revealed.
+- MakerDialog.gob is now available.
+- Work around of easy symbol input.
+- Fix iBus Google issue 310.
+
 
 * Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311-1
 - IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
