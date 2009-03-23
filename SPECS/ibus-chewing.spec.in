@@ -74,8 +74,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
-- Various Setting is now on dialog.
-- Integer setting is now revealed.
+- Fix koji build issues.
+
+* Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323-1
+- Various Settings are now in dialog.
+- Integer settings are now revealed.
 - MakerDialog.gob is now available.
 - Work around of easy symbol input.
 - Fix iBus Google issue 310.

@@ -1,25 +1,26 @@
-  Various Setting is now on dialog.
-  Integer setting is now revealed.
+* Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323
+  Various Settings are now in dialog.
+  Integer settings are now revealed.
   MakerDialog.gob is now available.
   Work around of easy symbol input.
   Fix iBus Google issue 310.
 
-* Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311-1
+* Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311
   IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
   IBus Google issue 307:  hardcoded chewing datadir
   Sync chewing candPerPage and IBusTable->page_size
   Sync between IM and keyboard (Experimental)
  
-* Tue Mar 03 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.2.20090303-1
+* Tue Mar 03 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.2.20090303
   Required gconf2 -> GConf2.
   Fix RPM scriptlet.
 
-* Fri Feb 27 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227-1
+* Fri Feb 27 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227
   Add gconf schema.
   Fix some memory leaking checked.
   Move some function to cmake_modules.
   Fix Google code issue 281
   
-* Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220-1
+* Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 This is a barely working version for with IBus C.
 The build system is converted from autotool to CMake.

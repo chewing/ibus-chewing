@@ -12,16 +12,16 @@ SET(CMAKE_C_FLAGS "-Wall")
 SET(PRJ_VER_MAJOR "1")
 SET(PRJ_VER_MINOR "0")
 SET(PRJ_VER_PATCH "4")
-SET(PRJ_VER_RELEASE "1")
+SET(PRJ_VER_RELEASE "2")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
 SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Fix Google issue 305, 307; Sync chewing candPerPage and IBusTable->page_size; Sync between IM and keyboard (Experimental)")
+SET(CHANGE_SUMMARY "Various Settings are now in dialog; Integer settings are now revealed; MakerDialog.gob is now available; Work around of easy symbol input; Fix iBus Google issue 310.")
 
-SET(CVS_DIST_TAGS F-10) 
+#SET(CVS_DIST_TAGS F-10) 
 
 ####################################################################
 # Includes
@@ -110,7 +110,7 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_
 INCLUDE(CPack)
 
 ADD_CUSTOM_TARGET(ChangeLog
-    COMMAND echo "* ${DATE} - ${MAINTAINER} - ${PRJ_VER_FULL}" > ${CMAKE_SOURCE_DIR}/ChangeLog
+    COMMAND echo "* ${DATE} - ${MAINTAINER} - ${PRJ_VER}" > ${CMAKE_SOURCE_DIR}/ChangeLog
     COMMAND cat ${CMAKE_SOURCE_DIR}/ChangeLog.in >> ${CMAKE_SOURCE_DIR}/ChangeLog
     DEPENDS ${CMAKE_SOURCE_DIR}/ChangeLog.in
     COMMENT "Making ChangeLog"
