@@ -11,6 +11,8 @@
 #
 #===================================================================
 # Variables: 
+#  XGETTEXT_OPTIONS: Options pass to xgettext
+#      Default:  --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2
 #  GETTEXT_MSGMERGE_EXECUTABLE: the full path to the msgmerge tool.
 #  GETTEXT_MSGFMT_EXECUTABLE: the full path to the msgfmt tool.
 #  GETTEXT_FOUND: True if gettext has been found.
@@ -25,6 +27,7 @@
 # )
 #
 # Generate .pot file.
+#    OPTION xgettext_options: Override XGETTEXT_OPTIONS
 #
 # * Produced targets: pot_file
 # 
@@ -61,6 +64,10 @@ ELSE(XGETTEXT_EXECUTABLE)
     SET(XGETTTEXT_FOUND FALSE)
 ENDIF(XGETTEXT_EXECUTABLE)
 
+IF(NOT DEFINED XGETTEXT_OPTIONS)
+    SET(XGETTEXT_OPTIONS --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2)
+ENDIF(NOT DEFINED XGETTEXT_OPTIONS)
+
 IF(XGETTEXT_FOUND)
     MACRO(GETTEXT_CREATE_POT _potFile _pot_options )
 	SET(_xgettext_options_list)
@@ -82,11 +89,17 @@ IF(XGETTEXT_FOUND)
 		    SET(_src_list_abs ${_src_list_abs} ${_absFile})
 		ENDIF(_stage STREQUAL "OPTION")
 	    ENDIF(_pot_option STREQUAL "OPTION")
-	ENDFOREACH(_pot_option ${_pot_options} ${ARGN})    
+	ENDFOREACH(_pot_option ${_pot_options} ${ARGN})
+
+	IF (_xgettext_options_list)
+	    SET(_xgettext_options ${_xgettext_options_list})
+	ELSE(_xgettext_options_list)
+	    SET(_xgettext_options ${XGETTEXT_OPTIONS})
+	ENDIF(_xgettext_options_list)
 
 	#MESSAGE("${XGETTEXT_EXECUTABLE} ${_xgettext_options_list} -o ${_potFile} ${_src_list}")
 	ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
-	    COMMAND ${XGETTEXT_EXECUTABLE} ${_xgettext_options_list} -o ${_potFile} ${_src_list}
+	    COMMAND ${XGETTEXT_EXECUTABLE} ${_xgettext_options} -o ${_potFile} ${_src_list}
 	    DEPENDS ${_src_list_abs}
 	    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 	    )

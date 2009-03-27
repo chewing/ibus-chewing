@@ -1,3 +1,6 @@
+  Add CMake policy 0011 as OLD
+  Fix Right key bug.
+
 * Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323
   Various Settings are now in dialog.
   Integer settings are now revealed.

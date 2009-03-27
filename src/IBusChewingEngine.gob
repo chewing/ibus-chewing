@@ -52,7 +52,7 @@ enum CHEWING_KBTYPE{
 } Chewing:KbType;
 
 enum CHEWING_MODIFIER_SYNC{
-    NONE,
+    DISABLE,
     FROM_KEYBOARD,
     FROM_IM
 } Chewing:Modifier:Sync;
@@ -79,7 +79,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     public ChewingContext *context=NULL
 	destroywith chewing_delete;
 
-    public Chewing:Modifier:Sync sync_CapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
+    public Chewing:Modifier:Sync syncCapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
 
     public GtkWidget *setting_dialog={
 	GTK_WIDGET(maker_dialog_new_full(_("Setting"),3,page_labels,1,button_labels,button_responses))};
@@ -246,6 +246,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	char *candidate=NULL;
 	iText=NULL;
 
+	G_DEBUG_MSG(3,"*** commit() TotalChoice=%d CurrentPage=%d",
+		chewing_cand_TotalChoice(self->context),chewing_cand_CurrentPage(self->context));
 	if (chewing_cand_TotalChoice(self->context) >0){
 	    chewing_cand_Enumerate(self->context);
 	    for(i=0;i<choicePerPage;i++){
@@ -465,7 +467,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    break;
 		case IBUS_Right:
 		case IBUS_KP_Right:
-		    chewing_handle_Left(selfObj->context);
+		    chewing_handle_Right(selfObj->context);
 		    break;
 		case IBUS_Home:
 		case IBUS_KP_Home:
@@ -597,7 +599,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		chewing_get_ChiEngMode(selfObj->context),caps_is_lock);
 	if (chewing_get_ChiEngMode(selfObj->context)==caps_is_lock){
 	    /* Caps_lock and ChiEngMode does not agree each other */
-	    switch(selfObj->sync_CapsLock_local){
+	    switch(selfObj->syncCapsLock_local){
 		case CHEWING_MODIFIER_SYNC_FROM_KEYBOARD:
 		    chewing_set_ChiEngMode(selfObj->context,!caps_is_lock);
 		    break;

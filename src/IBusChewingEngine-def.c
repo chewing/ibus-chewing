@@ -14,7 +14,6 @@ GtkResponseType button_responses[]={
     GTK_RESPONSE_OK,
 };
 
-//const int selKeys_default[10]={'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 const gchar *kbType_ids[]={
     N_("default"),
     N_("hsu"),
@@ -39,6 +38,14 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     "1234qweras",
     NULL
 };
+
+const gchar *syncCapsLockLocal_strs[]={
+    NC_("Sync","disable"),
+    NC_("Sync","keyboard"),
+    NC_("Sync","im"),
+    NULL
+};
+
 
 #ifndef DIALOG_TEST
 static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
@@ -112,6 +119,20 @@ static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
 #endif    
 }
 
+static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    const gchar *str=g_value_get_string(value);
+    if (strcmp(str,"keyboard")==0){
+	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
+    }else if (strcmp(str,"im")==0){
+	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_FROM_IM;
+    }else{
+	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_DISABLE;
+    }
+#endif    
+}
+
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 #ifndef DIALOG_TEST
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -137,75 +158,84 @@ static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
 
 PropertySpec propSpecs[]={
     {G_TYPE_STRING, "KBType", "Keyboard",  N_("Keyboard Type"), 
-	"default", kbType_ids,	0, 0, 
+	"default", kbType_ids, NULL, 0, 0, 
 	NULL, KBType_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION, 0, 0, 
 	NULL,
     },
     {G_TYPE_STRING, "selKeys", "Keyboard",  N_("Selection keys"), 
-	"1234567890", selKeys_array, 0, 0,
+	"1234567890", selKeys_array, NULL, 0, 0, 
 	NULL, selKeys_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_INT, "hsuSelKeyType", "Keyboard", N_("Hsu's selection key"),
-	"1", NULL, 1, 2, 
+	"1", NULL,  NULL, 1, 2, 
 	NULL, hsuSelKeyType_set_callback,
 	0, 0, 0,
 	NULL,
     },
 
     {G_TYPE_BOOLEAN, "autoShiftCur", "Editing", N_("Auto move cursor"),
-	"0", NULL, 0, 1,
+	"0", NULL, NULL, 0, 1,
 	NULL, autoShiftCur_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_BOOLEAN, "addPhraseDirection", "Editing", N_("Add phrase in front"),
-	"0", NULL, 0, 1, 
+	"0", NULL, NULL, 0, 1, 
 	NULL, addPhraseDirection_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_BOOLEAN, "easySymbolInput", "Editing", N_("Easy symbol input"),
-	"0", NULL, 0, 1,
+	"0", NULL, NULL,  0, 1,
 	NULL, easySymbolInput_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_BOOLEAN, "escCleanAllBuf", "Editing", N_("Esc clean all buffer"),
-	"0", NULL, 0, 1, 
+	"0", NULL, NULL,  0, 1, 
 	NULL, escCleanAllBuf_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_INT, "maxChiSymbolLen", "Editing", N_("Maximum Chinese characters"), 
-	"16", NULL, 4, 30,
+	"16", NULL, NULL,  4, 30,
 	NULL, maxChiSymbolLen_set_callback,
 	0, 0, 0,
 	N_("Maximum Chinese characters in pre-edit buffer"),
     },
 
+    /* Sync between CapsLock and IM */
+    {G_TYPE_STRING, "syncCapsLockLocal", "Editing", N_("Sync between CapsLock and IM"),
+	"keyboard", syncCapsLockLocal_strs,  "Sync", 0, 1, 
+	NULL, syncCapsLockLocal_set_callback,
+	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION |
+	    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT,
+       	0, 0, 
+	NULL,
+    },
     {G_TYPE_INT, "candPerPage", "Selecting", N_("Candidate per page"), 
-	"10", NULL, 8, 10,
+	"10", NULL, NULL,  8, 10,
 	NULL, candPerPage_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_BOOLEAN, "phraseChoiceRearward", "Selecting", N_("Choice phrase from the end"),
-	"1", NULL, 0, 1, 
+	"1", NULL, NULL,  0, 1, 
 	NULL, phraseChoiceRearward_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space as selection key"),
-	"1", NULL, 0, 1, 
+	"1", NULL, NULL,  0, 1, 
 	NULL, spaceAsSelection_set_callback,
 	0, 0, 0,
 	NULL,
     },
     {G_TYPE_INVALID, "", "", "",
-	"", NULL, 0, 0, 
+	"", NULL, NULL,  0, 0, 
 	NULL, NULL,
 	0, 0, 0,
 	NULL,
