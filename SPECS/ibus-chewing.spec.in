@@ -74,6 +74,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
+- Add tooltips.
+- Reveal the sync caps lock setting
+- Fix Right key bug.
+- Add CMake policy 0011 as OLD
 
 * Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323-2
 - Fix koji build issues.
