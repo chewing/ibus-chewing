@@ -154,3 +154,7 @@ IF(DEFINED BODHI_NEW_CMD)
 	)
 ENDIF(DEFINED BODHI_NEW_CMD)
 
+ADD_DEPENDENCIES(srpm koji_scratch_build)
+ADD_DEPENDENCIES(srpm koji_submit)
+ADD_DEPENDENCIES(srpm koji_build)
+

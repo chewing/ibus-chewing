@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-27 17:57+1000\n"
+"POT-Creation-Date: 2009-03-30 17:20+1000\n"
 "PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>, Ding-Yi Chen\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
@@ -25,14 +25,23 @@ msgid " Use default value:"
 msgstr " 使用預設值："
 
 #: ../src/IBusChewingEngine-def.c:185
-msgid "Add phrase in front"
+msgid "Add phrases in front"
+msgstr "前方加詞"
+
+#: ../src/IBusChewingEngine-def.c:189
+#, fuzzy
+msgid "Adding phrases in the front."
 msgstr "前方加詞"
 
 #: ../src/IBusChewingEngine-def.c:179
 msgid "Auto move cursor"
 msgstr "自動移游標"
 
-#: ../src/IBusChewingEngine-def.c:219
+#: ../src/IBusChewingEngine-def.c:183
+msgid "Automatically move cursor to next character."
+msgstr "自動移游標至下一個字。"
+
+#: ../src/IBusChewingEngine-def.c:223
 msgid "Candidate per page"
 msgstr "每頁備選字數"
 
@@ -40,12 +49,21 @@ msgstr "每頁備選字數"
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine-def.c:225
-msgid "Choice phrase from the end"
+#: ../src/IBusChewingEngine-def.c:229
+msgid "Choose phrases from backward"
+msgstr "後方選詞"
+
+#: ../src/IBusChewingEngine-def.c:233
+#, fuzzy
+msgid "Choose phrases from backward."
 msgstr "後方選詞"
 
 #: ../src/IBusChewingEngine-def.c:191
 msgid "Easy symbol input"
+msgstr "簡易符號輸入"
+
+#: ../src/IBusChewingEngine-def.c:195
+msgid "Easy symbol input."
 msgstr "簡易符號輸入"
 
 #: ../src/IBusChewingEngine-def.c:2
@@ -60,6 +78,11 @@ msgstr "英"
 msgid "Esc clean all buffer"
 msgstr "Esc 鍵清預編區 (pre-edit buffer)"
 
+#: ../src/IBusChewingEngine-def.c:201
+#, fuzzy
+msgid "Escape key cleans the buffered text."
+msgstr "Esc 鍵清預編區 (pre-edit buffer)"
+
 #: ../src/IBusChewingEngine.gob:137
 msgid "Full"
 msgstr "全"
@@ -67,6 +90,10 @@ msgstr "全"
 #: ../src/IBusChewingEngine.gob:138
 msgid "Half"
 msgstr "半"
+
+#: ../src/IBusChewingEngine-def.c:176
+msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
+msgstr "許氏鍵盤選擇鍵設定。1 為使用 asdfjkl789，2 為使用asdfzxcv89。"
 
 #: ../src/IBusChewingEngine-def.c:172
 msgid "Hsu's selection key"
@@ -78,7 +105,15 @@ msgstr "鍵盤"
 
 #: ../src/IBusChewingEngine-def.c:160
 msgid "Keyboard Type"
-msgstr "鍵盤種類"
+msgstr "鍵盤排列"
+
+#: ../src/IBusChewingEngine-def.c:170
+msgid ""
+"Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
+"select the 1st candidate, 's' for 2nd, and so on."
+msgstr ""
+"設定選字按鍵。以 \"asdfghjkl;\" 為例，按 'a' 選第一個候選字詞，按 's' 選第二"
+"個，依此類推。"
 
 #: ../src/IBusChewingEngine-def.c:203
 msgid "Maximum Chinese characters"
@@ -87,6 +122,31 @@ msgstr "容納中文字數"
 #: ../src/IBusChewingEngine-def.c:207
 msgid "Maximum Chinese characters in pre-edit buffer"
 msgstr "預編區(pre-edit buffer)可容納中文字數"
+
+#: ../src/IBusChewingEngine-def.c:227
+msgid "Number of selection candidate per page."
+msgstr "每頁可顯示候選字詞數。"
+
+#: ../src/IBusChewingEngine-def.c:217
+msgid ""
+"Occasionally, the CapsLock status does not match the IM, this option "
+"determines how these status be synchronized. Valid values:\n"
+"\"disable\": Do nothing.\n"
+"\"keyboard\": IM status follows keyboard status.\n"
+"\"im\": Keyboard status follows IM status."
+msgstr ""
+"CapsLock 狀態有時會跟輸入法不同步，這個選項決定如何同步這些狀態。可用的值：\n"
+"\"disable\":  停用本功能。\n"
+"\"keyboard\": 輸入法向 Caps Lock 狀態同步。\n"
+"\"im\": Caps Lock 向輸入法狀態同步。"
+
+#: ../src/IBusChewingEngine-def.c:239
+msgid "Press Space to select the candidate."
+msgstr "按空白鍵選擇"
+
+#: ../src/IBusChewingEngine-def.c:164
+msgid "Select keyboard layout of Zhuyin symbols."
+msgstr "選擇注音符號的鍵盤排列。"
 
 #: ../src/IBusChewingEngine-def.c:3
 msgid "Selecting"
@@ -104,8 +164,8 @@ msgstr "設定"
 msgid "Settings"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine-def.c:231
-msgid "Space as selection key"
+#: ../src/IBusChewingEngine-def.c:235
+msgid "Space to select"
 msgstr "空白鍵選字"
 
 #: ../src/IBusChewingEngine-def.c:211
