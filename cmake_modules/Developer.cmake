@@ -1,6 +1,9 @@
 # Developers helper target such as commit and upload.
 #
-# To use: INCLUDE(Developer), and DEVELOPER_SETTING_FILE defined and file exists
+# To use: INCLUDE(Developer)
+#
+# To hide the developer only targets,
+# only include this modules when  DEVELOPER_SETTING_FILE defined and file exists.
 #
 # Example of a developer setting file:
 #  SSH_USER=<user_name>
@@ -50,17 +53,19 @@
 #     upload_command: Custom upload command.
 # * Produced targets: upload_pkg_release
 #
+#===================================================================
+# Targets:
+# version_lock: 
+#   Lock in the current version, so the version won't be changed until unlocked.
+#   Useful for time-based version.
+#   Note that the PRJ_VER is locked but PRJ_VER_FULL is not, thus RPM
+#   maintainer can do some maintenances without affecting source version.
+#
+# version_unlock:
+#   Unlock the version.
+#
 
-MACRO(DEVELOPER_GET_ATTRIBUTE var attr_name setting_file)
-    EXECUTE_PROCESS(
-	COMMAND  grep ${attr_name} ${DEVELOPER_SETTING_FILE}
-	COMMAND sed -e "s/${attr_name}=//"
-	COMMAND tr \\n \\t
-	COMMAND sed  -e s/\\t//
-	OUTPUT_VARIABLE ${var}
-	)
-ENDMACRO(DEVELOPER_GET_ATTRIBUTE varattr_name setting_file)
-
+INCLUDE(BasicMacros)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
     SET(HOSTING_SERVICE_PROVIDER "hosting service provider")
 ENDIF(NOT DEFINED HOSTING_SERVICE_PROVIDER)    
@@ -136,5 +141,17 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
     ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
+ADD_CUSTOM_TARGET(version_lock
+    COMMAND grep "PRJ_VER=" ${_version_lock_file} || echo "PRJ_VER=${PRJ_VER}" > ${_version_lock_file}
+    COMMAND cmake ${CMAKE_SOURCE_DIR}
+    COMMENT "Lock version"
+    )
+
+ADD_CUSTOM_TARGET(version_unlock
+    COMMAND rm -f ${_version_lock_file}
+    COMMAND touch  ${_version_lock_file}
+    COMMAND cmake ${CMAKE_SOURCE_DIR}
+    COMMENT "Unlock version"
+    )
 
 

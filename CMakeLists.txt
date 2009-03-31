@@ -19,7 +19,7 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
 # For CVS changelog
-SET(CHANGE_SUMMARY "Various Settings are now in dialog; Integer settings are now revealed; MakerDialog.gob is now available; Work around of easy symbol input; Fix iBus Google issue 310.")
+SET(CHANGE_SUMMARY "Fix")
 
 #SET(CVS_DIST_TAGS F-10) 
 
@@ -61,11 +61,7 @@ IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
 ENDIF()
 
 PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
-EXECUTE_PROCESS(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing
-    COMMAND tr \\n \\t
-    COMMAND sed  -e s/\\t//
-    OUTPUT_VARIABLE CHEWING_DATADIR
-    )
+COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATADIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
 ADD_DEFINITIONS(-DCHEWING_DATADIR='"${CHEWING_DATADIR}"')
 
 
@@ -97,7 +93,7 @@ SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES 
     "/docs/"  
-    "\\\\.cache$"  "\\\\.gmo$" "\\\\.spec$" 
+    "\\\\.cache$"  "\\\\.spec$" 
     "ibus-chewing-engine.*\\\\.[ch]$" "maker-dialog.*\\\\.[ch]$"
     "messages.po$"
 )

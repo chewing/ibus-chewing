@@ -1,7 +1,8 @@
-- Add tooltips.
-- Reveal the sync caps lock setting
-- Fix Right key bug.
-- Add CMake policy 0011 as OLD
+* Mon Mar 30 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330
+- Added tooltips.
+- Revealed the sync caps lock setting.
+- Fixed Right key bug.
+- Added CMake policy 0011 as OLD.
 
 * Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323
 - Various Settings are now in dialog.

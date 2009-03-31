@@ -1,7 +1,7 @@
 # RPM generation, maintaining (remove old rpm) and verification (rpmlint).
 #
 # To use: INCLUDE(RPM)
-# Include: SourceTarball
+# Included: SourceTarball
 # 
 #===================================================================
 # Variables: 
@@ -33,8 +33,6 @@
 #
 #===================================================================
 # Targets:
-# pack_src: Make source tarball for rpm packaging.
-#
 # srpm: Build srpm (rpmbuild -bs).
 #     Depends on pack_src.
 # 

@@ -12,7 +12,7 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gettext-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  ibus-devel >= 1.1
-BuildRequires:  cmake
+BuildRequires:  cmake >= 2.4
 BuildRequires:  gob2
 BuildRequires:  libchewing-devel >= 0.3.2-4
 BuildRequires:  pkgconfig
@@ -74,10 +74,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
-- Add tooltips.
-- Reveal the sync caps lock setting
-- Fix Right key bug.
-- Add CMake policy 0011 as OLD
+
+* Mon Mar 30 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330-1
+- Added tooltips.
+- Revealed the sync caps lock setting.
+- Fixed Right key bug.
+- Added CMake policy 0011 as OLD.
 
 * Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323-2
 - Fix koji build issues.

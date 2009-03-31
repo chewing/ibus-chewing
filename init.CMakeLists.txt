@@ -3,17 +3,21 @@
 # 
 # Definition that should run in front of everything else.
 # 
+SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
-if(COMMAND cmake_policy)
+IF(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 OLD)
-    cmake_policy(SET CMP0011 OLD)
-endif(COMMAND cmake_policy)
 
-SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
+    # CMAKE 2.6.3 and above have CMAKE_VERSION
+    IF (CMAKE_VERSION)
+        cmake_policy(SET CMP0011 OLD)
+    ENDIF(CMAKE_VERSION)
+ENDIF(COMMAND cmake_policy)
+
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_modules)
 SET(ENV{LC_ALL} "C")
-INCLUDE(DateFormat)
+INCLUDE(BasicMacros)
 
 ###==================================================================
 # Find parameters configuration
@@ -22,22 +26,13 @@ INCLUDE(DateFormat)
 
 DATE_FORMAT(DATE "+%a %b %d %Y")
 DATE_FORMAT(DATE_SHORT "+%Y%m%d")
-
-EXECUTE_PROCESS(COMMAND rpm --showrc
-    COMMAND grep -E "dist[[:space:]]*\\."
-    COMMAND sed -e "s/^.*dist\\s*\\.//"
-    COMMAND tr \\n \\t
-    COMMAND sed  -e s/\\t//
-    OUTPUT_VARIABLE FEDORA_RELEASE)
+#MESSAGE("DATE=${DATE}|")
 
 ###==================================================================
 # Directories
 #
 
-IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-    SET(CMAKE_INSTALL_PREFIX /usr)
-    ADD_DEFINITIONS(-DCMAKE_INSTALL_PREFIX='"${CMAKE_INSTALL_PREFIX}"')
-ENDIF()
+ADD_DEFINITIONS(-DCMAKE_INSTALL_PREFIX='"${CMAKE_INSTALL_PREFIX}"')
 
 IF(NOT DEFINED datadir)
     SET(datadir "${CMAKE_INSTALL_PREFIX}/share")

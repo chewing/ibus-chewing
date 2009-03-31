@@ -21,6 +21,10 @@
 #     SOURCE_TARBALL_OUTPUT_DIR: Set the output directory for package files.
 #     SOURCE_TARBALL_OUTPUT_PREFIX: Set the prefix of package files.
 #
+#===================================================================
+# Targets:
+# pack_src: Make source tarball for rpm packaging.
+#
 
 IF(CPACK_SOURCE_GENERATOR STREQUAL "TGZ")
     SET(SOURCE_TARBALL_POSTFIX "tar.gz")
@@ -91,7 +95,7 @@ SET(CMAKE_GENERATED_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
 
 SET(COMMON_IGNORED_FILES
     "/\\\\.svn/"  "/CVS/" "/\\\\.git/"  "\\\\.gitignore$"
-    "~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$"
+    "~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$" "\\\\.gmo$"
     "\\\\.gz$" "\\\\.bz2$" "/src/config\\\\.h$" "NO_PACK") 
 
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${CMAKE_GENERATED_FILES} ${COMMON_IGNORED_FILES})
