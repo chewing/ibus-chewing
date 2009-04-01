@@ -9,24 +9,32 @@ INCLUDE(init.CMakeLists.txt)
 ####################################################################
 PROJECT(ibus-chewing)
 SET(CMAKE_C_FLAGS "-Wall")
-SET(PRJ_VER_MAJOR "1")
-SET(PRJ_VER_MINOR "0")
-SET(PRJ_VER_PATCH "5")
+
+SET(RELEASE_FILE RELEASE-NOTES.txt)
+SETTING_FILE_GET_ATTRIBUTE(PRJ_VER_PATTERN "PRJ_VER" ${RELEASE_FILE})
+MESSAGE("PRJ_VER_PATTERN=${PRJ_VER_PATTERN}")
 SET(PRJ_VER_RELEASE "1")
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
 SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 
-# For CVS changelog
-SET(CHANGE_SUMMARY "Fix")
+# For CVS/SVN/GIT change message
+SETTING_FILE_GET_ATTRIBUTE(CHANGE_SUMMARY "SUMMARY" ${RELEASE_FILE})
+MESSAGE("### CHANGE_SUMMARY=${CHANGE_SUMMARY}")
+
+# Changelog items
+EXECUTE_PROCESS(
+    COMMAND tail -n +5 ${RELEASE_FILE}
+    OUTPUT_VARIABLE CHANGELOG_ITEMS
+    )
+MESSAGE("CHANGELOG_ITEMS=${CHANGELOG_ITEMS}")
 
 #SET(CVS_DIST_TAGS F-10) 
 
 ####################################################################
 # Includes
 ####################################################################
-SET(PRJ_VER ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}.${DATE_SHORT})
 INCLUDE(Version)
 SET(GENERATE_SPEC SPECS/${PROJECT_NAME}.spec.in)
 INCLUDE(Gettext)
@@ -107,8 +115,9 @@ INCLUDE(CPack)
 
 ADD_CUSTOM_TARGET(ChangeLog
     COMMAND echo "* ${DATE} - ${MAINTAINER} - ${PRJ_VER}" > ${CMAKE_SOURCE_DIR}/ChangeLog
-    COMMAND cat ${CMAKE_SOURCE_DIR}/ChangeLog.in >> ${CMAKE_SOURCE_DIR}/ChangeLog
-    DEPENDS ${CMAKE_SOURCE_DIR}/ChangeLog.in
+    COMMAND echo "${CHANGELOG_ITEMS}" >> ${CMAKE_SOURCE_DIR}/ChangeLog
+    COMMAND cat ${CMAKE_SOURCE_DIR}/ChangeLog.prev >> ${CMAKE_SOURCE_DIR}/ChangeLog
+    DEPENDS ${CMAKE_SOURCE_DIR}/ChangeLog.prev ${CMAKE_SOURCE_DIR}/${RELEASE_FILE}
     COMMENT "Making ChangeLog"
     VERBATIM
     )

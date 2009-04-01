@@ -64,6 +64,9 @@
 # version_unlock:
 #   Unlock the version.
 #
+# To enable these two targets, need to:
+# SET(VERSION_NEED_LOCK)
+#
 
 INCLUDE(BasicMacros)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
@@ -141,17 +144,20 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
     ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
-ADD_CUSTOM_TARGET(version_lock
-    COMMAND grep "PRJ_VER=" ${_version_lock_file} || echo "PRJ_VER=${PRJ_VER}" > ${_version_lock_file}
-    COMMAND cmake ${CMAKE_SOURCE_DIR}
-    COMMENT "Lock version"
-    )
+IF (DEFINED VERSION_NEED_LOCK)
+    ADD_CUSTOM_TARGET(version_lock
+	COMMAND grep "PRJ_VER=" ${RELEASE_FILE} 
+	|| ${CMAKE_COMMAND} -E echo "PRJ_VER=${PRJ_VER}" > ${RELEASE_FILE}
+	COMMAND cmake ${CMAKE_SOURCE_DIR}
+	COMMENT "Lock version"
+	)
 
-ADD_CUSTOM_TARGET(version_unlock
-    COMMAND rm -f ${_version_lock_file}
-    COMMAND touch  ${_version_lock_file}
-    COMMAND cmake ${CMAKE_SOURCE_DIR}
-    COMMENT "Unlock version"
-    )
+    ADD_CUSTOM_TARGET(version_unlock
+	COMMAND ${RM} ${RELEASE_FILE}
+	COMMAND ${CMAKE_COMMAND} -E touch  ${RELEASE_FILE}
+	COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
+	COMMENT "Unlock version"
+	)
 
+ENDIF(DEFINED VERSION_NEED_LOCK)
 

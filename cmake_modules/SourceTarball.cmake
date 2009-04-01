@@ -1,6 +1,8 @@
 # 
 # Source Tarball handling. Required by RPM.cmake
 # To use: INCLUDE(SourceTarball)
+#
+# Includes: Version
 # 
 #===================================================================
 # Variables: 
@@ -25,6 +27,8 @@
 # Targets:
 # pack_src: Make source tarball for rpm packaging.
 #
+
+INCLUDE(Version)
 
 IF(CPACK_SOURCE_GENERATOR STREQUAL "TGZ")
     SET(SOURCE_TARBALL_POSTFIX "tar.gz")
@@ -100,5 +104,5 @@ SET(COMMON_IGNORED_FILES
 
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${CMAKE_GENERATED_FILES} ${COMMON_IGNORED_FILES})
 
-
+ADD_DEPENDENCIES(pack_src version_check)
 

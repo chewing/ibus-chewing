@@ -74,6 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * @DATE@ @MAINTAINER@ - @PRJ_VER@-@PRJ_VER_RELEASE@
+@CHANGELOG_ITEMS@
 
 * Mon Mar 30 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330-1
 - Added tooltips.
