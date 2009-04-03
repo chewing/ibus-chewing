@@ -1,0 +1,4 @@
+RPM_RELEASE=1
+RPM_RELEASE_SUMMARY=
+# RPM Release Changes. Note that following lines only go to RPM-ChangeLog when
+# RPM_RELEASE >1

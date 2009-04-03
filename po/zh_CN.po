@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-01 16:53+1000\n"
+"POT-Creation-Date: 2009-04-03 12:26+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,7 +77,7 @@ msgid "Esc clean all buffer"
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:201
-msgid "Escape key cleans the buffered text."
+msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
 #: ../src/IBusChewingEngine.gob:137

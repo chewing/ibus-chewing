@@ -1,0 +1,9 @@
+PRJ_VER=1.0.6.20090403
+SUMMARY=Dialog labels aligned; Fix iBus Google issue 326; CMake modules revised; Add 2 make targets.
+# Changes
+- Labels in setting dialogs are now aligned.
+- Fix iBus Google issue 326: Fail to build with CMake < 2.6.3
+- DateFormate.cmake is merged to BasicMacros.cmake
+- See headers of cmake modules in cmake_modules/ for detailed changed.
+- Add a make target "version_check" 
+- Add a make developer target "new_version"  which are hidden for ordinary users.

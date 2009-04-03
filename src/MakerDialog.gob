@@ -254,7 +254,50 @@ static void on_toggleButton_toggled_wrap (GtkToggleButton *button, gpointer    u
     G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
     ctx->spec->setFunc(ctx,&value);
 }
+
 /*===== End of Widget Callback function wraps =====*/
+static gboolean isEmptyString(const gchar *str){
+    if (!str)
+        return TRUE;
+    if (str[0]=='\0')
+        return TRUE;
+    return FALSE;
+}
+
+typedef struct{
+    MakerDialog *self;
+    gint currentMaxWidth;
+    const gchar *pageName;
+    gfloat xalign;
+    gfloat yalign;
+} WidgetAlignment;
+
+static void caculate_max_label_width_callback(gpointer key, gpointer value, gpointer user_data){
+    WidgetAlignment *wAlignment=(WidgetAlignment *) user_data;
+    if (!isEmptyString(wAlignment->pageName)){
+	if (isEmptyString(value) || strcmp(wAlignment->pageName,value)!=0)
+	    return;
+    }
+    gchar *keyStr=(gchar *) keyStr;
+
+    GtkWidget *widget=maker_dialog_get_widget(wAlignment->self,key,"label");
+    GtkRequisition requisition;
+    gtk_widget_size_request (widget,&requisition);
+    wAlignment->currentMaxWidth=MAX(wAlignment->currentMaxWidth, requisition.width);
+}
+
+static void set_label_width_callback(gpointer key, gpointer value, gpointer user_data){
+    WidgetAlignment *wAlignment=(WidgetAlignment *) user_data;
+    if (!isEmptyString(wAlignment->pageName)){
+	if (isEmptyString(value) || strcmp(wAlignment->pageName,value)!=0)
+	    return;
+    }
+    gchar *keyStr=(gchar *) keyStr;
+    GtkWidget *widget=maker_dialog_get_widget(wAlignment->self,key,"label");
+    gtk_widget_set_size_request(widget, wAlignment->currentMaxWidth,-1);
+    gtk_misc_set_alignment (GTK_MISC(widget),wAlignment->xalign,wAlignment->yalign);
+}
+
 
 /**
  * atob:
@@ -295,6 +338,7 @@ class Maker:Dialog from Gtk:Dialog{
     public GtkWidget *dialog_notebook=NULL;
 
     private GHashTable *widgetTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)};
+    private GHashTable *notebookContentTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)};
     private GStringChunk *widgetIds={g_string_chunk_new(STRING_BUFFER_SIZE_DEFAULT)};
     private GPtrArray *propList={g_ptr_array_new()}
     destroy {
@@ -358,7 +402,6 @@ class Maker:Dialog from Gtk:Dialog{
 	GtkWidget *hbox=gtk_hbox_new(FALSE,self->hbox_spacing);
 	self_widget_register(self, hbox, pSpec->key, "hbox");
 	GtkWidget *label=gtk_label_new(_(pSpec->label));
-	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 	self_widget_register(self, label, pSpec->key, "label");
 	if (pSpec->tooltip){
 	    gtk_widget_set_tooltip_text (label,_(pSpec->tooltip));
@@ -486,7 +529,39 @@ class Maker:Dialog from Gtk:Dialog{
 	gtk_widget_show(hbox);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
 	g_ptr_array_add(self->_priv->propList,ctx);
+
+        g_hash_table_insert(self->_priv->notebookContentTable, pSpec->key, pSpec->pageName);
+
 	return TRUE;
+    }
+
+    /**
+     * align_labels:
+     * @self: A MakerDialog.
+     * @pageName: Name of notebook page to be apply, can be NULL.
+     * @xalign: x align of labels. 0.0f for LEFT, 0.5f for CENTER, 1.0f for RIGHT.
+     * @yalign: y align of labels. 0.0f for TOP, 0.5f for CENTER, 1.0f for BOTTOM.
+     *
+     * Align labels for better dialog appearance.
+     *
+     * Labels that associate with value setting widget are stretched into same width.
+     * If @pageName is not NULL, only the labels in the page are stretched,
+     * otherwise, all labels will be stretched.
+     * 
+     * Moreover, the horizontal and vertical alignment can set by @xalign and @yalign, respectively.
+     */
+    public void align_labels(self, const gchar *pageName, gfloat xalign, gfloat yalign){
+	WidgetAlignment wAlignment;
+	wAlignment.self=self;
+	wAlignment.currentMaxWidth=0;
+	wAlignment.pageName=pageName;
+	wAlignment.xalign=xalign;
+	wAlignment.yalign=yalign;
+	g_hash_table_foreach(self->_priv->notebookContentTable,
+		caculate_max_label_width_callback, (gpointer) &wAlignment); 
+	g_hash_table_foreach(self->_priv->notebookContentTable, 
+		set_label_width_callback, (gpointer) &wAlignment); 
+	gtk_widget_show_all(GTK_WIDGET(self));
     }
 
     public void reload_property_value(self, const gchar *key){
@@ -710,8 +785,6 @@ class Maker:Dialog from Gtk:Dialog{
 	G_DEBUG_MSG(3,"*** widget_register(-,%s,%s) widget registered as %s",
 		widget_label,(widget_type)? (widget_type) : "", chunk_ret);
     }
-
-    
 
 
 }

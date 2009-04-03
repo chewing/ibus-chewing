@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-01 16:53+1000\n"
+"POT-Creation-Date: 2009-04-03 12:26+1000\n"
 "PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>, Ding-Yi Chen\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
@@ -76,12 +76,11 @@ msgstr "英"
 
 #: ../src/IBusChewingEngine-def.c:197
 msgid "Esc clean all buffer"
-msgstr "Esc 鍵清預編區 (pre-edit buffer)"
+msgstr "Esc 鍵清預編區"
 
 #: ../src/IBusChewingEngine-def.c:201
-#, fuzzy
-msgid "Escape key cleans the buffered text."
-msgstr "Esc 鍵清預編區 (pre-edit buffer)"
+msgid "Escape key cleans the text in pre-edit-buffer."
+msgstr "Esc 鍵清預編區"
 
 #: ../src/IBusChewingEngine.gob:137
 msgid "Full"
@@ -121,7 +120,7 @@ msgstr "容納中文字數"
 
 #: ../src/IBusChewingEngine-def.c:207
 msgid "Maximum Chinese characters in pre-edit buffer"
-msgstr "預編區(pre-edit buffer)可容納中文字數"
+msgstr "預編區可容納中文字數"
 
 #: ../src/IBusChewingEngine-def.c:227
 msgid "Number of selection candidate per page."

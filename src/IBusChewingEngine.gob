@@ -215,6 +215,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],buf,self);
 	    maker_dialog_apply_widget_value(MAKER_DIALOG(self->setting_dialog),propSpecs[i].key);
 	}
+
+	for (i=0; page_labels[i]!=NULL;i++){
+	    maker_dialog_align_labels(MAKER_DIALOG(self->setting_dialog),page_labels[i],1.0f, 0.5f);
+	}
+
 #undef BUFFER_SIZE_LOCAL
     }
 

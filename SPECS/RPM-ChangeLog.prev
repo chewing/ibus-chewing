@@ -1,0 +1,61 @@
+* Mon Mar 30 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330-1
+- Added tooltips.
+- Revealed the sync caps lock setting.
+- Fixed Right key bug.
+- Added CMake policy 0011 as OLD.
+
+* Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323-2
+- Fix koji build issues.
+
+* Mon Mar 23 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.4.20090323-1
+- Various Settings are now in dialog.
+- Integer settings are now revealed.
+- MakerDialog.gob is now available.
+- Work around of easy symbol input.
+- Fix iBus Google issue 310.
+
+
+* Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311-1
+- IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
+- IBus Google issue 307:  hardcoded chewing datadir
+    - Sync chewing candPerPage and IBusTable->page_size
+- Sync between IM and keyboard (Experimental)
+    - ibus-chewing.schema -> ibus-chewing.schemas
+
+* Tue Mar 03 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.2.20090303-1
+- Required gconf2 -> GConf2.
+- Fix RPM install issues.
+
+* Fri Feb 27 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.1.20090227-1
+- Setting shows/hides KBType, selKeys, and various settings.
+- Add gconf schema.
+- Fix some memory leaking checked.
+- Move some function to cmake_modules.
+- Fix Google code issue 281
+
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1.20081023-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Wed Feb 18 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090220-1
+- First working version for IBus C
+
+* Wed Jan 28 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.0.20090128-1
+- Fix the binding with libchewing 0.3.2.
+
+* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.1.1.20081023-2
+- Rebuild for Python 2.6
+
+* Thu Oct 23 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080923-1
+- Update to 0.1.1.20080923.
+
+* Wed Sep 17 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080917-1
+- Update to 0.1.1.20080917.
+
+* Tue Sep 16 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080916-1
+- Update to 0.1.1.20080916.
+
+* Mon Sep 09 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20080901-1
+- Update to 0.1.1.20080901.
+
+* Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
+- The first version.

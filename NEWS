@@ -1,3 +1,6 @@
+==== 2009-04-03 ====
+ibus-chewing 1.0.6 Released!
+
 ==== 2009-02-23 ====
 Now ibus-chewing is implemented by C/GOB2, and built by CMake.
 

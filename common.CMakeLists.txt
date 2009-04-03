@@ -39,6 +39,17 @@ IF(EXISTS ${DEVELOPER_SETTING_FILE})
 	OPTIONS ${SSH_ARGS}
 	SITE frs.sourceforge.net
     )
+
+    # Start next version
+    ADD_CUSTOM_TARGET(next_version
+	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ChangeLog {CMAKE_SOURCE_DIR}/ChangeLog.prev
+	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog 
+		${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLogChangeLog.prev
+	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.template
+	        ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt
+	    )
+
+
 ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 
 #==================================================================
@@ -52,6 +63,11 @@ ENDIF()
 IF (GENERATE_UPLOADPKG_BATCH)
     CONFIGURE_FILE(UploadPkg.batch.in UploadPkg.batch)
 ENDIF()
+
+FILE(READ ${CMAKE_SOURCE_DIR}/ChangeLog.prev CHANGELOG_PREV)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/ChangeLog.in ${CMAKE_SOURCE_DIR}/ChangeLog)
+FILE(READ ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog.prev RPM_CHANGELOG_PREV)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog.in ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog)
 
 #==================================================================
 # Make uninstall
@@ -95,6 +111,8 @@ IF (EXISTS Doxyfile)
 	DESTINATION "${docdir}/${PROJECT_NAME}-${PRJ_VER}"
     )
 ENDIF()
+
+
 
 
 

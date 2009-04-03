@@ -53,20 +53,6 @@
 #     upload_command: Custom upload command.
 # * Produced targets: upload_pkg_release
 #
-#===================================================================
-# Targets:
-# version_lock: 
-#   Lock in the current version, so the version won't be changed until unlocked.
-#   Useful for time-based version.
-#   Note that the PRJ_VER is locked but PRJ_VER_FULL is not, thus RPM
-#   maintainer can do some maintenances without affecting source version.
-#
-# version_unlock:
-#   Unlock the version.
-#
-# To enable these two targets, need to:
-# SET(VERSION_NEED_LOCK)
-#
 
 INCLUDE(BasicMacros)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
@@ -144,20 +130,35 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
     ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
-IF (DEFINED VERSION_NEED_LOCK)
-    ADD_CUSTOM_TARGET(version_lock
-	COMMAND grep "PRJ_VER=" ${RELEASE_FILE} 
-	|| ${CMAKE_COMMAND} -E echo "PRJ_VER=${PRJ_VER}" > ${RELEASE_FILE}
-	COMMAND cmake ${CMAKE_SOURCE_DIR}
-	COMMENT "Lock version"
-	)
 
-    ADD_CUSTOM_TARGET(version_unlock
-	COMMAND ${RM} ${RELEASE_FILE}
-	COMMAND ${CMAKE_COMMAND} -E touch  ${RELEASE_FILE}
-	COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
-	COMMENT "Unlock version"
-	)
+#===================================================================
+# Targets:
+# version_lock: 
+#   Lock in the current version, so the version won't be changed until unlocked.
+#   Useful for time-based version.
+#   Note that the PRJ_VER is locked but PRJ_VER_FULL is not, thus RPM
+#   maintainer can do some maintenances without affecting source version.
+#
+# version_unlock:
+#   Unlock the version.
+#
+# To enable these two targets, need to:
+# SET(VERSION_NEED_LOCK)
+#
 
-ENDIF(DEFINED VERSION_NEED_LOCK)
+#IF (DEFINED VERSION_NEED_LOCK)
+#    ADD_CUSTOM_TARGET(version_lock
+#	COMMAND grep "PRJ_VER=" ${RELEASE_FILE} 
+#	|| ${CMAKE_COMMAND} -E echo "PRJ_VER=${PRJ_VER}" > ${RELEASE_FILE}
+#	COMMAND cmake ${CMAKE_SOURCE_DIR}
+#	COMMENT "Lock version"
+#	)
+#
+#    ADD_CUSTOM_TARGET(version_unlock
+#	COMMAND ${RM} ${RELEASE_FILE}
+#	COMMAND ${CMAKE_COMMAND} -E touch  ${RELEASE_FILE}
+#	COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
+#	COMMENT "Unlock version"
+#	)
+#ENDIF(DEFINED VERSION_NEED_LOCK)
 

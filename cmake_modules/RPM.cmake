@@ -21,8 +21,6 @@
 # RPM_BUILD_BUILD:  Directory for RPM build.
 #         Default: ${RPM_BUILD_TOPDIR}/BUILD
 #
-# GENERATE_SPEC: Set this to the spec.in file.
-#
 # RPM_SOURCE_FILES: Source and patch file for RPM build.
 #         Default: ${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source 
 #                   with suffix of either tar.gz, tar.bz2, tgz, tbz, zip
@@ -31,6 +29,12 @@
 # RPM_IS_NO_ARCH: Set it if this rpm is noarch, it also
 #         hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
 #
+#===================================================================
+# Macros:
+# GENERATE_SPEC(spec_in)
+#     spec_in: Spec input file
+# 
+# Generate a RPM spec file using an input file, spec_in
 #===================================================================
 # Targets:
 # srpm: Build srpm (rpmbuild -bs).
@@ -89,14 +93,13 @@ IF(NOT DEFINED RPM_BUILD_BUILD)
     SET(RPM_BUILD_BUILD "${RPM_BUILD_TOPDIR}/BUILD")
 ENDIF(NOT DEFINED RPM_BUILD_BUILD)
 
-
-IF (DEFINED GENERATE_SPEC)
-    CONFIGURE_FILE(${GENERATE_SPEC} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
-
+MACRO(GENERATE_SPEC spec_in)
+    CONFIGURE_FILE(${spec_in} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
+   
     SET_SOURCE_FILES_PROPERTIES(${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
 	PROPERTIES GENERATED TRUE
 	)
-ENDIF(DEFINED GENERATE_SPEC)
+ENDMACRO(GENERATE_SPEC spec_in)
 
 IF(NOT DEFINED RPM_SOURCE_FILES)
     SET(RPM_SOURCE_FILES ${SOURCE_TARBALL_OUTPUT})

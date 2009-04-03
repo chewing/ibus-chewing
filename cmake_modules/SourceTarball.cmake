@@ -99,8 +99,9 @@ SET(CMAKE_GENERATED_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
 
 SET(COMMON_IGNORED_FILES
     "/\\\\.svn/"  "/CVS/" "/\\\\.git/"  "\\\\.gitignore$"
-    "~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$" "\\\\.gmo$"
-    "\\\\.gz$" "\\\\.bz2$" "/src/config\\\\.h$" "NO_PACK") 
+    "~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$" "\\\\.old$"
+    "\\\\.gmo$"
+    "\\\\.tar.gz$" "\\\\.tar.bz2$" "/src/config\\\\.h$" "NO_PACK") 
 
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${CMAKE_GENERATED_FILES} ${COMMON_IGNORED_FILES})
 
