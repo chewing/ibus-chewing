@@ -9,7 +9,7 @@
 # KOJI_CVS_PATH: The path for KOJI build.
 #         Default: ./
 # 
-# CHANGE_SUMMARY: Summary of latest change, used in CVS message and Bodhi
+# RPM_RELEASE_SUMMARY: Summary of latest change, used in CVS message and Bodhi
 #                 comment.
 #
 # CVS_DIST_TAGS: Distribution tags such as F-10, EL-5 to be committed to CVS
@@ -45,18 +45,18 @@ ENDIF(NOT DEFINED KOJI_CVS_PATH)
 
 # Koji submit
 SET (KOJI_SUBMISSION_CMD "")
-IF (DEFINED CHANGE_SUMMARY)
+IF (DEFINED RPM_RELEASE_SUMMARY)
     SET (KOJI_SUBMISSION_CMD 
-	"${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -m \"${CHANGE_SUMMARY}\" ${SRPM_FILE}" 
+	"${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -m \"${RPM_RELEASE_SUMMARY}\" ${SRPM_FILE}" 
     )
 
     FOREACH(_dist_tag ${CVS_DIST_TAGS})
 	SET (KOJI_SUBMISSION_CMD 
 	    "${KOJI_SUBMISSION_CMD}\;"
-	    "${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -b ${_dist_tag} -m \"${CHANGE_SUMMARY}\" ${SRPM_FILE}"
+	    "${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -b ${_dist_tag} -m \"${RPM_RELEASE_SUMMARY}\" ${SRPM_FILE}"
 	)
     ENDFOREACH(_dist_tag)
-ELSE(DEFINED CHANGE_SUMMARY)
+ELSE(DEFINED RPM_RELEASE_SUMMARY)
     SET (KOJI_SUBMISSION_CMD 
 	"${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh  ${SRPM_FILE}" 
     )
@@ -66,7 +66,7 @@ ELSE(DEFINED CHANGE_SUMMARY)
 	    "${KOJI_CVS_PATH}/${PROJECT_NAME}/common/cvs-import.sh -b ${_dist_tag}  ${SRPM_FILE}"
 	)
     ENDFOREACH(_dist_tag)
-ENDIF(DEFINED CHANGE_SUMMARY)
+ENDIF(DEFINED RPM_RELEASE_SUMMARY)
 
 SET (KOJI_BUILD_CMD
     "cd ${KOJI_CVS_PATH}/${PROJECT_NAME} && cvs up && cd devel && make build && cd .."
@@ -131,17 +131,17 @@ FOREACH(_bodhi_tag ${_bodhi_dist_tags})
     ELSE ()
 	SET (BODHI_NEW_CMD "")
     ENDIF ()
-    IF(DEFINED CHANGE_SUMMARY)
+    IF(DEFINED RPM_RELEASE_SUMMARY)
 	SET (BODHI_NEW_CMD 
 	    "${BODHI_NEW_CMD}"
-	    "bodhi --new --type=bugfix --comment=\"${CHANGE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
+	    "bodhi --new --type=bugfix --comment=\"${RPM_RELEASE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
 	    )
-    ELSE(DEFINED CHANGE_SUMMARY)
+    ELSE(DEFINED RPM_RELEASE_SUMMARY)
 	SET (BODHI_NEW_CMD 
 	    "${BODHI_NEW_CMD}"
 	    "bodhi --new --type=bugfix  ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
 	    )
-    ENDIF(DEFINED CHANGE_SUMMARY)
+    ENDIF(DEFINED RPM_RELEASE_SUMMARY)
 ENDFOREACH(_bodhi_tag)
 
 #MESSAGE(BODHI_NEW_CMD=${BODHI_NEW_CMD})

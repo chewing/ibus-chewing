@@ -18,16 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */ 
+ */
 
 
 #include <ibus.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <chewing.h>
+#include <glib/gi18n.h>
 #include "ibus-chewing-engine.h"
+#include "maker-dialog.h"
 
-GConfClient *gConfClient=NULL;
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 3
+#endif
+#define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
+
+MakerDialog *makerDialog=NULL;
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
@@ -35,7 +42,7 @@ static IBusFactory *factory = NULL;
 static gboolean ibus = FALSE;
 gboolean ibus_chewing_verbose = FALSE;
 
-static const GOptionEntry entries[] = 
+static const GOptionEntry entries[] =
 {
     { "ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL },
     { "verbose", 'v', 0, G_OPTION_ARG_NONE, &ibus_chewing_verbose, "verbose", NULL },
@@ -58,7 +65,7 @@ start_component (void)
     IBusComponent *component;
 
 //    ibus_init ();
-    
+
     bus = ibus_bus_new ();
     g_signal_connect (bus, "disconnected", G_CALLBACK (ibus_disconnected_cb), NULL);
 
@@ -73,9 +80,7 @@ start_component (void)
     }else {
         ibus_bus_register_component (bus, component);
     }
-    gtk_main ();
-
-//    ibus_main ();
+    ibus_main ();
 }
 
 int

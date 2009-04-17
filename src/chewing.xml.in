@@ -3,7 +3,7 @@
 <component>
     <name>org.freedesktop.IBus.Chewing</name>
     <description>Chewing Component</description>
-    <exec>@CMAKE_INSTALL_PREFIX@/libexec/ibus-engine-chewing --ibus</exec>
+    <exec>@LIBEXEC_DIR@/ibus-engine-chewing --ibus</exec>
     <version>@PRJ_VER_FULL@</version>
     <author>Peng Huang, Ding-Yi Chen</author>
     <license>GPL</license>

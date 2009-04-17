@@ -115,7 +115,12 @@
             <default>16</default>
 	    <locale name="C">
 	        <short>Maximum length of Chinese symbols.</short>
+		<long>Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols.</long>
             </locale>
+	    <locale name="zh_TW">
+	        <short>容納中文字數</short>
+                <long>預編區可容納中文字數(包含輸入中的注音符號)</long>
+	    </locale>
         </schema>
         <schema>
 	    <key>/schemas/desktop/ibus/engine/Chewing/phraseChoiceRearward</key>

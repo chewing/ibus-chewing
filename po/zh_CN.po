@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-03 12:26+1000\n"
+"POT-Creation-Date: 2009-04-17 12:34+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,84 +15,83 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:203
+#: ../src/IBusChewingEngine.gob:204
 msgid " No default value, skipped."
-msgstr ""
+msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:203
+#: ../src/IBusChewingEngine.gob:204
 msgid " Use default value:"
-msgstr ""
+msgstr " 使用缺省值："
 
-#: ../src/IBusChewingEngine-def.c:185
+#: ../src/IBusChewingEngine-def.c:191
 msgid "Add phrases in front"
-msgstr ""
+msgstr "前方加詞"
 
-#: ../src/IBusChewingEngine-def.c:189
+#: ../src/IBusChewingEngine-def.c:195
 msgid "Adding phrases in the front."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:179
+#: ../src/IBusChewingEngine-def.c:185
 msgid "Auto move cursor"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:183
+#: ../src/IBusChewingEngine-def.c:189
 msgid "Automatically move cursor to next character."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:223
+#: ../src/IBusChewingEngine-def.c:229
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:134
+#: ../src/IBusChewingEngine.gob:141
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine-def.c:229
+#: ../src/IBusChewingEngine-def.c:235
 msgid "Choose phrases from backward"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:233
+#: ../src/IBusChewingEngine-def.c:239
 msgid "Choose phrases from backward."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:191
+#: ../src/IBusChewingEngine-def.c:197
 msgid "Easy symbol input"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:195
+#: ../src/IBusChewingEngine-def.c:201
 msgid "Easy symbol input."
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:2
-#, fuzzy
 msgid "Editing"
-msgstr "英"
+msgstr ""
 
-#: ../src/IBusChewingEngine.gob:135
+#: ../src/IBusChewingEngine.gob:142
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine-def.c:197
+#: ../src/IBusChewingEngine-def.c:203
 msgid "Esc clean all buffer"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:201
+#: ../src/IBusChewingEngine-def.c:207
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:137
+#: ../src/IBusChewingEngine.gob:144
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:138
+#: ../src/IBusChewingEngine.gob:145
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine-def.c:176
+#: ../src/IBusChewingEngine-def.c:182
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:172
+#: ../src/IBusChewingEngine-def.c:178
 msgid "Hsu's selection key"
 msgstr ""
 
@@ -100,30 +99,32 @@ msgstr ""
 msgid "Keyboard"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:160
+#: ../src/IBusChewingEngine-def.c:166
 #, fuzzy
 msgid "Keyboard Type"
 msgstr "键盘"
 
-#: ../src/IBusChewingEngine-def.c:170
+#: ../src/IBusChewingEngine-def.c:176
 msgid ""
 "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
 "select the 1st candidate, 's' for 2nd, and so on."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:203
+#: ../src/IBusChewingEngine-def.c:209
 msgid "Maximum Chinese characters"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:207
-msgid "Maximum Chinese characters in pre-edit buffer"
+#: ../src/IBusChewingEngine-def.c:213
+msgid ""
+"Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
+"symbols"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:227
+#: ../src/IBusChewingEngine-def.c:233
 msgid "Number of selection candidate per page."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:217
+#: ../src/IBusChewingEngine-def.c:223
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -132,11 +133,11 @@ msgid ""
 "\"im\": Keyboard status follows IM status."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:239
+#: ../src/IBusChewingEngine-def.c:245
 msgid "Press Space to select the candidate."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:164
+#: ../src/IBusChewingEngine-def.c:170
 msgid "Select keyboard layout of Zhuyin symbols."
 msgstr ""
 
@@ -144,24 +145,28 @@ msgstr ""
 msgid "Selecting"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:166
+#: ../src/IBusChewingEngine-def.c:172
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:85
+#: ../src/IBusChewingEngine.gob:90
 msgid "Setting"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:140
+#: ../src/IBusChewingEngine.gob:147
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:235
+#: ../src/IBusChewingEngine-def.c:241
 msgid "Space to select"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:211
+#: ../src/IBusChewingEngine-def.c:217
 msgid "Sync between CapsLock and IM"
+msgstr ""
+
+#: ../src/IBusChewingEngine.gob:202
+msgid "Warning: cannot load configure key"
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:26

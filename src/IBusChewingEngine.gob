@@ -61,17 +61,22 @@ enum CHEWING_MODIFIER_SYNC{
 #include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
 #define EASY_SYMBOL_INPUT_WORK_AROUND
+
+extern PropertySpec propSpecs[];
+extern const gchar *page_labels[];
+extern const gchar *button_labels[];
+extern GtkResponseType button_responses[];
 %}
 
 %{
 extern gboolean ibus_chewing_verbose;
+//extern IBusConfig *iConfig;
 #ifndef DEBUG_LEVEL
 #define DEBUG_LEVEL 3
 #endif
 
 #define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
 #include "IBusChewingEngine-def.c"
-
 %}
 
 
@@ -92,6 +97,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     /* For easy symbol input work around */
     private gboolean easySymbolInput;
 
+    /* For init work around */
+    private gboolean initialized=FALSE;
 
     protected IBusLookupTable *table=NULL
 	destroy {
@@ -129,7 +136,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     private Display *pDisplay = {XOpenDisplay( NULL )}
           destroywith XCloseDisplay;
 
-    classwide GConfClient *gConfClient={gconf_client_get_default ()};
+//    classwide GConfClient *gConfClient={gconf_client_get_default ()};
 
     classwide IBusText *chieng_prop_label_chi={ibus_text_new_from_static_string(_("Chi"))};
     classwide IBusText *chieng_prop_label_eng={ibus_text_new_from_static_string(_("Eng"))};
@@ -142,86 +149,143 @@ class IBus:Chewing:Engine from IBus:Engine{
     init (self) {
           /* initialize the object here */
 	G_DEBUG_MSG(2,"*** init()");
-	gchar buf[100];
-	g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
+	if (!self->_priv->initialized){
+	    gchar buf[100];
+	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	chewing_Init(CHEWING_DATADIR, buf);
+	    chewing_Init(CHEWING_DATADIR, buf);
 
-	self->context=chewing_new();
-	chewing_set_ChiEngMode(self->context,CHINESE_MODE);
+	    self->context=chewing_new();
+	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
 
-	/* init properties */
-	ibus_prop_list_append(self->prop_list,self->chieng_prop);
-	ibus_prop_list_append(self->prop_list,self->alnumSize_prop);
-	ibus_prop_list_append(self->prop_list,self->settings_prop);
-	self_context_load_parameters(self);
+	    /* init properties */
+	    ibus_prop_list_append(self->prop_list,self->chieng_prop);
+	    ibus_prop_list_append(self->prop_list,self->alnumSize_prop);
+	    ibus_prop_list_append(self->prop_list,self->settings_prop);
 
-	self->table=ibus_lookup_table_new(chewing_get_candPerPage(self->context),0,FALSE,TRUE);
-	ibus_lookup_table_clear(self->table);
+	    self->_priv->initialized=TRUE;
+	}
     }
 
-    private void context_load_parameters(self){
+    private  void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
-	G_DEBUG_MSG(3,"*** context_load_parameters()");
+	G_DEBUG_MSG(3,"*** load_setting()");
 	int i;
-	gchar confKey[200];
 	gchar buf[BUFFER_SIZE_LOCAL];
+	GValue gValue={0};
 
-	int confKeyPrefix_len=strlen(GCONF_KEY_PREFIX);
-	GError *err=NULL;
-	g_strlcpy(confKey,GCONF_KEY_PREFIX,200);
-	gchar *str_ptr=NULL;
- 
 	for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
-	    G_DEBUG_MSG(3,"*** context_load_parameters(), i=%d",i);
-	    confKey[confKeyPrefix_len]='\0';
-	    g_strlcat(confKey,propSpecs[i].key,200);
+	    G_DEBUG_MSG(4,"*** load_setting(), i=%d",i);
+	    if (ibus_config_get_value(self->config, "engine/Chewing",propSpecs[i].key, &gValue)){
+		switch(propSpecs[i].valueType){
+		    case G_TYPE_BOOLEAN:
+			buf[0]=(g_value_get_boolean(&gValue))? '1' : '0';
+			buf[1]='\0';
+			break;
+		    case G_TYPE_UINT:
+			g_snprintf(buf,BUFFER_SIZE_LOCAL,"%u",
+				g_value_get_uint(&gValue));
+			break;
+		    case G_TYPE_INT:
+			g_snprintf(buf,BUFFER_SIZE_LOCAL,"%d",
+				g_value_get_int(&gValue));
+			break;
+		    case G_TYPE_STRING:
+			g_strlcpy(buf,g_value_get_string(&gValue), BUFFER_SIZE_LOCAL);
+			break;
+		    default:
+			break;
 
-	    switch(propSpecs[i].valueType){
-		case G_TYPE_BOOLEAN:
-		    buf[0]=(gconf_client_get_bool(SELF_GET_CLASS(self)->gConfClient, confKey, &err))? '1' : '0';
-		    buf[1]='\0';
-		    break;
-		case G_TYPE_UINT:
-		case G_TYPE_INT:
-		    g_snprintf(buf,BUFFER_SIZE_LOCAL,"%d",
-			    gconf_client_get_int(SELF_GET_CLASS(self)->gConfClient, confKey, &err));
-		    break;
-		case G_TYPE_STRING:
-		    str_ptr=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, confKey, &err);
-		    g_strlcpy(buf,str_ptr, BUFFER_SIZE_LOCAL);
-		    g_free(str_ptr);
-		    break;
-		default:
-		    break;
-
-	    }
-	    if (err){
-		g_warning("Warning: cannot load confKey %s because %s %s %s",
-			confKey,
-			err->message,
+		}
+	    }else{
+		g_warning("%s /desktop/ibus/engine/Chewing/%s, %s %s",
+			_("Warning: cannot load configure key"),
+			propSpecs[i].key,
 			(propSpecs[i].defaultValue)? _(" Use default value:") : _(" No default value, skipped.") ,
 			(propSpecs[i].defaultValue)? propSpecs[i].defaultValue : ""
 			);
-		g_error_free (err);
 		if (propSpecs[i].defaultValue){
 		    g_strlcpy(buf,propSpecs[i].defaultValue, BUFFER_SIZE_LOCAL);
 		}else{
 		    continue;
 		}
 	    }
-
 	    /* Add property to dialog */
 	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],buf,self);
 	    maker_dialog_apply_widget_value(MAKER_DIALOG(self->setting_dialog),propSpecs[i].key);
+	    g_value_unset(&gValue);
 	}
 
 	for (i=0; page_labels[i]!=NULL;i++){
 	    maker_dialog_align_labels(MAKER_DIALOG(self->setting_dialog),page_labels[i],1.0f, 0.5f);
 	}
-
+	gtk_widget_hide(self->setting_dialog);
 #undef BUFFER_SIZE_LOCAL
     }
+
+//    private void context_load_parameters(self){
+//#define BUFFER_SIZE_LOCAL 200
+//        G_DEBUG_MSG(3,"*** context_load_parameters()");
+//        int i;
+//        gchar confKey[200];
+//        gchar buf[BUFFER_SIZE_LOCAL];
+
+//        int confKeyPrefix_len=strlen(GCONF_KEY_PREFIX);
+//        GError *err=NULL;
+//        g_strlcpy(confKey,GCONF_KEY_PREFIX,200);
+//        gchar *str_ptr=NULL;
+
+//        for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
+//            G_DEBUG_MSG(3,"*** context_load_parameters(), i=%d",i);
+//            confKey[confKeyPrefix_len]='\0';
+//            g_strlcat(confKey,propSpecs[i].key,200);
+
+//            switch(propSpecs[i].valueType){
+//                case G_TYPE_BOOLEAN:
+//                    buf[0]=(gconf_client_get_bool(SELF_GET_CLASS(self)->gConfClient, confKey, &err))? '1' : '0';
+//                    buf[1]='\0';
+//                    break;
+//                case G_TYPE_UINT:
+//                case G_TYPE_INT:
+//                    g_snprintf(buf,BUFFER_SIZE_LOCAL,"%d",
+//                            gconf_client_get_int(SELF_GET_CLASS(self)->gConfClient, confKey, &err));
+//                    break;
+//                case G_TYPE_STRING:
+//                    str_ptr=gconf_client_get_string(SELF_GET_CLASS(self)->gConfClient, confKey, &err);
+//                    g_strlcpy(buf,str_ptr, BUFFER_SIZE_LOCAL);
+//                    g_free(str_ptr);
+//                    break;
+//                default:
+//                    break;
+
+//            }
+//            if (err){
+//                g_warning("Warning: cannot load confKey %s because %s %s %s",
+//                        confKey,
+//                        err->message,
+//                        (propSpecs[i].defaultValue)? _(" Use default value:") : _(" No default value, skipped.") ,
+//                        (propSpecs[i].defaultValue)? propSpecs[i].defaultValue : ""
+//                );
+//                g_error_free (err);
+//                if (propSpecs[i].defaultValue){
+//                    g_strlcpy(buf,propSpecs[i].defaultValue, BUFFER_SIZE_LOCAL);
+//                }else{
+//                    continue;
+//                }
+//            }
+
+//            /* Add property to dialog */
+//            maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),&propSpecs[i],buf,self);
+//            maker_dialog_apply_widget_value(MAKER_DIALOG(self->setting_dialog),propSpecs[i].key);
+//        }
+
+//        for (i=0; page_labels[i]!=NULL;i++){
+//            maker_dialog_align_labels(MAKER_DIALOG(self->setting_dialog),page_labels[i],1.0f, 0.5f);
+//        }
+//        gtk_widget_hide(self->setting_dialog);
+
+//#undef BUFFER_SIZE_LOCAL
+//    }
 
     protected gboolean commit(self){
 	/* commit string */
@@ -574,17 +638,18 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     enable(IBus:Engine  *self){
 	G_DEBUG_MSG(2,"*** enable");
-	Self *selfObj=SELF(self);
+        Self *selfObj=SELF(self);
 
-	if (!selfObj->config){
-	    /* connections_list is not avail in init, so we put it here */
+        if (!selfObj->config){
+
+            /* connections_list is not avail in init, so we put it here */
 	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
 	    g_assert(connections_list);
 	    g_assert(connections_list->data);
 	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
 	    selfObj->config=ibus_config_new(iConnection);
-	}
-
+	    self_load_setting(selfObj);
+        }
     }
 
     override (IBus:Engine) void
