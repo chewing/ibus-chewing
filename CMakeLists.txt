@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4)
 ####################################################################
-# Init Definition 
+# Init Definition
 ####################################################################
 INCLUDE(init.CMakeLists.txt)
 
@@ -46,12 +46,11 @@ ENDIF(${NEED_RPM_RELEASE_INFO})
 #MESSAGE("### RPM_RELEASE_SUMMARY=${RPM_RELEASE_SUMMARY}")
 #MESSAGE("### RPM_CHANGELOG_ITEMS=|${RPM_CHANGELOG_ITEMS}|")
 
-#SET(CVS_DIST_TAGS F-10) 
+SET(CVS_DIST_TAGS F-11)
 
 ####################################################################
 # Includes
 ####################################################################
-INCLUDE(Version)
 INCLUDE(Gettext)
 
 #==================================================================
@@ -105,7 +104,7 @@ ADD_SUBDIRECTORY(po)
 #
 SET(MAIN_DOCS AUTHORS README ChangeLog NEWS COPYING)
 
-#INSTALL(FILES ${MAIN_DOCS} 
+#INSTALL(FILES ${MAIN_DOCS}
 #    DESTINATION "${PROJECT_DOCDIR}")
 
 INSTALL(DIRECTORY icons
@@ -120,16 +119,16 @@ SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
-SET(PRJ_COMMON_IGNORE_FILES 
-    "/docs/"  
-    "\\\\.cache$"  "\\\\.spec$" 
+SET(PRJ_COMMON_IGNORE_FILES
+    "/docs/"
+    "\\\\.cache$"  "\\\\.spec$"
     "ibus-chewing-engine.*\\\\.[ch]$" "maker-dialog.*\\\\.[ch]$"
     "messages.po$"
 )
 
-SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/bin/" 
+SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/bin/"
     "\\\\.xml$")
-SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/src/" 
+SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/src/"
     "\\\\.spec$" "\\\\.in$" "\\\\.pot$")
 
 INCLUDE(CPack)

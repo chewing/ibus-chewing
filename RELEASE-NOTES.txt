@@ -1,5 +1,6 @@
-PRJ_VER=1.0.7.20090414
-SUMMARY=Fixed the issue with ibus-gtk after 1.1.0.20090407
+PRJ_VER=1.0.8.20090424
+SUMMARY=Support plain Zhuyin mode.
 # Changes
-Fixed the issue with ibus-gtk after 1.1.0.20090407
+Support plain Zhuyin mode.
+Fix some bugs in cmake_modules/RPM.cmake
 

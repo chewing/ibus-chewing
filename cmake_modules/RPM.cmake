@@ -2,9 +2,9 @@
 #
 # To use: INCLUDE(RPM)
 # Included: SourceTarball
-# 
+#
 #===================================================================
-# Variables: 
+# Variables:
 # DIST_TAG: Current distribution tag such as el5, fc10.
 #         Default: Distribution tag from rpm --showrc
 #
@@ -22,7 +22,7 @@
 #         Default: ${RPM_BUILD_TOPDIR}/BUILD
 #
 # RPM_SOURCE_FILES: Source and patch file for RPM build.
-#         Default: ${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source 
+#         Default: ${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source
 #                   with suffix of either tar.gz, tar.bz2, tgz, tbz, zip
 # SRPM_FILE: Generated srpm file.
 #         Default: ${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER_FULL}.${DIST_TAG}.src.rpm
@@ -33,16 +33,16 @@
 # Macros:
 # GENERATE_SPEC(spec_in)
 #     spec_in: Spec input file
-# 
+#
 # Generate a RPM spec file using an input file, spec_in
 #===================================================================
 # Targets:
 # srpm: Build srpm (rpmbuild -bs).
 #     Depends on pack_src.
-# 
+#
 # rpm: Build rpm and srpm (rpmbuild -ba)
 #     Depends on pack_src.
-# 
+#
 # rpmlint: Run rpmlint to generated rpms.
 #
 # rpm_mock_i386: Use mock to build i386 rpms.
@@ -95,7 +95,7 @@ ENDIF(NOT DEFINED RPM_BUILD_BUILD)
 
 MACRO(GENERATE_SPEC spec_in)
     CONFIGURE_FILE(${spec_in} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
-   
+
     SET_SOURCE_FILES_PROPERTIES(${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
 	PROPERTIES GENERATED TRUE
 	)
@@ -127,22 +127,22 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_PACKAGE_IGNORE_FILES}
 #-------------------------------------------------------------------
 # RPM build targets
 ADD_CUSTOM_TARGET(srpm
-    COMMAND mkdir -p SRPMS
-    COMMAND rpmbuild -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec 
+    COMMAND ${CMAKE_COMMAND} -E make_directory SRPMS
+    COMMAND rpmbuild -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
     --define '_sourcedir ${RPM_BUILD_SOURCES}'
-    --define '_builddir ${RPM_BUILD_BUILD}' 
+    --define '_builddir ${RPM_BUILD_BUILD}'
     --define '_srcrpmdir ${RPM_BUILD_SRPMS}'
     --define '_rpmdir ${RPM_BUILD_RPMS}'
-    --define '_specdir ${RPM_BUILD_SPECS}' 
+    --define '_specdir ${RPM_BUILD_SPECS}'
     DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec ${RPM_SOURCE_FILES}
     )
 
 ADD_CUSTOM_TARGET(rpm
-    COMMAND mkdir -p ${RPM_BUILD_SRPMS}
-    COMMAND mkdir -p ${RPM_BUILD_RPMS}/i386
-    COMMAND mkdir -p ${RPM_BUILD_RPMS}/x86_64
-    COMMAND mkdir -p ${RPM_BUILD_RPMS}/noarch
-    COMMAND mkdir -p BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_SRPMS}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i386
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/x86_64
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/noarch
+    COMMAND ${CMAKE_COMMAND} -E make_directory BUILD
     COMMAND rpmbuild -ba ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
     --define '_sourcedir ${RPM_BUILD_SOURCES}'
     --define '_builddir ${RPM_BUILD_BUILD}'
@@ -156,13 +156,13 @@ ADD_DEPENDENCIES(srpm pack_src)
 ADD_DEPENDENCIES(rpm pack_src)
 
 IF(NOT RPM_IS_NOARCH)
-    ADD_CUSTOM_TARGET(rpm_mock_i386 
-	COMMAND mkdir -p RPMS/i386
+    ADD_CUSTOM_TARGET(rpm_mock_i386
+	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/i386
 	COMMAND mock -r  fedora-10-i386 --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
 	)
 
     ADD_CUSTOM_TARGET(rpm_mock_x86_64
-	COMMAND mkdir -p RPMS/x86_64
+	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/x86_64
 	COMMAND mock -r  fedora-10-x86_64 --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
 	)
 
@@ -170,22 +170,22 @@ IF(NOT RPM_IS_NOARCH)
     ADD_DEPENDENCIES(rpm_mock_x86_64 srpm)
 ENDIF(NOT RPM_IS_NOARCH)
 
-ADD_CUSTOM_TARGET(rpmlint find . 
-    -name '${PROJECT_NAME}*-${PRJ_VER_FULL}.*.rpm' 
+ADD_CUSTOM_TARGET(rpmlint find .
+    -name '${PROJECT_NAME}*-${PRJ_VER_FULL}.*.rpm'
     -print -exec rpmlint '{}' '\\;'
     )
 
 
 ADD_CUSTOM_TARGET(rpm_remove_old
-    COMMAND find . 
+    COMMAND find .
     -name '${PROJECT_NAME}*.rpm' ! -name '${PROJECT_NAME}*-${PRJ_VER_FULL}.*.rpm'
     -print -delete
     COMMENT "Removing the old rpms.."
     )
 
 
-ADD_CUSTOM_TARGET(pkg_remove_old 
-    COMMAND find . 
+ADD_CUSTOM_TARGET(pkg_remove_old
+    COMMAND find .
     -name '${PROJECT_NAME}*.tar.[bg]z*' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${SOURCE_TARBALL_POSTFIX}'
     -print -delete
     COMMENT "Removing the old tarballs .."

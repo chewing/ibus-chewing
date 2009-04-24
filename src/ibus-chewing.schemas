@@ -1,6 +1,6 @@
 <gconfschemafile>
     <schemalist>
-        <!-- Keep the defaults in sync with the emergency fallbacks 
+        <!-- Keep the defaults in sync with the emergency fallbacks
           in nautilus-global-preferences.c -->
         <!-- General preferences -->
         <schema>
@@ -11,14 +11,14 @@
             <default>default</default>
 	    <locale name="C">
 	        <short>Keyboard mapping type.</short>
-	        <long>Type of Zhuyin keyboard mapping. Valid values: 
+	        <long>Type of Zhuyin keyboard mapping. Valid values:
 	            default, hsu, ibm, gin_yieh, eten, eten26,
 		    dvorak,  dvorak_hsu,  dachen_26, hanyu
                 </long>
             </locale>
             <locale name="zh_TW">
                 <short>鍵盤排列</short>
-	        <long>注音鍵盤排列方式。可用的值： 
+	        <long>注音鍵盤排列方式。可用的值：
 		    default, hsu, ibm, gin_yieh, eten, eten26,
   		    dvorak,  dvorak_hsu,  dachen_26, hanyu
 	        </long>
@@ -160,7 +160,7 @@
 	    </locale>
 	    <locale name="zh_TW">
 	        <short>使用空白鍵挑選候選字詞</short>
-            </locale>   
+            </locale>
         </schema>
         <schema>
 	    <key>/schemas/desktop/ibus/engine/Chewing/syncCapsLockLocal</key>
@@ -170,7 +170,7 @@
             <default>keyboard</default>
 	    <locale name="C">
 	        <short>Sync between CapsLock and IM.</short>
-		<long>Occasionally, the CapsLock status does not match the IM, 
+		<long>Occasionally, the CapsLock status does not match the IM,
 		      this option determines how these status be synchronized.
 		      Valid values:
 		      "disable": Do nothing.
@@ -181,14 +181,30 @@
 	    <locale name="zh_TW">
 	        <short>CapsLock與輸入法狀態同步</short>
 		<long>CapsLock 狀態有時會跟輸入法不同步，
-		      這個選項決定如何同步這些狀態。 
+		      這個選項決定如何同步這些狀態。
 		      可用的值：
 		      "disable":  停用本功能。
 		      "keyboard": 輸入法向 Caps Lock 狀態同步。
 		      "im": Caps Lock 向輸入法狀態同步。
 		</long>
-            </locale>   
+            </locale>
+        </schema>
+        <schema>
+	    <key>/schemas/desktop/ibus/engine/Chewing/plainZhuyin</key>
+	    <applyto>/desktop/ibus/engine/Chewing/plainZhuyin</applyto>
+	    <owner>ibus-chewing</owner>
+	    <type>bool</type>
+            <default>false</default>
+	    <locale name="C">
+	        <short>Plain Zhuyin mode</short>
+		<long>In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored.
+		</long>
+	    </locale>
+	    <locale name="zh_TW">
+	        <short>標準注音模式</short>
+		<long>在標準注音模式，自動選詞功能及選項將被關閉或忽略。</long>
+            </locale>
         </schema>
     </schemalist>
 </gconfschemafile>
- 
+

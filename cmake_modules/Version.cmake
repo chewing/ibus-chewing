@@ -1,4 +1,4 @@
-# Version: Handle version 
+# Version: Handle version
 #
 # To use: INCLUDE(Version)
 # Includes: BasicMacros
@@ -10,6 +10,10 @@
 #         Default: ${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH})
 #  PRJ_VER_FULL: Version for rpms.
 #         Default: ${PRJ_VER}-${PRJ_VER_RELEASE})
+#===================================================================
+# Targets:
+# version_check:
+#     Check and fix the inconsistent version.
 #
 
 IF(NOT DEFINED _VERSION_CMAKE_)
@@ -46,6 +50,6 @@ IF(NOT DEFINED _VERSION_CMAKE_)
 	COMMAND test \"`${_version_check_ver}`\" = \"\" -o \"`${_version_check_ver}`\" = "${PRJ_VER}"
 	|| echo Inconsistent version detected. Fixing.. && ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
 	)
-    
+
 ENDIF(NOT DEFINED _VERSION_CMAKE_)
 

@@ -1,6 +1,6 @@
 ####################################################################
 # CMake common setting.
-# 
+#
 # Project independent setting.
 #
 # Optional Variables:
@@ -12,16 +12,24 @@
 # SET(GTKDOC_OUTPUT_DIR <path>)
 #       Enable gtk-doc
 #
-# SET(GENERATE_UPLOADPKG_BATCH TRUE) 
+# SET(GENERATE_UPLOADPKG_BATCH TRUE)
 #        Generate UploadPkg.batch for Uploading to hosting host
-# 
+#
 ####################################################################
+INCLUDE(Version)
 
 ADD_DEFINITIONS(-DPROJECT_NAME='"${PROJECT_NAME}"')
 
+IF(NOT DEFINED PROJECT_DATADIR)
+    SET(PROJECT_DATADIR "${datadir}/${PROJECT_NAME}")
+ENDIF(NOT DEFINED PROJECT_DATADIR)
+ADD_DEFINITIONS(-DPROJECT_DATADIR='"${PROJECT_DATADIR}"')
 
-SET(PROJECT_DATADIR "${datadir}/${PROJECT_NAME}")
-SET(PROJECT_DOCDIR "${docdir}/${PROJECT_NAME}-${PRJ_VER}")
+IF(NOT DEFINED PROJECT_DOCDIR)
+    SET(PROJECT_DOCDIR "${docdir}/${PROJECT_NAME}-${PRJ_VER}")
+ENDIF(NOT DEFINED PROJECT_DOCDIR)
+
+ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER_FULL}"')
 
 # Load developer targets if DEVELOPER_SETTING_FILE exists
 SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING_NO_PACK")
@@ -43,13 +51,11 @@ IF(EXISTS ${DEVELOPER_SETTING_FILE})
     # Start next version
     ADD_CUSTOM_TARGET(next_version
 	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ChangeLog {CMAKE_SOURCE_DIR}/ChangeLog.prev
-	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog 
+	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog
 		${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLogChangeLog.prev
 	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.template
 	        ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt
 	    )
-
-
 ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 
 #==================================================================
@@ -103,7 +109,7 @@ ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 #
 IF (EXISTS Doxyfile)
     FIND_PACKAGE(Doxygen)
-    ADD_CUSTOM_TARGET(doxygen    
+    ADD_CUSTOM_TARGET(doxygen
 	    COMMAND "${DOXYGEN}" "Doxyfile"
 	    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )

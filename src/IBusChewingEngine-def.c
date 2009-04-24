@@ -14,6 +14,21 @@ GtkResponseType button_responses[]={
     GTK_RESPONSE_OK,
 };
 
+
+const gchar *toneKeys[]={
+    "6347",  //Default
+    "jfds",  //hsu
+    "uiop",  //ibm
+    "zaq1",  //gin-yieh
+    "4321",  //eten
+    "kjfd",  //eten26
+    "6347",  //dvorak
+    "thdn",  //dvorak_hsu
+    "yert",  //dachen_26
+    "1234",  //hanyu
+    NULL
+};
+
 const gchar *kbType_ids[]={
     N_("default"),
     N_("hsu"),
@@ -45,6 +60,7 @@ const gchar *syncCapsLockLocal_strs[]={
     NC_("Sync","im"),
     NULL
 };
+
 
 
 #ifndef DIALOG_TEST
@@ -160,6 +176,12 @@ static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
 #endif
 }
 
+static void plainZhuyin_set_callback(PropertyContext *ctx, GValue *value){
+#ifndef DIALOG_TEST
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    engine->plainZhuyin=g_value_get_boolean(value);
+#endif
+}
 /*===== End of Callback functions =====*/
 
 PropertySpec propSpecs[]={
@@ -226,6 +248,13 @@ this option determines how these status be synchronized. Valid values:\n\
 \"keyboard\": IM status follows keyboard status.\n\
 \"im\": Keyboard status follows IM status."),
     },
+
+    {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),
+	"0", NULL, NULL, 0, 1,
+	NULL, plainZhuyin_set_callback,
+	0, 0, 0,
+	N_("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
+    },
     {G_TYPE_INT, "candPerPage", "Selecting", N_("Candidate per page"),
 	"10", NULL, NULL,  8, 10,
 	NULL, candPerPage_set_callback,
@@ -244,6 +273,7 @@ this option determines how these status be synchronized. Valid values:\n\
 	0, 0, 0,
 	N_("Press Space to select the candidate."),
     },
+
     {G_TYPE_INVALID, "", "", "",
 	"", NULL, NULL,  0, 0,
 	NULL, NULL,
@@ -268,48 +298,42 @@ this option determines how these status be synchronized. Valid values:\n\
 //    }
 //    return NULL;
 //}
+
 #ifndef DIALOG_TEST
-static gunichar *preedit_string_make(ChewingContext *context,
-	glong *zhuyin_item_written_ptr,  glong *item_written_ptr){
-    glong chiSymbol_item_written=0;
-    gchar *str_ptr=chewing_buffer_String(context);
-    gunichar *chiSymbolBuf=g_utf8_to_ucs4_fast(str_ptr,-1, &chiSymbol_item_written);
-    g_free(str_ptr);
-
-    int chiSymbolCursor = chewing_cursor_Current(context);
-    str_ptr=chewing_zuin_String(context,NULL);
-    gunichar *zhuyinBuf=g_utf8_to_ucs4_fast(str_ptr,-1, zhuyin_item_written_ptr);
-    g_free(str_ptr);
-
-    glong i;
-    *item_written_ptr=chiSymbol_item_written+ *zhuyin_item_written_ptr;
-    gunichar *preeditBuf=g_new(gunichar, *item_written_ptr+1);
-    glong j=0;
-    for (i=0;i<*item_written_ptr;i++){
-	if (i<chiSymbolCursor){
-	    preeditBuf[i]=chiSymbolBuf[i];
-	}else if (j<*zhuyin_item_written_ptr){
-	    /* Inserting zhuyinBuf */
-	    preeditBuf[i]=zhuyinBuf[j++];
-	}else{
-	    /* Append rest zhuyinBuf */
-	    preeditBuf[i]=chiSymbolBuf[i- *zhuyin_item_written_ptr];
+static int get_tone(ChewingKbType kbType, guint keyval){
+    int i=0;
+    if (keyval==' ')
+	return 1;
+    for(i=0;i<4;i++){
+	if (toneKeys[kbType][i]==keyval){
+	    return i+2;
 	}
     }
-    preeditBuf[i]='\0';
-    g_free(chiSymbolBuf);
-    g_free(zhuyinBuf);
-    return preeditBuf;
+    return -1;
 }
 
-/*--------------------------------------------
- * Foreach functions
- */
+static void add_tone(char *str, gint tone){
+    switch(tone){
+	case 2:
+	    g_strlcat(str,"ˊ",ZHUYIN_BUFFER_SIZE);
+	    break;
+	case 3:
+	    g_strlcat(str,"ˇ",ZHUYIN_BUFFER_SIZE);
+	    break;
+	case 4:
+	    g_strlcat(str,"ˋ",ZHUYIN_BUFFER_SIZE);
+	    break;
+	case 5:
+	    g_strlcat(str,"˙",ZHUYIN_BUFFER_SIZE);
+	    break;
+	default:
+	    break;
+    }
+}
 
 /*--------------------------------------------
  * Key modifier functions
  */
-
 static guint keyModifier_get(Display *pDisplay){
     Window    root_retrun, child_retrun;
     int     root_x_return, root_y_return, win_x_return, win_y_return;
