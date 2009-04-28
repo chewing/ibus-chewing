@@ -38,4 +38,4 @@ bin/
 po/CMakeFiles/
 src/ibus-chewing-engine*.[ch]
 src/maker-dialog*.[ch]
-
+debug*s.list

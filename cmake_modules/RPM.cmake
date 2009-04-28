@@ -121,7 +121,7 @@ GET_FILENAME_COMPONENT(rpm_build_srpms_basename ${RPM_BUILD_SRPMS} NAME)
 GET_FILENAME_COMPONENT(rpm_build_rpms_basename ${RPM_BUILD_RPMS} NAME)
 GET_FILENAME_COMPONENT(rpm_build_build_basename ${RPM_BUILD_BUILD} NAME)
 SET(RPM_IGNORE_FILES "\\\\.rpm$"
-    "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/")
+    "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/" "debug.*s.list")
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME}:${PROJECT_DESCRIPTION}")
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES}

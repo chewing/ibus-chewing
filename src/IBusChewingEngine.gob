@@ -57,15 +57,15 @@ enum CHEWING_MODIFIER_SYNC{
 
 /**
  * ChewingInputMode:
- * @bypass: Do not handle key (Pure English mode)
- * @editing: Forming Chinese character (in pre-edit buffer).
- * @selecting: Selecting candidate.
+ * @BYPASS: Do not handle key (Pure English mode)
+ * @EDITING: Forming Chinese character (in pre-edit buffer).
+ * @SELECTING: Selecting candidate.
  *
  */
 enum CHEWING_INPUT_MODE{
     BYPASS,
     EDITING,
-    SELECTING,
+    SELECTING
 } Chewing:Input:Mode;
 
 %headertop{
@@ -152,9 +152,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     private guint key_last=0;
     private gchar zhuyin_latest[ZHUYIN_BUFFER_SIZE];
-
-    /* Tone -1: init; 0: ready;  >0: real tone*/
-    private gint zhuyin_tone=-1;
 
     classwide IBusText *chieng_prop_label_chi={ibus_text_new_from_static_string(_("Chi"))};
     classwide IBusText *chieng_prop_label_eng={ibus_text_new_from_static_string(_("Eng"))};
@@ -268,35 +265,43 @@ class IBus:Chewing:Engine from IBus:Engine{
     private gunichar *make_preedit_string(self, glong *zhuyin_item_written_ptr,  glong *item_written_ptr){
 	glong chiSymbol_item_written=0;
 	gchar *str_ptr=chewing_buffer_String(self->context);
-	G_DEBUG_MSG(3, "preedit_string_make(): chewing_buffer_String=%s",str_ptr);
+	G_DEBUG_MSG(3, "make_preedit_string(): chewing_buffer_String=%s",str_ptr);
 	gunichar *chiSymbolBuf=g_utf8_to_ucs4_fast(str_ptr,-1, &chiSymbol_item_written);
 	g_free(str_ptr);
 
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
 	int zhuyinCount;
+        int zhuyin_tone=-1;
+
 	str_ptr=chewing_zuin_String(self->context,&zhuyinCount);
 	int zhuyinLen=strlen(str_ptr);
-	G_DEBUG_MSG(3, "preedit_string_make(): chewing_zuin_String=%s count=%d len=%d zhuyin_tone=%d",
-		str_ptr,zhuyinCount,zhuyinLen,self->_priv->zhuyin_tone);
+	G_DEBUG_MSG(3, "make_preedit_string(): chewing_zuin_String=%s count=%d len=%d inputMode=%d",
+		str_ptr,zhuyinCount,zhuyinLen,self->inputMode);
 
 	if (zhuyinLen>0){
 	    g_strlcpy(self->_priv->zhuyin_latest,str_ptr,ZHUYIN_BUFFER_SIZE);
-	    self->_priv->zhuyin_tone=0;
+	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
+	    zhuyin_tone=0;
 	}else{
-	    if (self->_priv->zhuyin_tone==0){
+	    /* Character/Phrase is formed */
+	    if (self->inputMode==CHEWING_INPUT_MODE_EDITING){
 		/* One of the ending keys is inputted */
-		self->_priv->zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
-		add_tone(self->_priv->zhuyin_latest,self->_priv->zhuyin_tone);
+		zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
+		add_tone(self->_priv->zhuyin_latest,zhuyin_tone);
 		self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+		if (self->plainZhuyin){
+		    chewing_handle_Down(self->context);
+		}
 	    }else if (self_is_selectKey(self, self->_priv->key_last)){
-		// Normal key press
+		/* In SELECTING mode */
+		/* One of selection keys is pressed */
 		self->_priv->zhuyin_latest[0]='\0';
-		self->_priv->zhuyin_tone=-1;
+		zhuyin_tone=-1;
 		self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	    }
 	}
-	G_DEBUG_MSG(3, "preedit_string_make(): zhuyin_latest=%s zhuyin_tone=%d",
-		self->_priv->zhuyin_latest,self->_priv->zhuyin_tone);
+	G_DEBUG_MSG(3, "make_preedit_string(): zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
+		self->_priv->zhuyin_latest,zhuyin_tone,self->inputMode);
 	gunichar *zhuyinBuf=g_utf8_to_ucs4_fast(str_ptr,-1, zhuyin_item_written_ptr);
 	g_free(str_ptr);
 
@@ -401,10 +406,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	self_update_aux_string(self);
 	self_update_preedit(self);
-	G_DEBUG_MSG(3,"*** update() zhuyin_tone=%d",self->_priv->zhuyin_tone);
-	if (self->plainZhuyin && self->_priv->zhuyin_tone>0){
-	    chewing_handle_Down(self->context);
-	}
+	G_DEBUG_MSG(3,"*** update() inputMode=%d",self->inputMode);
 	self_update_lookup_table(self);
 	self_commit(self);
 
@@ -565,7 +567,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    return TRUE;
 	}
 
-	G_DEBUG_MSG(3,"*** process_key_event(-, %u(%c), %u) ... proceed.",keyval, keyval, modifiers);
+	G_DEBUG_MSG(3,"*** process_key_event(-, %u(%s), %u) ... proceed.",keyval, keyName_get(keyval), modifiers);
 	guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
 	selfObj->_priv->key_last=keyval;
 	if (state==0){
