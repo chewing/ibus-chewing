@@ -58,8 +58,5 @@ INSTALL(TARGETS ibus-engine-chewing
      LIBRARY DESTINATION ${LIB_INSTALL_DIR}
 )
 
-INSTALL(FILES chewing.xml
-    DESTINATION "${datadir}/ibus/component")
-
 INCLUDE(GConf)
 

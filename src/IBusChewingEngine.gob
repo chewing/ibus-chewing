@@ -30,8 +30,6 @@ requires 2.0.0
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf.h>
-#include <gconf/gconf-client.h>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 %}
@@ -57,6 +55,19 @@ enum CHEWING_MODIFIER_SYNC{
     FROM_IM
 } Chewing:Modifier:Sync;
 
+/**
+ * ChewingInputMode:
+ * @bypass: Do not handle key (Pure English mode)
+ * @editing: Forming Chinese character (in pre-edit buffer).
+ * @selecting: Selecting candidate.
+ *
+ */
+enum CHEWING_INPUT_MODE{
+    BYPASS,
+    EDITING,
+    SELECTING,
+} Chewing:Input:Mode;
+
 %headertop{
 #include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
@@ -73,13 +84,12 @@ extern GtkResponseType button_responses[];
 extern gboolean ibus_chewing_verbose;
 //extern IBusConfig *iConfig;
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 2
+#define DEBUG_LEVEL 3
 #endif
 
 #define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
 #include "IBusChewingEngine-def.c"
 %}
-
 
 class IBus:Chewing:Engine from IBus:Engine{
     public ChewingContext *context=NULL
@@ -94,6 +104,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     /* Plain Zhuyin mode */
     protected gboolean plainZhuyin=FALSE;
+
+    protected ChewingInputMode inputMode=CHEWING_INPUT_MODE_BYPASS;
 
     /* For init work around */
     private gboolean initialized=FALSE;
@@ -163,6 +175,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
+	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 
 	    /* init properties */
 	    ibus_prop_list_append(self->prop_list,self->chieng_prop);
@@ -247,6 +260,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    g_free(text);
 	    g_free(commit_string);
 	    g_object_unref(iText);
+	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	}
 	return commit;
     }
@@ -273,10 +287,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* One of the ending keys is inputted */
 		self->_priv->zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
 		add_tone(self->_priv->zhuyin_latest,self->_priv->zhuyin_tone);
+		self->inputMode=CHEWING_INPUT_MODE_SELECTING;
 	    }else if (self_is_selectKey(self, self->_priv->key_last)){
 		// Normal key press
 		self->_priv->zhuyin_latest[0]='\0';
 		self->_priv->zhuyin_tone=-1;
+		self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	    }
 	}
 	G_DEBUG_MSG(3, "preedit_string_make(): zhuyin_latest=%s zhuyin_tone=%d",
@@ -506,8 +522,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void handle_Default(self, guint keyval, gboolean shiftPressed){
-	G_DEBUG_MSG(2,"*** IBusChewingEngine::handle_Default(-,%u) plainZhuyin=%s",
-		keyval,(self->plainZhuyin)? "TRUE": "FALSE");
+	G_DEBUG_MSG(2,"*** IBusChewingEngine::handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
+		keyval,(self->plainZhuyin)? "TRUE": "FALSE",self->inputMode);
 #ifdef EASY_SYMBOL_INPUT_WORK_AROUND
 	if (self->_priv->easySymbolInput){
 	    /* If shift is pressed, turn on the  easySymbolInput, turn off
@@ -517,8 +533,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
 #endif
 	chewing_handle_Default(self->context,keyval);
-	if (self->plainZhuyin && self_is_selectKey(self,self->_priv->key_last)){
-	    chewing_handle_Enter(self->context);
+	if (self->plainZhuyin){
+	    if (self_is_selectKey(self,self->_priv->key_last) &&
+		    self->inputMode==CHEWING_INPUT_MODE_SELECTING){
+		chewing_handle_Enter(self->context);
+	    }
 	}
     }
 
@@ -693,11 +712,14 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    selfObj->config=ibus_config_new(iConnection);
 	    self_load_setting(selfObj);
         }
+	selfObj->inputMode=CHEWING_INPUT_MODE_EDITING;
     }
 
     override (IBus:Engine) void
     disable(IBus:Engine  *self){
 	G_DEBUG_MSG(2,"*** disable");
+	Self *selfObj=SELF(self);
+	selfObj->inputMode=CHEWING_INPUT_MODE_BYPASS;
     }
 
     override (IBus:Engine) void
