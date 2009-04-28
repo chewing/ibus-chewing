@@ -8,6 +8,7 @@ INCLUDE(init.CMakeLists.txt)
 # Project basic information
 ####################################################################
 PROJECT(ibus-chewing)
+SET(PROJECT_DESCRIPTION chewing Chinese IME for iBus)
 SET(CMAKE_C_FLAGS "-Wall")
 
 SET(RELEASE_FILE ${CMAKE_SOURCE_DIR}/RELEASE-NOTES.txt)
@@ -46,7 +47,20 @@ ENDIF(${NEED_RPM_RELEASE_INFO})
 #MESSAGE("### RPM_RELEASE_SUMMARY=${RPM_RELEASE_SUMMARY}")
 #MESSAGE("### RPM_CHANGELOG_ITEMS=|${RPM_CHANGELOG_ITEMS}|")
 
+
+#==================================================================
+# Developer setting.
+#
 SET(CVS_DIST_TAGS F-11)
+SET(HOSTING_SERVICE_PROVIDER "GitHub")
+SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING_NO_PACK")
+SET(DEVELOPER_DEPENDS UploadPkg.batch.in)
+ADD_CUSTOM_TARGET(commit
+    COMMAND git-commit -a -m "${CHANGE_SUMMARY}"
+    COMMAND git-tag -a "${PRJ_VER}"
+    COMMENT "Commit and tag the changes"
+    )
+
 
 ####################################################################
 # Includes
@@ -58,9 +72,13 @@ INCLUDE(Gettext)
 #
 INCLUDE(common.CMakeLists.txt)
 
-#====================================================================
+####################################################################
+# Post Include setting
+####################################################################
+
+####################################################################
 # RPM configuration
-#
+####################################################################
 FILE(READ ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog RPM_CHANGELOG)
 GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
 
@@ -71,15 +89,14 @@ GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
 ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER_FULL}"')
 ADD_DEFINITIONS(-DPKGDATADIR='"${PROJECT_DATADIR}"')
 ADD_DEFINITIONS(-DSYSTEMDIR='"${PROJECT_DATADIR}"')
-CONFIGURE_FILE(src/chewing.xml.in src/chewing.xml)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 
-#==================================================================
-# Required packages
-#
+####################################################################
+# Required
+####################################################################
 FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
 PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0)
-PKG_CHECK_MODULES(GCONF2 REQUIRED gconf-2.0)
 PKG_CHECK_MODULES(X11 REQUIRED x11)
 PKG_CHECK_MODULES(XTST REQUIRED xtst)
 FIND_PROGRAM(GOB2 gob2)
@@ -92,12 +109,15 @@ PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
 COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATADIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
 ADD_DEFINITIONS(-DCHEWING_DATADIR='"${CHEWING_DATADIR}"')
 
-
-#==================================================================
-# Source code subdirectories
-#
+####################################################################
+# Sub directories
+####################################################################
 ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(po)
+
+####################################################################
+# Packing
+####################################################################
 
 #====================================================================
 # Files to be install.
@@ -110,13 +130,13 @@ SET(MAIN_DOCS AUTHORS README ChangeLog NEWS COPYING)
 INSTALL(DIRECTORY icons
     DESTINATION  ${PROJECT_DATADIR})
 
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/chewing.xml
+    DESTINATION "${datadir}/ibus/component")
+
 #====================================================================
 # CPack configuration
 #
 
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ibus-chewing: chewing Chinese IME for iBus")
-SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 SET(PRJ_COMMON_IGNORE_FILES

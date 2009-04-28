@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-24 17:48+1000\n"
+"POT-Creation-Date: 2009-04-28 14:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:210
+#: ../src/IBusChewingEngine.gob:223
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:210
+#: ../src/IBusChewingEngine.gob:223
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:147
+#: ../src/IBusChewingEngine.gob:159
 msgid "Chi"
 msgstr "中"
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Editing"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:148
+#: ../src/IBusChewingEngine.gob:160
 msgid "Eng"
 msgstr "英"
 
@@ -79,11 +79,11 @@ msgstr ""
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:150
+#: ../src/IBusChewingEngine.gob:162
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:151
+#: ../src/IBusChewingEngine.gob:163
 msgid "Half"
 msgstr "半"
 
@@ -159,11 +159,11 @@ msgstr ""
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:91
+#: ../src/IBusChewingEngine.gob:101
 msgid "Setting"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:153
+#: ../src/IBusChewingEngine.gob:165
 msgid "Settings"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Sync between CapsLock and IM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:208
+#: ../src/IBusChewingEngine.gob:221
 msgid "Warning: cannot load configure key"
 msgstr ""
 

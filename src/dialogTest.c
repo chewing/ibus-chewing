@@ -4,8 +4,6 @@
 #include <X11/Xlib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf.h>
-#include <gconf/gconf-client.h>
 #include <ibus.h>
 #include <chewing.h>
 #include "ibus-chewing-engine.h"

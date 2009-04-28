@@ -10,25 +10,15 @@
 #  SSH_ARGS=<additional args>
 #  KOJI_CVS_PATH=<path for koji CVS>
 #
-# 
+#
 #===================================================================
-# Variables: 
-# DEVELOPER_SETTING_FILE: the file that contain developer information. 
+# Variables:
+# DEVELOPER_SETTING_FILE: the file that contain developer information.
 #                         Required.
 # DEVELOPER_DEPENDS: Files that the developer targets depends on.
 # HOSTING_SERVICE_PROVIDER: Name of hosting service provider for display.
 #===================================================================
-# Macro: 
-# DEVELOPER_GET_ATTRIBUTE(attr_name setting_file)
-#
-# Get attribute value from setting_file. The format of attribute should be:
-# ATTRIBUTE_NAME=<value>
-#
-# Parameters:
-#     var: Variable to store the attribute value.
-#     attr_name: Name of the attribute.
-#     settingfile: Setting filename.
-#-------------------------------------------------------------------
+# Macro:
 # DEVELOPER_UPLOAD([SERVER_TYPE] server_type
 #     [USER user]
 #     [BATCH batchfile]
@@ -41,7 +31,7 @@
 #
 #  Parameters:
 #     server_type: Server type of hosting service. Current "sftp" and "custom"
-#         are supported. 
+#         are supported.
 #         Note that type "sftp" ignores "COMMAND" option, while type
 #         "custom" only recognizes "COMMAND", but other type recognize
 #         everything else.
@@ -57,7 +47,7 @@
 INCLUDE(BasicMacros)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
     SET(HOSTING_SERVICE_PROVIDER "hosting service provider")
-ENDIF(NOT DEFINED HOSTING_SERVICE_PROVIDER)    
+ENDIF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
 
 
 MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
@@ -71,7 +61,7 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
     FOREACH(_arg_0 ${arg_list} ${ARGN})
 	IF(_arg_0 STREQUAL "SERVER_TYPE")
 	    SET(_stage "SERVER_TYPE")
-	ELSEIF(_arg_0 STREQUAL "USER") 
+	ELSEIF(_arg_0 STREQUAL "USER")
 	    SET(_stage "USER")
 	ELSEIF(_arg_0 STREQUAL "BATCH")
 	    SET(_stage "BATCH")
@@ -97,7 +87,7 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 	    ELSE(_stage STREQUAL "SERVER_TYPE")
 	    ENDIF(_stage STREQUAL "SERVER_TYPE")
 	ENDIF(_arg_0 STREQUAL "SERVER_TYPE")
-    ENDFOREACH(_arg_0)    
+    ENDFOREACH(_arg_0)
 
     SET(_developer_upload_cmd)
     IF(_type STREQUAL "sftp")
@@ -126,6 +116,7 @@ MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 	    COMMAND ${DEVELOPER_UPLOAD_CMD}
 	    DEPENDS ${DEVELOPER_DEPENDS}
 	    COMMENT "Uploading the package releases to ${HOSTING_SERVICE_PROVIDER}..."
+	    VERBATIM
 	    )
     ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
@@ -133,7 +124,7 @@ ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
 #===================================================================
 # Targets:
-# version_lock: 
+# version_lock:
 #   Lock in the current version, so the version won't be changed until unlocked.
 #   Useful for time-based version.
 #   Note that the PRJ_VER is locked but PRJ_VER_FULL is not, thus RPM
@@ -148,7 +139,7 @@ ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
 #IF (DEFINED VERSION_NEED_LOCK)
 #    ADD_CUSTOM_TARGET(version_lock
-#	COMMAND grep "PRJ_VER=" ${RELEASE_FILE} 
+#	COMMAND grep "PRJ_VER=" ${RELEASE_FILE}
 #	|| ${CMAKE_COMMAND} -E echo "PRJ_VER=${PRJ_VER}" > ${RELEASE_FILE}
 #	COMMAND cmake ${CMAKE_SOURCE_DIR}
 #	COMMENT "Lock version"

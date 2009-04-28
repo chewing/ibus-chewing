@@ -20,6 +20,8 @@
 #         Default: ${RPM_BUILD_TOPDIR}/RPMS
 # RPM_BUILD_BUILD:  Directory for RPM build.
 #         Default: ${RPM_BUILD_TOPDIR}/BUILD
+# RPM_BUILD_BUILDROOT:  Directory for RPM build.
+#         Default: ${RPM_BUILD_TOPDIR}/BUILDROOT
 #
 # RPM_SOURCE_FILES: Source and patch file for RPM build.
 #         Default: ${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source
@@ -93,6 +95,10 @@ IF(NOT DEFINED RPM_BUILD_BUILD)
     SET(RPM_BUILD_BUILD "${RPM_BUILD_TOPDIR}/BUILD")
 ENDIF(NOT DEFINED RPM_BUILD_BUILD)
 
+IF(NOT DEFINED RPM_BUILD_BUILDROOT)
+    SET(RPM_BUILD_BUILDROOT "${RPM_BUILD_TOPDIR}/BUILDROOT")
+ENDIF(NOT DEFINED RPM_BUILD_BUILDROOT)
+
 MACRO(GENERATE_SPEC spec_in)
     CONFIGURE_FILE(${spec_in} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
 
@@ -117,6 +123,7 @@ GET_FILENAME_COMPONENT(rpm_build_build_basename ${RPM_BUILD_BUILD} NAME)
 SET(RPM_IGNORE_FILES "\\\\.rpm$"
     "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/")
 
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME}:${PROJECT_DESCRIPTION}")
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES}
     ${RPM_IGNORE_FILES})
 SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_PACKAGE_IGNORE_FILES}
@@ -142,8 +149,9 @@ ADD_CUSTOM_TARGET(rpm
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i386
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/x86_64
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/noarch
-    COMMAND ${CMAKE_COMMAND} -E make_directory BUILD
-    COMMAND rpmbuild -ba ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_BUILD}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_BUILDROOT}
+    COMMAND rpmbuild -ba --buildroot ${RPM_BUILD_BUILDROOT} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
     --define '_sourcedir ${RPM_BUILD_SOURCES}'
     --define '_builddir ${RPM_BUILD_BUILD}'
     --define '_srcrpmdir ${RPM_BUILD_SRPMS}'

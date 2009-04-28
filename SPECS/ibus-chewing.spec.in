@@ -21,7 +21,6 @@ BuildRequires:  libX11-devel
 BuildRequires:  libXtst-devel
 Requires:   ibus >= 1.1
 Requires:  libchewing >= 0.3.2-4
-Requires:  GConf2
 Requires(pre): GConf2
 Requires(post): GConf2
 Requires(preun): GConf2
