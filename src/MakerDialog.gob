@@ -20,12 +20,12 @@ requires 2.0.0
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */ 
+ */
 #include <stdlib.h>
 #include <strings.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-
+#include <locale.h>
 %}
 
 %headertop{
@@ -86,262 +86,26 @@ struct _PropertyContext{
 
 %}
 
-%privateheader{
-#ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 3
-#endif
-
-#define G_DEBUG_MSG(level, msg, args...) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
-%}
-
-
 %{
-
-static PropertyContext *propertyContext_new(PropertySpec *spec, gpointer userData){
-    PropertyContext *ctx=g_new(PropertyContext,1);
-    ctx->spec=spec;
-    ctx->userData=userData;
-    return ctx;
-}
-
-
-static void propertyContext_free(gpointer ctx_ptr){
-    PropertyContext *ctx=(PropertyContext *) ctx_ptr;
-    g_free(ctx);
-}
-
-static void listStore_append(GtkListStore *listStore,const gchar *str,
-	const gchar *translationContext,
-	MakerDialogPropertyFlags propertyFlags){
-    GtkTreeIter iter;
-    gtk_list_store_append (listStore, &iter);
-
-    if (propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
-	if (translationContext || propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT){
-	    G_DEBUG_MSG(5,"*** str=%s, _(str)=%s",str,g_dpgettext2(NULL,translationContext,str));
-	    gtk_list_store_set (listStore, &iter,
-		    0, str,
-		    1, g_dpgettext2(NULL,translationContext,str),
-		    -1);
-	}else{
-	    G_DEBUG_MSG(5,"*** str=%s, _(str)=%s",str,_(str));
-	    gtk_list_store_set (listStore, &iter,
-		    0, str,
-		    1, _(str),
-		    -1);
-	}
-    }else{
-	G_DEBUG_MSG(5,"*** str=%s",str);
-	gtk_list_store_set (listStore, &iter,
-		0, str,
-		-1);
-    }
-
-}
-
-static gint listStore_find_string(GtkListStore *listStore,const gchar *str,
-	const gchar *translationContext,
-	MakerDialogPropertyFlags propertyFlags){
-    g_assert(str);
-    G_DEBUG_MSG(4,"*** listStore_find_string(%s,%u)",str,propertyFlags);
-    int i=0,index=-1;
-    GtkTreeIter iter;
-    GValue gValue={0};
-    if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(listStore), &iter)){
-	do{
-	    gtk_tree_model_get_value (GTK_TREE_MODEL(listStore), &iter,0,&gValue);
-	    if (strcmp(str,g_value_get_string(&gValue))==0){
-		index= i;
-		break;
-	    }
-	    i++;
-	    g_value_unset(&gValue);
-	}while(gtk_tree_model_iter_next (GTK_TREE_MODEL(listStore), &iter));
-    }
-    if (index<0 && !(propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE)){
-	/* Add new item*/
-	listStore_append(listStore, str,translationContext,propertyFlags);
-	index=i;
-    }
-    G_DEBUG_MSG(4,"*** listStore_find_string(%s,%u) index=%d",str,propertyFlags,index);
-    return index;
-}
-
-static gint combo_find_string_index(GtkComboBox *combo,const gchar *str,
-	const gchar *translationContext,
-	MakerDialogPropertyFlags propertyFlags){
-    GtkListStore *listStore=GTK_LIST_STORE(gtk_combo_box_get_model(combo));
-    return listStore_find_string(listStore,str, translationContext,propertyFlags);
-}
-
-static const gchar *combo_get_active_text(GtkComboBox *combo,GValue *gValue){
-    GtkTreeIter iter;
-    if (!gtk_combo_box_get_active_iter(combo,&iter)){
-	return NULL;
-    }
-    GtkListStore *listStore=GTK_LIST_STORE(gtk_combo_box_get_model(combo));
-    gtk_tree_model_get_value (GTK_TREE_MODEL(listStore), &iter,0,gValue);
-    return g_value_get_string(gValue);
-}
-
-
-static void  propList_free_deep_callback(gpointer data, gpointer user_data){
-    propertyContext_free(data);
-}
-
-static gchar *widget_get_id(gchar *buffer, gint buffer_size, 
-	const gchar *widget_label, const gchar *widget_type){
-    g_snprintf(buffer,buffer_size,"%s%s%s%s",
-	    WIDGET_ID_PREFIX, widget_label,
-	    (widget_type)? "_" : "",
-	    (widget_type)? widget_type : ""
-	    ); 
-    return buffer;
-}
-
-/*===== Widget Callback function wraps =====*/
-
-static void on_comboBox_changed_wrap (GtkComboBox *comboBox, gpointer    user_data)
-{
-    PropertyContext *ctx=(PropertyContext *)user_data;
-    GValue value={0};
-    combo_get_active_text(comboBox, &value);
-    G_DEBUG_MSG(2,"on_comboBox_changed_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
-    ctx->spec->setFunc(ctx,&value);
-}
-
-static void on_entry_activate_wrap (GtkEntry *entry, gpointer    user_data)
-{
-    PropertyContext *ctx=(PropertyContext *)user_data;
-    GValue value={0};
-    g_value_init(&value, ctx->spec->valueType);
-    g_value_set_string(&value,gtk_entry_get_text(entry));
-    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
-    ctx->spec->setFunc(ctx,&value);
-}
-
-static void on_spinButton_value_changed_wrap (GtkSpinButton *button, gpointer    user_data)
-{
-    PropertyContext *ctx=(PropertyContext *)user_data;
-    GValue value={0};
-    g_value_init(&value, ctx->spec->valueType);
-    switch(ctx->spec->valueType){
-	case G_TYPE_INT:
-	    g_value_set_int(&value,(gint) gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%d",
-		    ctx->spec->key,g_value_get_int(&value));
-	    break;
-	case G_TYPE_UINT:
-	    g_value_set_uint(&value,(guint) gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%u",
-		    ctx->spec->key,g_value_get_uint(&value));
-	    break;
-	case G_TYPE_DOUBLE:
-	    g_value_set_uint(&value, gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%g",
-		    ctx->spec->key,g_value_get_double(&value));
-	    break;
-	default:
-	    break;
-    }
-    ctx->spec->setFunc(ctx,&value);
-}
-
-static void on_toggleButton_toggled_wrap (GtkToggleButton *button, gpointer    user_data)
-{
-    PropertyContext *ctx=(PropertyContext *)user_data;
-    GValue value={0};
-    g_value_init(&value, ctx->spec->valueType);
-    g_value_set_boolean(&value, gtk_toggle_button_get_active(button));
-    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
-    ctx->spec->setFunc(ctx,&value);
-}
-
-/*===== End of Widget Callback function wraps =====*/
-static gboolean isEmptyString(const gchar *str){
-    if (!str)
-        return TRUE;
-    if (str[0]=='\0')
-        return TRUE;
-    return FALSE;
-}
-
-typedef struct{
-    MakerDialog *self;
-    gint currentMaxWidth;
-    const gchar *pageName;
-    gfloat xalign;
-    gfloat yalign;
-} WidgetAlignment;
-
-static void caculate_max_label_width_callback(gpointer key, gpointer value, gpointer user_data){
-    WidgetAlignment *wAlignment=(WidgetAlignment *) user_data;
-    if (!isEmptyString(wAlignment->pageName)){
-	if (isEmptyString(value) || strcmp(wAlignment->pageName,value)!=0)
-	    return;
-    }
-    gchar *keyStr=(gchar *) keyStr;
-
-    GtkWidget *widget=maker_dialog_get_widget(wAlignment->self,key,"label");
-    GtkRequisition requisition;
-    gtk_widget_size_request (widget,&requisition);
-    wAlignment->currentMaxWidth=MAX(wAlignment->currentMaxWidth, requisition.width);
-}
-
-static void set_label_width_callback(gpointer key, gpointer value, gpointer user_data){
-    WidgetAlignment *wAlignment=(WidgetAlignment *) user_data;
-    if (!isEmptyString(wAlignment->pageName)){
-	if (isEmptyString(value) || strcmp(wAlignment->pageName,value)!=0)
-	    return;
-    }
-    gchar *keyStr=(gchar *) keyStr;
-    GtkWidget *widget=maker_dialog_get_widget(wAlignment->self,key,"label");
-    gtk_widget_set_size_request(widget, wAlignment->currentMaxWidth,-1);
-    gtk_misc_set_alignment (GTK_MISC(widget),wAlignment->xalign,wAlignment->yalign);
-}
-
-
-/**
- * atob:
- * @string: A string.
- * @returns: Boolean value represented by @string.
- *
- * String to boolean.
- * It returns FALSE if:
- *    1. @string is NULL or have 0 length.
- *    2. @string starts with 'F', 'f', 'N' or 'n'.
- *    3. @string can be converted to a numeric 0.
- *
- * Everything else is TRUE.
- */
-gboolean atob(const gchar *string){
-    if (!string)
-	return FALSE;
-    if (strlen(string)<=0)
-	return FALSE;
-    if (string[0]=='F' || string[0]=='f' || string[0]=='N' ||  string[0]=='n')
-	return FALSE;
-    char *endPtr=NULL;
-    long int longValue=strtol(string, &endPtr, 10);
-
-    if (longValue==0 && *endPtr=='\0'){
-	// 0
-	return FALSE;
-    }
-    return TRUE;
-}
+void G_DEBUG_MSG(gint level, const char *format, ...);
+#include "MakerDialog-def.c"
 %}
 
 
 class Maker:Dialog from Gtk:Dialog{
+    private gint debugLevel=2;
     public gboolean vbox_homogeneous=TRUE;
     public gint hbox_spacing=2;
     public gint vbox_spacing=2;
-    public GtkWidget *dialog_notebook=NULL;
+    public GtkWidget *dialog_notebook=NULL
+    destroywith gtk_widget_destroy;
 
-    private GHashTable *widgetTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)};
-    private GHashTable *notebookContentTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)};
-    private GStringChunk *widgetIds={g_string_chunk_new(STRING_BUFFER_SIZE_DEFAULT)};
+    private GHashTable *widgetTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)}
+    destroywith g_hash_table_destroy;
+    private GHashTable *notebookContentTable={g_hash_table_new_full(g_str_hash,g_str_equal,NULL,NULL)}
+    destroywith g_hash_table_destroy;
+    private GStringChunk *widgetIds={g_string_chunk_new(STRING_BUFFER_SIZE_DEFAULT)}
+    destroywith g_string_chunk_free;
     private GPtrArray *propList={g_ptr_array_new()}
     destroy {
 	if (VAR){
@@ -350,7 +114,7 @@ class Maker:Dialog from Gtk:Dialog{
 	}
     };
 
-    
+
     init(self){
     }
 
@@ -359,7 +123,7 @@ class Maker:Dialog from Gtk:Dialog{
 	  return G_OBJECT (self);
     }
 
-    public GObject *new_full (const gchar *title, 
+    public GObject *new_full (const gchar *title,
 	    int notebook_pages,  const gchar **notebook_page_labels,
 	    int button_num, const gchar **button_labels, GtkResponseType *button_responses) {
 	Self *self = GET_NEW;
@@ -395,8 +159,12 @@ class Maker:Dialog from Gtk:Dialog{
 	return G_OBJECT(self);
     }
 
+    public void set_verbose_level(self,gint level){
+	verboseLevel=level;
+    }
+
     public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue, gpointer user_data){
-	G_DEBUG_MSG(2,"*** MakerDialog::add_property(%s,%s,-)",pSpec->key,initValue);
+	G_DEBUG_MSG(2,"::add_property(%s,%s,-)",pSpec->key,initValue);
 
 	GtkWidget *vbox=self_get_base_vbox(self, pSpec->pageName);
 	g_assert(vbox);
@@ -408,13 +176,13 @@ class Maker:Dialog from Gtk:Dialog{
 	if (pSpec->tooltip){
 	    gtk_widget_set_tooltip_text (label,_(pSpec->tooltip));
 	}
-	gtk_widget_show(label);	
+	gtk_widget_show(label);
 	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *widget=NULL;
         GtkAdjustment *gAdjust=NULL;
 	PropertyContext *ctx=propertyContext_new(pSpec,user_data);
-	
+
 	GValue gValue={0};
 	if (pSpec->valueType!=G_TYPE_STRING){
 	    g_value_init(&gValue,pSpec->valueType);
@@ -437,7 +205,7 @@ class Maker:Dialog from Gtk:Dialog{
 		break;
 	    case G_TYPE_UINT:
 	    case G_TYPE_INT:
-		 gAdjust = (GtkAdjustment *)gtk_adjustment_new (atoi(pSpec->defaultValue), 
+		 gAdjust = (GtkAdjustment *)gtk_adjustment_new (atoi(pSpec->defaultValue),
 			     pSpec->min, pSpec->max, 1.0, 0.0, 0.0);
 		 widget = gtk_spin_button_new (gAdjust, 1.0, 0);
 		 self_widget_register(self, widget, pSpec->key, NULL);
@@ -488,11 +256,11 @@ class Maker:Dialog from Gtk:Dialog{
 			if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
 			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), renderer,
 				    "text", 1,
-				    NULL); 		    
+				    NULL);
 			}else{
 			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), renderer,
 				    "text", 0,
-				    NULL); 		    
+				    NULL);
 			}
 
 		    }else{
@@ -502,7 +270,7 @@ class Maker:Dialog from Gtk:Dialog{
 
 		    self_widget_register(self, widget, pSpec->key, NULL);
 		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget),index);
-		    
+
 
 		    if (pSpec->setFunc){
 			g_signal_connect(widget, "changed", G_CALLBACK(on_comboBox_changed_wrap),ctx);
@@ -521,7 +289,7 @@ class Maker:Dialog from Gtk:Dialog{
 			g_value_set_string(&gValue,pSpec->defaultValue);
 		    }
 		    gtk_entry_set_text(GTK_ENTRY(widget),g_value_get_string(&gValue));
-		    gtk_editable_set_editable (GTK_EDITABLE(widget), 
+		    gtk_editable_set_editable (GTK_EDITABLE(widget),
 			    !(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
 
 		    if (pSpec->setFunc){
@@ -536,7 +304,7 @@ class Maker:Dialog from Gtk:Dialog{
 	    return FALSE;
 	}
 
-	gtk_widget_show(widget);	
+	gtk_widget_show(widget);
 	gtk_box_pack_end (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
@@ -559,7 +327,7 @@ class Maker:Dialog from Gtk:Dialog{
      * Labels that associate with value setting widget are stretched into same width.
      * If @pageName is not NULL, only the labels in the page are stretched,
      * otherwise, all labels will be stretched.
-     * 
+     *
      * Moreover, the horizontal and vertical alignment can set by @xalign and @yalign, respectively.
      */
     public void align_labels(self, const gchar *pageName, gfloat xalign, gfloat yalign){
@@ -570,9 +338,9 @@ class Maker:Dialog from Gtk:Dialog{
 	wAlignment.xalign=xalign;
 	wAlignment.yalign=yalign;
 	g_hash_table_foreach(self->_priv->notebookContentTable,
-		caculate_max_label_width_callback, (gpointer) &wAlignment); 
-	g_hash_table_foreach(self->_priv->notebookContentTable, 
-		set_label_width_callback, (gpointer) &wAlignment); 
+		caculate_max_label_width_callback, (gpointer) &wAlignment);
+	g_hash_table_foreach(self->_priv->notebookContentTable,
+		set_label_width_callback, (gpointer) &wAlignment);
 	gtk_widget_show_all(GTK_WIDGET(self));
     }
 
@@ -630,6 +398,42 @@ class Maker:Dialog from Gtk:Dialog{
     }
 
     /**
+     * write_gconf_schemas_file:
+     * @self: A MakerDialog.
+     * @filename: Filename for output.
+     * @owner: Owner of the schemas.
+     * @schemasHome: The "home direcory" of schemas.
+     * @locales: Supported locales, use ';' as delimiter.
+     * @returns: TRUE if succeed; FALSE otherwise.
+     *
+     * Output the parameters as GConf schemes file.
+     */
+    public gboolean write_gconf_schemas_file(self, const gchar *filename,
+	    const gchar * owner, const gchar *schemasHome, const gchar *locales){
+	G_DEBUG_MSG(2,"::output_gconf_schemes_file(%s)",filename);
+	FILE *outF=fopen(filename,"w");
+	if (outF==NULL){
+	    G_DEBUG_MSG(1,"::output_gconf_schemes_file(%s) file %s cannot be written!",
+		    filename,filename);
+	    return FALSE;
+	}
+	xml_tags_write(outF,"gconfschemafile",XML_TAG_TYPE_BEGIN_ONLY,NULL,NULL);
+	xml_tags_write(outF,"schemalist",XML_TAG_TYPE_BEGIN_ONLY,NULL,NULL);
+	SchemasFileData sData;
+	sData.schemasHome=schemasHome;
+	sData.owner=owner;
+	sData.locales=locales;
+	sData.outF=outF;
+	g_ptr_array_foreach(self->_priv->propList,ctx_write_callback,&sData);
+	xml_tags_write(outF,"schemalist",XML_TAG_TYPE_END_ONLY,NULL,NULL);
+	xml_tags_write(outF,"gconfschemafile",XML_TAG_TYPE_END_ONLY,NULL,NULL);
+	if (fclose(outF))
+	    return FALSE;
+	G_DEBUG_MSG(2,"::output_gconf_schemes_file(%s) ... done.",filename);
+	return TRUE;
+    }
+
+    /**
      * apply_widget_value:
      * @self: A MakerDialog.
      * @key: The key of a property.
@@ -640,7 +444,7 @@ class Maker:Dialog from Gtk:Dialog{
      * @see_also: set_widget_value()
      */
     public void apply_widget_value(self, const gchar *key){
-	G_DEBUG_MSG(2,"*** MakerDialog::apply_widget_value(%s)",key);
+	G_DEBUG_MSG(2,"::apply_widget_value(%s)",key);
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
@@ -659,7 +463,7 @@ class Maker:Dialog from Gtk:Dialog{
 
 
     public GValue *get_widget_value(self, const gchar *key, GValue *gValue){
-	G_DEBUG_MSG(2,"*** MakerDialog::get_widget_value(%s)",key);
+	G_DEBUG_MSG(2,"::get_widget_value(%s)",key);
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
@@ -682,7 +486,7 @@ class Maker:Dialog from Gtk:Dialog{
 	    case G_TYPE_STRING:
 		if (ctx->spec->validValues){
 		    const char *str=combo_get_active_text (GTK_COMBO_BOX(widget),gValue);
-		    G_DEBUG_MSG(3,"*** MakerDialog::get_widget_value(%s) %s",
+		    G_DEBUG_MSG(3,"::get_widget_value(%s) %s",
 			    key,str);
 		}else{
 		    g_value_set_string(gValue, gtk_entry_get_text (GTK_ENTRY(widget)));
@@ -699,7 +503,7 @@ class Maker:Dialog from Gtk:Dialog{
      * set_widget_value:
      * @self: A MakerDialog.
      * @key: The key of a property.
-     * @value: Value to be shown in widget. 
+     * @value: Value to be shown in widget.
      *
      * Set value for widget display.
      * However, the property value is not set.
@@ -740,7 +544,7 @@ class Maker:Dialog from Gtk:Dialog{
     }
 
 
-    public GtkWidget *get_widget(self, 
+    public GtkWidget *get_widget(self,
 	    const gchar *widget_key, const gchar *widget_type){
 	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
 	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_key, widget_type);
@@ -789,7 +593,7 @@ class Maker:Dialog from Gtk:Dialog{
     }
 
 
-    private void widget_register(self,  GtkWidget *widget, 
+    private void widget_register(self,  GtkWidget *widget,
 	    const gchar *widget_label, const gchar *widget_type){
 	gchar buf[STRING_BUFFER_SIZE_DEFAULT];
 	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, widget_type);

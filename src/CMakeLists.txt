@@ -32,6 +32,10 @@ ADD_EXECUTABLE(ibus-engine-chewing main.c
     ibus-chewing-engine.c
     maker-dialog.c
     )
+ADD_EXECUTABLE(generate-gconf-schemas
+    generate-gconf-schemas.c
+    maker-dialog.c
+    )
 ADD_EXECUTABLE(dialogTest dialogTest.c
     maker-dialog.c
     )
@@ -40,8 +44,11 @@ ADD_EXECUTABLE(dialogTest dialogTest.c
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
     ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
 
+TARGET_LINK_LIBRARIES(generate-gconf-schemas ${GTK2_LIBRARIES})
+
 TARGET_LINK_LIBRARIES(dialogTest ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
     ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
+
 
 IF(NOT DEFINED LIB_INSTALL_DIR)
     IF( $ENV{MACHTYPE} MATCHES "64")
@@ -52,6 +59,14 @@ IF(NOT DEFINED LIB_INSTALL_DIR)
 	ADD_DEFINITIONS(-DLIB_INSTALL_DIR='"${LIB_INSTALL_DIR}"')
     ENDIF()
 ENDIF()
+
+ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
+    COMMAND ${CMAKE_BINARY_DIR}/bin/generate-gconf-schemas -v 2 -l
+    "C;${TRANSLATED}" ${CMAKE_BINARY_DIR}/data/ibus-chewing.schemas
+    COMMENT "Generating gconf-schemas"
+    VERBATIM
+    )
+
 
 INSTALL(TARGETS ibus-engine-chewing
      RUNTIME DESTINATION ${LIBEXEC_DIR}

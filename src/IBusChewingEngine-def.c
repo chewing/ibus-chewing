@@ -61,9 +61,7 @@ const gchar *syncCapsLockLocal_strs[]={
     NULL
 };
 
-
-
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
 static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
     ChewingKbType i=0;
     for(i=0;kbType_ids[i]!=NULL;i++){
@@ -78,7 +76,7 @@ static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
 /*===== Callback functions =====*/
 
 static void KBType_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     ChewingKbType kbType=kbType_id_get_index(g_value_get_string(value));
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_KBType(engine->context,kbType);
@@ -86,35 +84,35 @@ static void KBType_set_callback(PropertyContext *ctx, GValue *value){
 }
 
 static void selKeys_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     ibus_chewing_engine_set_selKeys_string(engine,g_value_get_string(value));
 #endif
 }
 
 static void hsuSelKeyType_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_hsuSelKeyType(engine->context,g_value_get_int(value));
 #endif
 }
 
 static void autoShiftCur_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_autoShiftCur(engine->context,(g_value_get_boolean(value)) ? 1: 0);
 #endif
 }
 
 static void addPhraseDirection_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_addPhraseDirection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
 #endif
 }
 
 static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_easySymbolInput(engine->context,(g_value_get_boolean(value)) ? 1: 0);
     engine->_priv->easySymbolInput=g_value_get_boolean(value);
@@ -122,21 +120,21 @@ static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
 }
 
 static void escCleanAllBuf_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_escCleanAllBuf(engine->context,(g_value_get_boolean(value)) ? 1: 0);
 #endif
 }
 
 static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_maxChiSymbolLen(engine->context,g_value_get_int(value));
 #endif
 }
 
 static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     const gchar *str=g_value_get_string(value);
     if (strcmp(str,"keyboard")==0){
@@ -150,7 +148,7 @@ static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
 }
 
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_candPerPage(engine->context,g_value_get_int(value));
     if (engine->table){
@@ -163,21 +161,21 @@ static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 }
 
 static void phraseChoiceRearward_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_phraseChoiceRearward(engine->context,(g_value_get_boolean(value)) ? 1: 0);
 #endif
 }
 
 static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_spaceAsSelection(engine->context,(g_value_get_boolean(value)) ? 1: 0);
 #endif
 }
 
 static void plainZhuyin_set_callback(PropertyContext *ctx, GValue *value){
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     engine->plainZhuyin=g_value_get_boolean(value);
 #endif
@@ -299,7 +297,7 @@ this option determines how these status be synchronized. Valid values:\n\
 //    return NULL;
 //}
 
-#ifndef DIALOG_TEST
+#ifdef IBUS_CHEWING_MAIN
 static int get_tone(ChewingKbType kbType, guint keyval){
     int i=0;
     if (keyval==' ')

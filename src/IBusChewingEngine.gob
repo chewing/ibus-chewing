@@ -88,6 +88,7 @@ extern gboolean ibus_chewing_verbose;
 #endif
 
 #define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
+#define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
 %}
 

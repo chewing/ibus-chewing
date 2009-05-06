@@ -99,21 +99,22 @@ PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
 PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0)
 PKG_CHECK_MODULES(X11 REQUIRED x11)
 PKG_CHECK_MODULES(XTST REQUIRED xtst)
-FIND_PROGRAM(GOB2 gob2)
-
-IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
-    MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
-ENDIF()
 
 PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
 COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATADIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
 ADD_DEFINITIONS(-DCHEWING_DATADIR='"${CHEWING_DATADIR}"')
 
+FIND_PROGRAM(GOB2 gob2)
+IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
+    MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
+ENDIF()
+
 ####################################################################
 # Sub directories
 ####################################################################
-ADD_SUBDIRECTORY(src bin)
+SET(TRANSLATED zh_CN zh_TW)
 ADD_SUBDIRECTORY(po)
+ADD_SUBDIRECTORY(src bin)
 
 ####################################################################
 # Packing

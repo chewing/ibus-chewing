@@ -1,8 +1,8 @@
-# Gettext support: Create/Update pot file and 
+# Gettext support: Create/Update pot file and
 #
 # To use: INCLUDE(Gettext)
 #
-# Most of the gettext support code is from FindGettext.cmake of cmake, 
+# Most of the gettext support code is from FindGettext.cmake of cmake,
 # but it is included here because:
 #
 # 1. Some system like RHEL5 does not have FindGettext.cmake
@@ -10,7 +10,7 @@
 # 3. It does not support xgettext
 #
 #===================================================================
-# Variables: 
+# Variables:
 #  XGETTEXT_OPTIONS: Options pass to xgettext
 #      Default:  --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2
 #  GETTEXT_MSGMERGE_EXECUTABLE: the full path to the msgmerge tool.
@@ -18,10 +18,10 @@
 #  GETTEXT_FOUND: True if gettext has been found.
 #  XGETTEXT_EXECUTABLE: the full path to the xgettext.
 #  XGETTEXT_FOUND: True if xgettext has been found.
-# 
+#
 #===================================================================
 # Macros:
-# GETTEXT_CREATE_POT(potFile 
+# GETTEXT_CREATE_POT(potFile
 #    [OPTION xgettext_options]
 #    SRC list_of_source_file_that_contains_msgid
 # )
@@ -30,17 +30,17 @@
 #    OPTION xgettext_options: Override XGETTEXT_OPTIONS
 #
 # * Produced targets: pot_file
-# 
+#
 #-------------------------------------------------------------------
-# GETTEXT_CREATE_TRANSLATIONS ( outputFile [ALL] file1 ... fileN 
+# GETTEXT_CREATE_TRANSLATIONS ( outputFile [ALL] locale1 ... localeN
 #     [COMMENT comment] )
 #
-#     This will create a target "translations" which will convert the 
-#     given input po files into the binary output mo file. If the 
+#     This will create a target "translations" which will convert the
+#     given input po files into the binary output mo file. If the
 #     ALL option is used, the translations will also be created when
 #     building the default target.
 #
-# * Produced targets: translations 
+# * Produced targets: translations
 #-------------------------------------------------------------------
 
 
@@ -130,21 +130,21 @@ IF(XGETTEXT_FOUND)
 		SET(_is_comment FALSE)
 		SET(_comment ${_currentPoFile})
 	    ELSE()
-		GET_FILENAME_COMPONENT(_absFile ${_currentPoFile} ABSOLUTE)
+		GET_FILENAME_COMPONENT(_absFile ${_currentPoFile}.po ABSOLUTE)
 		GET_FILENAME_COMPONENT(_abs_PATH ${_absFile} PATH)
 		GET_FILENAME_COMPONENT(_lang ${_absFile} NAME_WE)
 		SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
 
 		#MESSAGE("_absFile=${_absFile} _abs_PATH=${_abs_PATH} _lang=${_lang} curr_bin=${CMAKE_CURRENT_BINARY_DIR}")
-		ADD_CUSTOM_COMMAND( 
-		    OUTPUT ${_gmoFile} 
+		ADD_CUSTOM_COMMAND(
+		    OUTPUT ${_gmoFile}
 		    COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --quiet --update --backup=none -s ${_absFile} ${_absPotFile}
 		    COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_gmoFile} ${_absFile}
-		    DEPENDS ${_absPotFile} ${_absFile} 
+		    DEPENDS ${_absPotFile} ${_absFile}
 		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		    )
 
-		INSTALL(FILES ${_gmoFile} DESTINATION share/locale/${_lang}/LC_MESSAGES RENAME ${_potBasename}.mo) 
+		INSTALL(FILES ${_gmoFile} DESTINATION share/locale/${_lang}/LC_MESSAGES RENAME ${_potBasename}.mo)
 		SET(_gmoFiles ${_gmoFiles} ${_gmoFile})
 	    ENDIF()
 	ENDFOREACH (_currentPoFile )

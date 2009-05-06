@@ -1,9 +1,6 @@
-PRJ_VER=1.0.8.20090428
-SUMMARY=Revision plain Zhuyin mode.
+PRJ_VER=1.0.8.20090508
+SUMMARY=Fix IBus Google issue 369
 # Changes
-Fix the plain Zhuyin mode.
-Fix the errors which Funda Wang as pointing out:
- 1. Move src/chewing.xml.in to data/
- 2. Fixed some typo in next_version targets.
- 3. Remove GConf2 package requirement, while add gconftool-2 requirement.
+Fix IBus Google issue 369.
+ibus-chewing.schemas is now generated.
 
