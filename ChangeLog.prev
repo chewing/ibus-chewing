@@ -1,3 +1,9 @@
+* Tue Apr 28 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.8.20090428
+Fix the errors which Funda Wang as pointing out:
+- Move src/chewing.xml.in to data/
+- Fixed some typo in next_version targets.
+- Remove GConf2 package requirement, while add gconftool-2 requirement.
+
 * Mon Mar 30 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330
 - Added tooltips.
 - Revealed the sync caps lock setting.
@@ -30,3 +36,4 @@
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-06 17:33+1000\n"
+"POT-Creation-Date: 2009-05-08 16:42+1000\n"
 "PO-Revision-Date: 2008-10-17 20:17+0800\n"
 "Last-Translator: swyear <swyear@gmail.com>, Ding-Yi Chen\n"
 "Language-Team: Traditional Chinese <opensuse-translation@opensuse.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/IBusChewingEngine.gob:221
+#: ../src/IBusChewingEngine.gob:219
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:221
+#: ../src/IBusChewingEngine.gob:219
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -45,7 +45,7 @@ msgstr "自動移游標至下一個字。"
 msgid "Candidate per page"
 msgstr "每頁備選字數"
 
-#: ../src/IBusChewingEngine.gob:157
+#: ../src/IBusChewingEngine.gob:154
 msgid "Chi"
 msgstr "中"
 
@@ -70,7 +70,7 @@ msgstr "簡易符號輸入"
 msgid "Editing"
 msgstr "編輯"
 
-#: ../src/IBusChewingEngine.gob:158
+#: ../src/IBusChewingEngine.gob:155
 msgid "Eng"
 msgstr "英"
 
@@ -82,11 +82,11 @@ msgstr "Esc 鍵清預編區"
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr "Esc 鍵清預編區"
 
-#: ../src/IBusChewingEngine.gob:160
+#: ../src/IBusChewingEngine.gob:157
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:161
+#: ../src/IBusChewingEngine.gob:158
 msgid "Half"
 msgstr "半"
 
@@ -167,11 +167,11 @@ msgstr "選字"
 msgid "Selection keys"
 msgstr "選字按鍵"
 
-#: ../src/IBusChewingEngine.gob:102
+#: ../src/IBusChewingEngine.gob:99
 msgid "Setting"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine.gob:163
+#: ../src/IBusChewingEngine.gob:160
 msgid "Settings"
 msgstr "設定"
 
@@ -183,7 +183,7 @@ msgstr "空白鍵選字"
 msgid "Sync between CapsLock and IM"
 msgstr "CapsLock與輸入法狀態同步"
 
-#: ../src/IBusChewingEngine.gob:219
+#: ../src/IBusChewingEngine.gob:217
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
 

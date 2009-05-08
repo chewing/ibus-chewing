@@ -61,17 +61,14 @@ IF(NOT DEFINED LIB_INSTALL_DIR)
 ENDIF()
 
 ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
-    COMMAND ${CMAKE_BINARY_DIR}/bin/generate-gconf-schemas -v 2 -l
+    COMMAND ${CMAKE_BINARY_DIR}/bin/generate-gconf-schemas -v 3 -l
     "C;${TRANSLATED}" ${CMAKE_BINARY_DIR}/data/ibus-chewing.schemas
     COMMENT "Generating gconf-schemas"
     VERBATIM
     )
 
-
 INSTALL(TARGETS ibus-engine-chewing
      RUNTIME DESTINATION ${LIBEXEC_DIR}
      LIBRARY DESTINATION ${LIB_INSTALL_DIR}
 )
-
-INCLUDE(GConf)
 

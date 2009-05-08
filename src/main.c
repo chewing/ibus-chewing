@@ -29,23 +29,20 @@
 #include "ibus-chewing-engine.h"
 #include "maker-dialog.h"
 
-#ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 3
-#endif
-#define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
-
 MakerDialog *makerDialog=NULL;
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
 /* options */
 static gboolean ibus = FALSE;
-gboolean ibus_chewing_verbose = FALSE;
+int ibus_chewing_verbose= 0;
 
 static const GOptionEntry entries[] =
 {
     { "ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL },
-    { "verbose", 'v', 0, G_OPTION_ARG_NONE, &ibus_chewing_verbose, "verbose", NULL },
+    { "verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
+        "Verbose level. The higher the level, the more the debug messages.",
+        "[integer]" },
     { NULL },
 };
 

@@ -93,7 +93,6 @@ void G_DEBUG_MSG(gint level, const char *format, ...);
 
 
 class Maker:Dialog from Gtk:Dialog{
-    private gint debugLevel=2;
     public gboolean vbox_homogeneous=TRUE;
     public gint hbox_spacing=2;
     public gint vbox_spacing=2;
@@ -118,12 +117,11 @@ class Maker:Dialog from Gtk:Dialog{
     init(self){
     }
 
-    public GObject *new (void) {
-	  Self *self = GET_NEW;
-	  return G_OBJECT (self);
+    public MakerDialog *new (void) {
+	  return GET_NEW;
     }
 
-    public GObject *new_full (const gchar *title,
+    public MakerDialog *new_full (const gchar *title,
 	    int notebook_pages,  const gchar **notebook_page_labels,
 	    int button_num, const gchar **button_labels, GtkResponseType *button_responses) {
 	Self *self = GET_NEW;
@@ -156,13 +154,42 @@ class Maker:Dialog from Gtk:Dialog{
 		gtk_notebook_append_page (GTK_NOTEBOOK(self->dialog_notebook), vbox,label);
 	    }
 	}
-	return G_OBJECT(self);
+	return self;
     }
 
     public void set_verbose_level(self,gint level){
 	verboseLevel=level;
     }
 
+    /**
+     * add_property_no_gui:
+     * @self: A MakerDialog
+     * @pSpec: A property spec to be added.
+     * @user_data: user_data to be passed to callback functions.
+     * @returns: A newly allocated PropertyContext.
+     *
+     * Add a property without GUI automation involved.
+     */
+    public PropertyContext *add_property_no_gui(self, PropertySpec *pSpec, gpointer user_data){
+	G_DEBUG_MSG(2,"::add_property_no_gui(%s,-)",pSpec->key);
+	PropertyContext *ctx=propertyContext_new(pSpec,user_data);
+	g_ptr_array_add(self->_priv->propList,ctx);
+	g_hash_table_insert(self->_priv->notebookContentTable, pSpec->key, pSpec->pageName);
+	return ctx;
+    }
+
+    /**
+     * add_property_no_gui:
+     * @self: A MakerDialog
+     * @pSpec: A property spec to be added.
+     * @initValue: Initial value of the property.
+     * @user_data: user_data to be passed to callback functions.
+     * @returns: TRUE if the property adding succeed; FALSE otherwise.
+     *
+     * Add a property to the dialog and corresponding Gtk widget will also be
+     * set.
+     * If @initValue is not NULL, it will be the initial value of the widget.
+     */
     public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue, gpointer user_data){
 	G_DEBUG_MSG(2,"::add_property(%s,%s,-)",pSpec->key,initValue);
 
@@ -181,24 +208,22 @@ class Maker:Dialog from Gtk:Dialog{
 
 	GtkWidget *widget=NULL;
         GtkAdjustment *gAdjust=NULL;
-	PropertyContext *ctx=propertyContext_new(pSpec,user_data);
-
-	GValue gValue={0};
-	if (pSpec->valueType!=G_TYPE_STRING){
-	    g_value_init(&gValue,pSpec->valueType);
+	PropertyContext *ctx=self_add_property_no_gui(self,pSpec,user_data);
+	if (!ctx){
+	    return FALSE;
 	}
 
 	switch(pSpec->valueType){
 	    case G_TYPE_BOOLEAN:
 		widget = gtk_check_button_new();
 		self_widget_register(self, widget, pSpec->key, NULL);
-
+		gboolean bValue=FALSE;
 		if(initValue){
-		    g_value_set_boolean(&gValue,atob(initValue));
+		    bValue=atob(initValue);
 		}else if (pSpec->defaultValue){
-		    g_value_set_boolean(&gValue,atob(pSpec->defaultValue));
+		    bValue=atob(pSpec->defaultValue);
 		}
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),g_value_get_boolean(&gValue));
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),bValue);
 		if (pSpec->setFunc){
 		    g_signal_connect(widget, "toggled", G_CALLBACK(on_toggleButton_toggled_wrap),ctx);
 		}
@@ -283,12 +308,16 @@ class Maker:Dialog from Gtk:Dialog{
 			gtk_entry_set_max_length(GTK_ENTRY(widget),pSpec->max);
 		    }
 
+		    const char *sValue=NULL;
+
 		    if(initValue){
-			g_value_set_string(&gValue,initValue);
+			sValue=initValue;
 		    }else if (pSpec->defaultValue){
-			g_value_set_string(&gValue,pSpec->defaultValue);
+			sValue=pSpec->defaultValue;
+		    }else{
+			sValue="";
 		    }
-		    gtk_entry_set_text(GTK_ENTRY(widget),g_value_get_string(&gValue));
+		    gtk_entry_set_text(GTK_ENTRY(widget),sValue);
 		    gtk_editable_set_editable (GTK_EDITABLE(widget),
 			    !(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
 
@@ -308,9 +337,6 @@ class Maker:Dialog from Gtk:Dialog{
 	gtk_box_pack_end (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 	gtk_widget_show(hbox);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
-	g_ptr_array_add(self->_priv->propList,ctx);
-
-        g_hash_table_insert(self->_priv->notebookContentTable, pSpec->key, pSpec->pageName);
 
 	return TRUE;
     }

@@ -1,15 +1,13 @@
 ####################################################################
 # CMake init defintion.
-# 
+#
 # Definition that should run in front of everything else.
-# 
+#
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
-
 IF(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 OLD)
-
-    # CMAKE 2.6.3 and above have CMAKE_VERSION
+# CMAKE 2.6.3 and above have CMAKE_VERSION
     IF (CMAKE_VERSION)
         cmake_policy(SET CMP0011 OLD)
     ENDIF(CMAKE_VERSION)
@@ -27,6 +25,7 @@ INCLUDE(BasicMacros)
 DATE_FORMAT(DATE "+%a %b %d %Y")
 DATE_FORMAT(DATE_SHORT "+%Y%m%d")
 #MESSAGE("DATE=${DATE}|")
+#MESSAGE("DATE_SHORT=${DATE_SHORT}|")
 
 ###==================================================================
 # Directories

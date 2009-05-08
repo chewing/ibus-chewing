@@ -18,15 +18,15 @@ static const GOptionEntry entries[] =
 };
 
 gboolean schemas_get_definition(){
-    MakerDialog *dialog=MAKER_DIALOG(maker_dialog_new());
+    MakerDialog *dialog=maker_dialog_new();
     maker_dialog_set_verbose_level(dialog,verbose);
     int i;
     for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
-	maker_dialog_add_property(dialog,&propSpecs[i],NULL,NULL);
+	maker_dialog_add_property_no_gui(dialog,&propSpecs[i],NULL);
     }
     gboolean ret=maker_dialog_write_gconf_schemas_file(dialog,schemasFilename,
 	    "ibus-chewing", "/desktop/ibus/engine/Chewing",localeStr);
-    gtk_widget_destroy(GTK_WIDGET(dialog));
+
     return ret;
 }
 
@@ -34,14 +34,16 @@ int main (gint argc, gchar *argv[])
 {
     GError *error = NULL;
     GOptionContext *context;
-    gtk_init(&argc,&argv);
+
+    g_type_init();
+//    gtk_init(&argc,&argv);
 
     /* Init i18n messages */
     setlocale (LC_ALL, "");
     bindtextdomain(PROJECT_NAME, DATADIR "/locale");
     textdomain(PROJECT_NAME);
 
-    context = g_option_context_new ("schemasFile");
+    context = g_option_context_new("schemasFile");
 
     g_option_context_add_main_entries (context, entries, "ibus-chewing");
 
@@ -61,5 +63,6 @@ int main (gint argc, gchar *argv[])
 	exit(0);
     }
     exit(1);
+    return 0;
 }
 

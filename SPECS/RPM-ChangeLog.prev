@@ -1,3 +1,9 @@
+* Tue Apr 28 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.8.20090428-1
+Fix the errors which Funda Wang as pointing out:
+- Move src/chewing.xml.in to data/
+- Fixed some typo in next_version targets.
+- Remove GConf2 package requirement, while add gconftool-2 requirement.
+
 * Mon Mar 30 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.5.20090330-1
 - Added tooltips.
 - Revealed the sync caps lock setting.
@@ -13,7 +19,6 @@
 - MakerDialog.gob is now available.
 - Work around of easy symbol input.
 - Fix iBus Google issue 310.
-
 
 * Wed Mar 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.3.20090311-1
 - IBus Google issue 305:  ibus-chewing.schema -> ibus-chewing.schemas
@@ -59,3 +64,4 @@
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+

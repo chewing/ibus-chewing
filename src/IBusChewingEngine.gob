@@ -83,11 +83,8 @@ extern GtkResponseType button_responses[];
 %{
 extern gboolean ibus_chewing_verbose;
 //extern IBusConfig *iConfig;
-#ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 3
-#endif
 
-#define G_DEBUG_MSG(level, msg, args...) if (ibus_chewing_verbose) if (level<=DEBUG_LEVEL) g_debug(msg, ##args)
+#define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
 %}
@@ -166,6 +163,7 @@ class IBus:Chewing:Engine from IBus:Engine{
           /* initialize the object here */
 	G_DEBUG_MSG(2,"*** init()");
 	if (!self->_priv->initialized){
+	    maker_dialog_set_verbose_level(MAKER_DIALOG(self->setting_dialog),ibus_chewing_verbose);
 	    gchar buf[100];
 	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
@@ -544,24 +542,33 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
+    private void force_commit(self){
+	if (chewing_buffer_Check(self->context)){
+	    if (!chewing_commit_Check(self->context)){
+		chewing_handle_Enter(self->context);
+	    }
+	    self_update(self);
+	}
+    }
+
     /*============================================
      * Overridden Parent (IBusEngine) methods
      */
 
     override (IBus:Engine) void
-    reset(IBus:Engine *self){
+    reset(IBus:Engine *engine){
 	G_DEBUG_MSG(2,"*** reset 1");
-	Self *selfObj=SELF(self);
-	ibus_lookup_table_clear(selfObj->table);
-	chewing_Reset(selfObj->context);
-	ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
-	self_update(selfObj);
+	Self *self=SELF(engine);
+	ibus_lookup_table_clear(self->table);
+	chewing_Reset(self->context);
+	ibus_engine_hide_auxiliary_text(IBUS_ENGINE(engine));
+	ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
     }
 
 
     override (IBus:Engine) gboolean
-    process_key_event(IBus:Engine *self, guint  keyval,  guint  modifiers){
-	Self *selfObj=SELF(self);
+    process_key_event(IBus:Engine *engine, guint  keyval,  guint  modifiers){
+	Self *self=SELF(engine);
 	gboolean result=TRUE;
 	if (modifiers & IBUS_RELEASE_MASK){
 	    /* Skip release event */
@@ -570,93 +577,93 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	G_DEBUG_MSG(3,"*** process_key_event(-, %u(%s), %u) ... proceed.",keyval, keyName_get(keyval), modifiers);
 	guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
-	selfObj->_priv->key_last=keyval;
+	self->_priv->key_last=keyval;
 	if (state==0){
 	    switch (keyval){
 		case IBUS_Return:
 		case IBUS_KP_Enter:
-		    chewing_handle_Enter(selfObj->context);
+		    chewing_handle_Enter(self->context);
 		    break;
 		case IBUS_Escape:
-		    chewing_handle_Esc(selfObj->context);
+		    chewing_handle_Esc(self->context);
 		    break;
 		case IBUS_BackSpace:
-		    chewing_handle_Backspace(selfObj->context);
+		    chewing_handle_Backspace(self->context);
 		    break;
 		case IBUS_Delete:
 		case IBUS_KP_Delete:
-		    chewing_handle_Del(selfObj->context);
+		    chewing_handle_Del(self->context);
 		    break;
 		case IBUS_space:
 		case IBUS_KP_Space:
-		    chewing_handle_Space(selfObj->context);
+		    chewing_handle_Space(self->context);
 		    break;
 		case IBUS_Page_Up:
 		case IBUS_KP_Page_Up:
-		    IBUS_ENGINE_GET_CLASS(self)->page_up(self);
+		    IBUS_ENGINE_GET_CLASS(engine)->page_up(engine);
 		    break;
 		case IBUS_Page_Down:
 		case IBUS_KP_Page_Down:
-		    IBUS_ENGINE_GET_CLASS(self)->page_down(self);
+		    IBUS_ENGINE_GET_CLASS(engine)->page_down(engine);
 		    break;
 		case IBUS_Up:
 		case IBUS_KP_Up:
-		    IBUS_ENGINE_GET_CLASS(self)->cursor_up(self);
+		    IBUS_ENGINE_GET_CLASS(engine)->cursor_up(engine);
 		    break;
 		case IBUS_Down:
 		case IBUS_KP_Down:
-		    IBUS_ENGINE_GET_CLASS(self)->cursor_down(self);
+		    IBUS_ENGINE_GET_CLASS(engine)->cursor_down(engine);
 		    break;
 		case IBUS_Left:
 		case IBUS_KP_Left:
-		    chewing_handle_Left(selfObj->context);
+		    chewing_handle_Left(self->context);
 		    break;
 		case IBUS_Right:
 		case IBUS_KP_Right:
-		    chewing_handle_Right(selfObj->context);
+		    chewing_handle_Right(self->context);
 		    break;
 		case IBUS_Home:
 		case IBUS_KP_Home:
-		    chewing_handle_Home(selfObj->context);
+		    chewing_handle_Home(self->context);
 		    break;
 		case IBUS_End:
 		case IBUS_KP_End:
-		    chewing_handle_End(selfObj->context);
+		    chewing_handle_End(self->context);
 		    break;
 		case IBUS_Tab:
-		    chewing_handle_Tab(selfObj->context);
+		    chewing_handle_Tab(self->context);
 		    break;
 		case IBUS_Caps_Lock:
-		    chewing_handle_Capslock(selfObj->context);
-		    self_refresh_property(selfObj,"chewing_chieng_prop");
+		    chewing_handle_Capslock(self->context);
+		    self_refresh_property(self,"chewing_chieng_prop");
 		    break;
 		default:
-		    self_handle_Default(selfObj,keyval,FALSE);
+		    self_handle_Default(self,keyval,FALSE);
 		    break;
 	    }
 	}else if (state==IBUS_SHIFT_MASK){
 	    switch(keyval){
 		case IBUS_Shift_L:
-		    chewing_handle_ShiftLeft(selfObj->context);
+		    chewing_handle_ShiftLeft(self->context);
 		    break;
 		case IBUS_Shift_R:
-		    chewing_handle_ShiftRight(selfObj->context);
+		    chewing_handle_ShiftRight(self->context);
 		    break;
 		case IBUS_space:
 		case IBUS_KP_Space:
-		    chewing_handle_ShiftSpace(selfObj->context);
-		    chewing_set_ShapeMode(selfObj->context, !chewing_get_ShapeMode(selfObj->context));
-		    self_refresh_property(selfObj,"chewing_alnumSize_prop");
+		    chewing_handle_ShiftSpace(self->context);
+		    chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
+		    self_refresh_property(self,"chewing_alnumSize_prop");
 		    break;
 		default:
-		    self_handle_Default(selfObj,keyval,TRUE);
+		    self_handle_Default(self,keyval,TRUE);
 		    break;
 	    }
 	}else if (state==IBUS_CONTROL_MASK){
 	    if (keyval>=IBUS_0 && keyval<=IBUS_9){
-		chewing_handle_CtrlNum(selfObj->context,keyval);
+		chewing_handle_CtrlNum(self->context,keyval);
 	    }else if (keyval==IBUS_v || keyval==IBUS_V){
-		chewing_handle_Right(selfObj->context);
+		chewing_handle_Right(self->context);
 	    }else{
 		result=FALSE;
 	    }
@@ -667,83 +674,84 @@ class IBus:Chewing:Engine from IBus:Engine{
 	if (!result){
 	    return FALSE;
 	}
-	return self_update(selfObj);
+	return self_update(self);
     }
 
 
     override (IBus:Engine) void
-    page_up(IBus:Engine *self){
-	Self *selfObj=SELF(self);
-	chewing_handle_PageUp(selfObj->context);
-	self_update(selfObj);
+    page_up(IBus:Engine *engine){
+	Self *self=SELF(engine);
+	chewing_handle_PageUp(self->context);
+	self_update(self);
     }
 
 
     override (IBus:Engine) void
-    page_down(IBus:Engine *self){
-	Self *selfObj=SELF(self);
-	chewing_handle_PageDown(selfObj->context);
-	self_update(selfObj);
+    page_down(IBus:Engine *engine){
+	Self *self=SELF(engine);
+	chewing_handle_PageDown(self->context);
+	self_update(self);
     }
 
     override (IBus:Engine) void
-    cursor_up(IBus:Engine *self){
-	Self *selfObj=SELF(self);
-	chewing_handle_Up(selfObj->context);
-	self_update(selfObj);
+    cursor_up(IBus:Engine *engine){
+	Self *self=SELF(engine);
+	chewing_handle_Up(self->context);
+	self_update(self);
     }
 
     override (IBus:Engine) void
-    cursor_down(IBus:Engine *self){
-	Self *selfObj=SELF(self);
-	chewing_handle_Down(selfObj->context);
-	self_update(selfObj);
+    cursor_down(IBus:Engine *engine){
+	Self *self=SELF(engine);
+	chewing_handle_Down(self->context);
+	self_update(self);
     }
 
     override (IBus:Engine) void
-    enable(IBus:Engine  *self){
+    enable(IBus:Engine  *engine){
 	G_DEBUG_MSG(2,"*** enable");
-        Self *selfObj=SELF(self);
+        Self *self=SELF(engine);
 
-        if (!selfObj->config){
+        if (!self->config){
 
             /* connections_list is not avail in init, so we put it here */
-	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
+	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(engine));
 	    g_assert(connections_list);
 	    g_assert(connections_list->data);
 	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
-	    selfObj->config=ibus_config_new(iConnection);
-	    self_load_setting(selfObj);
+	    self->config=ibus_config_new(iConnection);
+	    self_load_setting(self);
         }
-	selfObj->inputMode=CHEWING_INPUT_MODE_EDITING;
+	self->inputMode=CHEWING_INPUT_MODE_EDITING;
     }
 
     override (IBus:Engine) void
-    disable(IBus:Engine  *self){
+    disable(IBus:Engine  *engine){
 	G_DEBUG_MSG(2,"*** disable");
-	Self *selfObj=SELF(self);
-	selfObj->inputMode=CHEWING_INPUT_MODE_BYPASS;
+	Self *self=SELF(engine);
+	self_force_commit(self);
+	self->inputMode=CHEWING_INPUT_MODE_BYPASS;
     }
 
     override (IBus:Engine) void
-    focus_in(IBus:Engine *self){
+    focus_in(IBus:Engine *engine){
 	G_DEBUG_MSG(2,"*** focus_in");
-	Self *selfObj=SELF(self);
+	Self *self=SELF(engine);
 
 	/* Sync Caps_Lock and ChiEngMode */
-	guint modifiers=keyModifier_get(selfObj->_priv->pDisplay);
+	guint modifiers=keyModifier_get(self->_priv->pDisplay);
 	gint caps_is_lock=(modifiers & IBUS_LOCK_MASK)!=0;
 	G_DEBUG_MSG(2,"focus_in(): ChiEng=%d IBUS_LOCK=%d",
-		chewing_get_ChiEngMode(selfObj->context),caps_is_lock);
-	if (chewing_get_ChiEngMode(selfObj->context)==caps_is_lock){
+		chewing_get_ChiEngMode(self->context),caps_is_lock);
+	if (chewing_get_ChiEngMode(self->context)==caps_is_lock){
 	    /* Caps_lock and ChiEngMode does not agree each other */
-	    switch(selfObj->syncCapsLock_local){
+	    switch(self->syncCapsLock_local){
 		case CHEWING_MODIFIER_SYNC_FROM_KEYBOARD:
-		    chewing_set_ChiEngMode(selfObj->context,!caps_is_lock);
+		    chewing_set_ChiEngMode(self->context,!caps_is_lock);
 		    break;
 		case CHEWING_MODIFIER_SYNC_FROM_IM:
 		    /* fake event won't go through process_key_event */
-		    key_send_fake_event(IBUS_Caps_Lock,selfObj->_priv->pDisplay);
+		    key_send_fake_event(IBUS_Caps_Lock,self->_priv->pDisplay);
 		    break;
 		default:
 		    g_warning("Caps_lock and ChiEngMode does not agree each other!");
@@ -751,57 +759,59 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	    }
 	}
-	self_refresh_property_list(selfObj);
-	self_update_preedit(selfObj);
+	self_refresh_property_list(self);
+	self_update_preedit(self);
     }
 
     override (IBus:Engine) void
-    focus_out(IBus:Engine *self){
-	G_DEBUG_MSG(2,"*** focus_out 1");
+    focus_out(IBus:Engine *engine){
+	Self *self=SELF(engine);
+	G_DEBUG_MSG(2,"*** focus_out: buffer_Check %d",chewing_buffer_Check(self->context));
+	self_force_commit(self);
     }
 
     override (IBus:Engine) void
-    property_activate(IBus:Engine *self, const gchar  *prop_name, guint  prop_state){
+    property_activate(IBus:Engine *engine, const gchar  *prop_name, guint  prop_state){
 	G_DEBUG_MSG(2,"*** property_activate(-, %s, %u)", prop_name, prop_state);
-	Self *selfObj=SELF(self);
+	Self *self=SELF(engine);
 	gboolean needRefresh=TRUE;
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    /* Toggle Chinese <-> English */
-	    chewing_set_ChiEngMode(selfObj->context, !chewing_get_ChiEngMode(selfObj->context));
+	    chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    /* Toggle Full <-> Half */
-	    chewing_set_ShapeMode(selfObj->context, !chewing_get_ShapeMode(selfObj->context));
+	    chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
-	    if (selfObj->settings_prop->state==PROP_STATE_UNCHECKED){
-		if (gtk_dialog_run(GTK_DIALOG(selfObj->setting_dialog))==GTK_RESPONSE_OK){
-		    self_save_config_all(selfObj);
+	    if (self->settings_prop->state==PROP_STATE_UNCHECKED){
+		if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))==GTK_RESPONSE_OK){
+		    self_save_config_all(self);
 		}
-		gtk_widget_hide(selfObj->setting_dialog);
-		selfObj->settings_prop->state=PROP_STATE_UNCHECKED;
+		gtk_widget_hide(self->setting_dialog);
+		self->settings_prop->state=PROP_STATE_UNCHECKED;
 	    }
 	}else{
 	    G_DEBUG_MSG(2,"*** property_activate(-, %s, %u) not recognized",prop_name, prop_state);
 	    needRefresh=FALSE;
 	}
 	if (needRefresh)
-	    self_refresh_property(selfObj,prop_name);
+	    self_refresh_property(self,prop_name);
     }
 
     override (IBus:Engine) void
-    property_show(IBus:Engine *self, const gchar  *prop_name){
+    property_show(IBus:Engine *engine, const gchar  *prop_name){
 	G_DEBUG_MSG(2,"*** property_show(-, %s)",prop_name);
-	Self *selfObj=SELF(self);
-	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
+	Self *self=SELF(engine);
+	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,TRUE);
-	ibus_engine_update_property(self,prop);
+	ibus_engine_update_property(engine,prop);
     }
 
     override (IBus:Engine) void
-    property_hide(IBus:Engine *self, const gchar  *prop_name){
+    property_hide(IBus:Engine *engine, const gchar  *prop_name){
 	G_DEBUG_MSG(2,"*** property_hide(-, %s)",prop_name);
-	Self *selfObj=SELF(self);
-	IBusProperty *prop=self_get_iBusProperty(selfObj, prop_name);
+	Self *self=SELF(engine);
+	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,FALSE);
-	ibus_engine_update_property(self,prop);
+	ibus_engine_update_property(engine,prop);
     }
 }

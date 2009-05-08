@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-06 17:33+1000\n"
+"POT-Creation-Date: 2009-05-08 16:42+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,25 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:221
+#: ../src/IBusChewingEngine.gob:219
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:221
+#: ../src/IBusChewingEngine.gob:219
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
 #: ../src/IBusChewingEngine-def.c:211
 msgid "Add phrases in front"
-msgstr "前方加詞"
+msgstr "前方加词"
 
 #: ../src/IBusChewingEngine-def.c:215
 msgid "Adding phrases in the front."
-msgstr ""
+msgstr "前方加词"
 
 #: ../src/IBusChewingEngine-def.c:205
 msgid "Auto move cursor"
-msgstr ""
+msgstr "自动移游标下一个字"
 
 #: ../src/IBusChewingEngine-def.c:209
 msgid "Automatically move cursor to next character."
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:157
+#: ../src/IBusChewingEngine.gob:154
 msgid "Chi"
 msgstr "中"
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Editing"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:158
+#: ../src/IBusChewingEngine.gob:155
 msgid "Eng"
 msgstr "英"
 
@@ -79,11 +79,11 @@ msgstr ""
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:160
+#: ../src/IBusChewingEngine.gob:157
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:161
+#: ../src/IBusChewingEngine.gob:158
 msgid "Half"
 msgstr "半"
 
@@ -159,11 +159,11 @@ msgstr ""
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:102
+#: ../src/IBusChewingEngine.gob:99
 msgid "Setting"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:163
+#: ../src/IBusChewingEngine.gob:160
 msgid "Settings"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Sync between CapsLock and IM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:219
+#: ../src/IBusChewingEngine.gob:217
 msgid "Warning: cannot load configure key"
 msgstr ""
 
