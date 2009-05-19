@@ -1,11 +1,10 @@
-PRJ_VER=1.0.9.20090508
-SUMMARY=Fix IBus Google issue 369
+PRJ_VER=1.0.9.20090519
+SUMMARY=Fix phraseChooseRearward
 # Changes
-- Fix IBus Google issue 369.
-  Now commit is forced when switch of ibus-chewing or current application loses focus.
-- New ibus-chewing.png is contribute by WM.
-- input-keyboard.png is no longer needed and removed.
-- ibus-engine-chewing -v option now need an integer as verbose level.
-- ibus-chewing.schemas is now generated.
-- Fix some CMake modules bugs.
+- Fix the behavior when phraseChooseRearward is on.
+  Now the 1st down key brings the longest possible phrases.
+  The 2nd down key brings the 2nd longest possible phrases from the back,
+  unlike the previous versions where the cursor stays in the head of longest phrase.
+- Fix double free issue when destroy ibus-chewing.
+- Hide ibus-chewing-panel when ibus-chewing is focus-out
 

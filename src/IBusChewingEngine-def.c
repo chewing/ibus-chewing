@@ -133,6 +133,13 @@ static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
 #endif
 }
 
+static void forceLowercaseEnglish_set_callback(PropertyContext *ctx, GValue *value){
+#ifdef IBUS_CHEWING_MAIN
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    engine->forceLowercaseEnglish=g_value_get_boolean(value);
+#endif
+}
+
 static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -231,6 +238,13 @@ PropertySpec propSpecs[]={
 	NULL, maxChiSymbolLen_set_callback,
 	0, 0, 0,
 	N_("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
+    },
+    {G_TYPE_BOOLEAN, "forceLowercaseEnglish", "Editing", N_("Force lowercase in En mode"),
+	"0", NULL, NULL,  0, 1,
+	NULL, forceLowercaseEnglish_set_callback,
+	0, 0, 0,
+	N_("Ignore CapsLock status and input lowercase by default.\n\
+It is handy if you wish to enter lowercase by default. Uppercase can still be inputted with Shift"),
     },
 
     /* Sync between CapsLock and IM */

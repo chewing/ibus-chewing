@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-08 16:42+1000\n"
+"POT-Creation-Date: 2009-05-19 17:36+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,7 +159,7 @@ msgstr ""
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:99
+#: ../src/IBusChewingEngine.gob:105
 msgid "Setting"
 msgstr ""
 

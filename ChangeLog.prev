@@ -1,3 +1,11 @@
+* Mon May 11 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.9.20090508
+  Now commit is forced when switch of ibus-chewing or current application loses focus.
+- New ibus-chewing.png is contribute by WM.
+- input-keyboard.png is no longer needed and removed.
+- ibus-engine-chewing -v option now need an integer as verbose level.
+- ibus-chewing.schemas is now generated.
+- Fix some CMake modules bugs.
+
 * Tue Apr 28 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.8.20090428
 Fix the errors which Funda Wang as pointing out:
 - Move src/chewing.xml.in to data/
@@ -36,4 +44,5 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
