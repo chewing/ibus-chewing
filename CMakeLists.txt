@@ -45,13 +45,13 @@ ENDIF(${NEED_RPM_RELEASE_INFO})
 #==================================================================
 # Developer setting.
 #
-SET(CVS_DIST_TAGS F-11)
+SET(CVS_DIST_TAGS F-10 F-11)
 SET(HOSTING_SERVICE_PROVIDER "GitHub")
 SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING_NO_PACK")
 SET(DEVELOPER_DEPENDS UploadPkg.batch.in)
 ADD_CUSTOM_TARGET(commit
-    COMMAND git-commit -a -m "${CHANGE_SUMMARY}"
-    COMMAND git-tag -a "${PRJ_VER}"
+    COMMAND git commit -a -m "${CHANGE_SUMMARY}"
+    COMMAND git tag -a "${PRJ_VER}"
     COMMENT "Commit and tag the changes"
     )
 

@@ -32,6 +32,7 @@ requires 2.0.0
 #include <gtk/gtk.h>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
+#include <ctype.h>
 %}
 
 
@@ -609,7 +610,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	ibus_engine_hide_auxiliary_text(IBUS_ENGINE(engine));
 	ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
     }
-
 
     override (IBus:Engine) gboolean
     process_key_event(IBus:Engine *engine, guint  keyval,  guint  modifiers){

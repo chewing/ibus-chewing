@@ -126,6 +126,7 @@ static void escCleanAllBuf_set_callback(PropertyContext *ctx, GValue *value){
 #endif
 }
 
+/* Additional symbol buffer length */
 static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -222,7 +223,7 @@ PropertySpec propSpecs[]={
 	N_("Adding phrases in the front."),
     },
     {G_TYPE_BOOLEAN, "easySymbolInput", "Editing", N_("Easy symbol input"),
-	"0", NULL, NULL,  0, 1,
+	"1", NULL, NULL,  0, 1,
 	NULL, easySymbolInput_set_callback,
 	0, 0, 0,
 	N_("Easy symbol input."),
@@ -234,7 +235,7 @@ PropertySpec propSpecs[]={
 	N_("Escape key cleans the text in pre-edit-buffer."),
     },
     {G_TYPE_INT, "maxChiSymbolLen", "Editing", N_("Maximum Chinese characters"),
-	"16", NULL, NULL,  8, 40,
+	"20", NULL, NULL,  8, 40,
 	NULL, maxChiSymbolLen_set_callback,
 	0, 0, 0,
 	N_("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
@@ -244,7 +245,7 @@ PropertySpec propSpecs[]={
 	NULL, forceLowercaseEnglish_set_callback,
 	0, 0, 0,
 	N_("Ignore CapsLock status and input lowercase by default.\n\
-It is handy if you wish to enter lowercase by default. Uppercase can still be inputted with Shift"),
+It is handy if you wish to enter lowercase by default. Uppercase can still be inputted with Shift."),
     },
 
     /* Sync between CapsLock and IM */
@@ -292,7 +293,6 @@ this option determines how these status be synchronized. Valid values:\n\
 	0, 0, 0,
 	NULL,
     },
-
 };
 
 

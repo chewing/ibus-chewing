@@ -67,7 +67,8 @@ typedef struct{
     MakerDialogPropertyFlags propertyFlags;
     gint width;
     gint height;
-    gchar *tooltip;
+    const gchar *tooltip;
+    gpointer userData;
 } PropertySpec;
 
 struct _PropertyContext{
@@ -112,7 +113,6 @@ class Maker:Dialog from Gtk:Dialog{
 	    g_ptr_array_free(VAR,TRUE);
 	}
     };
-
 
     init(self){
     }
@@ -272,7 +272,6 @@ class Maker:Dialog from Gtk:Dialog{
 			index=listStore_find_string(listStore,pSpec->defaultValue,
 				pSpec->translationContext,pSpec->propertyFlags);
 		    }
-
 
 		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE){
 			widget=gtk_combo_box_new_with_model (GTK_TREE_MODEL(listStore));

@@ -1,4 +1,5 @@
-RPM_RELEASE=1
-RPM_RELEASE_SUMMARY=
+RPM_RELEASE=2
+RPM_RELEASE_SUMMARY= Add back the export GCONF_CONFIG_SOURCE statement
 # RPM Release Changes. Note that following lines only go to RPM-ChangeLog when
 # RPM_RELEASE >1
+- Add back the export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`

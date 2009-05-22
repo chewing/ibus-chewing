@@ -1,3 +1,14 @@
+* Fri May 22 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.10.20090523
+- Applied Lubomir Rintel's patch
+
+* Fri May 22 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.10.20090522
+- Now the 1st down key brings the longest possible phrases.
+  The 2nd down key brings the 2nd longest possible phrases from the back,
+  unlike the previous versions where the cursor stays in the head of longest phrase.
+- Add force lowercase in English mode option.
+- Fix double free issue when destroy ibus-chewing.
+- Hide ibus-chewing-panel when ibus-chewing is focus-out
+
 * Mon May 11 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.0.9.20090508
   Now commit is forced when switch of ibus-chewing or current application loses focus.
 - New ibus-chewing.png is contribute by WM.
@@ -44,5 +55,6 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
