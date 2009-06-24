@@ -77,7 +77,6 @@ ADD_CUSTOM_TARGET(uninstall
     "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
     )
 
-
 #====================================================================
 # Package handling
 #
@@ -109,8 +108,4 @@ IF (EXISTS Doxyfile)
 	DESTINATION "${docdir}/${PROJECT_NAME}-${PRJ_VER}"
     )
 ENDIF()
-
-
-
-
 

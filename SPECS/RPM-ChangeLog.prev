@@ -1,3 +1,9 @@
+* Mon Jun 22 2009 Peng Huang <shawn.p.huang@gmail.com> - 1.2.0.20090622-1
+- Update to 1.2.0.20090622.
+
+* Fri May 22 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.10.20090523-2
+- Add back the export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+
 * Fri May 22 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.10.20090523-1
 - Applied Lubomir Rintel's patch
 
@@ -86,6 +92,7 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+
 
 
 

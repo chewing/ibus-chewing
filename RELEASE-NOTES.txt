@@ -1,5 +1,5 @@
-PRJ_VER=1.0.10.20090523
-SUMMARY=Applied Lubomir Rintel patch
+PRJ_VER=1.2.0.20090624
+SUMMARY=Lookup table now shows the selection key.
 # Changes
-- Applied Lubomir Rintel's patch
+- Lookup table now shows the selection key.
 

@@ -87,6 +87,10 @@ static void selKeys_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     ibus_chewing_engine_set_selKeys_string(engine,g_value_get_string(value));
+    if (!engine->table){
+	engine->table=ibus_lookup_table_new(strlen(g_value_get_string(value)),0,FALSE,TRUE);
+    }
+    ibus_chewing_engine_set_lookup_table_label(engine,g_value_get_string(value));
 #endif
 }
 

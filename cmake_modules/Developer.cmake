@@ -38,7 +38,7 @@
 #     user: User name used to upload.
 #     batchfile: File that contain batch command to upload.
 #     hosting_site: Domain name of hosting service.
-#     upload_options: Paramerters of uploading command. No use if type is
+#     upload_options: Parameters of uploading command. No use if type is
 #         "custom"
 #     upload_command: Custom upload command.
 # * Produced targets: upload_pkg_release
@@ -48,7 +48,6 @@ INCLUDE(BasicMacros)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
     SET(HOSTING_SERVICE_PROVIDER "hosting service provider")
 ENDIF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
-
 
 MACRO(DEVELOPER_UPLOAD arg_0 arg_list)
     SET(_stage SERVER_TYPE)
