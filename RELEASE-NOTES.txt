@@ -1,5 +1,5 @@
 PRJ_VER=1.2.0.20090817
-SUMMARY=Merge 1.2 and 1.1;
+SUMMARY=Merge 1.2 and 1.1; IBUS Google code issue 471
 # Changes
 - Merged 1.2 and 1.1 source code.
 - Addressed Upstream (IBUS Google code) issue 471.
