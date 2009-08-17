@@ -1,5 +1,6 @@
-PRJ_VER=1.2.0.20090624
-SUMMARY=Lookup table now shows the selection key.
+PRJ_VER=1.2.0.20090817
+SUMMARY=Merge 1.2 and 1.1;
 # Changes
-- Lookup table now shows the selection key.
+- Merged 1.2 and 1.1 source code.
+- Addressed Upstream (IBUS Google code) issue 471.
 

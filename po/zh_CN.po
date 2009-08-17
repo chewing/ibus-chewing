@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-24 10:12+1000\n"
+"POT-Creation-Date: 2009-08-17 17:11+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,51 +15,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:224
+#: ../src/IBusChewingEngine.gob:259
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:224
+#: ../src/IBusChewingEngine.gob:259
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
-#: ../src/IBusChewingEngine-def.c:223
+#: ../src/IBusChewingEngine-def.c:230
 msgid "Add phrases in front"
 msgstr "前方加词"
 
-#: ../src/IBusChewingEngine-def.c:227
+#: ../src/IBusChewingEngine-def.c:234
 msgid "Adding phrases in the front."
 msgstr "前方加词"
 
-#: ../src/IBusChewingEngine-def.c:217
+#: ../src/IBusChewingEngine-def.c:280
+msgid "Always input numbers when number keys from key pad is inputted."
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:224
 msgid "Auto move cursor"
 msgstr "自动移游标下一个字"
 
-#: ../src/IBusChewingEngine-def.c:221
+#: ../src/IBusChewingEngine-def.c:228
 msgid "Automatically move cursor to next character."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:275
+#: ../src/IBusChewingEngine-def.c:289
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:159
+#: ../src/IBusChewingEngine.gob:186
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine-def.c:281
+#: ../src/IBusChewingEngine-def.c:295
 msgid "Choose phrases from backward"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:285
-msgid "Choose phrases from backward."
+#: ../src/IBusChewingEngine-def.c:299
+msgid "Choose phrases from the back, without moving cursor."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:229
+#: ../src/IBusChewingEngine-def.c:236
 msgid "Easy symbol input"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:233
+#: ../src/IBusChewingEngine-def.c:240
 msgid "Easy symbol input."
 msgstr ""
 
@@ -67,46 +71,46 @@ msgstr ""
 msgid "Editing"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:160
+#: ../src/IBusChewingEngine.gob:187
 msgid "Eng"
 msgstr "英"
 
-#: ../src/IBusChewingEngine-def.c:235
+#: ../src/IBusChewingEngine-def.c:242
 msgid "Esc clean all buffer"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:239
+#: ../src/IBusChewingEngine-def.c:246
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:247
+#: ../src/IBusChewingEngine-def.c:254
 msgid "Force lowercase in En mode"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:162
+#: ../src/IBusChewingEngine.gob:189
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:163
+#: ../src/IBusChewingEngine.gob:190
 msgid "Half"
 msgstr "半"
 
-#: ../src/IBusChewingEngine-def.c:214
+#: ../src/IBusChewingEngine-def.c:221
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:210
+#: ../src/IBusChewingEngine-def.c:217
 msgid "Hsu's selection key"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:251
+#: ../src/IBusChewingEngine-def.c:258
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default. Uppercase can still "
 "be inputted with Shift."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:273
+#: ../src/IBusChewingEngine-def.c:287
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
@@ -116,32 +120,36 @@ msgstr ""
 msgid "Keyboard"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:198
+#: ../src/IBusChewingEngine-def.c:205
 #, fuzzy
 msgid "Keyboard Type"
 msgstr "键盘"
 
-#: ../src/IBusChewingEngine-def.c:208
+#: ../src/IBusChewingEngine-def.c:215
 msgid ""
 "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
 "select the 1st candidate, 's' for 2nd, and so on."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:241
+#: ../src/IBusChewingEngine-def.c:248
 msgid "Maximum Chinese characters"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:245
+#: ../src/IBusChewingEngine-def.c:252
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:279
+#: ../src/IBusChewingEngine-def.c:293
 msgid "Number of selection candidate per page."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:262
+#: ../src/IBusChewingEngine-def.c:276
+msgid "Number pad always input number"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:269
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -150,15 +158,15 @@ msgid ""
 "\"im\": Keyboard status follows IM status."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:269
+#: ../src/IBusChewingEngine-def.c:283
 msgid "Plain Zhuyin mode"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:291
+#: ../src/IBusChewingEngine-def.c:305 ../src/IBusChewingEngine-def.c:312
 msgid "Press Space to select the candidate."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:202
+#: ../src/IBusChewingEngine-def.c:209
 msgid "Select keyboard layout of Zhuyin symbols."
 msgstr ""
 
@@ -166,27 +174,27 @@ msgstr ""
 msgid "Selecting"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:204
+#: ../src/IBusChewingEngine-def.c:211
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:106
+#: ../src/IBusChewingEngine.gob:131
 msgid "Setting"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:165
+#: ../src/IBusChewingEngine.gob:192
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:287
+#: ../src/IBusChewingEngine-def.c:301 ../src/IBusChewingEngine-def.c:308
 msgid "Space to select"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:256
+#: ../src/IBusChewingEngine-def.c:263
 msgid "Sync between CapsLock and IM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:222
+#: ../src/IBusChewingEngine.gob:257
 msgid "Warning: cannot load configure key"
 msgstr ""
 

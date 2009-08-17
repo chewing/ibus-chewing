@@ -159,6 +159,13 @@ static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
 #endif
 }
 
+static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value){
+#ifdef IBUS_CHEWING_MAIN
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    engine->numpadAlwaysNumber=g_value_get_boolean(value);
+#endif
+}
+
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -266,6 +273,13 @@ this option determines how these status be synchronized. Valid values:\n\
 \"im\": Keyboard status follows IM status."),
     },
 
+    {G_TYPE_BOOLEAN, "numpadAlwaysNumber", "Editing", N_("Number pad always input number"),
+	"1", NULL, NULL,  0, 1,
+	NULL, numpadAlwaysNumber_set_callback,
+	0, 0, 0,
+	N_("Always input numbers when number keys from key pad is inputted."),
+    },
+
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),
 	"0", NULL, NULL, 0, 1,
 	NULL, plainZhuyin_set_callback,
@@ -282,8 +296,15 @@ this option determines how these status be synchronized. Valid values:\n\
 	"1", NULL, NULL,  0, 1,
 	NULL, phraseChoiceRearward_set_callback,
 	0, 0, 0,
-	N_("Choose phrases from backward."),
+	N_("Choose phrases from the back, without moving cursor."),
     },
+    {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space to select"),
+	"1", NULL, NULL,  0, 1,
+	NULL, spaceAsSelection_set_callback,
+	0, 0, 0,
+	N_("Press Space to select the candidate."),
+    },
+
     {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space to select"),
 	"1", NULL, NULL,  0, 1,
 	NULL, spaceAsSelection_set_callback,
@@ -304,18 +325,13 @@ this option determines how these status be synchronized. Valid values:\n\
 /*============================================
  * Supporting functions
  */
-
-//static const PropertySpec *propertySpec_find_by_key(const gchar *key){
-//    int i;
-//    for(i=0;propSpecs[i].valueType!=G_TYPE_INVALID;i++){
-//        if (strcmp(propSpecs[i].key,key)==0){
-//            return &propSpecs[i];
-//        }
-//    }
-//    return NULL;
-//}
-
 #ifdef IBUS_CHEWING_MAIN
+static guint keysym_KP_to_normal(guint key){
+    if (key < IBUS_KP_0 || key > IBUS_KP_9)
+	return 0;
+    return key - IBUS_KP_0 + IBUS_0;
+}
+
 static int get_tone(ChewingKbType kbType, guint keyval){
     int i=0;
     if (keyval==' ')
@@ -464,5 +480,4 @@ static void key_send_fake_event(KeySym key, Display *pDisplay)
 
 }
 #endif
-
 

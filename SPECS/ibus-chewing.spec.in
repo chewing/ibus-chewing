@@ -33,8 +33,10 @@ libchewing.
 %setup -q -n %{name}-%{version}-Source
 
 %build
-%cmake -DCMAKE_INSTALL_PREFIX=%{_usr}
-make VERBOSE=1 C_DEFINES="$RPM_OPT_FLAGS" %{?_smp_mflags}
+
+#%cmake -DCMAKE_INSTALL_PREFIX=%{_usr} -DCMAKE_C_FLAGS_RELWITHDEBINFO="$RPM_OPT_FLAGS"
+%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
+make VERBOSE=2  %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT

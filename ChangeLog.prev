@@ -1,3 +1,6 @@
+* Mon Aug 17 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090624
+- Lookup table now shows the selection key.
+
 * Mon Jun 22 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090622
 - For IBus 1.2
 - Revised dialog look.
@@ -59,6 +62,7 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
 

@@ -76,7 +76,6 @@ INCLUDE(common.CMakeLists.txt)
 FILE(READ ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog RPM_CHANGELOG)
 GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
 
-
 ####################################################################
 # Definitions
 ####################################################################
@@ -91,7 +90,14 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/
 FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
 PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0)
-PKG_CHECK_MODULES(X11 REQUIRED x11)
+STRING(REGEX MATCH "[1-9][0-9]*\\.[1-9][0-9]*" IBUS_COMPAT_VERSION "${IBUS_VERSION}")
+IF( IBUS_COMPAT_VERSION STREQUAL 1.1)
+    MESSAGE("IBus 1.1 detected!")
+    ADD_DEFINITIONS(-DIBUS_1_1)
+ELSE()
+    MESSAGE("IBus compatible version: ${IBUS_COMPAT_VERSION}")
+ENDIF()
+#PKG_CHECK_MODULES(X11 REQUIRED x11)
 PKG_CHECK_MODULES(XTST REQUIRED xtst)
 
 PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)

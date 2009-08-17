@@ -31,6 +31,9 @@
 # RPM_IS_NO_ARCH: Set it if this rpm is noarch, it also
 #         hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
 #
+# MOCK_DIST_TAG: Prefix of mock configure file, such as "fedora-11", "fedora-rawhide", "epel-5"/
+#         Default: Convert from DIST_TAG
+#
 #===================================================================
 # Macros:
 # GENERATE_SPEC(spec_in)
@@ -47,7 +50,7 @@
 #
 # rpmlint: Run rpmlint to generated rpms.
 #
-# rpm_mock_i386: Use mock to build i386 rpms.
+# rpm_mock_i386: Use mock to build i386/i586 rpms.
 #     Depends on srpm.
 #
 # rpm_mock_x86_64: Use mock to build x86_64 rpms.
@@ -116,6 +119,21 @@ IF(NOT DEFINED SRPM_FILE)
     SET (SRPM_FILE ${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER_FULL}.${DIST_TAG}.src.rpm)
 ENDIF(NOT DEFINED SRPM_FILE)
 
+IF(NOT DEFINED MOCK_DIST_TAG)
+    STRING(REGEX MATCH "^fc([1-9][0-9]*)"  _fedora_mock_dist "${DIST_TAG}")
+    STRING(REGEX MATCH "^el([1-9][0-9]*)"  _el_mock_dist "${DIST_TAG}")
+
+    IF (_fedora_mock_dist)
+        STRING(REGEX REPLACE "^fc([1-9][0-9]*)" "fedora-\\1" MOCK_DIST_TAG "${DIST_TAG}")
+    ELSEIF (_el_mock_dist)
+        STRING(REGEX REPLACE "^el([1-9][0-9]*)" "epel-\\1" MOCK_DIST_TAG "${DIST_TAG}")
+    ELSE (_fedora_mock_dist)
+	SET(MOCK_DIST_TAG "fedora-devel")
+    ENDIF(_fedora_mock_dist)
+    #MESSAGE ("MOCK_DIST_TAG=${MOCK_DIST_TAG}")
+ENDIF(NOT DEFINED MOCK_DIST_TAG)
+
+
 GET_FILENAME_COMPONENT(rpm_build_sources_basename ${RPM_BUILD_SOURCES} NAME)
 GET_FILENAME_COMPONENT(rpm_build_srpms_basename ${RPM_BUILD_SRPMS} NAME)
 GET_FILENAME_COMPONENT(rpm_build_rpms_basename ${RPM_BUILD_RPMS} NAME)
@@ -123,7 +141,7 @@ GET_FILENAME_COMPONENT(rpm_build_build_basename ${RPM_BUILD_BUILD} NAME)
 SET(RPM_IGNORE_FILES "\\\\.rpm$"
     "/${rpm_build_sources_basename}/" "/${rpm_build_srpms_basename}/" "/${rpm_build_rpms_basename}/" "/${rpm_build_build_basename}/" "debug.*s.list")
 
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME}:${PROJECT_DESCRIPTION}")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME}: ${PROJECT_SUMMARY}")
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES}
     ${RPM_IGNORE_FILES})
 SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_PACKAGE_IGNORE_FILES}
@@ -147,6 +165,7 @@ ADD_CUSTOM_TARGET(srpm
 ADD_CUSTOM_TARGET(rpm
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_SRPMS}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i386
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i586
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/x86_64
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/noarch
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_BUILD}
@@ -166,12 +185,12 @@ ADD_DEPENDENCIES(rpm pack_src)
 IF(NOT RPM_IS_NOARCH)
     ADD_CUSTOM_TARGET(rpm_mock_i386
 	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/i386
-	COMMAND mock -r  fedora-10-i386 --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
+	COMMAND mock -r  "${MOCK_DIST_TAG}-i386" --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
 	)
 
     ADD_CUSTOM_TARGET(rpm_mock_x86_64
 	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/x86_64
-	COMMAND mock -r  fedora-10-x86_64 --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
+	COMMAND mock -r  "${MOCK_DIST_TAG}-x86_64" --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
 	)
 
     ADD_DEPENDENCIES(rpm_mock_i386 srpm)
