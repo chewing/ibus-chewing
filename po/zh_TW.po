@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-17 17:11+1000\n"
+"POT-Creation-Date: 2009-08-18 15:06+1000\n"
 "PO-Revision-Date: 2009-05-22 10:37+1000\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Plain Zhuyin mode"
 msgstr "標準注音模式"
 
-#: ../src/IBusChewingEngine-def.c:305 ../src/IBusChewingEngine-def.c:312
+#: ../src/IBusChewingEngine-def.c:305
 msgid "Press Space to select the candidate."
 msgstr "按空白鍵選擇"
 
@@ -198,7 +198,7 @@ msgstr "設定"
 msgid "Settings"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine-def.c:301 ../src/IBusChewingEngine-def.c:308
+#: ../src/IBusChewingEngine-def.c:301
 msgid "Space to select"
 msgstr "空白鍵選字"
 

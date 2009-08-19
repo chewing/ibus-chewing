@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-17 17:11+1000\n"
+"POT-Creation-Date: 2009-08-18 15:06+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Plain Zhuyin mode"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:305 ../src/IBusChewingEngine-def.c:312
+#: ../src/IBusChewingEngine-def.c:305
 msgid "Press Space to select the candidate."
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:301 ../src/IBusChewingEngine-def.c:308
+#: ../src/IBusChewingEngine-def.c:301
 msgid "Space to select"
 msgstr ""
 

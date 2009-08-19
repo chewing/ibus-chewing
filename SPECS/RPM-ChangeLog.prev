@@ -1,4 +1,7 @@
-* Mon Aug 17 2009 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090624-1
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0.20090624-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Fri Jul 24 2009 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090624-1
 - Lookup table now shows the selection key.
 
 * Mon Jun 22 2009 Peng Huang <shawn.p.huang@gmail.com> - 1.2.0.20090622-1

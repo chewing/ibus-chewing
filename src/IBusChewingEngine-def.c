@@ -305,13 +305,6 @@ this option determines how these status be synchronized. Valid values:\n\
 	N_("Press Space to select the candidate."),
     },
 
-    {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space to select"),
-	"1", NULL, NULL,  0, 1,
-	NULL, spaceAsSelection_set_callback,
-	0, 0, 0,
-	N_("Press Space to select the candidate."),
-    },
-
     {G_TYPE_INVALID, "", "", "",
 	"", NULL, NULL,  0, 0,
 	NULL, NULL,
