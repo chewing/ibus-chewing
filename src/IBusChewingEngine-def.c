@@ -319,18 +319,32 @@ this option determines how these status be synchronized. Valid values:\n\
  * Supporting functions
  */
 #ifdef IBUS_CHEWING_MAIN
-static guint keysym_KP_to_normal(guint key){
-    if (key < IBUS_KP_0 || key > IBUS_KP_9)
-	return 0;
-    return key - IBUS_KP_0 + IBUS_0;
+static guint keysym_KP_to_normal(guint keysym){
+    if (keysym < IBUS_KP_0 || keysym > IBUS_KP_9){
+	switch(keysym){
+	    case IBUS_KP_Decimal:
+		return IBUS_period;
+	    case IBUS_KP_Add:
+		return IBUS_plus;
+	    case IBUS_KP_Subtract:
+		return IBUS_minus;
+	    case IBUS_KP_Multiply:
+		return IBUS_asterisk;
+	    case IBUS_KP_Divide:
+		return IBUS_slash;
+	    default:
+		return 0;
+	}
+    }
+    return keysym - IBUS_KP_0 + IBUS_0;
 }
 
-static int get_tone(ChewingKbType kbType, guint keyval){
+static int get_tone(ChewingKbType kbType, guint keysym){
     int i=0;
-    if (keyval==' ')
+    if (keysym==' ')
 	return 1;
     for(i=0;i<4;i++){
-	if (toneKeys[kbType][i]==keyval){
+	if (toneKeys[kbType][i]==keysym){
 	    return i+2;
 	}
     }

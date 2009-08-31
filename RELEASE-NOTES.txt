@@ -1,6 +1,7 @@
-PRJ_VER=1.2.0.20090818
-SUMMARY=Merge 1.2 and 1.1; IBUS Google code issue 471; Remove libX11 dependency.
+PRJ_VER=1.2.0.20090831
+SUMMARY= IBus upstream issue 484
 # Changes
-- Merged 1.2 and 1.1 source code.
-- Addressed Upstream (IBUS Google code) issue 471.
-- Remove libX11 dependency.
+- IBusProperty and IBusPropList are free upon destruction.
+- Addressed Upstream (IBUS Google code) issue 484:
+  Arithmetic symbols (+-*/) on number pad does not input properly.
+
