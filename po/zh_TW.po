@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-18 15:06+1000\n"
+"POT-Creation-Date: 2009-08-31 12:32+1000\n"
 "PO-Revision-Date: 2009-05-22 10:37+1000\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/IBusChewingEngine.gob:259
+#: ../src/IBusChewingEngine.gob:264
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:259
+#: ../src/IBusChewingEngine.gob:264
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -50,7 +50,7 @@ msgstr "自動移游標至下一個字。"
 msgid "Candidate per page"
 msgstr "每頁備選字數"
 
-#: ../src/IBusChewingEngine.gob:186
+#: ../src/IBusChewingEngine.gob:191
 msgid "Chi"
 msgstr "中"
 
@@ -75,7 +75,7 @@ msgstr "簡易符號輸入"
 msgid "Editing"
 msgstr "編輯"
 
-#: ../src/IBusChewingEngine.gob:187
+#: ../src/IBusChewingEngine.gob:192
 msgid "Eng"
 msgstr "英"
 
@@ -91,11 +91,11 @@ msgstr "Esc 鍵清預編區"
 msgid "Force lowercase in En mode"
 msgstr "CapsLock時英數仍用小寫"
 
-#: ../src/IBusChewingEngine.gob:189
+#: ../src/IBusChewingEngine.gob:194
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:190
+#: ../src/IBusChewingEngine.gob:195
 msgid "Half"
 msgstr "半"
 
@@ -190,11 +190,11 @@ msgstr "選字"
 msgid "Selection keys"
 msgstr "選字按鍵"
 
-#: ../src/IBusChewingEngine.gob:131
+#: ../src/IBusChewingEngine.gob:132
 msgid "Setting"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine.gob:192
+#: ../src/IBusChewingEngine.gob:197
 msgid "Settings"
 msgstr "設定"
 
@@ -206,7 +206,7 @@ msgstr "空白鍵選字"
 msgid "Sync between CapsLock and IM"
 msgstr "CapsLock與輸入法狀態同步"
 
-#: ../src/IBusChewingEngine.gob:257
+#: ../src/IBusChewingEngine.gob:262
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
 

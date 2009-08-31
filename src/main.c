@@ -75,7 +75,11 @@ start_component (void)
     if (ibus) {
         ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
     }else {
+#ifdef IBUS_1_1
         ibus_bus_register_component (bus, component);
+#else
+        ibus_bus_register_component (bus, component);
+#endif /* ifdef IBUS_1_1 */
     }
     ibus_main ();
 }

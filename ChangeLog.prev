@@ -1,3 +1,8 @@
+* Wed Aug 26 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090818
+- Merged 1.2 and 1.1 source code.
+- Addressed Upstream (IBUS Google code) issue 471.
+- Remove libX11 dependency.
+
 * Mon Aug 17 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090624
 - Lookup table now shows the selection key.
 
@@ -62,6 +67,7 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
 

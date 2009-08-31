@@ -60,12 +60,13 @@ enum CHEWING_MODIFIER_SYNC{
  * @BYPASS: Do not handle key (Pure English mode)
  * @EDITING: Forming Chinese character (in pre-edit buffer).
  * @SELECTING: Selecting candidate.
- *
+ * @SELECTING_DONE: A candidate is now selected.
  */
 enum CHEWING_INPUT_MODE{
     BYPASS,
     EDITING,
-    SELECTING
+    SELECTING,
+    SELECTING_DONE
 } Chewing:Input:Mode;
 
 %h{
@@ -155,23 +156,27 @@ class IBus:Chewing:Engine from IBus:Engine{
 		SELF_GET_CLASS(self)->chieng_prop_label_chi,
 		NULL, NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL)
-    };
+        }
+        destroywith g_object_unref;
 
     public IBusProperty    *alnumSize_prop={
         ibus_property_new("chewing_alnumSize_prop",PROP_TYPE_NORMAL,
 	       	SELF_GET_CLASS(self)->alnumSize_prop_label_half,
 	      	NULL, NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL);
-    };
+        }
+        destroywith g_object_unref;
 
     public IBusProperty    *settings_prop={
 	ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
 		PKGDATADIR "/icons/settings.png", NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL);
-    };
+        }
+        destroywith g_object_unref;
 
-    public IBusPropList   *prop_list={ibus_prop_list_new()};
+    public IBusPropList   *prop_list={ibus_prop_list_new()}
+        destroywith  g_object_unref;
 
     public IBusConfig *config=NULL;
 
@@ -313,39 +318,49 @@ class IBus:Chewing:Engine from IBus:Engine{
     private gunichar *make_preedit_string(self, glong *zhuyin_item_written_ptr,  glong *item_written_ptr){
 	glong chiSymbol_item_written=0;
 	gchar *str_ptr=chewing_buffer_String(self->context);
-	G_DEBUG_MSG(3, "make_preedit_string(): chewing_buffer_String=%s",str_ptr);
+	guint bufferString_len=strlen(str_ptr);
+	G_DEBUG_MSG(3, "make_preedit_string(): chewing_buffer_String=%s buf_len=%d",str_ptr, bufferString_len);
 	gunichar *chiSymbolBuf=g_utf8_to_ucs4_fast(str_ptr,-1, &chiSymbol_item_written);
 	g_free(str_ptr);
 
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
-	int zhuyinCount;
+	int zhuyin_count;
         int zhuyin_tone=-1;
 
-	str_ptr=chewing_zuin_String(self->context,&zhuyinCount);
-	int zhuyinLen=strlen(str_ptr);
+	str_ptr=chewing_zuin_String(self->context,&zhuyin_count);
+	int zhuyin_len=strlen(str_ptr);
 	G_DEBUG_MSG(3, "make_preedit_string(): chewing_zuin_String=%s count=%d len=%d inputMode=%d",
-		str_ptr,zhuyinCount,zhuyinLen,self->inputMode);
+		str_ptr,zhuyin_count,zhuyin_len,self->inputMode);
 
-	if (zhuyinLen>0){
+	if (zhuyin_len>0){
 	    g_strlcpy(self->_priv->zhuyin_latest,str_ptr,ZHUYIN_BUFFER_SIZE);
 	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	    zhuyin_tone=0;
 	}else{
-	    /* Character/Phrase is completed, may need selection */
+	    /* Character/Phrase is completed. */
 	    if (self->inputMode==CHEWING_INPUT_MODE_EDITING){
-		/* Character/Phrase is completed because one of the ending keys is inputted */
+		/* In EDITING mode */
 		zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
 		add_tone(self->_priv->zhuyin_latest,zhuyin_tone);
-		self->inputMode=CHEWING_INPUT_MODE_SELECTING;
-		if (self->plainZhuyin){
-		    chewing_handle_Down(self->context);
+		if (zhuyin_tone>0 ){
+		    /* Enter SELECTING mode */
+		    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+		    if (self->plainZhuyin){
+			if (chewing_get_spaceAsSelection(self->context)){
+			    chewing_handle_Space(self->context);
+			}else{
+			    chewing_handle_Down(self->context);
+			}
+		    }
 		}
-	    }else if (self_is_selectKey(self, self->_priv->key_last)){
-		/* In SELECTING mode */
+	    }else if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
+		/* In SELECTING_DONE mode */
 		/* One of selection keys is pressed */
 		self->_priv->zhuyin_latest[0]='\0';
 		zhuyin_tone=-1;
 		self->inputMode=CHEWING_INPUT_MODE_EDITING;
+	    }else{
+		/* In SELECTING mode */
 	    }
 	}
 	G_DEBUG_MSG(3, "make_preedit_string(): zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
@@ -460,7 +475,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	self_update_aux_string(self);
 	self_update_preedit(self);
-	G_DEBUG_MSG(3,"update() inputMode=%d",self->inputMode);
 	uint16 *phoneSeq=(chewing_get_phoneSeqLen(self->context)>0)? chewing_get_phoneSeq(self->context): NULL;
 	G_DEBUG_MSG(3,"update() inputMode=%d nPhoneSeq=%d",self->inputMode,
 		chewing_get_phoneSeqLen(self->context));
@@ -580,9 +594,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		return TRUE;
 	    }
 	}
-	if (keyval==' ' && chewing_get_spaceAsSelection(self->context)){
-	    return TRUE;
-	}
 	return FALSE;
     }
 
@@ -630,6 +641,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    if (self_is_selectKey(self,self->_priv->key_last) &&
 		    self->inputMode==CHEWING_INPUT_MODE_SELECTING){
 		chewing_handle_Enter(self->context);
+		self->inputMode= CHEWING_INPUT_MODE_SELECTING_DONE;
 	    }
 	}
     }

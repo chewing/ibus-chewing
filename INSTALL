@@ -1,0 +1,28 @@
+Installation Instructions
+*************************
+0. Remove the old build cache:
+  If you have previous ibus-chewing, or change between ibus 1.1 and ibus 1.2,
+  You may need to remove CMakeCache.txt
+
+1. Extract source and enter the extracted directory, then:
+cmake . -DCMAKE_INSTALL_PREFIX='/usr' -DLIBEXEC_DIR='/usr/libexec'
+make
+
+Change CMAKE_INSTALL_PREFIX and LIBEXEC_DIR if you want to install
+in different directories.
+
+2. If you have previous version installed, then need to:
+make uninstall_schemas
+
+3. Install and register schemas:
+sudo make install
+make install_schemas
+
+
+4. Use iBus UI or run ibus-setup to add ibus-chewing.
+
+5. Restart iBus and Enjoy!
+
+To see other available build targets, use
+
+make help
