@@ -3,23 +3,23 @@
 <component>
     <name>org.freedesktop.IBus.Chewing</name>
     <description>Chewing Component</description>
-    <exec>@LIBEXEC_DIR@/ibus-engine-chewing --ibus</exec>
     <version>@PRJ_VER_FULL@</version>
-    <author>Peng Huang, Ding-Yi Chen</author>
     <license>GPL</license>
+    <author>Peng Huang, Ding-Yi Chen</author>
     <homepage>http://code.google.com/p/ibus</homepage>
+    <exec>@LIBEXEC_DIR@/ibus-engine-chewing --ibus</exec>
     <textdomain>ibus-chewing</textdomain>
-
     <engines>
         <engine>
 	    <name>chewing</name>
-	    <language>zh</language>
+	    <longname>Chinese Chewing</longname>
+	    <description>Chewing Input Method</description>
+	    <language>zh_TW</language>
 	    <license>GPL</license>
 	    <author>Peng Huang, Ding-Yi Chen</author>
             <icon>@PROJECT_DATADIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>
-	    <longname>Chewing</longname>
-	    <description>Chewing Input Method</description>
         </engine>
     </engines>
 </component>
+

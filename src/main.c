@@ -66,8 +66,31 @@ start_component (void)
     bus = ibus_bus_new ();
     g_signal_connect (bus, "disconnected", G_CALLBACK (ibus_disconnected_cb), NULL);
 
+#ifdef IBUS_1_1
     component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
+#else
+    component=ibus_component_new("org.freedesktop.IBus.Chewing",
+            "Chewing Component",
+            PRJ_VERSION,
+            "GPL",
+            "Peng Huang, Ding-Yi Chen",
+            "http://code.google.com/p/ibus",
+            LIBEXEC_DIR "ibus-engine-chewing --ibus",
+            "ibus-chewing");
 
+    IBusEngineDesc *desc=ibus_engine_desc_new ("chewing",
+            "Chinese Chewing",
+            "Chewing Input Method",
+            "zh_TW",
+            "GPL",
+            "Peng Huang, Ding-Yi Chen",
+            PKGDATADIR "/icons/ibus-chewing.png",
+            "us");
+
+    ibus_component_add_engine(component,desc);
+//    ibus_component_add_observed_path (component, PKGDATADIR "/data/chewing.xml",TRUE);
+
+#endif /* ifdef IBUS_1_1 */
     IBusConnection *iConnection=ibus_bus_get_connection (bus);
     factory = ibus_factory_new (iConnection);
     ibus_factory_add_engine (factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
@@ -75,11 +98,7 @@ start_component (void)
     if (ibus) {
         ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
     }else {
-#ifdef IBUS_1_1
         ibus_bus_register_component (bus, component);
-#else
-        ibus_bus_register_component (bus, component);
-#endif /* ifdef IBUS_1_1 */
     }
     ibus_main ();
 }

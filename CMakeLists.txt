@@ -145,10 +145,13 @@ INCLUDE(GConf)
 
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
+
+# GOB_GENERATED source codes are not excluded,
+# in order to avoid Bug 519108.
+# https://bugzilla.redhat.com/show_bug.cgi?id=519108
 SET(PRJ_COMMON_IGNORE_FILES
     "/docs/"
     "\\\\.cache$"  "\\\\.spec$"
-    "ibus-chewing-engine.*\\\\.[ch]$" "maker-dialog.*\\\\.[ch]$"
     "messages.po$"
 )
 
@@ -159,5 +162,6 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_
 
 INCLUDE(CPack)
 
-ADD_DEPENDENCIES(pack_src pot_file)
+# Avoid [Bug 519108]: [gob2] class and enum names convert incorrectly in mock / koji.
+ADD_DEPENDENCIES(pack_src pot_file gob2)
 

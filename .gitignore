@@ -12,7 +12,6 @@
 tags
 Makefile
 ABOUT-NLS
-INSTALL
 gtk-doc.make
 install_manifest.txt
 libtool
