@@ -53,6 +53,7 @@ ADD_CUSTOM_TARGET(commit
     COMMAND git commit -a -m "${CHANGE_SUMMARY}"
     COMMAND git tag -a "${PRJ_VER}" -m "Ver ${PRJ_VER}"
     COMMENT "Commit and tag the changes"
+    VERBATIM
     )
 
 

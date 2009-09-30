@@ -313,12 +313,11 @@ this option determines how these status be synchronized. Valid values:\n\
     },
 };
 
-
-
 /*============================================
  * Supporting functions
  */
 #ifdef IBUS_CHEWING_MAIN
+
 static guint keysym_KP_to_normal(guint keysym){
     if (keysym < IBUS_KP_0 || keysym > IBUS_KP_9){
 	switch(keysym){
@@ -486,5 +485,6 @@ static void key_send_fake_event(KeySym key, Display *pDisplay)
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
 
 }
+
 #endif
 

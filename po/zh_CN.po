@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-16 17:42+1000\n"
+"POT-Creation-Date: 2009-09-30 13:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:264
+#: ../src/IBusChewingEngine.gob:267
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:264
+#: ../src/IBusChewingEngine.gob:267
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
@@ -47,9 +47,23 @@ msgstr ""
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:191
+#: ../src/main.c:74
+msgid "Chewing component"
+msgstr ""
+
+#: ../src/IBusChewingEngine.gob:194
 msgid "Chi"
 msgstr "中"
+
+#: ../src/main.c:81
+#, fuzzy
+msgid "Chinese chewing"
+msgstr "新酷音"
+
+#: ../src/main.c:82
+#, fuzzy
+msgid "Chinese chewing input method"
+msgstr "新酷音"
 
 #: ../src/IBusChewingEngine-def.c:295
 msgid "Choose phrases from backward"
@@ -71,7 +85,7 @@ msgstr ""
 msgid "Editing"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:192
+#: ../src/IBusChewingEngine.gob:195
 msgid "Eng"
 msgstr "英"
 
@@ -87,11 +101,11 @@ msgstr ""
 msgid "Force lowercase in En mode"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:194
+#: ../src/IBusChewingEngine.gob:197
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:195
+#: ../src/IBusChewingEngine.gob:198
 msgid "Half"
 msgstr "半"
 
@@ -158,6 +172,10 @@ msgid ""
 "\"im\": Keyboard status follows IM status."
 msgstr ""
 
+#: ../src/main.c:75 ../src/main.c:83
+msgid "Peng Huang, Ding-Yi Chen"
+msgstr ""
+
 #: ../src/IBusChewingEngine-def.c:283
 msgid "Plain Zhuyin mode"
 msgstr ""
@@ -178,11 +196,11 @@ msgstr ""
 msgid "Selection keys"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:132
+#: ../src/IBusChewingEngine.gob:135
 msgid "Setting"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:197
+#: ../src/IBusChewingEngine.gob:200
 msgid "Settings"
 msgstr ""
 
@@ -194,9 +212,14 @@ msgstr ""
 msgid "Sync between CapsLock and IM"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:262
+#: ../src/IBusChewingEngine.gob:265
 msgid "Warning: cannot load configure key"
 msgstr ""
+
+#: ../src/main.c:81
+#, fuzzy
+msgid "chewing"
+msgstr "新酷音"
 
 #: ../src/IBusChewingEngine-def.c:41
 #, fuzzy
@@ -260,9 +283,6 @@ msgstr ""
 msgctxt "Sync"
 msgid "keyboard"
 msgstr "键盘"
-
-#~ msgid "Chewing"
-#~ msgstr "新酷音"
 
 #~ msgid "ETen"
 #~ msgstr "倚天"

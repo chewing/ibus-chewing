@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-16 17:42+1000\n"
+"POT-Creation-Date: 2009-09-30 11:30+1000\n"
 "PO-Revision-Date: 2009-05-22 10:37+1000\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/IBusChewingEngine.gob:264
+#: ../src/IBusChewingEngine.gob:267
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:264
+#: ../src/IBusChewingEngine.gob:267
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -50,9 +50,23 @@ msgstr "自動移游標至下一個字。"
 msgid "Candidate per page"
 msgstr "每頁備選字數"
 
-#: ../src/IBusChewingEngine.gob:191
+#: ../src/main.c:74
+msgid "Chewing component"
+msgstr "酷音元件"
+
+#: ../src/IBusChewingEngine.gob:194
 msgid "Chi"
 msgstr "中"
+
+#: ../src/main.c:81
+#, fuzzy
+msgid "Chinese chewing"
+msgstr "新酷音"
+
+#: ../src/main.c:82
+#, fuzzy
+msgid "Chinese chewing input method"
+msgstr "新酷音中文輸入法"
 
 #: ../src/IBusChewingEngine-def.c:295
 msgid "Choose phrases from backward"
@@ -61,7 +75,7 @@ msgstr "後方選詞"
 #: ../src/IBusChewingEngine-def.c:299
 #, fuzzy
 msgid "Choose phrases from the back, without moving cursor."
-msgstr "後方選詞"
+msgstr "直接由後方選詞，不必把游標移到候選詞前。"
 
 #: ../src/IBusChewingEngine-def.c:236
 msgid "Easy symbol input"
@@ -75,7 +89,7 @@ msgstr "簡易符號輸入"
 msgid "Editing"
 msgstr "編輯"
 
-#: ../src/IBusChewingEngine.gob:192
+#: ../src/IBusChewingEngine.gob:195
 msgid "Eng"
 msgstr "英"
 
@@ -85,17 +99,17 @@ msgstr "Esc 鍵清預編區"
 
 #: ../src/IBusChewingEngine-def.c:246
 msgid "Escape key cleans the text in pre-edit-buffer."
-msgstr "Esc 鍵清預編區"
+msgstr "Esc 鍵清預編區。"
 
 #: ../src/IBusChewingEngine-def.c:254
 msgid "Force lowercase in En mode"
 msgstr "CapsLock時英數仍用小寫"
 
-#: ../src/IBusChewingEngine.gob:194
+#: ../src/IBusChewingEngine.gob:197
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:195
+#: ../src/IBusChewingEngine.gob:198
 msgid "Half"
 msgstr "半"
 
@@ -170,6 +184,10 @@ msgstr ""
 "\"keyboard\": 輸入法向 Caps Lock 狀態同步。\n"
 "\"im\": Caps Lock 向輸入法狀態同步。"
 
+#: ../src/main.c:75 ../src/main.c:83
+msgid "Peng Huang, Ding-Yi Chen"
+msgstr ""
+
 #: ../src/IBusChewingEngine-def.c:283
 msgid "Plain Zhuyin mode"
 msgstr "標準注音模式"
@@ -190,11 +208,11 @@ msgstr "選字"
 msgid "Selection keys"
 msgstr "選字按鍵"
 
-#: ../src/IBusChewingEngine.gob:132
+#: ../src/IBusChewingEngine.gob:135
 msgid "Setting"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine.gob:197
+#: ../src/IBusChewingEngine.gob:200
 msgid "Settings"
 msgstr "設定"
 
@@ -206,9 +224,14 @@ msgstr "空白鍵選字"
 msgid "Sync between CapsLock and IM"
 msgstr "CapsLock與輸入法狀態同步"
 
-#: ../src/IBusChewingEngine.gob:262
+#: ../src/IBusChewingEngine.gob:265
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
+
+#: ../src/main.c:81
+#, fuzzy
+msgid "chewing"
+msgstr "新酷音"
 
 #: ../src/IBusChewingEngine-def.c:41
 msgid "dachen_26"
@@ -264,6 +287,3 @@ msgstr "由輸入法"
 msgctxt "Sync"
 msgid "keyboard"
 msgstr "由鍵盤"
-
-#~ msgid "Chewing"
-#~ msgstr "新酷音"

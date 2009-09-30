@@ -4,7 +4,7 @@
     <name>org.freedesktop.IBus.Chewing</name>
     <description>Chewing Component</description>
     <version>@PRJ_VER_FULL@</version>
-    <license>GPL</license>
+    <license>GPLv2+</license>
     <author>Peng Huang, Ding-Yi Chen</author>
     <homepage>http://code.google.com/p/ibus</homepage>
     <exec>@LIBEXEC_DIR@/ibus-engine-chewing --ibus</exec>
@@ -12,10 +12,10 @@
     <engines>
         <engine>
 	    <name>chewing</name>
-	    <longname>Chinese Chewing</longname>
-	    <description>Chewing Input Method</description>
+	    <longname>Chinese chewing</longname>
+	    <description>Chewing chewing input method</description>
 	    <language>zh_TW</language>
-	    <license>GPL</license>
+	    <license>GPLv2+</license>
 	    <author>Peng Huang, Ding-Yi Chen</author>
             <icon>@PROJECT_DATADIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>

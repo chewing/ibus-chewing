@@ -14,12 +14,12 @@ BuildRequires:  gtk2-devel
 BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake >= 2.4
 BuildRequires:  gob2
-BuildRequires:  libchewing-devel >= 0.3.2-4
+BuildRequires:  libchewing-devel >= 0.3.2-16
 BuildRequires:  pkgconfig
 BuildRequires:  GConf2-devel
 BuildRequires:  libXtst-devel
 Requires:   ibus >= 1.1
-Requires:  libchewing >= 0.3.2-4
+Requires:  libchewing >= 0.3.2-16
 Requires(pre): GConf2
 Requires(post): GConf2
 Requires(preun): GConf2

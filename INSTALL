@@ -1,27 +1,36 @@
 Installation Instructions
 *************************
-0. Remove the old build cache:
+0. Required: 
+    libchewing>=0.3.2-16 (with chewing_zuin patch),
+    cmake >=2.4
+    gob  >=2
+    gettext
+    gtk2
+    GConf2
+    libXtst
+   
+1. Remove the old build cache:
   If you have previous ibus-chewing, or change between ibus 1.1 and ibus 1.2,
   You may need to remove CMakeCache.txt
 
-1. Extract source and enter the extracted directory, then:
+2. Extract source and enter the extracted directory, then:
 cmake . -DCMAKE_INSTALL_PREFIX='/usr' -DLIBEXEC_DIR='/usr/libexec'
 make
 
 Change CMAKE_INSTALL_PREFIX and LIBEXEC_DIR if you want to install
 in different directories.
 
-2. If you have previous version installed, then need to:
+3. If you have previous version installed, then need to:
 make uninstall_schemas
 
-3. Install and register schemas:
+4. Install and register schemas:
 sudo make install
 make install_schemas
 
 
-4. Use iBus UI or run ibus-setup to add ibus-chewing.
+5. Use iBus UI or run ibus-setup to add ibus-chewing.
 
-5. Restart iBus and Enjoy!
+6. Restart iBus and Enjoy!
 
 To see other available build targets, use
 
