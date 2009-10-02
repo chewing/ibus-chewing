@@ -1,3 +1,6 @@
+* Wed Sep 30 2009 Peng Huang <shawn.p.huang@gmail.com> - 1.2.0.20090917-2
+- Rebuild with ibus-1.2.0
+
 * Thu Sep 17 2009 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20090917-1
 - Addressed Upstream (IBUS Google code) issue 484:
   + Find the source that why the / and . are not working.
@@ -115,5 +118,4 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
-
 

@@ -7,7 +7,6 @@
 #include <ibus.h>
 #include <chewing.h>
 #include "ibus-chewing-engine.h"
-#define G_DEBUG_MSG(msg, args...) if (1) g_debug(msg, ##args)
 #define DIALOG_TEST
 #include "IBusChewingEngine-def.c"
 

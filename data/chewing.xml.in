@@ -12,8 +12,8 @@
     <engines>
         <engine>
 	    <name>chewing</name>
-	    <longname>Chinese chewing</longname>
-	    <description>Chewing chewing input method</description>
+	    <longname>Chewing</longname>
+	    <description>Chinese chewing input method</description>
 	    <language>zh_TW</language>
 	    <license>GPLv2+</license>
 	    <author>Peng Huang, Ding-Yi Chen</author>

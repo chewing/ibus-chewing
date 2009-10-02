@@ -71,6 +71,12 @@ enum CHEWING_INPUT_MODE{
     SELECTING_DONE
 } Chewing:Input:Mode;
 
+enum CHEWING_OUTPUT_CHARSET{
+    AUTO,
+    BIG5,
+    UTF8
+} Chewing:Output:Charset;
+
 %h{
 #include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
@@ -96,6 +102,8 @@ extern GtkResponseType button_responses[];
 typedef void IBusKeymap;
 IBusKeymap *ibus_keymap_new(gchar *keymap_name);
 #endif /* IBUS_1_1 */
+
+#define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
 %}
 
 %privateheader{
@@ -113,7 +121,6 @@ gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 extern gboolean ibus_chewing_verbose;
 //extern IBusConfig *iConfig;
 
-#define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
 
@@ -291,16 +298,13 @@ class IBus:Chewing:Engine from IBus:Engine{
 	gboolean commit=chewing_commit_Check(self->context);
 	G_DEBUG_MSG(2,"[I2] commit() %s", (commit) ? "TRUE": "FALSE");
 	if (commit){
-	    gunichar *text=NULL;
 	    IBusText *iText=NULL;
-	    glong item_written;
 
 	    gchar *commit_string=chewing_commit_String(self->context);
 	    G_DEBUG_MSG(3,"[I3] commit() commit_string=%s", commit_string);
-	    text=g_utf8_to_ucs4_fast(commit_string,-1, &item_written);
-	    iText=ibus_text_new_from_ucs4(text);
+
+	    iText=ibus_text_new_from_string(commit_string);
 	    ibus_engine_commit_text(IBUS_ENGINE(self),iText);
-	    g_free(text);
 	    g_free(commit_string);
 	    g_object_unref(iText);
 	}
@@ -316,26 +320,24 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
-    private gunichar *make_preedit_string(self, glong *zhuyin_item_written_ptr,  glong *item_written_ptr){
+    private gchar *make_preedit_string(self, glong *zhuyin_item_written_ptr){
 	G_DEBUG_MSG(4, "[I3] make_preedit_string()");
-	glong chiSymbol_item_written=0;
-	gchar *str_ptr=chewing_buffer_String(self->context);
-	gunichar *chiSymbolBuf=g_utf8_to_ucs4_fast(str_ptr,-1, &chiSymbol_item_written);
-	G_DEBUG_MSG(4, "[I4] make_preedit_string(): chewing_buffer_String=%s chiSymbol_item_written=%ld",
-		str_ptr, chiSymbol_item_written);
-	g_free(str_ptr);
+	gchar *buff_str=chewing_buffer_String(self->context);
+	G_DEBUG_MSG(4, "[I4] make_preedit_string(): chewing_buffer_String=%s ",
+		buff_str);
 
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
 	int zhuyin_count;
         int zhuyin_tone=-1;
 
-	str_ptr=chewing_zuin_String(self->context,&zhuyin_count);
+	gchar *zhuyin_str=chewing_zuin_String(self->context,&zhuyin_count);
+	*zhuyin_item_written_ptr= (glong) zhuyin_count;
 	G_DEBUG_MSG(4, "[I4] make_preedit_string(): chewing_zuin_String=%s count=%d inputMode=%d",
-		str_ptr,zhuyin_count,self->inputMode);
+		zhuyin_str,zhuyin_count,self->inputMode);
 
 	switch(self->inputMode){
 	    case CHEWING_INPUT_MODE_EDITING:
-		g_strlcpy(self->_priv->zhuyin_latest,str_ptr,ZHUYIN_BUFFER_SIZE);
+		g_strlcpy(self->_priv->zhuyin_latest,zhuyin_str,ZHUYIN_BUFFER_SIZE);
 		zhuyin_tone=0;
 		break;
 	    case CHEWING_INPUT_MODE_SELECTING:
@@ -362,29 +364,26 @@ class IBus:Chewing:Engine from IBus:Engine{
 		break;
 
 	}
-	gunichar *zhuyinBuf=g_utf8_to_ucs4_fast(str_ptr,-1, zhuyin_item_written_ptr);
-	g_free(str_ptr);
 
-	glong i;
-	*item_written_ptr=chiSymbol_item_written+ *zhuyin_item_written_ptr;
-	gunichar *preeditBuf=g_new(gunichar, *item_written_ptr+1);
-	glong j=0;
-	for (i=0;i<*item_written_ptr;i++){
-	    if (i<chiSymbolCursor){
-		preeditBuf[i]=chiSymbolBuf[i];
-	    }else if (j<*zhuyin_item_written_ptr){
-		/* Inserting zhuyinBuf */
-		preeditBuf[i]=zhuyinBuf[j++];
-	    }else{
-		/* Append rest chiSymbolBuf */
-		preeditBuf[i]=chiSymbolBuf[i- *zhuyin_item_written_ptr];
-	    }
+	gsize len=strlen(zhuyin_str)+strlen(buff_str);
+	gchar *preeditBuf=g_new(gchar, len+1);
+        preeditBuf[0]='\0';
+	if (chiSymbolCursor>0){
+	    g_utf8_strncpy(preeditBuf, buff_str, chiSymbolCursor);
 	}
-	preeditBuf[i]='\0';
-	g_free(chiSymbolBuf);
-	g_free(zhuyinBuf);
-	G_DEBUG_MSG(4, "[I4] make_preedit_string(): return zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
-		self->_priv->zhuyin_latest,zhuyin_tone,self->inputMode);
+	gsize zhuyin_start=strlen(preeditBuf);
+	/* Inserting zhuyinBuf */
+	if (zhuyin_count>0){
+	    g_strlcat(preeditBuf,zhuyin_str,len+1);
+	}
+	/* Append rest chiSymbolBuf */
+	g_strlcat(preeditBuf,buff_str+zhuyin_start, len+1);
+
+	g_free(buff_str);
+	g_free(zhuyin_str);
+	G_DEBUG_MSG(4, "[I4] make_preedit_string(): return preedit=%s zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
+		preeditBuf, self->_priv->zhuyin_latest,zhuyin_tone,self->inputMode);
+
 	return preeditBuf;
     }
 
@@ -430,17 +429,13 @@ class IBus:Chewing:Engine from IBus:Engine{
     private void update_aux_string(self){
 	G_DEBUG_MSG(4,"[I4] update_aux_string()");
 	IBusText *iText=NULL;
-	gunichar *text=NULL;
-	glong item_written;
 	if (chewing_aux_Length(self->context)>0){
 	    gchar *aux_string=chewing_aux_String(self->context);
-	    text=g_utf8_to_ucs4_fast(aux_string,-1,&item_written);
-	    iText=ibus_text_new_from_ucs4 (text);
+	    iText=ibus_text_new_from_string (aux_string);
 	    ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),iText,TRUE);
 	    g_object_unref (iText);
 	    ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
 	    g_free(aux_string);
-	    g_free(text);
 	}else{
 	    ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
 //            iText=ibus_text_new_from_string(self->_priv->zhuyin_latest);
@@ -452,9 +447,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     private void update_preedit(self){
 	G_DEBUG_MSG(4,"[I4] update_preedit()");
-	glong zhuyin_item_written, item_written;
-	gunichar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written, &item_written);
-	IBusText *iText=ibus_text_new_from_ucs4(preeditBuf);
+	glong zhuyin_item_written;
+	gchar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written);
+	IBusText *iText=ibus_text_new_from_string(preeditBuf);
+	g_free(preeditBuf);
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
 	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff,
 		chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
@@ -715,7 +711,6 @@ class IBus:Chewing:Engine from IBus:Engine{
     /*============================================
      * Overridden Parent (IBusEngine) methods
      */
-
     override (IBus:Engine) void
     reset(IBus:Engine *engine){
 	G_DEBUG_MSG(1,"[I1] reset");

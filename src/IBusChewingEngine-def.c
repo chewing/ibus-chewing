@@ -43,6 +43,7 @@ const gchar *kbType_ids[]={
     NULL
 };
 
+
 #define SELKEYS_ARRAY_SIZE 7
 const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     "1234567890",
@@ -58,6 +59,13 @@ const gchar *syncCapsLockLocal_strs[]={
     NC_("Sync","disable"),
     NC_("Sync","keyboard"),
     NC_("Sync","im"),
+    NULL
+};
+
+const gchar *outputCharsets[]={
+    N_("Auto"),
+    N_("Big5"),
+    N_("UTF8"),
     NULL
 };
 
@@ -199,6 +207,7 @@ static void plainZhuyin_set_callback(PropertyContext *ctx, GValue *value){
     engine->plainZhuyin=g_value_get_boolean(value);
 #endif
 }
+
 /*===== End of Callback functions =====*/
 
 PropertySpec propSpecs[]={
@@ -231,7 +240,7 @@ PropertySpec propSpecs[]={
 	"0", NULL, NULL, 0, 1,
 	NULL, addPhraseDirection_set_callback,
 	0, 0, 0,
-	N_("Adding phrases in the front."),
+	N_("Add phrases in the front."),
     },
     {G_TYPE_BOOLEAN, "easySymbolInput", "Editing", N_("Easy symbol input"),
 	"1", NULL, NULL,  0, 1,
@@ -290,7 +299,7 @@ this option determines how these status be synchronized. Valid values:\n\
 	"10", NULL, NULL,  8, 10,
 	NULL, candPerPage_set_callback,
 	0, 0, 0,
-	N_("Number of selection candidate per page."),
+	N_("Number of candidate per page."),
     },
     {G_TYPE_BOOLEAN, "phraseChoiceRearward", "Selecting", N_("Choose phrases from backward"),
 	"1", NULL, NULL,  0, 1,
@@ -302,7 +311,7 @@ this option determines how these status be synchronized. Valid values:\n\
 	"1", NULL, NULL,  0, 1,
 	NULL, spaceAsSelection_set_callback,
 	0, 0, 0,
-	N_("Press Space to select the candidate."),
+	"Press Space to select the candidate.",
     },
 
     {G_TYPE_INVALID, "", "", "",

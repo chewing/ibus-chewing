@@ -69,18 +69,18 @@ start_component (void)
         ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
     }else {
         IBusComponent *component;
-        //    component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
+//        component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
         component=ibus_component_new("org.freedesktop.IBus.Chewing",
                 _("Chewing component"), PKGDATADIR, "GPLv2+",
-                _("Peng Huang, Ding-Yi Chen"),
+                "Peng Huang, Ding-Yi Chen",
                 "http://code.google.com/p/ibus",
                 LIBEXEC_DIR "/ibus-engine-chewing --ibus",
                 "ibus-chewing");
 
         ibus_component_add_engine(component,
-                ibus_engine_desc_new(_("chewing"), _("Chinese chewing"),
-                _("Chinese chewing input method"),
-                "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
+                ibus_engine_desc_new("chewing", _("Chewing"),
+                "Chinese chewing input method",
+                "zh_TW", "GPLv2+", "Peng Huang, Ding-Yi Chen",
                 PKGDATADIR "/icons/" PROJECT_NAME ".png",
                 "us")
         );
@@ -88,6 +88,42 @@ start_component (void)
         ibus_bus_register_component (bus, component);
     }
     ibus_main ();
+}
+
+const char *locale_env_strings[]={
+    "LC_ALL",
+    "LANG",
+    "LANGUAGE",
+    "GDM_LANG",
+    NULL
+};
+void determine_locale(){
+#ifndef STRING_BUFFER_SIZE
+#define STRING_BUFFER_SIZE 100
+#endif
+    gchar *localePtr=NULL;
+    gchar localeStr[STRING_BUFFER_SIZE];
+    int i;
+    for(i=0;locale_env_strings[i]!=NULL;i++){
+        if (getenv(locale_env_strings[i])){
+            localePtr=getenv(locale_env_strings[i]);
+            break;
+        }
+    }
+    if (!localePtr){
+        localePtr="en_US.utf8";
+    }
+    /* Use UTF8 as charset unconditionally */
+    for (i=0;localePtr[i]!='\0';i++){
+        if (localePtr[i]=='.')
+            break;
+        localeStr[i]=localePtr[i];
+    }
+    localeStr[i]='\0';
+    g_strlcat(localeStr,".utf8",STRING_BUFFER_SIZE);
+#undef STRING_BUFFER_SIZE
+    setlocale (LC_ALL, localeStr);
+    G_DEBUG_MSG(1,"[I1] determine_locale %s",localeStr);
 }
 
 int
@@ -98,7 +134,7 @@ main (gint argc, gchar *argv[])
     gtk_init(&argc,&argv);
 
     /* Init i18n messages */
-    setlocale (LC_ALL, "");
+    setlocale (LC_ALL, "zh_TW.utf8");
     bindtextdomain(PROJECT_NAME, DATADIR "/locale");
     textdomain(PROJECT_NAME);
 

@@ -1,10 +1,11 @@
-PRJ_VER=1.2.0.20090930
-SUMMARY= IBus Google issue 501, 502; Revised ibus-chewing icon.
+PRJ_VER=1.2.0.20091002
+SUMMARY= Bugzilla Bug 518901; IBus Google issue 501, 502; Revised ibus-chewing icon.
 # Changes
-- Use WM's revised ibus-chewing icon.
-- Debug output now marked with levels.
+- Bug 518901 - ibus-chewing would not work with locale zh_TW.Big
 - Fix Google issue 501: ibus-chewing buffer doesn't get cleared when
-  toggling ibus on/off
+toggling ibus on/off
 - Fix Google issue 502: ibus-chewing: character selection window stays
-  behind when toggling ibus off
+behind when toggling ibus off- Use WM's revised ibus-chewing icon.
+- Debug output now marked with levels.
+
 
