@@ -1,3 +1,11 @@
+* Fri Oct 09 2009 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20091002-1
+- Bug 518901 - ibus-chewing would not work with locale zh_TW.Big
+- Fix Google issue 501: ibus-chewing buffer doesn't get cleared when
+toggling ibus on/off
+- Fix Google issue 502: ibus-chewing: character selection window stays
+behind when toggling ibus off- Use WM's revised ibus-chewing icon.
+- Debug output now marked with levels.
+
 * Wed Sep 30 2009 Peng Huang <shawn.p.huang@gmail.com> - 1.2.0.20090917-2
 - Rebuild with ibus-1.2.0
 
@@ -118,4 +126,5 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+
 

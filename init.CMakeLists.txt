@@ -53,6 +53,14 @@ IF(NOT DEFINED LIBEXEC_DIR)
 ENDIF()
 ADD_DEFINITIONS(-DLIBEXEC_DIR='"${LIBEXEC_DIR}"')
 
+IF(NOT DEFINED IS_64)
+    IF( $ENV{MACHTYPE} MATCHES "64")
+        SET(IS_64 "64")
+    ELSE()
+        SET(IS_64 "")
+    ENDIF()
+ENDIF()
+ADD_DEFINITIONS(-DIS_64='"${IS64}"')
 
 ###==================================================================
 # CPack Generator

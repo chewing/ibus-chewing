@@ -446,16 +446,18 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void update_preedit(self){
-	G_DEBUG_MSG(4,"[I4] update_preedit()");
+	G_DEBUG_MSG(5,"[I5] update_preedit()");
 	glong zhuyin_item_written;
 	gchar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written);
 	IBusText *iText=ibus_text_new_from_string(preeditBuf);
-	g_free(preeditBuf);
 	int chiSymbolCursor = chewing_cursor_Current(self->context);
+	G_DEBUG_MSG(4,"[I4] update_preedit() chiSymbolCursor=%d preeditBuf=%s",chiSymbolCursor,preeditBuf );
+	g_free(preeditBuf);
+	gint cursorRight=chiSymbolCursor + MAX(zhuyin_item_written,1);
 	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff,
-		chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
+		chiSymbolCursor, cursorRight);
 	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00000000,
-		chiSymbolCursor, chiSymbolCursor+zhuyin_item_written);
+		chiSymbolCursor, cursorRight);
 
 	IntervalType it;
 	chewing_interval_Enumerate(self->context);
@@ -716,7 +718,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(1,"[I1] reset");
 	Self *self=SELF(engine);
 	ibus_lookup_table_clear(self->table);
+	/* Save KBType type, becaue chewing_Reset() will reset it to default.
+	 */
+	int kbType=chewing_get_KBType(self->context);
 	chewing_Reset(self->context);
+	chewing_set_KBType(self->context,kbType);
 	ibus_engine_hide_auxiliary_text(IBUS_ENGINE(engine));
 	ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
     }

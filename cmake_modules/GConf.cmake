@@ -24,7 +24,6 @@ IF(${GCONFTOOL} STREQUAL "GCONFTOOL-NOTFOUND")
     MESSAGE(FATAL_ERROR "gconftool and gconftool-2 are not found, please install GConf or GConf2.")
 ENDIF()
 
-
 IF (NOT DEFINED GCONF_SCHEMAS_FILE)
     SET(GCONF_SCHEMAS_FILE  "${PROJECT_NAME}.schemas")
 ENDIF(NOT DEFINED GCONF_SCHEMAS_FILE)
@@ -49,6 +48,7 @@ ADD_CUSTOM_TARGET(uninstall_schemas
     )
 
 ADD_CUSTOM_TARGET(install_schemas
+    COMMAND cmake -E copy ${GCONF_SCHEMAS_FILE} ${GCONF_SCHEMAS_INSTALLED_DIR}/${_gconf_schemas_basename}
     COMMAND GCONF_CONFIG_SOURCE=${GCONF_CONFIG_SOURCE}
     ${GCONFTOOL} --makefile-install-rule
     ${GCONF_SCHEMAS_INSTALLED_DIR}/${_gconf_schemas_basename}

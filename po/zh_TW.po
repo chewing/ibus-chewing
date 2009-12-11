@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-02 16:04+1000\n"
+"POT-Creation-Date: 2009-12-09 16:19+1000\n"
 "PO-Revision-Date: 2009-10-02 12:24+1000\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -188,6 +188,10 @@ msgstr ""
 "\"keyboard\": 輸入法向 Caps Lock 狀態同步。\n"
 "\"im\": Caps Lock 向輸入法狀態同步。"
 
+#: ../src/main.c:75 ../src/main.c:83
+msgid "Peng Huang, Ding-Yi Chen"
+msgstr ""
+
 #: ../src/IBusChewingEngine-def.c:292
 msgid "Plain Zhuyin mode"
 msgstr "標準注音模式"
@@ -283,27 +287,3 @@ msgctxt "Sync"
 msgid "keyboard"
 msgstr "由鍵盤"
 
-#, fuzzy
-#~ msgid ""
-#~ "Charset of output. Auto means if locale is Big5, then outputs Big5, "
-#~ "otherwise outputs UTF8."
-#~ msgstr ""
-#~ "輸出編碼方式。「自動」代表ibus-chewing 會參照系統編碼設定。若系統編碼為 "
-#~ "big-5 或 big5 則設定為 Big5 相容模式，否則則為 UTF8模式。"
-
-#, fuzzy
-#~ msgid "Chinese chewing"
-#~ msgstr "新酷音"
-
-#, fuzzy
-#~ msgid "Chinese chewing input method"
-#~ msgstr "新酷音中文輸入法"
-
-#~ msgid "Misc"
-#~ msgstr "其他"
-
-#~ msgid "Output Charset"
-#~ msgstr "輸出編碼"
-
-#~ msgid "Press Space to select the candidate."
-#~ msgstr "按空白鍵選擇"

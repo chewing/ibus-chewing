@@ -1,11 +1,10 @@
-PRJ_VER=1.2.0.20091002
-SUMMARY= Bugzilla Bug 518901; IBus Google issue 501, 502; Revised ibus-chewing icon.
+PRJ_VER=1.2.0.20091211
+SUMMARY= Fixed Google code issue 608, 611, 660.
 # Changes
-- Bug 518901 - ibus-chewing would not work with locale zh_TW.Big
-- Fix Google issue 501: ibus-chewing buffer doesn't get cleared when
-toggling ibus on/off
-- Fix Google issue 502: ibus-chewing: character selection window stays
-behind when toggling ibus off- Use WM's revised ibus-chewing icon.
-- Debug output now marked with levels.
+- Fix Google issue 608: ibus-chewing does not show cursor in xim mode.
+- Fix Google issue 611: ibus-chewing keyboard setting reverts to default unexpectlly.
+- Fix Google issue 660: failed to build with binutils-gold.
+- Remove make target commit.
+- Add make target tag
 
 

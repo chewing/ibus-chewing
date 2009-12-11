@@ -1,7 +1,7 @@
 Installation Instructions
 *************************
 0. Required: 
-    libchewing>=0.3.2-16 (with chewing_zuin patch),
+    libchewing>=0.3.2-16 (with chewing_zuin path, or upstream r1048),
     cmake >=2.4
     gob  >=2
     gettext

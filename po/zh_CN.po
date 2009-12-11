@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-02 16:04+1000\n"
+"POT-Creation-Date: 2009-12-11 17:41+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -174,6 +174,10 @@ msgid ""
 "\"disable\": Do nothing.\n"
 "\"keyboard\": IM status follows keyboard status.\n"
 "\"im\": Keyboard status follows IM status."
+msgstr ""
+
+#: ../src/main.c:75 ../src/main.c:83
+msgid "Peng Huang, Ding-Yi Chen"
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:292

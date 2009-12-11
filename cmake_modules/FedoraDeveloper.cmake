@@ -31,7 +31,7 @@
 #
 
 INCLUDE(RPM)
-SET(RAWHIDE_VER 12)
+SET(RAWHIDE_VER 13)
 
 IF(NOT DEFINED KOJI_CVS_PATH)
     SET(KOJI_CVS_PATH "./")
@@ -81,16 +81,29 @@ FOREACH(_dist_tag ${CVS_DIST_TAGS})
     SET (KOJI_BUILD_CMD
 	"${KOJI_BUILD_CMD} && cd ${_dist_tag} && make build && cd .."
 	)
-    STRING(REGEX REPLACE "F-([0-9]*)" "\\1"
-	_curr_tag ${_dist_tag})
-    IF (_curr_tag)
+    STRING(REGEX MATCH "F-([0-9]*)"
+    	_is_fedora_tag ${_dist_tag})
+    STRING(REGEX MATCH "EL-([0-9]*)"
+	_is_epel_tag ${_dist_tag})
+    IF (_is_fedora_tag)
+	STRING(REGEX REPLACE "F-([0-9]*)" "\\1"
+	    _curr_tag ${_dist_tag})
 	SET (KOJI_SCRATCH_BUILD_CMD
 	    "${KOJI_SCRATCH_BUILD_CMD} && koji build --scratch dist-f${_curr_tag} ${SRPM_FILE}"
 	    )
 	IF(NOT DEFINED BODHI_DIST_TAGS)
-	    SET(_bodhi_dist_tags "fc${_curr_tag}")
+	    SET(_bodhi_dist_tags ${_bodhi_dist_tags} "fc${_curr_tag}")
 	ENDIF(NOT DEFINED BODHI_DIST_TAGS)
-    ENDIF(_curr_tag)
+    ELSEIF (_is_epel_tag)
+	STRING(REGEX REPLACE "EL-([0-9]*)" "\\1"
+	    _curr_tag ${_dist_tag})
+	SET (KOJI_SCRATCH_BUILD_CMD
+	    "${KOJI_SCRATCH_BUILD_CMD} && koji build --scratch dist-${_curr_tag}E-epel-testing-candidate ${SRPM_FILE}"
+	    )
+	IF(NOT DEFINED BODHI_DIST_TAGS)
+	    SET(_bodhi_dist_tags ${_bodhi_dist_tags} "el${_curr_tag}")
+	ENDIF(NOT DEFINED BODHI_DIST_TAGS)
+    ENDIF(_is_fedora_tag)
 ENDFOREACH(_dist_tag)
 
 #MESSAGE(KOJI_SCRATCH_BUILD_CMD=${KOJI_SCRATCH_BUILD_CMD})

@@ -42,19 +42,12 @@ ADD_EXECUTABLE(generate-gconf-schemas
     generate-gconf-schemas.c
     maker-dialog.c
     )
-ADD_EXECUTABLE(dialogTest dialogTest.c
-    maker-dialog.c
-    )
 
 # Link the executable to the library.
 TARGET_LINK_LIBRARIES(ibus-engine-chewing ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
-    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
+    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${XTST_LIBRARIES})
 
 TARGET_LINK_LIBRARIES(generate-gconf-schemas ${GTK2_LIBRARIES})
-
-TARGET_LINK_LIBRARIES(dialogTest ${GTK2_LIBRARIES} ${IBUS_LIBRARIES}
-    ${CHEWING_LIBRARIES} ${GCONF2_LIBRARIES} ${X11_LIBRARIES} ${XTST_LIBRARIES})
-
 
 IF(NOT DEFINED LIB_INSTALL_DIR)
     IF( $ENV{MACHTYPE} MATCHES "64")

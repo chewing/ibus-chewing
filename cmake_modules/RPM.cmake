@@ -153,7 +153,7 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_PACKAGE_IGNORE_FILES}
 # RPM build targets
 ADD_CUSTOM_TARGET(srpm
     COMMAND ${CMAKE_COMMAND} -E make_directory SRPMS
-    COMMAND rpmbuild -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+    COMMAND rpmbuild-md5 -bs ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
     --define '_sourcedir ${RPM_BUILD_SOURCES}'
     --define '_builddir ${RPM_BUILD_BUILD}'
     --define '_srcrpmdir ${RPM_BUILD_SRPMS}'
@@ -170,7 +170,7 @@ ADD_CUSTOM_TARGET(rpm
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/noarch
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_BUILD}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_BUILDROOT}
-    COMMAND rpmbuild -ba --buildroot ${RPM_BUILD_BUILDROOT} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
+    COMMAND rpmbuild-md5 -ba --buildroot ${RPM_BUILD_BUILDROOT} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
     --define '_sourcedir ${RPM_BUILD_SOURCES}'
     --define '_builddir ${RPM_BUILD_BUILD}'
     --define '_srcrpmdir ${RPM_BUILD_SRPMS}'

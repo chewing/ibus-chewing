@@ -45,13 +45,12 @@ ENDIF(${NEED_RPM_RELEASE_INFO})
 #==================================================================
 # Developer setting.
 #
-SET(CVS_DIST_TAGS F-10 F-11)
+SET(CVS_DIST_TAGS F-11 F-12)
 SET(HOSTING_SERVICE_PROVIDER "GitHub")
 SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING_NO_PACK")
 SET(DEVELOPER_DEPENDS UploadPkg.batch.in)
-ADD_CUSTOM_TARGET(commit
-    COMMAND git commit -a -m "${CHANGE_SUMMARY}"
-    COMMAND git tag -a "${PRJ_VER}" -m "Ver ${PRJ_VER}"
+ADD_CUSTOM_TARGET(tag
+    COMMAND git tag -a "${PRJ_VER}" -m "Ver ${PRJ_VER}" HEAD
     COMMENT "Commit and tag the changes"
     VERBATIM
     )
@@ -98,7 +97,7 @@ IF( IBUS_COMPAT_VERSION STREQUAL 1.1)
 ELSE()
     MESSAGE("IBus compatible version: ${IBUS_COMPAT_VERSION}")
 ENDIF()
-PKG_CHECK_MODULES(XTST REQUIRED xtst)
+PKG_CHECK_MODULES(XTST REQUIRED xtst x11)
 
 PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
 COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATADIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
