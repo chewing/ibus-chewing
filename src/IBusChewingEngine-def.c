@@ -58,7 +58,7 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
 const gchar *syncCapsLockLocal_strs[]={
     NC_("Sync","disable"),
     NC_("Sync","keyboard"),
-    NC_("Sync","im"),
+    NC_("Sync","input method"),
     NULL
 };
 
@@ -68,6 +68,13 @@ const gchar *outputCharsets[]={
     N_("UTF8"),
     NULL
 };
+
+const gchar *inputStyles[]={
+    N_("On the Spot"),
+    N_("Over the Spot"),
+    NULL
+};
+
 
 #ifdef IBUS_CHEWING_MAIN
 static ChewingKbType kbType_id_get_index(const gchar *kbType_id){
@@ -127,7 +134,11 @@ static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_easySymbolInput(engine->context,(g_value_get_boolean(value)) ? 1: 0);
-    engine->_priv->easySymbolInput=g_value_get_boolean(value);
+    if (g_value_get_boolean(value)){
+	engine->flags |= CHEWING_FLAG_EASY_SYMBOL_INPUT;
+    }else{
+	engine->flags &= ~CHEWING_FLAG_EASY_SYMBOL_INPUT;
+    }
 #endif
 }
 
@@ -149,7 +160,11 @@ static void maxChiSymbolLen_set_callback(PropertyContext *ctx, GValue *value){
 static void forceLowercaseEnglish_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
-    engine->forceLowercaseEnglish=g_value_get_boolean(value);
+    if (g_value_get_boolean(value)){
+	engine->flags |= CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
+    }else{
+	engine->flags &= ~CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
+    }
 #endif
 }
 
@@ -159,7 +174,7 @@ static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
     const gchar *str=g_value_get_string(value);
     if (strcmp(str,"keyboard")==0){
 	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
-    }else if (strcmp(str,"im")==0){
+    }else if (strcmp(str,"input method")==0){
 	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_FROM_IM;
     }else{
 	engine->syncCapsLock_local=CHEWING_MODIFIER_SYNC_DISABLE;
@@ -170,7 +185,26 @@ static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
 static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
-    engine->numpadAlwaysNumber=g_value_get_boolean(value);
+    if (g_value_get_boolean(value)){
+	engine->flags |= CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
+    }else{
+	engine->flags &= ~CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
+    }
+#endif
+}
+
+static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
+#ifdef IBUS_CHEWING_MAIN
+    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
+    const gchar *str=g_value_get_string(value);
+    if (strcmp(str,"On the Spot")==0){
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_ON_THE_SPOT;
+    }else  if (strcmp(str,"Over the Spot")==0){
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_OVER_THE_SPOT;
+    }else{
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_ON_THE_SPOT;
+    }
+    ibus_chewing_engine_force_commit(engine);
 #endif
 }
 
@@ -204,7 +238,11 @@ static void spaceAsSelection_set_callback(PropertyContext *ctx, GValue *value){
 static void plainZhuyin_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
-    engine->plainZhuyin=g_value_get_boolean(value);
+    if (g_value_get_boolean(value)){
+	engine->flags |= CHEWING_FLAG_PLAIN_ZHUYIN;
+    }else{
+	engine->flags &= ~CHEWING_FLAG_PLAIN_ZHUYIN;
+    }
 #endif
 }
 
@@ -279,7 +317,7 @@ It is handy if you wish to enter lowercase by default. Uppercase can still be in
 this option determines how these status be synchronized. Valid values:\n\
 \"disable\": Do nothing.\n\
 \"keyboard\": IM status follows keyboard status.\n\
-\"im\": Keyboard status follows IM status."),
+\"IM\": Keyboard status follows IM status."),
     },
 
     {G_TYPE_BOOLEAN, "numpadAlwaysNumber", "Editing", N_("Number pad always input number"),
@@ -287,6 +325,16 @@ this option determines how these status be synchronized. Valid values:\n\
 	NULL, numpadAlwaysNumber_set_callback,
 	0, 0, 0,
 	N_("Always input numbers when number keys from key pad is inputted."),
+    },
+
+    {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
+	"On the Spot", inputStyles, NULL,  0, 1,
+	NULL, inputStyle_set_callback,
+	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
+       	0, 0,
+	N_("Input style determines where the preedit strings be shown and edited.\n"
+		"\"On the Spot\": Preedit strings are edited on the target client window.\n"
+		"\"Over the Spot\": Preedit strings are edited on the candidate selection window."),
     },
 
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),

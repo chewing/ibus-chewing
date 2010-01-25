@@ -1,10 +1,8 @@
-PRJ_VER=1.2.0.20091211
-SUMMARY= Fixed Google code issue 608, 611, 660.
+PRJ_VER=1.2.0.20100125
+SUMMARY= Add Over-the-spot editing mode.
 # Changes
-- Fix Google issue 608: ibus-chewing does not show cursor in xim mode.
-- Fix Google issue 611: ibus-chewing keyboard setting reverts to default unexpectlly.
-- Fix Google issue 660: failed to build with binutils-gold.
-- Remove make target commit.
-- Add make target tag
-
+- Add over-the-spot editing mode.
+- Possible fixed of Google issue 505: ibus acts strange in Qt programs.
+- Implemented Google issue 738:  Add a mode that allow editing in candidate window
+  (thus over-the-spot mode).
 

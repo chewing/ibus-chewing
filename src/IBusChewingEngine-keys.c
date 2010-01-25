@@ -26,7 +26,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	guint keysym_tmp=keysym_KP_to_normal(keysym);
 	if (keysym_tmp){
 	    /* Is keypad key */
-	    if (self->numpadAlwaysNumber && chewing_get_ChiEngMode(self->context)){
+	    if ((self->flags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER) && chewing_get_ChiEngMode(self->context)){
 		chewing_set_ChiEngMode(self->context, 0);
 		self_handle_Default(self,keysym_tmp,FALSE);
 		chewing_set_ChiEngMode(self->context,CHINESE_MODE);
