@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_TW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-29 14:17+1000\n"
+"POT-Creation-Date: 2010-02-01 17:15+1000\n"
 "PO-Revision-Date: 2009-10-02 12:24+1000\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/IBusChewingEngine.gob:296
+#: ../src/IBusChewingEngine.gob:299
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:296
+#: ../src/IBusChewingEngine.gob:299
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -67,7 +67,7 @@ msgstr "新酷音"
 msgid "Chewing component"
 msgstr "酷音元件"
 
-#: ../src/IBusChewingEngine.gob:222
+#: ../src/IBusChewingEngine.gob:225
 msgid "Chi"
 msgstr "中"
 
@@ -92,7 +92,7 @@ msgstr "簡易符號輸入。"
 msgid "Editing"
 msgstr "編輯"
 
-#: ../src/IBusChewingEngine.gob:223
+#: ../src/IBusChewingEngine.gob:226
 msgid "Eng"
 msgstr "英"
 
@@ -108,11 +108,11 @@ msgstr "Esc 鍵清預編區。"
 msgid "Force lowercase in En mode"
 msgstr "CapsLock時英數仍用小寫"
 
-#: ../src/IBusChewingEngine.gob:225
+#: ../src/IBusChewingEngine.gob:228
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:226
+#: ../src/IBusChewingEngine.gob:229
 msgid "Half"
 msgstr "半"
 
@@ -236,7 +236,7 @@ msgstr "選字按鍵"
 msgid "Setting"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine.gob:228
+#: ../src/IBusChewingEngine.gob:231
 msgid "Settings"
 msgstr "設定"
 
@@ -252,7 +252,7 @@ msgstr "CapsLock與輸入法狀態同步"
 msgid "UTF8"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:294
+#: ../src/IBusChewingEngine.gob:297
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
 

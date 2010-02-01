@@ -183,30 +183,33 @@ class IBus:Chewing:Engine from IBus:Engine{
 	destroywith ibus_lookup_table_clear;
 
     public IBusProperty    *chieng_prop={
-        ibus_property_new("chewing_chieng_prop",PROP_TYPE_NORMAL,
+        g_object_ref_sink (
+            ibus_property_new("chewing_chieng_prop",PROP_TYPE_NORMAL,
 		SELF_GET_CLASS(self)->chieng_prop_label_chi,
 		NULL, NULL, TRUE, TRUE,
-		PROP_STATE_UNCHECKED, NULL)
+		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
 
     public IBusProperty    *alnumSize_prop={
-        ibus_property_new("chewing_alnumSize_prop",PROP_TYPE_NORMAL,
+        g_object_ref_sink (
+            ibus_property_new("chewing_alnumSize_prop",PROP_TYPE_NORMAL,
 	       	SELF_GET_CLASS(self)->alnumSize_prop_label_half,
 	      	NULL, NULL, TRUE, TRUE,
-		PROP_STATE_UNCHECKED, NULL);
+		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
 
     public IBusProperty    *settings_prop={
-	ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
+        g_object_ref_sink (
+	    ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
 		PKGDATADIR "/icons/settings.png", NULL, TRUE, TRUE,
-		PROP_STATE_UNCHECKED, NULL);
+		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
 
-    public IBusPropList   *prop_list={ibus_prop_list_new()}
+    public IBusPropList   *prop_list={ g_object_ref_sink (ibus_prop_list_new()) }
         destroywith  g_object_unref;
 
     public IBusConfig *config=NULL;
