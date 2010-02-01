@@ -19,7 +19,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	return TRUE;
     }
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    G_DEBUG_MSG(3,"[I3] ibus_chewing_engine_process_key_event(-, %u(%s), %u) ... proceed.",keysym, keyName_get(keysym), modifiers);
+    G_DEBUG_MSG(3,"[I3] process_key_event(-, %u(%s), %u) ... proceed.",keysym, keyName_get(keysym), modifiers);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last=keysym;
     if (state==0){
@@ -52,7 +52,12 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    break;
 		case IBUS_space:
 		case IBUS_KP_Space:
+		    /**
+		     * Fix for space in Temporary mode.
+		     */
 		    chewing_handle_Space(self->context);
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    break;
 		case IBUS_Page_Up:
 		case IBUS_KP_Page_Up:

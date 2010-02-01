@@ -1,8 +1,7 @@
-PRJ_VER=1.2.0.20100125
-SUMMARY= Add Over-the-spot editing mode.
+PRJ_VER=1.2.0.20100129
+SUMMARY= Fixing Google issue 754, 755, 758
 # Changes
-- Add over-the-spot editing mode.
-- Possible fixed of Google issue 505: ibus acts strange in Qt programs.
-- Implemented Google issue 738:  Add a mode that allow editing in candidate window
-  (thus over-the-spot mode).
+- Fixed Google issue 754: commit string is missing when inputting long English text in the end.
+- Fixed Google issue 755: Cannot input ㄧ、ㄛ、ㄣ、ㄦ with Dvorak Hsu's keyboard.
+- Fixed Google issue 758: Space is irresponsive in Temporary English mode if no Chinese in preedit buffer.
 

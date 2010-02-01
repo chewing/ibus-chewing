@@ -1,3 +1,9 @@
+* Mon Jan 25 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100125
+- Add over-the-spot editing mode.
+- Possible fixed of Google issue 505: ibus acts strange in Qt programs.
+- Implemented Google issue 738:  Add a mode that allow editing in candidate window
+  (thus over-the-spot mode).
+
 * Fri Dec 11 2009 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20091211
 - Fix Google issue 608: ibus-chewing does not show cursor in xim mode.
 - Fix Google issue 611: ibus-chewing keyboard setting reverts to default unexpectlly.
@@ -94,6 +100,7 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
 
