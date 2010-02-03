@@ -68,6 +68,10 @@ enum CHEWING_INPUT_STYLE{
  * @SELECTING_DONE: A candidate is manually selected.
  *
  * Chewing input (key handling) mode.
+ * Note for EDITING_ENGLISH:
+ *   It is possible that chewing status bar shows Chinese mode,
+ *   yet still inputting English.
+ *   This mode is for mix-typing English and Chinese.
  */
 enum CHEWING_INPUT_MODE{
     BYPASS,
@@ -126,7 +130,7 @@ extern GtkResponseType button_responses[];
  * Dummy data structure for ibus 1.1 and early.
  */
 typedef void IBusKeymap;
-IBusKeymap *ibus_keymap_new(gchar *keymap_name);
+IBusKeymap *ibus_keymap_get(gchar *keymap_name);
 #endif /* IBUS_1_1 */
 
 #define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
@@ -150,12 +154,16 @@ extern gboolean ibus_chewing_verbose;
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
 
+#ifndef IBUS_1_3
+IBusKeymap *ibus_keymap_get(gchar *keymap_name){
 #ifdef IBUS_1_1
-IBusKeymap *ibus_keymap_new(gchar *keymap_name){
     return NULL;
-}
-
 #endif /* IBUS_1_1 */
+#ifdef IBUS_1_2
+    return ibus_keymap_new(keymap_name);
+#endif /* IBUS_1_2 */
+}
+#endif /* IBUS_1_3 */
 %}
 
 class IBus:Chewing:Engine from IBus:Engine{
@@ -214,7 +222,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     public IBusConfig *config=NULL;
 
-    protected IBusKeymap *keymap_us={ibus_keymap_new("us")};
+    protected IBusKeymap *keymap_us={ibus_keymap_get("us")};
 
     private Display *pDisplay = {XOpenDisplay( NULL )}
           destroywith XCloseDisplay;
@@ -243,7 +251,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
-	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
+	    self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
 
 	    /* init properties */
 	    ibus_prop_list_append(self->prop_list,self->chieng_prop);
@@ -363,7 +371,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    case CHEWING_INPUT_MODE_SELECTING_DONE:
 		self->_priv->zhuyin_latest[0]='\0';
 		zhuyin_tone=-1;
-		self->inputMode=CHEWING_INPUT_MODE_EDITING;
+		if (zhuyin_count)
+		    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 		break;
 	    default:
 		/* BYPASS */
@@ -718,8 +727,13 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* In EDITING mode */
 		zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
 		if (zhuyin_tone>0 ){
-		    /* Enter SELECTING mode */
-		    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+			/* For plain zhuyin, Enter SELECTING mode */
+			self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+		    }else{
+			/* For normal zhuyin, Enter SELECTING mode */
+			self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
+		    }
 		}
 	    }else if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
 		/* In SELECTING_DONE mode */
@@ -840,7 +854,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self_load_setting(self);
         }
 	self_refresh_property_list(self);
-	self->inputMode=CHEWING_INPUT_MODE_EDITING;
+	self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_ENABLED);
     }
 

@@ -56,7 +56,8 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		     * Fix for space in Temporary mode.
 		     */
 		    chewing_handle_Space(self->context);
-		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS
+			    || self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE)
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    break;
 		case IBUS_Page_Up:
@@ -105,10 +106,10 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	}
     }else if (state==IBUS_SHIFT_MASK){
 	switch(keysym){
-	    case IBUS_Shift_L:
+	    case IBUS_Left:
 		chewing_handle_ShiftLeft(self->context);
 		break;
-	    case IBUS_Shift_R:
+	    case IBUS_Right:
 		chewing_handle_ShiftRight(self->context);
 		break;
 	    case IBUS_space:
