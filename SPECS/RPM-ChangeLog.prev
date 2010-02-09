@@ -1,3 +1,6 @@
+* Mon Feb 08 2010 Adam Jackson <ajax@redhat.com> - 1.2.0.20100125-2
+- Rebuild for new libibus.so.2 ABI.
+
 * Mon Jan 25 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100125-1
 - Add over-the-spot editing mode.
 - Possible fixed of Google issue 505: ibus acts strange in Qt programs.

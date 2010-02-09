@@ -44,13 +44,15 @@ const gchar *kbType_ids[]={
 };
 
 
-#define SELKEYS_ARRAY_SIZE 7
+#define SELKEYS_ARRAY_SIZE 8
 const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     "1234567890",
     "asdfghjkl;",
     "asdfzxcv89",
     "asdfjkl789",
-    "aoeuhtn789",
+    "aoeu;qjkix", /* Dvorak */
+    "aoeuhtnsid", /* Dvorak */
+    "aoeuidhtns", /* Dvorak */
     "1234qweras",
     NULL
 };
@@ -70,8 +72,8 @@ const gchar *outputCharsets[]={
 };
 
 const gchar *inputStyles[]={
-    N_("On the Spot"),
-    N_("Over the Spot"),
+    N_("in application window"),
+    N_("in candidate window"),
     NULL
 };
 
@@ -197,12 +199,12 @@ static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     const gchar *str=g_value_get_string(value);
-    if (strcmp(str,"On the Spot")==0){
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_ON_THE_SPOT;
-    }else  if (strcmp(str,"Over the Spot")==0){
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_OVER_THE_SPOT;
+    if (strcmp(str,"in application window")==0){
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
+    }else  if (strcmp(str,"in candidate window")==0){
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_CANDIDATE;
     }else{
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_ON_THE_SPOT;
+	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
     }
     ibus_chewing_engine_force_commit(engine);
 #endif
@@ -328,13 +330,13 @@ this option determines how these status be synchronized. Valid values:\n\
     },
 
     {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
-	"On the Spot", inputStyles, NULL,  0, 1,
+	"in application window", inputStyles, NULL,  0, 1,
 	NULL, inputStyle_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
        	0, 0,
 	N_("Input style determines where the preedit strings be shown and edited.\n"
-		"\"On the Spot\": Preedit strings are edited on the target client window.\n"
-		"\"Over the Spot\": Preedit strings are edited on the candidate selection window."),
+		"\"in application window\": Preedit strings are edited on the target application window.\n"
+		"\"in candidate window\": Preedit strings are edited on the candidate selection window."),
     },
 
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),

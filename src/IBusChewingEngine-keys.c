@@ -56,49 +56,78 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		     * Fix for space in Temporary mode.
 		     */
 		    chewing_handle_Space(self->context);
-		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS
-			    || self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE)
+		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE)
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    break;
 		case IBUS_Page_Up:
 		case IBUS_KP_Page_Up:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    IBUS_ENGINE_GET_CLASS(engine)->page_up(engine);
 		    break;
 		case IBUS_Page_Down:
 		case IBUS_KP_Page_Down:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    IBUS_ENGINE_GET_CLASS(engine)->page_down(engine);
 		    break;
 		case IBUS_Up:
 		case IBUS_KP_Up:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    IBUS_ENGINE_GET_CLASS(engine)->cursor_up(engine);
 		    break;
 		case IBUS_Down:
 		case IBUS_KP_Down:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    IBUS_ENGINE_GET_CLASS(engine)->cursor_down(engine);
 		    break;
 		case IBUS_Left:
 		case IBUS_KP_Left:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Left(self->context);
 		    break;
 		case IBUS_Right:
 		case IBUS_KP_Right:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Right(self->context);
 		    break;
 		case IBUS_Home:
 		case IBUS_KP_Home:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Home(self->context);
 		    break;
 		case IBUS_End:
 		case IBUS_KP_End:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_End(self->context);
 		    break;
 		case IBUS_Tab:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Tab(self->context);
 		    break;
 		case IBUS_Caps_Lock:
 		    chewing_handle_Capslock(self->context);
 		    self_refresh_property(self,"chewing_chieng_prop");
 		    break;
+		case IBUS_Shift_L:
+		case IBUS_Shift_R:
+		    /* Some QT application will sneak these through */
+		    return FALSE;
+		case IBUS_Alt_L:
+		case IBUS_Alt_R:
+		    /* Some QT application will sneak these through */
+		    return FALSE;
+		case IBUS_Control_L:
+		case IBUS_Control_R:
+		    /* Some QT application will sneak these through */
+		    return FALSE;
 		default:
 		    self_handle_Default(self,keysym,FALSE);
 		    break;
@@ -107,11 +136,19 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     }else if (state==IBUS_SHIFT_MASK){
 	switch(keysym){
 	    case IBUS_Left:
+		if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+		    return FALSE;
 		chewing_handle_ShiftLeft(self->context);
 		break;
 	    case IBUS_Right:
+		if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+		    return FALSE;
 		chewing_handle_ShiftRight(self->context);
 		break;
+	    case IBUS_Up:
+		return FALSE;
+	    case IBUS_Down:
+		return FALSE;
 	    case IBUS_space:
 	    case IBUS_KP_Space:
 		chewing_handle_ShiftSpace(self->context);

@@ -56,8 +56,8 @@ enum CHEWING_MODIFIER_SYNC{
 } Chewing:Modifier:Sync;
 
 enum CHEWING_INPUT_STYLE{
-    ON_THE_SPOT,
-    OVER_THE_SPOT,
+    IN_APPLICATION,
+    IN_CANDIDATE,
 } Chewing:Input:Style;
 
 /**
@@ -489,7 +489,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(4,"[I4] update_aux_string() statusFlags=%u", self->_priv->statusFlags);
 	IBusText *iText=NULL;
 	switch (self->_priv->inputStyle){
-	    case CHEWING_INPUT_STYLE_ON_THE_SPOT:
+	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
 		if (chewing_aux_Length(self->context)>0){
 		    gchar *aux_string=chewing_aux_String(self->context);
 		    iText=ibus_text_new_from_string (aux_string);
@@ -501,7 +501,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
 		}
 		break;
-	    case CHEWING_INPUT_STYLE_OVER_THE_SPOT:
+	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
 		ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),preeditIText,TRUE);
 		ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
 		break;
@@ -511,10 +511,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     private void update_preedit(self, IBusText *preeditIText,gint chiSymbolCursor){
 	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%u", preeditIText->text, self->_priv->statusFlags);
 	switch (self->_priv->inputStyle){
-	    case CHEWING_INPUT_STYLE_ON_THE_SPOT:
+	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE);
 		break;
-	    case CHEWING_INPUT_STYLE_OVER_THE_SPOT:
+	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE);
 		break;
 	}

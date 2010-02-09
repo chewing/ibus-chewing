@@ -146,13 +146,11 @@ FOREACH(_bodhi_tag ${_bodhi_dist_tags})
     ENDIF ()
     IF(DEFINED RPM_RELEASE_SUMMARY)
 	SET (BODHI_NEW_CMD
-	    "${BODHI_NEW_CMD}"
-	    "bodhi --new --type=bugfix --comment=\"${RPM_RELEASE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
+	    "${BODHI_NEW_CMD} bodhi --new --type=bugfix --comment=\"${RPM_RELEASE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
 	    )
     ELSE(DEFINED RPM_RELEASE_SUMMARY)
 	SET (BODHI_NEW_CMD
-	    "${BODHI_NEW_CMD}"
-	    "bodhi --new --type=bugfix  ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
+	    "${BODHI_NEW_CMD} bodhi --new --type=bugfix  ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
 	    )
     ENDIF(DEFINED RPM_RELEASE_SUMMARY)
 ENDFOREACH(_bodhi_tag)
