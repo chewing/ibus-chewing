@@ -1,15 +1,6 @@
-PRJ_VER=1.2.0.20100209
-SUMMARY= Fixing Google issue 754, 758, 763
+PRJ_VER=1.2.0.20100210
+SUMMARY= Revert the change that fix Google issue 758.
 # Changes
-- Fixed Google issue 754: commit string is missing when inputting
-  long English text in the end.
-- Fixed Google issue 758: Space is irresponsive in Temporary English mode
-  if no Chinese in preedit buffer.
-- Fixed Google Issue 763: [ibus-chewing] [qt] Shift-Up/Down does not mark
-  text area properly.
-- Change the String "on the spot" to "in application window",
-  Chinese translation change to "在輸入處組詞"
-- Change the "over the spot" to "in candidate window",
-  Chinese translation remain the same
-- Fixed bodhi submission.
+- Revert the change that fix Google issue 758.
+- Remove "tag" target, add "commit" which do commit and tag.
 

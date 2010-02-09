@@ -1,3 +1,16 @@
+* Tue Feb 09 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100209-1
+- Fixed Google issue 754: commit string is missing when inputting
+  long English text in the end.
+- Fixed Google issue 758: Space is irresponsive in Temporary English mode
+  if no Chinese in preedit buffer.
+- Fixed Google Issue 763: [ibus-chewing] [qt] Shift-Up/Down does not mark
+  text area properly.
+- Change the String "on the spot" to "in application window",
+  Chinese translation change to "在輸入處組詞"
+- Change the "over the spot" to "in candidate window",
+  Chinese translation remain the same
+- Fixed bodhi submission.
+
 * Mon Feb 08 2010 Adam Jackson <ajax@redhat.com> - 1.2.0.20100125-2
 - Rebuild for new libibus.so.2 ABI.
 
@@ -142,6 +155,7 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+
 
 
 
