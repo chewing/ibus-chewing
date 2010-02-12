@@ -140,7 +140,7 @@ ENDIF(DEFINED BODHI_DIST_TAGS)
 
 FOREACH(_bodhi_tag ${_bodhi_dist_tags})
     IF (DEFINED BODHI_NEW_CMD)
-	SET (BODHI_NEW_CMD "${BODHI_NEW_CMD} && ")
+	SET (BODHI_NEW_CMD "${BODHI_NEW_CMD} ; ")
     ELSE ()
 	SET (BODHI_NEW_CMD "")
     ENDIF ()

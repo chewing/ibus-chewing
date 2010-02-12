@@ -41,13 +41,19 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    chewing_handle_Enter(self->context);
 		    break;
 		case IBUS_Escape:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Esc(self->context);
 		    break;
 		case IBUS_BackSpace:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Backspace(self->context);
 		    break;
 		case IBUS_Delete:
 		case IBUS_KP_Delete:
+		    if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
+			return FALSE;
 		    chewing_handle_Del(self->context);
 		    break;
 		case IBUS_space:
@@ -147,8 +153,17 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		chewing_handle_ShiftRight(self->context);
 		break;
 	    case IBUS_Up:
-		return FALSE;
+	    case IBUS_KP_Up:
 	    case IBUS_Down:
+	    case IBUS_KP_Down:
+	    case IBUS_Page_Up:
+	    case IBUS_KP_Page_Up:
+	    case IBUS_Page_Down:
+	    case IBUS_KP_Page_Down:
+	    case IBUS_Home:
+	    case IBUS_End:
+		if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT)
+		    self_force_commit(self);
 		return FALSE;
 	    case IBUS_space:
 	    case IBUS_KP_Space:

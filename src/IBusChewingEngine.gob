@@ -108,6 +108,7 @@ enum ENGINE_STATUS{
     FOCUS_IN=			0x4,
     SHOW_CANDIDATE=		0x8,
     NEED_COMMIT=		0x10,
+    FORCE_COMMIT=		0x20,
 } Engine:Status;
 
 %h{
@@ -230,14 +231,13 @@ class IBus:Chewing:Engine from IBus:Engine{
     private guint key_last=0;
     private gchar zhuyin_latest[ZHUYIN_BUFFER_SIZE];
 
-    classwide IBusText *chieng_prop_label_chi={ibus_text_new_from_static_string(_("Chi"))};
-    classwide IBusText *chieng_prop_label_eng={ibus_text_new_from_static_string(_("Eng"))};
+    classwide IBusText *chieng_prop_label_chi={g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))};
+    classwide IBusText *chieng_prop_label_eng={g_object_ref_sink(ibus_text_new_from_static_string(_("Eng")))};
+    classwide IBusText *alnumSize_prop_label_full={g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))};
+    classwide IBusText *alnumSize_prop_label_half={g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))};
 
-    classwide IBusText *alnumSize_prop_label_full={ibus_text_new_from_static_string(_("Full"))};
-    classwide IBusText *alnumSize_prop_label_half={ibus_text_new_from_static_string(_("Half"))};
-
-    classwide IBusText *settings_prop_label={ibus_text_new_from_static_string(_("Settings"))};
-    classwide IBusText *emptyText={ibus_text_new_from_static_string("")};
+    classwide IBusText *settings_prop_label={g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))};
+    classwide IBusText *emptyText={g_object_ref_sink(ibus_text_new_from_static_string(""))};
 
     init (self) {
           /* initialize the object here */
@@ -427,7 +427,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    for(i=0;i<choicePerPage;i++){
 		if (chewing_cand_hasNext(self->context)){
 		    candidate=chewing_cand_String(self->context);
-		    iText=ibus_text_new_from_string (candidate);
+		    iText=g_object_ref_sink(ibus_text_new_from_string (candidate));
 		    ibus_lookup_table_append_candidate(self->table,iText);
 		    g_free(candidate);
 		    g_object_unref (iText);
@@ -443,9 +443,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     /* Apply IBusText attributes */
     private IBusText *decorate_preedit(self, gchar *preeditBuf, gint *chiSymbolCursor, gint zhuyin_item_written){
-	IBusText *iText=ibus_text_new_from_string(preeditBuf);
+	IBusText *iText=g_object_ref_sink(ibus_text_new_from_string(preeditBuf));
 	*chiSymbolCursor = chewing_cursor_Current(self->context);
-	G_DEBUG_MSG(4,"[I4] decorate_preedit() chiSymbolCursor=%d preeditBuf=%s statusFlags=%u",
+	G_DEBUG_MSG(4,"[I4] decorate_preedit() chiSymbolCursor=%d preeditBuf=%s statusFlags=%x",
 		*chiSymbolCursor,preeditBuf, self->_priv->statusFlags);
 	g_free(preeditBuf);
 
@@ -486,13 +486,13 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void update_aux_string(self, IBusText *preeditIText){
-	G_DEBUG_MSG(4,"[I4] update_aux_string() statusFlags=%u", self->_priv->statusFlags);
+	G_DEBUG_MSG(4,"[I4] update_aux_string() statusFlags=%x", self->_priv->statusFlags);
 	IBusText *iText=NULL;
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
 		if (chewing_aux_Length(self->context)>0){
 		    gchar *aux_string=chewing_aux_String(self->context);
-		    iText=ibus_text_new_from_string (aux_string);
+		    iText=g_object_ref_sink(ibus_text_new_from_string (aux_string));
 		    ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),iText,TRUE);
 		    g_object_unref (iText);
 		    ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
@@ -509,7 +509,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     private void update_preedit(self, IBusText *preeditIText,gint chiSymbolCursor){
-	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%u", preeditIText->text, self->_priv->statusFlags);
+	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%x", preeditIText->text, self->_priv->statusFlags);
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE);
@@ -522,30 +522,22 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     protected gboolean update(self){
-	G_DEBUG_MSG(3,"[I3] update() statusFlags=%u", self->_priv->statusFlags);
+	G_DEBUG_MSG(3,"[I3] update() statusFlags=%x", self->_priv->statusFlags);
 	self_determine_input_mode(self);
 	gint chiSymbolCursor;
 	glong zhuyin_item_written;
+	self_commit(self);
 	gchar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written);
 	IBusText *iText=self_decorate_preedit(self, preeditBuf, &chiSymbolCursor, zhuyin_item_written);
 
 	self_update_aux_string(self, iText);
 	self_update_preedit(self, iText, chiSymbolCursor);
-	g_object_unref (iText);
-	uint16 *phoneSeq=(chewing_get_phoneSeqLen(self->context)>0)? chewing_get_phoneSeq(self->context): NULL;
-	G_DEBUG_MSG(4,"[I4]  update() inputMode=%d nPhoneSeq=%d statusFlags=%u",
+	g_object_unref(iText);
+	G_DEBUG_MSG(4,"[I4]  update() inputMode=%d nPhoneSeq=%d statusFlags=%x",
 		self->inputMode,
 		chewing_get_phoneSeqLen(self->context),
 		self->_priv->statusFlags);
-        if (phoneSeq){
-	    int i=0;
-	    for(i=0;i<chewing_get_phoneSeqLen(self->context);i++){
-		G_DEBUG_MSG(5,"[I5]  update() phoneSeq[%d]=%x",i,phoneSeq[i]);
-	    }
-	    free(phoneSeq);
-	}
 	self_update_lookup_table(self);
-	self_commit(self);
 	gboolean ret=TRUE;
 
 	if (chewing_keystroke_CheckAbsorb(self->context)){
@@ -578,6 +570,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	    ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
 	}
+	G_DEBUG_MSG(2,"[I2] refresh_property(%s) finished",prop_name);
     }
 
     /**
@@ -757,24 +750,35 @@ class IBus:Chewing:Engine from IBus:Engine{
     /* commit string */
     protected gboolean commit(self){
 	gint commit=chewing_commit_Check(self->context);
-	G_DEBUG_MSG(2,"[I2] commit() %s statusFlags=%u", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
-	if (commit && (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT)){
+	G_DEBUG_MSG(2,"[I2] commit() %s statusFlags=%x", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
+	if ((self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT) && commit){
 	    IBusText *iText=NULL;
 
 	    gchar *commit_string=chewing_commit_String(self->context);
-	    G_DEBUG_MSG(3,"[I3]  commit() commit_string=%s", commit_string);
-
-	    iText=ibus_text_new_from_string(commit_string);
+	    G_DEBUG_MSG(3,"[I3]  commit() commit:%s", commit_string);
+	    iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
 	    ibus_engine_commit_text(IBUS_ENGINE(self),iText);
 	    g_free(commit_string);
 	    g_object_unref(iText);
-	    ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
+	    if (!chewing_buffer_Check(self->context)){
+		/* Buffer is clean */
+		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT );
+	    }else if (self->_priv->statusFlags & ENGINE_STATUS_FORCE_COMMIT){
+		/* Flush the buffer  */
+		chewing_handle_Enter(self->context);
+		commit_string=chewing_commit_String(self->context);
+		iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
+		ibus_engine_commit_text(IBUS_ENGINE(self),iText);
+		g_free(commit_string);
+		g_object_unref(iText);
+		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT );
+	    }
 	}
 	return commit;
     }
 
     protected void force_commit(self){
-	G_DEBUG_MSG(3,"[I3] force_commit() buffer=%d, commit=%d statusFlags=%u",
+	G_DEBUG_MSG(3,"[I3] force_commit() buffer=%d, commit=%d statusFlags=%x",
 		chewing_buffer_Check(self->context),chewing_commit_Check(self->context), self->_priv->statusFlags);
 	/* Remove the incomplete zhuyin symbol */
         if (self->inputMode==CHEWING_INPUT_MODE_EDITING)
@@ -787,7 +791,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		}
 		chewing_handle_Enter(self->context);
 	    }
-	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
+	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT);
 	    self_update(self);
 	}
     }
@@ -799,6 +803,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     reset(IBus:Engine *engine){
 	G_DEBUG_MSG(1,"[I1] reset");
 	Self *self=SELF(engine);
+	if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT){
+	    /* Force commit non-empty preedit buffer */
+	    self_force_commit(self);
+	}
 	ibus_lookup_table_clear(self->table);
 	/* Save KBType type, becaue chewing_Reset() will reset it to default.
 	 */

@@ -105,7 +105,7 @@ static void selKeys_set_callback(PropertyContext *ctx, GValue *value){
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     ibus_chewing_engine_set_selKeys_string(engine,g_value_get_string(value));
     if (!engine->table){
-	engine->table=ibus_lookup_table_new(strlen(g_value_get_string(value)),0,FALSE,TRUE);
+	engine->table=g_object_ref_sink(ibus_lookup_table_new(strlen(g_value_get_string(value)),0,FALSE,TRUE));
     }
     ibus_chewing_engine_set_lookup_table_label(engine,g_value_get_string(value));
 #endif
@@ -218,7 +218,7 @@ static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 	ibus_lookup_table_clear(engine->table);
 	engine->table->page_size=g_value_get_int(value);
     }else{
-	engine->table=ibus_lookup_table_new(g_value_get_int(value),0,FALSE,TRUE);
+	engine->table=g_object_ref_sink(ibus_lookup_table_new(g_value_get_int(value),0,FALSE,TRUE));
     }
 #endif
 }
@@ -330,7 +330,7 @@ this option determines how these status be synchronized. Valid values:\n\
     },
 
     {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
-	"in application window", inputStyles, NULL,  0, 1,
+	"in candidate window", inputStyles, NULL,  0, 1,
 	NULL, inputStyle_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
        	0, 0,

@@ -1,6 +1,12 @@
-PRJ_VER=1.2.0.20100210
-SUMMARY= Revert the change that fix Google issue 758.
+PRJ_VER=1.2.99.20100212
+SUMMARY= Fixed Google issue 505, 776
 # Changes
+- Fixed Google issue 505.
+- Google issue 755 is fixed in libchewing-0.3.2-22,
+  See Chewing Google issue 10
+- Fixed behavior of Del, Backspace,  Home, End
 - Revert the change that fix Google issue 758.
-- Remove "tag" target, add "commit" which do commit and tag.
+- Change the default input style to "in candidate window",
+  because not all application handle the on-the-spot mode well.
+- Fixed Google issue 776
 

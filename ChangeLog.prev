@@ -1,3 +1,7 @@
+* Tue Feb 09 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100210
+- Revert the change that fix Google issue 758.
+- Remove "tag" target, add "commit" which do commit and tag.
+
 * Tue Feb 09 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100209
 - Fixed Google issue 754: commit string is missing when inputting
   long English text in the end.
@@ -113,6 +117,7 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
 
