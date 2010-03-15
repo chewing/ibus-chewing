@@ -6,7 +6,19 @@ gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 	return TRUE;
     }
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    guint keysym=ibus_keymap_lookup_keysym (self->keymap_us,keycode,modifiers);
+    GValue gValue={0};
+    gboolean useSysKeyLayout=TRUE;
+    if (ibus_config_get_value(self->config, "general", "use_system_keyboard_layout", &gValue)){
+	useSysKeyLayout=g_value_get_boolean(&gValue);
+    }
+    guint keysym;
+    if (useSysKeyLayout && (!chewing_get_ChiEngMode(self->context))){
+	// English mode.
+	keysym=keysym_ignore;
+    }else{
+	keysym=ibus_keymap_lookup_keysym (self->keymap_us,keycode,modifiers);
+    }
+
     return ibus_chewing_engine_process_key_event(engine, keysym, modifiers);
 }
 #endif /* IBUS_1_1 */
@@ -120,6 +132,12 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    chewing_handle_Tab(self->context);
 		    break;
 		case IBUS_Caps_Lock:
+		    /* When Chi->Eng with incomplete character */
+		    if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+			/* chewing_zuin_Check==0 means incomplete character */
+			/* Send a space to finish the character */
+			chewing_handle_Space(self->context);
+		    }
 		    chewing_handle_Capslock(self->context);
 		    self_refresh_property(self,"chewing_chieng_prop");
 		    break;

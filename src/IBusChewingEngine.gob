@@ -68,10 +68,6 @@ enum CHEWING_INPUT_STYLE{
  * @SELECTING_DONE: A candidate is manually selected.
  *
  * Chewing input (key handling) mode.
- * Note for EDITING_ENGLISH:
- *   It is possible that chewing status bar shows Chinese mode,
- *   yet still inputting English.
- *   This mode is for mix-typing English and Chinese.
  */
 enum CHEWING_INPUT_MODE{
     BYPASS,
@@ -241,7 +237,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     init (self) {
           /* initialize the object here */
-	G_DEBUG_MSG(1,"[I1] init()");
+	G_DEBUG_MSG(1,"[I1] init() %sinitialized",(self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED)? "": "un" );
 	if (!(self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED)){
 	    maker_dialog_set_verbose_level(MAKER_DIALOG(self->setting_dialog),ibus_chewing_verbose);
 	    gchar buf[100];
@@ -273,6 +269,12 @@ class IBus:Chewing:Engine from IBus:Engine{
     private  void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
 	G_DEBUG_MSG(3,"[I3] load_setting()");
+	GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
+	g_assert(connections_list);
+	g_assert(connections_list->data);
+	IBusConnection *iConnection=(IBusConnection *) connections_list->data;
+	self->config=ibus_config_new(iConnection);
+
 	int i;
 	gchar buf[BUFFER_SIZE_LOCAL];
 	GValue gValue={0};
@@ -502,8 +504,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 		}
 		break;
 	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-		ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),preeditIText,TRUE);
-		ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
+		if (self->inputMode==CHEWING_INPUT_MODE_BYPASS){
+		    ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
+		}else{
+		    ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),preeditIText,TRUE);
+		    ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
+		}
 		break;
 	}
     }
@@ -728,6 +734,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 			self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
 		    }
 		}
+	    }else if (self->inputMode==CHEWING_INPUT_MODE_BYPASS){
+		/* In BYPASS mode */
+		if (chewing_buffer_Len(self->context)>0){
+		    /* Has punctuation mark in buffer */
+		    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+		}
 	    }else if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
 		/* In SELECTING_DONE mode */
 		/* One of selection keys is pressed */
@@ -796,6 +808,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
+
     /*============================================
      * Overridden Parent (IBusEngine) methods
      */
@@ -852,13 +865,6 @@ class IBus:Chewing:Engine from IBus:Engine{
         Self *self=SELF(engine);
 
         if (!self->config){
-
-            /* connections_list is not avail in init, so we put it here */
-	    GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(engine));
-	    g_assert(connections_list);
-	    g_assert(connections_list->data);
-	    IBusConnection *iConnection=(IBusConnection *) connections_list->data;
-	    self->config=ibus_config_new(iConnection);
 	    self_load_setting(self);
         }
 	self_refresh_property_list(self);
@@ -879,6 +885,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     focus_in(IBus:Engine *engine){
 	Self *self=SELF(engine);
+	if (!self->config){
+	    self_load_setting(self);
+	}
+	self_refresh_property_list(self);
 
 	/* Sync Caps_Lock and ChiEngMode */
 	guint modifiers=keyModifier_get(self->_priv->pDisplay);

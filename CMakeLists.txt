@@ -8,7 +8,7 @@ INCLUDE(init.CMakeLists.txt)
 # Project basic information
 ####################################################################
 PROJECT(ibus-chewing)
-SET(PROJECT_DESCRIPTION chewing Chinese IME for iBus)
+SET(PROJECT_DESCRIPTION "The Chewing engine for IBus input platform")
 SET(CMAKE_C_FLAGS "-Wall")
 
 SET(RELEASE_FILE ${CMAKE_SOURCE_DIR}/RELEASE-NOTES.txt)

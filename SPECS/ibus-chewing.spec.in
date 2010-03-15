@@ -1,7 +1,8 @@
 Name:       @PROJECT_NAME@
 Version:    @PRJ_VER@
 Release:    @PRJ_VER_RELEASE@%{?dist}
-Summary:    The Chewing engine for IBus input platform
+Summary:    @PROJECT_DESCRIPTION@
+Summary(zh_TW): IBus新酷音輸入法
 License:    GPLv2+
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
@@ -25,8 +26,20 @@ Requires(post): GConf2
 Requires(preun): GConf2
 
 %description
-The Chewing engine for IBus platform. It provides Chinese input method from
-libchewing.
+IBus-chewing is an IBus front-end of Chewing, an intelligent Chinese input
+method for Zhuyin (BoPoMoFo) users.
+It supports various Zhuyin keyboard layout, such as standard (DaChen),
+IBM, Gin-Yeah, Eten, Eten 26, Hsu, Dvorak, Dvorak-Hsu, and DaChen26.
+
+Chewing also support toned Hanyu pinyin input.
+
+%description -l zh_TW
+IBus-chewing 是新酷音輸入法的IBus前端。
+新酷音輸入法是個智慧型注音輸入法，支援多種鍵盤布局，諸如：
+標準注音鍵盤、IBM、精業、倚天、倚天26鍵、許氏、Dvorak、Dvorak許氏
+及大千26鍵。
+
+本輸入法也同時支援帶調漢語拼音輸入。
 
 %prep
 %setup -q -n %{name}-%{version}-Source
@@ -34,11 +47,11 @@ libchewing.
 %build
 # $RPM_OPT_FLAGS should be  loaded from cmake macro.
 %cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
-make VERBOSE=1  %{?_smp_mflags}
+%__make VERBOSE=1  %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%__rm -rf $RPM_BUILD_ROOT
+%__make install DESTDIR=$RPM_BUILD_ROOT
 %find_lang %{name}
 
 %pre
@@ -66,7 +79,7 @@ gconftool-2 --makefile-uninstall-rule \
 fi
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%__rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)

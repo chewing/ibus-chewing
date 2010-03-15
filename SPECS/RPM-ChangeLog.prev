@@ -1,3 +1,25 @@
+* Fri Feb 19 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100217-1
+- Fixed the CMake description that leads summary incorrect.
+
+* Tue Feb 16 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100216-1
+- Fixed when typing English immediately after incomplete Chinese character.
+- Add zh_TW summary.
+- Revised description and write its zh_TW translation.
+
+* Mon Feb 15 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100215-1
+- "Macroize" rpm spec.
+- Resolves: #565388
+
+* Fri Feb 12 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100212-1
+- Fixed Google issue 505.
+- Google issue 755 is fixed in libchewing-0.3.2-22,
+  See Chewing Google issue 10
+- Fixed behavior of Del, Backspace,  Home, End
+- Revert the change that fix Google issue 758.
+- Change the default input style to "in candidate window",
+  because not all application handle the on-the-spot mode well.
+- Fixed Google issue 776
+
 * Tue Feb 09 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.0.20100210-1
 - Revert the change that fix Google issue 758.
 - Remove "tag" target, add "commit" which do commit and tag.
@@ -159,6 +181,11 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+
+
+
+
+
 
 
 
