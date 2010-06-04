@@ -1,27 +1,25 @@
-# translation of Traditional Chinese of ibus-chewing
-# Copyright (C) YEAR Huang Peng <shawn.p.huang@gmail.com>
+# Translation of Traditional Chinese of ibus-chewing
+# Copyright (C) 2008, 2009, 2010
+# Huang Peng <shawn.p.huang@gmail.com>. Ding-Yi Chen <dchen@redhat.com>
+# swyear <swyear@gmail.com>
 # This file is distributed under the same license as the ibus-chewing package.
 #
-# swyear <swyear@gmail.com>, 2008, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: zh_TW\n"
+"Project-Id-Version: ibus-chewing 1.2.99.20100317\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 14:09+1000\n"
-"PO-Revision-Date: 2009-10-02 12:24+1000\n"
-"Last-Translator: \n"
-"Language-Team: American English <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2010-03-17 10:57+1000\n"
+"PO-Revision-Date: 2010-03-17 10:57+1000\n"
+"Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 0.3\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/IBusChewingEngine.gob:303
+#: ../src/IBusChewingEngine.gob:309
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:303
+#: ../src/IBusChewingEngine.gob:309
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -32,7 +30,7 @@ msgstr "前方加詞"
 #: ../src/IBusChewingEngine-def.c:283
 #, fuzzy
 msgid "Add phrases in the front."
-msgstr "前方加詞"
+msgstr "前方加詞。"
 
 #: ../src/IBusChewingEngine-def.c:329
 msgid "Always input numbers when number keys from key pad is inputted."
@@ -125,7 +123,6 @@ msgid "Hsu's selection key"
 msgstr "許式鍵盤選擇鍵"
 
 #: ../src/IBusChewingEngine-def.c:307
-#, fuzzy
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default. Uppercase can still "
@@ -145,7 +142,6 @@ msgid "Input Style"
 msgstr "輸入風格"
 
 #: ../src/IBusChewingEngine-def.c:337
-#, fuzzy
 msgid ""
 "Input style determines where the preedit strings be shown and edited.\n"
 "\"in application window\": Preedit strings are edited on the target "
@@ -215,7 +211,8 @@ msgid "Plain Zhuyin mode"
 msgstr "單純注音模式"
 
 #: ../src/IBusChewingEngine-def.c:258
-msgid "Select keyboard layout of Zhuyin symbols."
+#, fuzzy
+msgid "Select Zhuyin keyboard layout."
 msgstr "選擇注音符號的鍵盤排列。"
 
 #: ../src/IBusChewingEngine-def.c:3
@@ -246,7 +243,7 @@ msgstr "CapsLock與輸入法狀態同步"
 msgid "UTF8"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:301
+#: ../src/IBusChewingEngine.gob:307
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
 

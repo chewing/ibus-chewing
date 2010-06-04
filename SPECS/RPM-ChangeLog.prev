@@ -1,3 +1,12 @@
+* Wed Apr 07 2010 Peng Huang <shawn.p.huang@gmail.com> - 1.2.99.20100317-2
+- Rebuild with ibus-1.3.0
+
+* Wed Mar 17 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100317-1
+- Fix google 796: English input for dvorak
+- Fix google 797: Zhuyin input for dvorak
+- Fix google 807: ibus-chewing shows the over-the-spot panel
+  even when not necessary
+
 * Fri Feb 19 2010 Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100217-1
 - Fixed the CMake description that leads summary incorrect.
 
@@ -181,14 +190,4 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
-
-
-
-
-
-
-
-
-
-
 

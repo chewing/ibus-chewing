@@ -45,7 +45,6 @@ ENDIF(${NEED_RPM_RELEASE_INFO})
 #==================================================================
 # Developer setting.
 #
-SET(CVS_DIST_TAGS F-11 F-12)
 SET(HOSTING_SERVICE_PROVIDER "GitHub")
 SET(DEVELOPER_SETTING_FILE "DEVELOPER_SETTING_NO_PACK")
 SET(DEVELOPER_DEPENDS UploadPkg.batch.in)
@@ -152,13 +151,17 @@ INCLUDE(GConf)
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
 
-# GOB_GENERATED source codes are not excluded,
-# in order to avoid Bug 519108.
-# https://bugzilla.redhat.com/show_bug.cgi?id=519108
 SET(PRJ_COMMON_IGNORE_FILES
     "/docs/"
     "\\\\.cache$"  "\\\\.spec$"
     "messages.po$"
+)
+
+# GOB_GENERATED source codes are now excluded,
+# As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
+# Is fixed from Fedora 11
+SET(PRJ_COMMON_IGNORE_FILES
+    ${PRJ_COMMON_IGNORE_FILES} "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
 )
 
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/bin/"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 14:30+1000\n"
+"POT-Creation-Date: 2010-06-04 10:06+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:303
+#: ../src/IBusChewingEngine.gob:309
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:303
+#: ../src/IBusChewingEngine.gob:309
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
@@ -198,7 +198,7 @@ msgid "Plain Zhuyin mode"
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:258
-msgid "Select keyboard layout of Zhuyin symbols."
+msgid "Select Zhuyin keyboard layout."
 msgstr ""
 
 #: ../src/IBusChewingEngine-def.c:3
@@ -229,7 +229,7 @@ msgstr ""
 msgid "UTF8"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:301
+#: ../src/IBusChewingEngine.gob:307
 msgid "Warning: cannot load configure key"
 msgstr ""
 

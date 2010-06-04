@@ -10,9 +10,12 @@
 # 3. It does not support xgettext
 #
 #===================================================================
+# Constants:
+#  XGETTEXT_OPTIONS_DEFAULT: Default xgettext option:
+#===================================================================
 # Variables:
 #  XGETTEXT_OPTIONS: Options pass to xgettext
-#      Default:  --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2
+#      Default:  XGETTEXT_OPTIONS_DEFAULT
 #  GETTEXT_MSGMERGE_EXECUTABLE: the full path to the msgmerge tool.
 #  GETTEXT_MSGFMT_EXECUTABLE: the full path to the msgfmt tool.
 #  GETTEXT_FOUND: True if gettext has been found.
@@ -43,10 +46,13 @@
 # * Produced targets: translations
 #-------------------------------------------------------------------
 
-
 FIND_PROGRAM(GETTEXT_MSGMERGE_EXECUTABLE msgmerge)
 FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 FIND_PROGRAM(XGETTEXT_EXECUTABLE xgettext)
+
+SET(XGETTEXT_OPTIONS_DEFAULT
+    --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2 -s
+    --package-name=${PROJECT_NAME} --package-version=${PRJ_VER})
 
 IF (GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE )
     SET(GETTEXT_FOUND TRUE)
@@ -65,7 +71,7 @@ ELSE(XGETTEXT_EXECUTABLE)
 ENDIF(XGETTEXT_EXECUTABLE)
 
 IF(NOT DEFINED XGETTEXT_OPTIONS)
-    SET(XGETTEXT_OPTIONS --language=C --keyword=_ --keyword=N_ --keyword=C_:1c,2 --keyword=NC_:1c,2 -s)
+    SET(XGETTEXT_OPTIONS ${XGETTEXT_OPTIONS_DEFAULT})
 ENDIF(NOT DEFINED XGETTEXT_OPTIONS)
 
 IF(XGETTEXT_FOUND)

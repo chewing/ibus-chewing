@@ -1,8 +1,10 @@
-PRJ_VER=1.2.99.20100315
+PRJ_VER=1.3.4.20100604
 SUMMARY= Fix google issue 796, 797, 807
 # Changes
-- Fix google 796: English input for dvorak
-- Fix google 797: Zhuyin input for dvorak
-- Fix google 807: ibus-chewing shows the over-the-spot panel
-  even when not necessary
+- Fix Issue 942: Fix unsunk references in ibus-chewing
+  Applied the patch provided by zork@chromium.org.
+- Rename CVS_DIST_TAGS to FEDORA_DIST_TAGS, and move its
+  definition to cmake_modules/
+- Gob2 generated file is now removed, because
+  Bug 519108 is fixed from Fedora 11.
 

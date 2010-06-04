@@ -255,7 +255,7 @@ PropertySpec propSpecs[]={
 	"default", kbType_ids, NULL, 0, 0,
 	NULL, KBType_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION, 0, 0,
-	N_("Select keyboard layout of Zhuyin symbols."),
+	N_("Select Zhuyin keyboard layout."),
     },
     {G_TYPE_STRING, "selKeys", "Keyboard",  N_("Selection keys"),
 	"1234567890", selKeys_array, NULL, 0, 0,
