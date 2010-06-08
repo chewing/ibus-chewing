@@ -136,6 +136,8 @@ IBusKeymap *ibus_keymap_get(gchar *keymap_name);
 %privateheader{
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	guint keyval, guint  modifiers);
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
+	guint button, guint state);
 
 #ifndef IBUS_1_1
 gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
@@ -264,6 +266,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 #else
 	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event_1_2;
 #endif /* IBUS_1_1 */
+	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
     }
 
     private  void load_setting(self){
@@ -707,6 +710,25 @@ class IBus:Chewing:Engine from IBus:Engine{
 		chewing_handle_Enter(self->context);
 		self->inputMode= CHEWING_INPUT_MODE_SELECTING_DONE;
 	    }
+	}
+    }
+
+    protected void handle_candidate_clicked(self, guint index, guint button, guint state){
+	if (index >= chewing_get_candPerPage(self->context)) {
+	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... index out of range.", index, button, state);
+	    return;
+	}
+	if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
+	    int* keys = chewing_get_selKey(self->context);
+	    if (!keys) {
+		G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... No sel keys.", index, button, state);
+		return;
+	    }
+	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
+	    chewing_handle_Default(self->context, keys[index]);
+	    self_update(self);
+	} else {
+	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked() ... Wrong mode: %u", self->inputMode);
 	}
     }
 

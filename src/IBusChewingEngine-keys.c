@@ -211,3 +211,9 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     return self_update(self);
 }
 
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
+	guint button, guint state) {
+    G_DEBUG_MSG(3,"[I3] cadidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
+    IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
+    self_handle_candidate_clicked(self, index, button, state);
+}

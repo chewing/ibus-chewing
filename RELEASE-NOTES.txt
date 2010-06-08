@@ -1,10 +1,7 @@
-PRJ_VER=1.3.4.20100605
-SUMMARY= Fix google issue 942
+PRJ_VER=1.3.4.20100608
+SUMMARY= Fix google issue 951
 # Changes
-- Fix Issue 942: Fix unsunk references in ibus-chewing
-  Applied the patch provided by zork@chromium.org.
-- Rename CVS_DIST_TAGS to FEDORA_DIST_TAGS, and move its
-  definition to cmake_modules/
-- Gob2 generated file is now removed, because
-  Bug 519108 is fixed from Fedora 11.
+- ibus-chewing can now use mouse to click on mouse. Thus
+  Fix Issue 951: Chewing does not support selection of candidates via mouseclick
+  Thanks zork@chromium.org for the patch.
 
