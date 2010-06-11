@@ -146,14 +146,12 @@ FOREACH(_bodhi_tag ${_bodhi_dist_tags})
 	SET (BODHI_NEW_CMD "")
     ENDIF ()
     IF(DEFINED RPM_RELEASE_SUMMARY)
-	SET (BODHI_NEW_CMD
-	    "${BODHI_NEW_CMD} bodhi --new --type=bugfix --comment=\"${RPM_RELEASE_SUMMARY}\" ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
-	    )
-    ELSE(DEFINED RPM_RELEASE_SUMMARY)
-	SET (BODHI_NEW_CMD
-	    "${BODHI_NEW_CMD} bodhi --new --type=bugfix  ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}"
-	    )
-    ENDIF(DEFINED RPM_RELEASE_SUMMARY)
+	SET(commentArg "--comment=\"${RPM_RELEASE_SUMMARY}\"")
+    ELSEIF(DEFINED CHANGE_SUMMARY)
+	SET(commentArg "--comment=\"${CHANGE_SUMMARY}\"")
+    ENDIF()
+    SET (BODHI_NEW_CMD
+	"${BODHI_NEW_CMD} bodhi --new --type=bugfix ${commentArg} ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}")
 ENDFOREACH(_bodhi_tag)
 
 #MESSAGE(BODHI_NEW_CMD=${BODHI_NEW_CMD})
@@ -161,7 +159,7 @@ IF(DEFINED BODHI_NEW_CMD)
     ADD_CUSTOM_TARGET(bodhi_new
 	COMMAND eval "${BODHI_NEW_CMD}"
 	DEPENDS ${BODHI_DEPENDS}
-	COMMENT "Send the new package to bodhi"
+	COMMENT "Send new package to bodhi"
 	VERBATIM
 	)
 ENDIF(DEFINED BODHI_NEW_CMD)
