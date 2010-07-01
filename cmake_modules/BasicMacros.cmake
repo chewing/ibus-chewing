@@ -29,6 +29,15 @@
 #
 # Get attribute value from a setting file.
 # New line characters will be stripped.
+# Use "#" to comment out lines.
+#
+#-------------------------------------------------------------------
+# SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [setting_sign]):
+#     setting_file: Setting filename.
+#
+# Get all attributes and corresponding from a setting file.
+# New line characters will be stripped.
+# Use "#" to comment out lines.
 #
 #-------------------------------------------------------------------
 # DATE_FORMAT(date_var format [locale])
@@ -59,10 +68,23 @@
 #
 
 IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
+    SET(CMAKE_LOWEST_SUPPORTED_VERSION 2.4)
     SET(_BASIC_MACROS_CMAKE_ "DEFINED")
     IF(NOT DEFINED READ_TXT_CMD)
 	SET(READ_TXT_CMD cat)
     ENDIF(NOT DEFINED READ_TXT_CMD)
+
+    IF(CMAKE_VERSION)
+	IF(CMAKE_VERSION VERSION_LESS 2.6)
+	    MESSAGE("SET CMAKE_BACKWARDS_COMPATIBILITY ${CMAKE_VERSION}")
+	    SET(CMAKE_BACKWARDS_COMPATIBILITY ${CMAKE_VERSION})
+	ENDIF()
+    ELSE()
+	# CMAKE_VERSION may not available in 2.4
+	MESSAGE("SET CMAKE_BACKWARDS_COMPATIBILITY ${CMAKE_LOWEST_SUPPORTED_VERSION}")
+	SET(CMAKE_BACKWARDS_COMPATIBILITY ${CMAKE_LOWEST_SUPPORTED_VERSION})
+	SET(CMAKE_VERSION ${CMAKE_LOWEST_SUPPORTED_VERSION})
+    ENDIF()
 
     MACRO(STRING_TRIM var str)
 	IF ("${ARGN}" STREQUAL "UNQUOTED")
@@ -104,8 +126,8 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 	        SET(setting_sign ${_arg})
 	    ENDIF(${_arg} STREQUAL "UNQUOTED")
 	ENDFOREACH(_arg)
-	SET(_find_pattern "\n[ \\t]*${attr_name}[ \\t]*${setting_sign}[^\n]*")
-	SET(_ignore_pattern "\n[ \\t]*${attr_name}[ \\t]*${setting_sign}")
+	SET(_find_pattern "\n[^#][ \\t]*${attr_name}[ \\t]*${setting_sign}[^\n]*")
+	SET(_strip_pattern "\n[ \\t]*${attr_name}[ \\t]*${setting_sign}")
 
 	FILE(READ ${setting_file} _txt_content)
 	SET(_txt_content "\n${_txt_content}\n")
@@ -115,19 +137,68 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 
 	# Last line should get priority.
 	FOREACH(_line ${_matched_lines})
-	    STRING(REGEX REPLACE "${_ignore_pattern}" "" _result_line "${_line}")
+	    STRING(REGEX REPLACE "${_strip_pattern}" "" _result_line "${_line}")
 	ENDFOREACH()
 	#MESSAGE("### _result_line=|${_result_line}|")
-	IF(_result_line)
-	    STRING_TRIM(${var} "${_result_line}" ${_UNQUOTED})
-	ELSEIF("${_result_line}" EQUAL "0")
-	    SET(${var} "0")
-	ELSE(_result_line)
+	IF ("${_result_line}" STREQUAL "")
 	    SET(${var} "")
-	ENDIF(_result_line)
-	SET(value "${${var}}")
+	ELSE("${_result_line}" STREQUAL "")
+	    STRING_TRIM(${var} "${_result_line}" ${_UNQUOTED})
+	ENDIF("${_result_line}" STREQUAL "")
+	#SET(value "${${var}}")
 	#MESSAGE("### ${var}=|${value}|")
     ENDMACRO(SETTING_FILE_GET_ATTRIBUTE var attr_name setting_file)
+
+    MACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)
+	SET(setting_sign "=")
+	SET(_UNQUOTED "")
+	FOREACH(_arg ${ARGN})
+	    IF (${_arg} STREQUAL "UNQUOTED")
+		SET(_UNQUOTED "UNQUOTED")
+	    ELSE(${_arg} STREQUAL "UNQUOTED")
+		SET(setting_sign ${_arg})
+	    ENDIF(${_arg} STREQUAL "UNQUOTED")
+	ENDFOREACH(_arg)
+	SET(_find_pattern "\n[ \\t]*([A-Za-z0-9_]*\)[ \\t]*${setting_sign}\([^\n]*\)")
+
+	FILE(READ ${setting_file} _txt_content)
+	SET(_txt_content "\n${_txt_content}\n")
+
+	# Escape ';'
+	STRING(REPLACE ";" "\\;" _txt_content "${_txt_content}")
+
+	STRING(REGEX MATCHALL "${_find_pattern}" _matched_lines "${_txt_content}")
+
+	#MESSAGE("_matched_lines=|${_matched_lines}|")
+	SET(_result_line)
+	SET(_var)
+
+	FOREACH(_line ${_matched_lines})
+	    #MESSAGE("### _line=|${_line}|")
+	    STRING(REGEX REPLACE "${_find_pattern}" "\\1" _var "${_line}")
+	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
+	    IF ( NOT "${_var}" STREQUAL "")
+		#MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
+		IF ("${_result_line}" STREQUAL "")
+		    IF (${CMAKE_VERSION} EQUAL ${CMAKE_LOWEST_SUPPORTED_VERSION})
+			SET(${_var} "")
+		    ELSE()
+			SET(${_var} "" PARENT_SCOPE)
+		    ENDIF()
+		ELSE("${_result_line}" STREQUAL "")
+		    STRING_TRIM(_result_line_striped "${_result_line}" ${_UNQUOTED})
+		    IF (${CMAKE_VERSION} EQUAL ${CMAKE_LOWEST_SUPPORTED_VERSION})
+			SET(${_var} "${_result_line_striped}")
+		    ELSE()
+			SET(${_var} "${_result_line_striped}")
+		    ENDIF()
+		ENDIF("${_result_line}" STREQUAL "")
+		SET(value "${${_var}}")
+		MESSAGE("### ${_var}=|${value}|")
+	    ENDIF()
+
+	ENDFOREACH()
+    ENDMACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)
 
     MACRO(DATE_FORMAT date_var format)
 	SET(_locale ${ARGV2})
