@@ -8,18 +8,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.2.99.20100317\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-17 10:57+1000\n"
+"POT-Creation-Date: 2010-07-06 13:41+1000\n"
 "PO-Revision-Date: 2010-03-17 10:57+1000\n"
 "Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/IBusChewingEngine.gob:309
+#: ../src/IBusChewingEngine.gob:313
 msgid " No default value, skipped."
 msgstr " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:309
+#: ../src/IBusChewingEngine.gob:313
 msgid " Use default value:"
 msgstr " 使用預設值："
 
@@ -65,7 +65,7 @@ msgstr "新酷音"
 msgid "Chewing component"
 msgstr "酷音元件"
 
-#: ../src/IBusChewingEngine.gob:230
+#: ../src/IBusChewingEngine.gob:233
 msgid "Chi"
 msgstr "中"
 
@@ -90,7 +90,7 @@ msgstr "簡易符號輸入。"
 msgid "Editing"
 msgstr "編輯"
 
-#: ../src/IBusChewingEngine.gob:231
+#: ../src/IBusChewingEngine.gob:234
 msgid "Eng"
 msgstr "英"
 
@@ -106,11 +106,11 @@ msgstr "Esc 鍵清預編區。"
 msgid "Force lowercase in En mode"
 msgstr "CapsLock時英數仍用小寫"
 
-#: ../src/IBusChewingEngine.gob:232
+#: ../src/IBusChewingEngine.gob:235
 msgid "Full"
 msgstr "全"
 
-#: ../src/IBusChewingEngine.gob:233
+#: ../src/IBusChewingEngine.gob:236
 msgid "Half"
 msgstr "半"
 
@@ -223,11 +223,11 @@ msgstr "選字"
 msgid "Selection keys"
 msgstr "選字按鍵"
 
-#: ../src/IBusChewingEngine.gob:173
+#: ../src/IBusChewingEngine.gob:176
 msgid "Setting"
 msgstr "設定"
 
-#: ../src/IBusChewingEngine.gob:235
+#: ../src/IBusChewingEngine.gob:238
 msgid "Settings"
 msgstr "設定"
 
@@ -243,7 +243,7 @@ msgstr "CapsLock與輸入法狀態同步"
 msgid "UTF8"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:307
+#: ../src/IBusChewingEngine.gob:311
 msgid "Warning: cannot load configure key"
 msgstr "警告：無法載入設定鍵"
 

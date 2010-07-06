@@ -65,7 +65,7 @@ enum CHEWING_INPUT_STYLE{
  * @BYPASS: Bypass the cursor movement keys.
  * @EDITING: Forming Chinese character (in pre-edit buffer).
  * @SELECTING: Selecting candidate. Immediately after character is formed.
- * @SELECTING_DONE: A candidate is manually selected.
+ * @SELECTION_DONE: A candidate is manually selected.
  *
  * Chewing input (key handling) mode.
  */
@@ -73,7 +73,8 @@ enum CHEWING_INPUT_MODE{
     BYPASS,
     EDITING,
     SELECTING,
-    SELECTING_DONE
+    SELECTING_CONTINUE,
+    SELECTION_DONE
 } Chewing:Input:Mode;
 
 enum CHEWING_OUTPUT_CHARSET{
@@ -84,7 +85,7 @@ enum CHEWING_OUTPUT_CHARSET{
 
 /**
  * ChewingFlag:
- * @PLAIN_CHEWING: Plain chewing mode (non AI).
+ * @PLAIN_ZHUYIN: Plain chewing mode (no AI).
  * @FORCE_LOWERCASE_ENGLISH: Force Lowercase even when CapsLock is on.
  */
 enum CHEWING_FLAG{
@@ -249,7 +250,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
-	    self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
+	    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 
 	    /* init properties */
 	    ibus_prop_list_append(self->prop_list,self->chieng_prop);
@@ -367,15 +368,21 @@ class IBus:Chewing:Engine from IBus:Engine{
 		if (zhuyin_tone>0 ){
 		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
 			/* Open candidate selection window */
-			if (chewing_get_spaceAsSelection(self->context)){
-			    chewing_handle_Space(self->context);
-			}else{
-			    chewing_handle_Down(self->context);
-			}
+                        if (chewing_get_spaceAsSelection(self->context)){
+                            chewing_handle_Space(self->context);
+                        }else{
+                            chewing_handle_Down(self->context);
+                        }
 		    }
 		}
 		break;
-	    case CHEWING_INPUT_MODE_SELECTING_DONE:
+	    case CHEWING_INPUT_MODE_SELECTING_CONTINUE:
+		/* Do Nothing, as the action has been taken by
+		 * either chewing_handle_Space, chewing_handle_Left,
+		 * or chewing_handle_Right
+		 */
+		break;
+	    case CHEWING_INPUT_MODE_SELECTION_DONE:
 		self->_priv->zhuyin_latest[0]='\0';
 		zhuyin_tone=-1;
 		if (zhuyin_count)
@@ -463,7 +470,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
 		break;
 	    case CHEWING_INPUT_MODE_EDITING:
-	    case CHEWING_INPUT_MODE_SELECTING_DONE:
+	    case CHEWING_INPUT_MODE_SELECTION_DONE:
 	    default: /* BYPASS */
 		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
 		break;
@@ -708,7 +715,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    if (self_is_selectKey(self,self->_priv->key_last) &&
 		    self->inputMode==CHEWING_INPUT_MODE_SELECTING){
 		chewing_handle_Enter(self->context);
-		self->inputMode= CHEWING_INPUT_MODE_SELECTING_DONE;
+		self->inputMode= CHEWING_INPUT_MODE_SELECTION_DONE;
 	    }
 	}
     }
@@ -718,7 +725,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... index out of range.", index, button, state);
 	    return;
 	}
-	if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
+	if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE){
 	    int* keys = chewing_get_selKey(self->context);
 	    if (!keys) {
 		G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... No sel keys.", index, button, state);
@@ -749,29 +756,48 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	}else{
 	    /* Character/Phrase is completed. */
-	    if (self->inputMode==CHEWING_INPUT_MODE_EDITING){
-		/* In EDITING mode */
-		zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
-		if (zhuyin_tone>0 ){
-		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
-			/* For plain zhuyin, Enter SELECTING mode */
+	    switch(self->inputMode){
+		case CHEWING_INPUT_MODE_BYPASS:
+		    if (chewing_buffer_Len(self->context)>0){
+			/* Has punctuation mark in buffer */
 			self->inputMode=CHEWING_INPUT_MODE_SELECTING;
-		    }else{
-			/* For normal zhuyin, Enter SELECTING mode */
-			self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
 		    }
-		}
-	    }else if (self->inputMode==CHEWING_INPUT_MODE_BYPASS){
-		/* In BYPASS mode */
-		if (chewing_buffer_Len(self->context)>0){
-		    /* Has punctuation mark in buffer */
-		    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
-		}
-	    }else if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE){
-		/* In SELECTING_DONE mode */
-		/* One of selection keys is pressed */
-	    }else{
-		/* In SELECTING mode */
+		    break;
+		case CHEWING_INPUT_MODE_EDITING:
+		    zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
+		    if (zhuyin_tone>0 ){
+			if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+			    /* For plain zhuyin, Enter SELECTING mode */
+			    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+			}else{
+			    /* For normal zhuyin, Enter SELECTION_DONE mode */
+			    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
+			}
+		    }
+		    break;
+		case CHEWING_INPUT_MODE_SELECTING:
+		    /* Switch to another t page */
+		    switch(self->_priv->key_last){
+			case ' ':
+			    /* Space to next page */
+			    if (!chewing_get_spaceAsSelection(self->context)){
+				break;
+			    }
+			case IBUS_Left:
+			case IBUS_KP_Left:
+			case IBUS_Right:
+			case IBUS_KP_Right:
+			    self->inputMode=CHEWING_INPUT_MODE_SELECTING_CONTINUE;
+			    break;
+			default:
+			    break;
+		    }
+		case CHEWING_INPUT_MODE_SELECTION_DONE:
+		    /* One of selection keys is pressed */
+		    break;
+		default:
+		    /* In SELECTING mode */
+		    break;
 	    }
 	}
 
@@ -895,7 +921,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self_load_setting(self);
         }
 	self_refresh_property_list(self);
-	self->inputMode=CHEWING_INPUT_MODE_SELECTING_DONE;
+	self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_ENABLED);
     }
 

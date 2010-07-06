@@ -66,6 +66,13 @@
 # Add compiler environment with a variable and its value.
 # If the variable is not defined yet, then a default value is assigned to it first.
 #
+#-------------------------------------------------------------------
+# SET_VAR(var untrimmed_value)
+#     var: Variable to be set
+#     untrimmed_value: Untrimmed values that may have space, \t, \n, \r in the front or back of the string.
+#
+# Trim an set the value to a variable.
+#
 
 IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
     SET(CMAKE_LOWEST_SUPPORTED_VERSION 2.4)
@@ -126,27 +133,24 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 	        SET(setting_sign ${_arg})
 	    ENDIF(${_arg} STREQUAL "UNQUOTED")
 	ENDFOREACH(_arg)
-	SET(_find_pattern "\n[^#][ \\t]*${attr_name}[ \\t]*${setting_sign}[^\n]*")
-	SET(_strip_pattern "\n[ \\t]*${attr_name}[ \\t]*${setting_sign}")
+	SET(_find_pattern "\n[ \\t]*(${attr_name}\)[ \\t]*${setting_sign}\([^\n]*\)")
 
 	FILE(READ ${setting_file} _txt_content)
 	SET(_txt_content "\n${_txt_content}\n")
+
+	# Escape ';'
+	STRING(REPLACE ";" "\\;" _txt_content "${_txt_content}")
+
 	STRING(REGEX MATCHALL "${_find_pattern}" _matched_lines "${_txt_content}")
-	#MESSAGE("attr_name=${attr_name} _matched_lines=|${_matched_lines}|")
+
+	#MESSAGE("_matched_lines=|${_matched_lines}|")
 	SET(_result_line)
 
-	# Last line should get priority.
 	FOREACH(_line ${_matched_lines})
-	    STRING(REGEX REPLACE "${_strip_pattern}" "" _result_line "${_line}")
+	    #MESSAGE("### _line=|${_line}|")
+	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
+	    SET_VAR(${var} "${_result_line}")
 	ENDFOREACH()
-	#MESSAGE("### _result_line=|${_result_line}|")
-	IF ("${_result_line}" STREQUAL "")
-	    SET(${var} "")
-	ELSE("${_result_line}" STREQUAL "")
-	    STRING_TRIM(${var} "${_result_line}" ${_UNQUOTED})
-	ENDIF("${_result_line}" STREQUAL "")
-	#SET(value "${${var}}")
-	#MESSAGE("### ${var}=|${value}|")
     ENDMACRO(SETTING_FILE_GET_ATTRIBUTE var attr_name setting_file)
 
     MACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)
@@ -179,24 +183,8 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
 	    IF ( NOT "${_var}" STREQUAL "")
 		#MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
-		IF ("${_result_line}" STREQUAL "")
-		    IF (${CMAKE_VERSION} EQUAL ${CMAKE_LOWEST_SUPPORTED_VERSION})
-			SET(${_var} "")
-		    ELSE()
-			SET(${_var} "" PARENT_SCOPE)
-		    ENDIF()
-		ELSE("${_result_line}" STREQUAL "")
-		    STRING_TRIM(_result_line_striped "${_result_line}" ${_UNQUOTED})
-		    IF (${CMAKE_VERSION} EQUAL ${CMAKE_LOWEST_SUPPORTED_VERSION})
-			SET(${_var} "${_result_line_striped}")
-		    ELSE()
-			SET(${_var} "${_result_line_striped}")
-		    ENDIF()
-		ENDIF("${_result_line}" STREQUAL "")
-		SET(value "${${_var}}")
-		MESSAGE("### ${_var}=|${value}|")
+		SET_VAR(var "${_result_line}")
 	    ENDIF()
-
 	ENDFOREACH()
     ENDMACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)
 
@@ -234,6 +222,17 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 	#MESSAGE("Variable Set to ${var},${_env}=${${var}}")
 	ADD_DEFINITIONS(-D${_env}='"${${var}}"')
     ENDMACRO(SET_ENV var default_value)
+
+    MACRO(SET_VAR var untrimmedValue)
+	IF ("${untrimmedValue}" STREQUAL "")
+	    SET(${var} "")
+	ELSE("${untrimmedValue}" STREQUAL "")
+	    STRING_TRIM(trimmedValue "${untrimmedValue}" ${_UNQUOTED})
+	    SET(${var} "${trimmedValue}")
+	ENDIF("${untrimmedValue}" STREQUAL "")
+	#SET(value "${${var}}")
+	#MESSAGE("### ${var}=|${value}|")
+    ENDMACRO(SET_VAR var untrimmedValue)
 
 ENDIF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 

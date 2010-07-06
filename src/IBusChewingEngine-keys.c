@@ -74,7 +74,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		     * Fix for space in Temporary mode.
 		     */
 		    chewing_handle_Space(self->context);
-		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTING_DONE ||
+		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE ||
 			    self->inputMode==CHEWING_INPUT_MODE_BYPASS )
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    break;
