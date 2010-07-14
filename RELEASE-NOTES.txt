@@ -1,8 +1,6 @@
-PRJ_VER=1.3.5.20100706
-SUMMARY=Fix google issue 965
+PRJ_VER=1.3.5.20100714
+SUMMARY=Resolves: #608991; Removes Ctrl-v/V Hotkey;
 # Changes
-- Fixed google issue 965:
-  Candidate missing if both "Plain Zhuyin" and "Space As selection" are enabled.
-- Revised Basic.macro
-- Resolved: #608991
+- Resolves: #608991
+- Removes Ctrl-v/V Hotkey
 

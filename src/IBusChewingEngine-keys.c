@@ -196,8 +196,8 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     }else if (state==IBUS_CONTROL_MASK){
 	if (keysym>=IBUS_0 && keysym<=IBUS_9){
 	    chewing_handle_CtrlNum(self->context,keysym);
-	}else if (keysym==IBUS_v || keysym==IBUS_V){
-	    chewing_handle_Right(self->context);
+//	}else if (keysym==IBUS_v || keysym==IBUS_V){
+//	    chewing_handle_Right(self->context);
 	}else{
 	    result=FALSE;
 	}

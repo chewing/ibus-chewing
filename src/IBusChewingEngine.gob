@@ -64,7 +64,8 @@ enum CHEWING_INPUT_STYLE{
  * ChewingInputMode:
  * @BYPASS: Bypass the cursor movement keys.
  * @EDITING: Forming Chinese character (in pre-edit buffer).
- * @SELECTING: Selecting candidate. Immediately after character is formed.
+ * @SELECTING: Start Selecting candidate. Immediately after character is formed.
+ * @SELECTING_CONTINUE: Still selecting candidate,.
  * @SELECTION_DONE: A candidate is manually selected.
  *
  * Chewing input (key handling) mode.
@@ -181,6 +182,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     /* Controlling flags */
     protected ChewingFlag flags=0;
+
+    protected GString *completedString={g_string_new(NULL)};
 
     private guint statusFlags=0;
 
@@ -733,6 +736,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
 	    chewing_handle_Default(self->context, keys[index]);
+	    chewing_free(keys);
 	    self_update(self);
 	} else {
 	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked() ... Wrong mode: %u", self->inputMode);
@@ -773,6 +777,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 			    /* For normal zhuyin, Enter SELECTION_DONE mode */
 			    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 			}
+			gchar *buff_str=chewing_buffer_String(self->context);
+			g_string_assign(self->completedString,buff_str);
+			chewing_free(buff_str);
 		    }
 		    break;
 		case CHEWING_INPUT_MODE_SELECTING:
@@ -816,9 +823,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     protected gboolean commit(self){
 	gint commit=chewing_commit_Check(self->context);
 	G_DEBUG_MSG(2,"[I2] commit() %s statusFlags=%x", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
+	IBusText *iText=NULL;
 	if ((self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT) && commit){
-	    IBusText *iText=NULL;
-
 	    gchar *commit_string=chewing_commit_String(self->context);
 	    G_DEBUG_MSG(3,"[I3]  commit() commit:%s", commit_string);
 	    iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
@@ -838,6 +844,17 @@ class IBus:Chewing:Engine from IBus:Engine{
 		g_object_unref(iText);
 		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT );
 	    }
+	    /* Clear completed string */
+	    g_string_assign(self->completedString,"");
+//        }else if (self->_priv->statusFlags & (ENGINE_STATUS_FORCE_COMMIT | ENGINE_STATUS_NEED_COMMIT)){
+//            if (self->completedString->len>0){
+//                /* Still need to output completed string */
+//                iText=g_object_ref_sink(ibus_text_new_from_string(self->completedString->str));
+//                ibus_engine_commit_text(IBUS_ENGINE(self),iText);
+//                g_object_unref(iText);
+//                g_string_assign(self->completedString,"");
+//            }
+//            ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT );
 	}
 	return commit;
     }
