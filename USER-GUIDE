@@ -1,0 +1,100 @@
+#summary User Guide for Chewing
+
+For the latest version of this document, please see
+http://code.google.com/p/ibus/wiki/ChewingUserGuide
+
+= Introduction =
+Chewing helps you inputting Chinese by its pronunciation,
+in the form of either [http://en.wikipedia.org/wiki/Bopomofo Bopomofo/Zhuyin]
+or [http://en.wikipedia.org/wiki/Pinyin Hanyu pinyin], as well as Chinese
+punctuation marks and normal and full shape number and English alphabets.
+
+For the ease of documentation and readability, following sections assume you
+are using the default configuration, that is, with default/DaChen Bopomofo
+keyboard layout, on an en_US keyboard, and default key-binding.
+
+= Glossary =
+Preedit buffer: The places for storing your typing before sending to the
+   applications (such as firefox) you are using.
+
+= Mode =
+Mode determines how Chewing reacts on keyboard input.
+
+== Editing mode ==
+This mode is for normal Chinese character and punctuation typing. You are
+ more likely working on this mode.
+
+In this mode, alpha-numberic and punctuation marks are interpreted as either
+Bopomofo symbols or punctuation marks. If the symbols can form Chinese
+characters, it will choose the most suitable character according to the
+context in preedit buffer.
+
+It's recommend that you enter the whole Chinese sentences, so Chewing can
+do auto-correction for you. If you like what you see, you can press [Enter]
+to commit the characters in preedit buffer.
+
+If something go wrong, you can select the character by move your cursor using
+{Left} or {Right}, then press {Down} to enter Candidate Selection mode to
+choose words.
+
+To prevent the auto-correction on certain phrase, you may press {Tab} to
+break the auto-correction on the end of the sentence.
+
+You can also remember the 2,3,4 words phrases by pressing {Ctrl-2},
+{Ctrl-3}, and {Ctrl-4} on the end of the phrase.
+
+Also note that Shift's behavior changes in this mode.
+Shift-(alpha number) outputs corresponding Full shape Chinese symbol if
+"Easy symbol input" is enabled;
+Or outputs corresponding number half shape lowercase English alphabets if
+"Easy symbol input" is disabled.
+
+Hot-keys:
+||Caps Lock  || Toggle Temporary English sub-mode                   ||
+||Down       || Enter Candidate Selection mode                      ||
+||Shift-Space|| Toggle Half/Full Shape sub-mode                     ||
+||Enter      || Commit the content in preedit buffer to application ||
+||Tab        || Break the auto-correction.                          ||
+||Ctrl-2     || Remember 2-word phrase.                             ||
+||Ctrl-3     || Remember 3-word phrase.                             ||
+||Ctrl-4     || Remember 4-word phrase.                             ||
+
+=== Half/Full Shape sub-mode ====
+This sub-mode is for inputing half shape and full shape characters.
+Half shape characters are essentially normal English characters; while the
+full shape characters are full-width pretty symbols that resemble English
+characters.
+
+Hot-keys:
+||Shift-Space|| Toggle Half/Full Shape sub-mode                     ||
+
+=== Temporary English sub-mode ===
+This sub-mode is for temporary English inputting.
+
+Hot-keys:
+||Caps Lock  || Toggle Temporary English sub-mode                   ||
+
+== Candidate Selection mode ==
+This mode if for Choosing the candidate.
+Firstly, the longest phrases that fit the pronunciation are shown, then the
+second shortest, till the single characters. Pressing {Down} again to return
+to the longest phrases.
+
+For example, after entering "w91o3g4".
+Pressing {Down} makes Chewing displays 3-word candidate "台北市";
+pressing {Down} again makes Chewing displays 2-word candidate "北市";
+pressing {Down} again makes Chewing displays 1-word candidates "市","是";
+pressing {Down} again makes Chewing displays back the 3-word candidates
+"台北市";
+
+Hot-keys:
+||Down       || Next bunch of candidates in different length        ||
+||Left       || Previous page of candidates                         ||
+||Right      || Next page of candidates                             ||
+||1, 2, ...0 || Select 1st, 2nd, ... 10th candidate                 ||
+
+== Bypass mode ==
+This mode is on whenever the preedit buffer is empty. This allows you to use
+movement keys (such as cursor keys and page up/page down) and popular
+key binding (Ctrl-A, Ctrl-S).
+

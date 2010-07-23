@@ -89,7 +89,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS README ChangeLog NEWS COPYING
+%doc AUTHORS README ChangeLog COPYING USER-GUIDE
 %{_libexecdir}/ibus-engine-chewing
 %{_datadir}/%{name}
 %{_datadir}/ibus/component/chewing.xml

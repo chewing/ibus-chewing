@@ -1,6 +1,8 @@
-PRJ_VER=1.3.5.20100714
-SUMMARY=Resolves: #608991; Removes Ctrl-v/V Hotkey;
+PRJ_VER=1.3.5.20100723
+SUMMARY=Providing USER-GUIDE, which Resolves: #608991 and upstream issue 993.
 # Changes
 - Resolves: #608991
-- Removes Ctrl-v/V Hotkey
+- Sort of fix upstream issue 993.
+- Include USER-GUIDE
+- Remove NEWS, as this project does not use it.
 

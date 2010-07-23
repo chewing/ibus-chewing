@@ -371,11 +371,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 		if (zhuyin_tone>0 ){
 		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
 			/* Open candidate selection window */
-                        if (chewing_get_spaceAsSelection(self->context)){
-                            chewing_handle_Space(self->context);
-                        }else{
-                            chewing_handle_Down(self->context);
-                        }
+			chewing_handle_Down(self->context);
+//                        if (chewing_get_spaceAsSelection(self->context)){
+//                            chewing_handle_Space(self->context);
+//                        }else{
+//                            chewing_handle_Down(self->context);
+//                        }
 		    }
 		}
 		break;
@@ -547,7 +548,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_determine_input_mode(self);
 	gint chiSymbolCursor;
 	glong zhuyin_item_written;
-	self_commit(self);
+	self_check_commit(self);
 	gchar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written);
 	IBusText *iText=self_decorate_preedit(self, preeditBuf, &chiSymbolCursor, zhuyin_item_written);
 	if (g_object_is_floating(iText)){
@@ -820,28 +821,30 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     /* commit string */
-    protected gboolean commit(self){
+    protected gboolean commit(self, gchar *commit_string){
+	G_DEBUG_MSG(3,"[I3] commit() commit:%s", commit_string);
+	gchar *commit_string=chewing_commit_String(self->context);
+	IBusText *iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
+	ibus_engine_commit_text(IBUS_ENGINE(self),iText);
+	g_object_unref(iText);
+	chewing_free(commit_string);
+	return TRUE;
+    }
+
+    /* Check commit string */
+    protected gboolean check_commit(self){
 	gint commit=chewing_commit_Check(self->context);
-	G_DEBUG_MSG(2,"[I2] commit() %s statusFlags=%x", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
+	G_DEBUG_MSG(2,"[I2] check_commit() %s statusFlags=%x", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
 	IBusText *iText=NULL;
 	if ((self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT) && commit){
-	    gchar *commit_string=chewing_commit_String(self->context);
-	    G_DEBUG_MSG(3,"[I3]  commit() commit:%s", commit_string);
-	    iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
-	    ibus_engine_commit_text(IBUS_ENGINE(self),iText);
-	    g_free(commit_string);
-	    g_object_unref(iText);
+	    self_commit(self);
 	    if (!chewing_buffer_Check(self->context)){
 		/* Buffer is clean */
 		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT );
 	    }else if (self->_priv->statusFlags & ENGINE_STATUS_FORCE_COMMIT){
 		/* Flush the buffer  */
 		chewing_handle_Enter(self->context);
-		commit_string=chewing_commit_String(self->context);
-		iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
-		ibus_engine_commit_text(IBUS_ENGINE(self),iText);
-		g_free(commit_string);
-		g_object_unref(iText);
+		self_commit(self);
 		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT );
 	    }
 	    /* Clear completed string */
