@@ -25,7 +25,7 @@ ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED}
 )
 
 ADD_CUSTOM_TARGET(gob2
-    DEPENDS ${GOB_GENERATED}
+    DEPENDS ${GOB_GENERATED} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-input-events.c
     COMMENT "Preprocess with gob2."
 )
 
@@ -37,6 +37,7 @@ SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED}
 ADD_EXECUTABLE(ibus-engine-chewing main.c
     ibus-chewing-engine.c
     maker-dialog.c
+
     )
 ADD_EXECUTABLE(generate-gconf-schemas
     generate-gconf-schemas.c

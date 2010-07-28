@@ -44,10 +44,15 @@ You can also remember the 2,3,4 words phrases by pressing {Ctrl-2},
 {Ctrl-3}, and {Ctrl-4} on the end of the phrase.
 
 Also note that Shift's behavior changes in this mode.
-Shift-(alpha number) outputs corresponding Full shape Chinese symbol if
+Shift-(alpha number) outputs corresponding Full shape Chinese symbols if
 "Easy symbol input" is enabled;
 Or outputs corresponding number half shape lowercase English alphabets if
 "Easy symbol input" is disabled.
+
+Talking about inputing Chinese symbols, other then enable "Easy symbol input"
+mode, you can also press {Ctrl-1} to open up a symbol selection dialog,
+select the category, then use {Down} key to choose the symbols as you
+would do for characters.
 
 Hot-keys:
 ||Caps Lock  || Toggle Temporary English sub-mode                   ||
@@ -55,6 +60,7 @@ Hot-keys:
 ||Shift-Space|| Toggle Half/Full Shape sub-mode                     ||
 ||Enter      || Commit the content in preedit buffer to application ||
 ||Tab        || Break the auto-correction.                          ||
+||Ctrl-1     || Open symbol selection dialog                        ||
 ||Ctrl-2     || Remember 2-word phrase.                             ||
 ||Ctrl-3     || Remember 3-word phrase.                             ||
 ||Ctrl-4     || Remember 4-word phrase.                             ||
