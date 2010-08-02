@@ -330,7 +330,7 @@ this option determines how these status be synchronized. Valid values:\n\
     },
 
     {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
-	"in application window", inputStyles, NULL,  0, 1,
+	"in candidate window", inputStyles, NULL,  0, 1,
 	NULL, inputStyle_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
        	0, 0,

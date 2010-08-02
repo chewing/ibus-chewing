@@ -1,4 +1,4 @@
-PRJ_VER=1.3.6.20100728
+PRJ_VER=1.3.6.20100730
 SUMMARY=Providing USER-GUIDE, which Resolves: #608991 and upstream issue 993; Fix Issue 1016
 # Changes
 - Resolves: #608991
@@ -10,6 +10,5 @@ SUMMARY=Providing USER-GUIDE, which Resolves: #608991 and upstream issue 993; Fi
 - Default setting changes: (Won't affect current user though).
   + Auto move cursor: TRUE
   + Add phrases in front: TRUE
-  + Input Style: in application window
   + spaceAsSelection: FALSE
 
