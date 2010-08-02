@@ -99,6 +99,10 @@ enum CHEWING_FLAG{
 /**
  * EngineStatus:
  * @INITIALIZED:	Engine is initialized.
+ * @NEED_COMMIT:        Something to commit.
+ *
+ * libChewing does not have direct method to clean commit buffer.
+ * Thus NEED_COMMIT is needed to prevent unnecessary commit.
  */
 enum ENGINE_STATUS{
     INITIALIZED=		0x1,
@@ -124,28 +128,29 @@ extern GtkResponseType button_responses[];
 #define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= f
 #define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~f
 
-#ifdef IBUS_1_1
-/*
- * Dummy data structure for ibus 1.1 and early.
- */
+#if IBUS_VERSION <= 10100
+/* Dummy data structure for ibus 1.1 and early. */
 typedef void IBusKeymap;
 IBusKeymap *ibus_keymap_get(gchar *keymap_name);
-#endif /* IBUS_1_1 */
+#endif /* IBUS_VERSION */
 
 #define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
+
 %}
 
 %privateheader{
-gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
-	guint keyval, guint  modifiers);
-void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
-	guint button, guint state);
+void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, gboolean shiftPressed);
+#define self_handle_Default ibus_chewing_engine_handle_Default
 
-#ifndef IBUS_1_1
+gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, guint keyval, guint  modifiers);
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state);
+void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state);
+
+#if IBUS_VERSION >= 10200
 gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 	guint keyval_ignore,  guint  keycode,   guint  modifiers);
 
-#endif /* IBUS_1_1 */
+#endif /* IBUS_VERSION */
 %}
 
 %{
@@ -155,16 +160,18 @@ extern gboolean ibus_chewing_verbose;
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
 
-#ifndef IBUS_1_3
+
+#if IBUS_VERSION <= 10200
 IBusKeymap *ibus_keymap_get(gchar *keymap_name){
-#ifdef IBUS_1_1
+#if IBUS_VERSION <= 10100
+    /*  IBUS 1.1 */
     return NULL;
-#endif /* IBUS_1_1 */
-#ifdef IBUS_1_2
+#else
     return ibus_keymap_new(keymap_name);
-#endif /* IBUS_1_2 */
+#endif
 }
-#endif /* IBUS_1_3 */
+#endif
+
 %}
 
 class IBus:Chewing:Engine from IBus:Engine{
@@ -182,8 +189,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     /* Controlling flags */
     protected ChewingFlag flags=0;
-
-    protected GString *completedString={g_string_new(NULL)};
 
     private guint statusFlags=0;
 
@@ -265,12 +270,13 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     class_init(klass){
-#ifdef IBUS_1_1
-	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event;
-#else
+	ibus_engine_class->property_activate= ibus_chewing_engine_property_activate;
+#if IBUS_VERSION >= 10200
 	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event_1_2;
-#endif /* IBUS_1_1 */
 	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
+#else
+	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event;
+#endif
     }
 
     private  void load_setting(self){
@@ -371,12 +377,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 		if (zhuyin_tone>0 ){
 		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
 			/* Open candidate selection window */
-			chewing_handle_Down(self->context);
-//                        if (chewing_get_spaceAsSelection(self->context)){
-//                            chewing_handle_Space(self->context);
-//                        }else{
-//                            chewing_handle_Down(self->context);
-//                        }
+                        if (chewing_get_spaceAsSelection(self->context)){
+                            chewing_handle_Space(self->context);
+                        }else{
+                            chewing_handle_Down(self->context);
+                        }
 		    }
 		}
 		break;
@@ -433,14 +438,13 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     private void update_lookup_table(self){
 	ibus_lookup_table_clear(self->table);
-	int choicePerPage=chewing_cand_ChoicePerPage(self->context);
 	int i=0;
 	char *candidate=NULL;
 	IBusText *iText=NULL;
 
-	G_DEBUG_MSG(4,"[I4] update_lookup_table() TotalChoice=%d CurrentPage=%d",
-		chewing_cand_TotalChoice(self->context),chewing_cand_CurrentPage(self->context));
-	if (chewing_cand_TotalChoice(self->context) >0){
+	G_DEBUG_MSG(4,"[I4] update_lookup_table() CurrentPage=%d", chewing_cand_CurrentPage(self->context));
+	if (self->inputMode==CHEWING_INPUT_MODE_SELECTING){
+	    int choicePerPage=chewing_cand_ChoicePerPage(self->context);
 	    chewing_cand_Enumerate(self->context);
 	    for(i=0;i<choicePerPage;i++){
 		if (chewing_cand_hasNext(self->context)){
@@ -534,10 +538,18 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%x", preeditIText->text, self->_priv->statusFlags);
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
+#if IBUS_VERSION >= 10300
+		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, IBUS_ENGINE_PREEDIT_COMMIT);
+#else
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE);
+#endif
 		break;
 	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
+#if IBUS_VERSION >= 10300
+		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE,IBUS_ENGINE_PREEDIT_COMMIT);
+#else
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE);
+#endif
 		break;
 	}
 	G_DEBUG_MSG(5,"[I5]  update_preedit(): return");
@@ -665,7 +677,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     protected gboolean is_selectKey(self, guint keyval){
-	int j;
+	gint j;
 	for (j=0;j< MAX_SELKEY;j++){
 	    if (self->selKeys[j]==keyval){
 		return TRUE;
@@ -678,7 +690,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	int j;
 	int len_min= MIN(strlen(selKeys_str), MAX_SELKEY);
 	for (j=0;j< len_min;j++){
-	    self->selKeys[j]=(int) selKeys_str[j];
+	    self->selKeys[j]=(gint) selKeys_str[j];
 	}
 	chewing_set_selKey(self->context, self->selKeys,len_min);
     }
@@ -695,55 +707,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	return NULL;
     }
 
-    protected void handle_Default(self, guint keyval, gboolean shiftPressed){
-	G_DEBUG_MSG(2,"[I2] handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
-		keyval,(self->flags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
-	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
-#ifdef EASY_SYMBOL_INPUT_WORK_AROUND
-	if (self->flags & CHEWING_FLAG_EASY_SYMBOL_INPUT){
-	    /* If shift is pressed, turn on the  easySymbolInput, turn off
-	     * otherwise
-	     */
-	    chewing_set_easySymbolInput(self->context,(shiftPressed)? 1:0);
-	}
-#endif
-	if (self->flags & CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH){
-	    if (isupper(keyval) && !shiftPressed){
-		keyval=tolower(keyval);
-	    }else if (islower(keyval) && shiftPressed){
-		keyval=toupper(keyval);
-	    }
-	}
-	chewing_handle_Default(self->context,keyval);
-	if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
-	    if (self_is_selectKey(self,self->_priv->key_last) &&
-		    self->inputMode==CHEWING_INPUT_MODE_SELECTING){
-		chewing_handle_Enter(self->context);
-		self->inputMode= CHEWING_INPUT_MODE_SELECTION_DONE;
-	    }
-	}
-    }
-
-    protected void handle_candidate_clicked(self, guint index, guint button, guint state){
-	if (index >= chewing_get_candPerPage(self->context)) {
-	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... index out of range.", index, button, state);
-	    return;
-	}
-	if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE){
-	    int* keys = chewing_get_selKey(self->context);
-	    if (!keys) {
-		G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked(-, %u, %u, %u) ... No sel keys.", index, button, state);
-		return;
-	    }
-	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
-	    chewing_handle_Default(self->context, keys[index]);
-	    chewing_free(keys);
-	    self_update(self);
-	} else {
-	    G_DEBUG_MSG(3,"[I3] handle_cadidate_clicked() ... Wrong mode: %u", self->inputMode);
-	}
-    }
-
     /*
      * determine_input_mode:
      *
@@ -752,11 +715,16 @@ class IBus:Chewing:Engine from IBus:Engine{
     private void determine_input_mode(self){
 	gint zhuyin_count=-1;
 	gchar *str_ptr=chewing_zuin_String(self->context,&zhuyin_count);
-	G_DEBUG_MSG(3, "[I3] determine_input_mode(): chewing_zuin_String=%s count=%d inputMode=%d",
-		str_ptr,zhuyin_count,self->inputMode);
+	G_DEBUG_MSG(3, "[I3] determine_input_mode(): chewing_zuin_String=%s count=%d inputMode=%d keyLast=%s",
+		str_ptr,zhuyin_count,self->inputMode, keyName_get(self->_priv->key_last));
 
 	int zhuyin_tone=-1;
-	if (zhuyin_count>0){
+	gint totalChoice=chewing_cand_TotalChoice(self->context);
+	G_DEBUG_MSG(5, "[I5]  determine_input_mode(): TotalChoice=%d", totalChoice);
+	if (totalChoice >0){
+	    /* Candidate selection mode ensure. */
+	    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
+	}else if (zhuyin_count>0){
 	    /* Incomplete Character*/
 	    self->inputMode=CHEWING_INPUT_MODE_EDITING;
 	}else{
@@ -778,33 +746,37 @@ class IBus:Chewing:Engine from IBus:Engine{
 			    /* For normal zhuyin, Enter SELECTION_DONE mode */
 			    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 			}
-			gchar *buff_str=chewing_buffer_String(self->context);
-			g_string_assign(self->completedString,buff_str);
-			chewing_free(buff_str);
+//			gchar *buff_str=chewing_buffer_String(self->context);
+//			g_string_assign(self->completedString,buff_str);
+//			chewing_free(buff_str);
 		    }
 		    break;
 		case CHEWING_INPUT_MODE_SELECTING:
 		    /* Switch to another t page */
-		    switch(self->_priv->key_last){
-			case ' ':
-			    /* Space to next page */
-			    if (!chewing_get_spaceAsSelection(self->context)){
+		    if (self_is_selectKey(self, self->_priv->key_last)){
+			self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
+		    }else{
+			switch(self->_priv->key_last){
+			    case ' ':
+				/* Space to next page */
+				if (!chewing_get_spaceAsSelection(self->context)){
+				    break;
+				}
+			    case IBUS_Left:
+			    case IBUS_KP_Left:
+			    case IBUS_Right:
+			    case IBUS_KP_Right:
+				self->inputMode=CHEWING_INPUT_MODE_SELECTING_CONTINUE;
 				break;
-			    }
-			case IBUS_Left:
-			case IBUS_KP_Left:
-			case IBUS_Right:
-			case IBUS_KP_Right:
-			    self->inputMode=CHEWING_INPUT_MODE_SELECTING_CONTINUE;
-			    break;
-			default:
-			    break;
+			    default:
+				break;
+			}
 		    }
+		    break;
+		case CHEWING_INPUT_MODE_SELECTING_CONTINUE:
+		    break;
 		case CHEWING_INPUT_MODE_SELECTION_DONE:
 		    /* One of selection keys is pressed */
-		    break;
-		default:
-		    /* In SELECTING mode */
 		    break;
 	    }
 	}
@@ -816,14 +788,25 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self->_priv->zhuyin_latest[0]='\0';
 	}
 	g_free(str_ptr);
-	G_DEBUG_MSG(3, "[I3]  determine_input_mode() return: zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
+	G_DEBUG_MSG(2, "[I2]  determine_input_mode() return: zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
 		self->_priv->zhuyin_latest,zhuyin_tone,self->inputMode);
     }
 
+    /*
+     * Clean chewing buffer
+     */
+    protected void clean_chewing_buffer(self){
+	/* Save the orig Esc clean buffer state */
+	gint origState=chewing_get_escCleanAllBuf(self->context);
+	chewing_set_escCleanAllBuf(self->context, TRUE);
+	chewing_handle_Esc(self->context);
+	chewing_set_escCleanAllBuf(self->context, origState);
+    }
+
     /* commit string */
-    protected gboolean commit(self, gchar *commit_string){
-	G_DEBUG_MSG(3,"[I3] commit() commit:%s", commit_string);
+    protected gboolean commit(self){
 	gchar *commit_string=chewing_commit_String(self->context);
+	G_DEBUG_MSG(2,"[I2] commit() commit:%s", commit_string);
 	IBusText *iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
 	ibus_engine_commit_text(IBUS_ENGINE(self),iText);
 	g_object_unref(iText);
@@ -835,48 +818,47 @@ class IBus:Chewing:Engine from IBus:Engine{
     protected gboolean check_commit(self){
 	gint commit=chewing_commit_Check(self->context);
 	G_DEBUG_MSG(2,"[I2] check_commit() %s statusFlags=%x", (commit) ? "TRUE": "FALSE", self->_priv->statusFlags);
-	IBusText *iText=NULL;
 	if ((self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT) && commit){
 	    self_commit(self);
-	    if (!chewing_buffer_Check(self->context)){
-		/* Buffer is clean */
-		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT );
-	    }else if (self->_priv->statusFlags & ENGINE_STATUS_FORCE_COMMIT){
-		/* Flush the buffer  */
-		chewing_handle_Enter(self->context);
-		self_commit(self);
-		ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT );
-	    }
-	    /* Clear completed string */
-	    g_string_assign(self->completedString,"");
-//        }else if (self->_priv->statusFlags & (ENGINE_STATUS_FORCE_COMMIT | ENGINE_STATUS_NEED_COMMIT)){
-//            if (self->completedString->len>0){
-//                /* Still need to output completed string */
-//                iText=g_object_ref_sink(ibus_text_new_from_string(self->completedString->str));
-//                ibus_engine_commit_text(IBUS_ENGINE(self),iText);
-//                g_object_unref(iText);
-//                g_string_assign(self->completedString,"");
-//            }
-//            ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT );
+	}
+	if (chewing_buffer_Len(self->context)==0){
+	    /* Buffer is empty, safe to clear the ENGINE_STATUS_NEED_COMMIT */
+	    ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
+	}
+	if ((self->_priv->statusFlags & ENGINE_STATUS_FORCE_COMMIT)){
+	    /* In Force commit, we already push the completed string to commit */
+	    G_DEBUG_MSG(3,"[I3]   check_commit() clean chewing buffer after force commit.");
+	    self_clean_chewing_buffer(self);
+	    ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
 	}
 	return commit;
     }
 
     protected void force_commit(self){
-	G_DEBUG_MSG(3,"[I3] force_commit() buffer=%d, commit=%d statusFlags=%x",
+	G_DEBUG_MSG(2,"[I2] force_commit() buffer=%d, commit=%d statusFlags=%x",
 		chewing_buffer_Check(self->context),chewing_commit_Check(self->context), self->_priv->statusFlags);
+	/* Close candidate window */
+	if (self->_priv->statusFlags & ENGINE_STATUS_SHOW_CANDIDATE){
+	    chewing_handle_Esc(self->context);
+	    ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_SHOW_CANDIDATE );
+	}
 	/* Remove the incomplete zhuyin symbol */
-        if (self->inputMode==CHEWING_INPUT_MODE_EDITING)
-            chewing_handle_Esc(self->context);
+	if (self->inputMode==CHEWING_INPUT_MODE_EDITING)
+	    chewing_handle_Esc(self->context);
 	if (chewing_buffer_Check(self->context)){
-	    if (!chewing_commit_Check(self->context)){
-		/* Close candidate window */
-		if (self->_priv->statusFlags & ENGINE_STATUS_SHOW_CANDIDATE){
-		    chewing_handle_Esc(self->context);
-		}
+	    G_DEBUG_MSG(3,"[I3]  force_commit() buffer is not empty.");
+#if IBUS_VERSION < 10300
+	    /* IBUS 1.2 and earlier does not have ibus_engine_update_preedit_text_with_mode(),
+	     * Thus need to simulate enter. */
+            if (!chewing_commit_Check(self->context)){
 		chewing_handle_Enter(self->context);
-	    }
-	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT | ENGINE_STATUS_FORCE_COMMIT);
+             }
+#endif
+	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
+	}
+	if (chewing_commit_Check(self->context)){
+	    G_DEBUG_MSG(3,"[I3]  force_commit() has something to commit. buffer=%d, commit=%d",
+		    chewing_buffer_Check(self->context),chewing_commit_Check(self->context));
 	    self_update(self);
 	}
     }
@@ -1002,7 +984,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_activate(IBus:Engine *engine, const gchar  *prop_name, guint  prop_state){
-	G_DEBUG_MSG(2,"[I2] property_activate(-, %s, %u)", prop_name, prop_state);
+	G_DEBUG_MSG(3,"[I3] property_activate(-, %s, %u)", prop_name, prop_state);
 	Self *self=SELF(engine);
 	gboolean needRefresh=TRUE;
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
@@ -1020,7 +1002,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		self->settings_prop->state=PROP_STATE_UNCHECKED;
 	    }
 	}else{
-	    G_DEBUG_MSG(2,"[I2]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);
+	    G_DEBUG_MSG(3,"[I3]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);
 	    needRefresh=FALSE;
 	}
 	if (needRefresh)
@@ -1029,7 +1011,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_show(IBus:Engine *engine, const gchar  *prop_name){
-	G_DEBUG_MSG(2,"[I2] property_show(-, %s)",prop_name);
+	G_DEBUG_MSG(3,"[I3] property_show(-, %s)",prop_name);
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,TRUE);
@@ -1038,7 +1020,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_hide(IBus:Engine *engine, const gchar  *prop_name){
-	G_DEBUG_MSG(2,"[I2] property_hide(-, %s)",prop_name);
+	G_DEBUG_MSG(3,"[I3] property_hide(-, %s)",prop_name);
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,FALSE);
@@ -1047,6 +1029,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 }
 
 %{
-#include "IBusChewingEngine-keys.c"
+#include "IBusChewingEngine-input-events.c"
 %}
 

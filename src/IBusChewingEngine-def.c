@@ -271,13 +271,13 @@ PropertySpec propSpecs[]={
     },
 
     {G_TYPE_BOOLEAN, "autoShiftCur", "Editing", N_("Auto move cursor"),
-	"0", NULL, NULL, 0, 1,
+	"1", NULL, NULL, 0, 1,
 	NULL, autoShiftCur_set_callback,
 	0, 0, 0,
 	N_("Automatically move cursor to next character."),
     },
     {G_TYPE_BOOLEAN, "addPhraseDirection", "Editing", N_("Add phrases in front"),
-	"0", NULL, NULL, 0, 1,
+	"1", NULL, NULL, 0, 1,
 	NULL, addPhraseDirection_set_callback,
 	0, 0, 0,
 	N_("Add phrases in the front."),
@@ -358,7 +358,7 @@ this option determines how these status be synchronized. Valid values:\n\
 	N_("Choose phrases from the back, without moving cursor."),
     },
     {G_TYPE_BOOLEAN, "spaceAsSelection", "Selecting", N_("Space to select"),
-	"1", NULL, NULL,  0, 1,
+	"0", NULL, NULL,  0, 1,
 	NULL, spaceAsSelection_set_callback,
 	0, 0, 0,
 	"Press Space to select the candidate.",
@@ -498,6 +498,18 @@ const char *keyName_get(guint keyval){
 	    return "Table";
 	case IBUS_Caps_Lock:
 	    return "Caps";
+	case IBUS_Shift_L:
+	    return "Shift_L";
+	case IBUS_Shift_R:
+	    return "Shift_R";
+	case IBUS_Alt_L:
+	    return "Alt_L";
+	case IBUS_Alt_R:
+	    return "Alt_R";
+	case IBUS_Control_L:
+	    return "Control_L";
+	case IBUS_Control_R:
+	    return "Control_R";
 	default:
 	    if (keyval>='0' && keyval<='9'){
 		return &numConst[(keyval-'0')*2];

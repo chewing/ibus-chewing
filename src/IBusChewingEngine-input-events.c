@@ -1,4 +1,5 @@
-#ifndef IBUS_1_1
+#if IBUS_VERSION >= 10200
+/* IBus 1.2 and up */
 gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 	guint keysym_ignore,  guint  keycode,   guint  modifiers){
     if (modifiers & IBUS_RELEASE_MASK){
@@ -21,7 +22,7 @@ gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 
     return ibus_chewing_engine_process_key_event(engine, keysym, modifiers);
 }
-#endif /* IBUS_1_1 */
+#endif
 
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	guint keysym, guint  modifiers){
@@ -31,7 +32,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	return TRUE;
     }
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    G_DEBUG_MSG(3,"[I3] process_key_event(-, %u(%s), %u) ... proceed.",keysym, keyName_get(keysym), modifiers);
+    G_DEBUG_MSG(2,"***[I2] process_key_event(-, %u(%s), %u) ... proceed.",keysym, keyName_get(keysym), modifiers);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last=keysym;
     if (state==0){
@@ -71,7 +72,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		case IBUS_space:
 		case IBUS_KP_Space:
 		    /**
-		     * Fix for space in Temporary mode.
+		     * Fix for space in Temporary English mode.
 		     */
 		    chewing_handle_Space(self->context);
 		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE ||
@@ -211,9 +212,76 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     return self_update(self);
 }
 
-void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
-	guint button, guint state) {
-    G_DEBUG_MSG(3,"[I3] cadidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
+void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, gboolean shiftPressed){
+    G_DEBUG_MSG(2,"[I2] handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
+	    keyval,(self->flags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
+    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
+#ifdef EASY_SYMBOL_INPUT_WORK_AROUND
+    if (self->flags & CHEWING_FLAG_EASY_SYMBOL_INPUT){
+	/* If shift is pressed, turn on the  easySymbolInput, turn off
+	 * otherwise
+	 */
+	chewing_set_easySymbolInput(self->context,(shiftPressed)? 1:0);
+    }
+#endif
+    if (self->flags & CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH){
+	if (isupper(keyval) && !shiftPressed){
+	    keyval=tolower(keyval);
+	}else if (islower(keyval) && shiftPressed){
+	    keyval=toupper(keyval);
+	}
+    }
+    chewing_handle_Default(self->context,keyval);
+    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+	if (self_is_selectKey(self,self->_priv->key_last) &&
+		self->inputMode==CHEWING_INPUT_MODE_SELECTING){
+	    chewing_handle_Enter(self->context);
+	    self->inputMode= CHEWING_INPUT_MODE_SELECTION_DONE;
+	}
+    }
+}
+
+/*===================================================
+ * Mouse events
+ */
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state){
+    G_DEBUG_MSG(2,"***[I2] candidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    self_handle_candidate_clicked(self, index, button, state);
+    if (index >= chewing_get_candPerPage(self->context) || index <0) {
+	G_DEBUG_MSG(3,"[I3]  candidate_clicked() index out of ranged");
+	return;
+    }
+    if (self->inputMode==CHEWING_INPUT_MODE_SELECTING){
+	self->_priv->key_last=(guint) self->selKeys[index];
+	ibus_chewing_engine_handle_Default(self, self->_priv->key_last, FALSE);
+	self_update(self);
+    } else {
+	G_DEBUG_MSG(3,"[I3] candidate_clicked() ... Wrong mode: %u", self->inputMode);
+    }
+}
+
+void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state){
+    G_DEBUG_MSG(3,"[I3] property_activate(-, %s, %u)", prop_name, prop_state);
+    Self *self=SELF(engine);
+    gboolean needRefresh=TRUE;
+    if (strcmp(prop_name,"chewing_chieng_prop")==0){
+	/* Toggle Chinese <-> English */
+	chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+    }else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
+	/* Toggle Full <-> Half */
+	chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
+    }else if (strcmp(prop_name,"chewing_settings_prop")==0){
+	if (self->settings_prop->state==PROP_STATE_UNCHECKED){
+	    if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))==GTK_RESPONSE_OK){
+		self_save_config_all(self);
+	    }
+	    gtk_widget_hide(self->setting_dialog);
+	    self->settings_prop->state=PROP_STATE_UNCHECKED;
+	}
+    }else{
+	G_DEBUG_MSG(3,"[I3]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);
+	needRefresh=FALSE;
+    }
+    if (needRefresh)
+	self_refresh_property(self,prop_name);
 }
