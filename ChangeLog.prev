@@ -1,3 +1,15 @@
+* Fri Jul 30 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.3.6.20100730
+- Resolves: #608991
+- Sort of fix upstream issue 993.
+- Include USER-GUIDE
+- Remove NEWS, as this project does not use it.
+- Fix upstream Issue 1016: [ibus-chewing] Chewing should commit the complete string before disable chewing. But only for ibus-1.3.0 and later.
+- Mouse candidate selection now work in plain Zhuyin mode.
+- Default setting changes: (Won't affect current user though).
+  + Auto move cursor: TRUE
+  + Add phrases in front: TRUE
+  + spaceAsSelection: FALSE
+
 * Wed Jul 14 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.5.20100714
 - Resolves: #608991
 - Removes Ctrl-v/V Hotkey
@@ -168,6 +180,7 @@ Fix the errors which Funda Wang as pointing out:
 * Fri Feb 20 2009 - Ding-Yi Chen <dchen at redhat.com>  - 1.0.0.20090220
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
+
 
 
 

@@ -1,4 +1,4 @@
-# Developers helper target such as commit and upload.
+# Generic developers helper target such as commit and upload.
 #
 # To use: INCLUDE(Developer)
 #
@@ -9,6 +9,7 @@
 #  SSH_USER=<user_name>
 #  SSH_ARGS=<additional args>
 #  KOJI_CVS_PATH=<path for koji CVS>
+#  FEDPKG_DIR=<directory for Fedora git clone>
 #
 #
 #===================================================================
@@ -123,32 +124,26 @@ ENDMACRO(DEVELOPER_UPLOAD arg_0 arg_list)
 
 #===================================================================
 # Targets:
-# version_lock:
-#   Lock in the current version, so the version won't be changed until unlocked.
-#   Useful for time-based version.
-#   Note that the PRJ_VER is locked but PRJ_VER_FULL is not, thus RPM
-#   maintainer can do some maintenances without affecting source version.
+# next_version:
+#   Starting a new version.
+#   This updates ChangeLog.prev and RPM-ChangeLog.prev
 #
-# version_unlock:
-#   Unlock the version.
-#
-# To enable these two targets, need to:
-# SET(VERSION_NEED_LOCK)
-#
+ADD_CUSTOM_TARGET(next_version
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ChangeLog ${CMAKE_SOURCE_DIR}/ChangeLog.prev
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog
+    ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog.prev
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.template
+    ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt
+    )
 
-#IF (DEFINED VERSION_NEED_LOCK)
-#    ADD_CUSTOM_TARGET(version_lock
-#	COMMAND grep "PRJ_VER=" ${RELEASE_FILE}
-#	|| ${CMAKE_COMMAND} -E echo "PRJ_VER=${PRJ_VER}" > ${RELEASE_FILE}
-#	COMMAND cmake ${CMAKE_SOURCE_DIR}
-#	COMMENT "Lock version"
-#	)
-#
-#    ADD_CUSTOM_TARGET(version_unlock
-#	COMMAND ${RM} ${RELEASE_FILE}
-#	COMMAND ${CMAKE_COMMAND} -E touch  ${RELEASE_FILE}
-#	COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
-#	COMMENT "Unlock version"
-#	)
-#ENDIF(DEFINED VERSION_NEED_LOCK)
+IF (HOSTING_SERVICE STREQUAL git)
+    ADD_CUSTOM_TARGET(push
+	COMMAND git commit -a -m "${CHANGE_SUMMARY}"
+	COMMAND git tag -a "${PRJ_VER}" -m "Ver ${PRJ_VER}" HEAD
+	COMMAND git push
+	COMMENT "Commit and tag the changes"
+	VERBATIM
+	)
+ENDIF(HOSTING_SERVICE STREQUAL git)
+
 

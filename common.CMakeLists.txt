@@ -1,20 +1,25 @@
 ####################################################################
-# CMake common setting.
+# CMake project independent setting.
 #
-# Project independent setting.
+# Normally, you need not modify this file, instead,
+# override following variables to change the default behavior.
 #
-# Optional Variables:
-#
-# SET(GENERATE_DOXYFILE TRUE)
-#       Generate doxyfile from doxyfile.in
-#
-# SET(ENABLE_GTKDOC TRUE)
-# SET(GTKDOC_OUTPUT_DIR <path>)
-#       Enable gtk-doc
-#
-# SET(GENERATE_UPLOADPKG_BATCH TRUE)
-#        Generate UploadPkg.batch for Uploading to hosting host
-#
+#===================================================================
+# Variables:
+# DEVELOPER_SETTING_FILE <filename>
+#   Set the setting file which should only visible to maintainer,
+#   such as commit and upload parameters.
+#   This file should not need for ordinary user build.
+#-------------------------------------------------------------------
+# GENERATE_DOXYFILE
+#   Have this to generate doxyfile from doxyfile.in
+#-------------------------------------------------------------------
+# GENERATE_GTKDOC
+#   Have this to generate gtkdoc
+#-------------------------------------------------------------------
+# GENERATE_UPLOADPKG_BATCH
+#   Have this to generate UploadPkg.batch from UploadPkg.batch.in
+#   for Uploading to hosting host
 ####################################################################
 INCLUDE(Version)
 
@@ -31,21 +36,14 @@ ENDIF(NOT DEFINED PROJECT_DOCDIR)
 
 ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER_FULL}"')
 
+IF (NOT DEFINED DEVELOPER_SETTING_FILE)
+    SET(DEVELOPER_SETTING_FILE "MAINTAINER_SETTING_NO_PACK")
+ENDIF(NOT DEFINED DEVELOPER_SETTING_FILE)
+
 # Load developer targets if DEVELOPER_SETTING_FILE exists
 IF(EXISTS ${DEVELOPER_SETTING_FILE})
+    SETTING_FILE_GET_ALL_ATTRIBUTES(${DEVELOPER_SETTING_FILE} UNQUOTED)
     INCLUDE(Developer)
-    SETTING_FILE_GET_ATTRIBUTE(SSH_USER SSH_USER ${DEVELOPER_SETTING_FILE})
-    SETTING_FILE_GET_ATTRIBUTE(SSH_ARGS SSH_ARGS ${DEVELOPER_SETTING_FILE})
-    SETTING_FILE_GET_ATTRIBUTE(KOJI_CVS_PATH KOJI_CVS_PATH ${DEVELOPER_SETTING_FILE})
-
-    # Start next version
-    ADD_CUSTOM_TARGET(next_version
-	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ChangeLog ${CMAKE_SOURCE_DIR}/ChangeLog.prev
-	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog
-		${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog.prev
-	    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.template
-	        ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt
-	    )
 ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
 
 #==================================================================
