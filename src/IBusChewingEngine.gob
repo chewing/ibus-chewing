@@ -871,10 +871,11 @@ class IBus:Chewing:Engine from IBus:Engine{
     reset(IBus:Engine *engine){
 	G_DEBUG_MSG(1,"[I1] reset");
 	Self *self=SELF(engine);
-//        if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT){
-//            /* Force commit non-empty preedit buffer */
-//            self_force_commit(self);
-//        }
+
+	/* Always clean buffer */
+	self_clean_chewing_buffer(self);
+	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
+
 	ibus_lookup_table_clear(self->table);
 	/* Save KBType type, becaue chewing_Reset() will reset it to default.
 	 */
