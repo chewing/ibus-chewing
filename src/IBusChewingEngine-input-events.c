@@ -39,7 +39,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	guint keysym_tmp=keysym_KP_to_normal(keysym);
 	if (keysym_tmp){
 	    /* Is keypad key */
-	    if ((self->flags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER) && chewing_get_ChiEngMode(self->context)){
+	    if ((self->chewingFlags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER) && chewing_get_ChiEngMode(self->context)){
 		chewing_set_ChiEngMode(self->context, 0);
 		self_handle_Default(self,keysym_tmp,FALSE);
 		chewing_set_ChiEngMode(self->context,CHINESE_MODE);
@@ -214,17 +214,17 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 
 void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, gboolean shiftPressed){
     G_DEBUG_MSG(2,"[I2] handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
-	    keyval,(self->flags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
+	    keyval,(self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
     ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
 #ifdef EASY_SYMBOL_INPUT_WORK_AROUND
-    if (self->flags & CHEWING_FLAG_EASY_SYMBOL_INPUT){
+    if (self->chewingFlags & CHEWING_FLAG_EASY_SYMBOL_INPUT){
 	/* If shift is pressed, turn on the  easySymbolInput, turn off
 	 * otherwise
 	 */
 	chewing_set_easySymbolInput(self->context,(shiftPressed)? 1:0);
     }
 #endif
-    if (self->flags & CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH){
+    if (self->chewingFlags & CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH){
 	if (isupper(keyval) && !shiftPressed){
 	    keyval=tolower(keyval);
 	}else if (islower(keyval) && shiftPressed){
@@ -232,7 +232,7 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, g
 	}
     }
     chewing_handle_Default(self->context,keyval);
-    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+    if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN){
 	if (self_is_selectKey(self,self->_priv->key_last) &&
 		self->inputMode==CHEWING_INPUT_MODE_SELECTING){
 	    chewing_handle_Enter(self->context);

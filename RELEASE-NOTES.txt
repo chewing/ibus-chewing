@@ -1,4 +1,4 @@
-PRJ_VER=1.3.6.20100730
+PRJ_VER=1.3.6.20100806
 SUMMARY=Resolves: #608991
 # Changes
 - Resolves: #608991

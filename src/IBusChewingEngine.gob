@@ -188,7 +188,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     protected ChewingInputMode inputMode=CHEWING_INPUT_MODE_BYPASS;
 
     /* Controlling flags */
-    protected ChewingFlag flags=0;
+    protected ChewingFlag chewingFlags=0;
 
     private guint statusFlags=0;
 
@@ -375,7 +375,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
 		add_tone(self->_priv->zhuyin_latest,zhuyin_tone);
 		if (zhuyin_tone>0 ){
-		    if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+		    if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN){
 			/* Open candidate selection window */
                         if (chewing_get_spaceAsSelection(self->context)){
                             chewing_handle_Space(self->context);
@@ -739,7 +739,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 		case CHEWING_INPUT_MODE_EDITING:
 		    zhuyin_tone=get_tone(chewing_get_KBType(self->context),self->_priv->key_last);
 		    if (zhuyin_tone>0 ){
-			if (self->flags & CHEWING_FLAG_PLAIN_ZHUYIN){
+			if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN){
 			    /* For plain zhuyin, Enter SELECTING mode */
 			    self->inputMode=CHEWING_INPUT_MODE_SELECTING;
 			}else{
@@ -871,10 +871,10 @@ class IBus:Chewing:Engine from IBus:Engine{
     reset(IBus:Engine *engine){
 	G_DEBUG_MSG(1,"[I1] reset");
 	Self *self=SELF(engine);
-	if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT){
-	    /* Force commit non-empty preedit buffer */
-	    self_force_commit(self);
-	}
+//        if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT){
+//            /* Force commit non-empty preedit buffer */
+//            self_force_commit(self);
+//        }
 	ibus_lookup_table_clear(self->table);
 	/* Save KBType type, becaue chewing_Reset() will reset it to default.
 	 */
