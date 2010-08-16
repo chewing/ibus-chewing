@@ -746,13 +746,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 			    /* For normal zhuyin, Enter SELECTION_DONE mode */
 			    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 			}
-//			gchar *buff_str=chewing_buffer_String(self->context);
-//			g_string_assign(self->completedString,buff_str);
-//			chewing_free(buff_str);
 		    }
 		    break;
 		case CHEWING_INPUT_MODE_SELECTING:
-		    /* Switch to another t page */
+		    /* Switch to another page */
 		    if (self_is_selectKey(self, self->_priv->key_last)){
 			self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 		    }else{
