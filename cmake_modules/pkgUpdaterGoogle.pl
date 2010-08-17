@@ -53,7 +53,6 @@ for (qw(project user pass summary filePattern)) {
     usage("Need $_") if (!$$_);					# die unless all vars are defined
 }
 
-@labels = map {('label', $_)} @labels;					# put the word 'label' before each
 ###
 # Deprecated present package
 my $downloadlist = "http://code.google.com/p/ibus/downloads/list";
@@ -64,35 +63,44 @@ if ($res->is_success) {
      die $res->status_line;
 }
 
+
+@labels = map {('label', $_)} @labels;					# put the word 'label' before each
+my @labelsWithDeprecated = (@labels, "label", "Deprecated");
+
+my $url = "https://$user:$pass\@$project.googlecode.com/files";
+# yep, that's it, one function does it all
+my $res = $ua->post($url,
+	Content_Type => 'form-data',
+	Content => [ summary=>$summary,
+		     filename=>[$file],
+		     @labelsWithDeprecated
+		   ]
+);
+process_web_result/./////;
+
 ###
 # finally the "upload part"
 ###
-my $url = "https://$user:$pass\@$project.googlecode.com/files";
-
-@labels = map {('label', $_)} @labels;					# put the word 'label' before each
-@labelsWithDeprecated = map {('label', $_)} @labels;
-my $lab1;
-foreach $lab1 (@labels){
-    print "labels=" . $lab1 . "\n";
-}
-
-# yep, that's it, one function does it all
-#my $res = $ua->post($url,
-#	Content_Type => 'form-data',
-#	Content => [ summary=>$summary,
-#		     filename=>[$file],
-#		     @labels
-#		   ]
-#);
+my $res = $ua->post($url,
+    Content_Type => 'form-data',
+    Content => [ summary=>$summary,
+    filename=>[$file],
+    @labels
+    ]
+);
+process_web_result;
 
 # show the results and explicitly call exit with success/fail
-#if ($res->is_success) {
-#	print $res->content, "\n";
-#	exit 0;
-#} else {
-#	print STDERR $res->status_line, "\n";
-#	exit 1;
-#}
+
+sub process_web_result {
+    if ($res->is_success) {
+	print $res->content, "\n";
+    } else {
+	print STDERR $res->status_line, "\n";
+	exit 1;
+    }
+}
+
 
 sub prompt {
     print "Enter ". $_[0] . ":" ;			# show the prompt
