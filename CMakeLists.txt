@@ -168,6 +168,5 @@ SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_
 
 INCLUDE(CPack)
 
-# Avoid [Bug 519108]: [gob2] class and enum names convert incorrectly in mock / koji.
-ADD_DEPENDENCIES(pack_src pot_file gob2)
+ADD_DEPENDENCIES(pack_src pot_file)
 

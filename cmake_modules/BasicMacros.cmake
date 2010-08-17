@@ -32,12 +32,16 @@
 # Use "#" to comment out lines.
 #
 #-------------------------------------------------------------------
-# SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [setting_sign]):
+# SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [NOREPLACE] [setting_sign]):
 #     setting_file: Setting filename.
 #
 # Get all attributes and corresponding from a setting file.
 # New line characters will be stripped.
 # Use "#" to comment out lines.
+#
+# NOREPLACE
+#    By default, it will replace the previous defined variable,
+# Use NOREPLACE to override this.
 #
 #-------------------------------------------------------------------
 # DATE_FORMAT(date_var format [locale])
@@ -156,9 +160,12 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
     MACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)
 	SET(setting_sign "=")
 	SET(_UNQUOTED "")
+	SET(_NOREPLACE "")
 	FOREACH(_arg ${ARGN})
 	    IF (${_arg} STREQUAL "UNQUOTED")
 		SET(_UNQUOTED "UNQUOTED")
+	    ELSEIF (${_arg} STREQUAL "NOREPLACE")
+		SET(_NOREPLACE "NOREPLACE")
 	    ELSE(${_arg} STREQUAL "UNQUOTED")
 		SET(setting_sign ${_arg})
 	    ENDIF(${_arg} STREQUAL "UNQUOTED")
@@ -182,8 +189,13 @@ IF(NOT DEFINED _BASIC_MACROS_CMAKE_)
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\1" _var "${_line}")
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
 	    IF ( NOT "${_var}" STREQUAL "")
-		#MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
-		SET_VAR(var "${_result_line}")
+		IF ("${_NOREPLACE}" STREQUAL "" OR "${${_var}}" STREQUAL "" )
+		    MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
+		    SET_VAR(${_var} "${_result_line}")
+		ELSE()
+		    SET(val ${${_var}})
+		    MESSAGE("### ${_var} is already defined as ${val}")
+		ENDIF()
 	    ENDIF()
 	ENDFOREACH()
     ENDMACRO(SETTING_FILE_GET_ALL_ATTRIBUTES setting_file)

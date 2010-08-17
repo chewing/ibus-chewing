@@ -137,9 +137,9 @@ static void easySymbolInput_set_callback(PropertyContext *ctx, GValue *value){
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     chewing_set_easySymbolInput(engine->context,(g_value_get_boolean(value)) ? 1: 0);
     if (g_value_get_boolean(value)){
-	engine->flags |= CHEWING_FLAG_EASY_SYMBOL_INPUT;
+	engine->chewingFlags |= CHEWING_FLAG_EASY_SYMBOL_INPUT;
     }else{
-	engine->flags &= ~CHEWING_FLAG_EASY_SYMBOL_INPUT;
+	engine->chewingFlags &= ~CHEWING_FLAG_EASY_SYMBOL_INPUT;
     }
 #endif
 }
@@ -163,9 +163,9 @@ static void forceLowercaseEnglish_set_callback(PropertyContext *ctx, GValue *val
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     if (g_value_get_boolean(value)){
-	engine->flags |= CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
+	engine->chewingFlags |= CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
     }else{
-	engine->flags &= ~CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
+	engine->chewingFlags &= ~CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
     }
 #endif
 }
@@ -188,9 +188,9 @@ static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value)
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     if (g_value_get_boolean(value)){
-	engine->flags |= CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
+	engine->chewingFlags |= CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
     }else{
-	engine->flags &= ~CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
+	engine->chewingFlags &= ~CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
     }
 #endif
 }
@@ -241,9 +241,9 @@ static void plainZhuyin_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     if (g_value_get_boolean(value)){
-	engine->flags |= CHEWING_FLAG_PLAIN_ZHUYIN;
+	engine->chewingFlags |= CHEWING_FLAG_PLAIN_ZHUYIN;
     }else{
-	engine->flags &= ~CHEWING_FLAG_PLAIN_ZHUYIN;
+	engine->chewingFlags &= ~CHEWING_FLAG_PLAIN_ZHUYIN;
     }
 #endif
 }
