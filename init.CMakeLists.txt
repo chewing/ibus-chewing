@@ -14,18 +14,16 @@ IF(COMMAND cmake_policy)
 ENDIF(COMMAND cmake_policy)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_modules)
-SET(ENV{LC_ALL} "C")
-INCLUDE(BasicMacros)
+#SET(ENV{LC_ALL} "C")
+INCLUDE(DateTimeFormat)
 
 ###==================================================================
 # Find parameters configuration
 #
 #  Note: CMake 2.4 does not support STRING(STRIP ..)
 
-DATE_FORMAT(DATE "+%a %b %d %Y")
-DATE_FORMAT(DATE_SHORT "+%Y%m%d")
-#MESSAGE("DATE=${DATE}|")
-#MESSAGE("DATE_SHORT=${DATE_SHORT}|")
+#MESSAGE("TODAY_CHANGELOG=${TODAY_CHANGELOG}|")
+#MESSAGE("TODAY_SHORT=${TODAY_SHORT}|")
 
 ###==================================================================
 # Directories
@@ -33,25 +31,10 @@ DATE_FORMAT(DATE_SHORT "+%Y%m%d")
 
 ADD_DEFINITIONS(-DCMAKE_INSTALL_PREFIX='"${CMAKE_INSTALL_PREFIX}"')
 
-IF(NOT DEFINED datadir)
-    SET(datadir "${CMAKE_INSTALL_PREFIX}/share")
-ENDIF()
-ADD_DEFINITIONS(-DDATADIR='"${datadir}"')
-
-IF(NOT DEFINED docdir)
-    SET(docdir "${datadir}/doc")
-ENDIF()
-ADD_DEFINITIONS(-DDOCDIR='"${docdir}"')
-
-IF(NOT DEFINED SYSCONF_INSTALL_DIR)
-    SET(SYSCONF_INSTALL_DIR "/etc")
-ENDIF()
-ADD_DEFINITIONS(-DSYSCONFDIR='"${SYSCONF_INSTALL_DIR}"')
-
-IF(NOT DEFINED LIBEXEC_DIR)
-    SET(LIBEXEC_DIR "${CMAKE_INSTALL_PREFIX}/libexec")
-ENDIF()
-ADD_DEFINITIONS(-DLIBEXEC_DIR='"${LIBEXEC_DIR}"')
+SET_COMPILE_ENV(datadir "{CMAKE_INSTALL_PREFIX}/share" DATADIR )
+SET_COMPILE_ENV(docdir "${datadir}" DOCDIR )
+SET_COMPILE_ENV(SYSCONF_INSTALL_DIR "/etc" SYSCONFDIR)
+SET_COMPILE_ENV(LIBEXEC_DIR "${CMAKE_INSTALL_PREFIX}/libexec")
 
 IF(NOT DEFINED IS_64)
     IF( $ENV{MACHTYPE} MATCHES "64")
@@ -61,12 +44,4 @@ IF(NOT DEFINED IS_64)
     ENDIF()
 ENDIF()
 ADD_DEFINITIONS(-DIS_64='"${IS64}"')
-
-###==================================================================
-# CPack Generator
-# RPM and pack need them, so declare here.
-#
-SET(CPACK_GENERATOR "TGZ")
-SET(CPACK_SOURCE_GENERATOR "TGZ")
-
 
