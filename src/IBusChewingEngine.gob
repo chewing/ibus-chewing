@@ -721,6 +721,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 	int zhuyin_tone=-1;
 	gint totalChoice=chewing_cand_TotalChoice(self->context);
 	G_DEBUG_MSG(5, "[I5]  determine_input_mode(): TotalChoice=%d", totalChoice);
+	if (chewing_commit_Check(self->context)
+		&& (self->_priv->key_last==IBUS_Return || self->_priv->key_last==IBUS_KP_Enter)){
+	    ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
+	}
 	if (totalChoice >0){
 	    /* Candidate selection mode ensure. */
 	    self->inputMode=CHEWING_INPUT_MODE_SELECTING;

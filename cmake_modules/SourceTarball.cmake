@@ -1,13 +1,13 @@
-# 
+#
 # Source Tarball handling. Required by RPM.cmake
 # To use: INCLUDE(SourceTarball)
 #
 # Includes: Version
-# 
+#
 #===================================================================
-# Variables: 
+# Variables:
 #   Predefined:
-#     CMAKE_GENERATED_FILES: Pattern of CMake generated files. 
+#     CMAKE_GENERATED_FILES: Pattern of CMake generated files.
 #          They are excluded from packing.
 #     COMMON_IGNORED_FILES: Pattern of backup files and version control system
 #          files such as CVS, SVN and git.
@@ -29,6 +29,13 @@
 #
 
 INCLUDE(Version)
+IF(NOT DEFINED CPACK_GENERATOR)
+    SET(CPACK_GENERATOR "TGZ")
+ENDIF(NOT DEFINED CPACK_GENERATOR)
+
+IF(NOT DEFINED CPACK_SOURCE_GENERATOR)
+    SET(CPACK_SOURCE_GENERATOR ${CPACK_GENERATOR})
+ENDIF(NOT DEFINED CPACK_SOURCE_GENERATOR)
 
 IF(CPACK_SOURCE_GENERATOR STREQUAL "TGZ")
     SET(SOURCE_TARBALL_POSTFIX "tar.gz")
@@ -46,18 +53,18 @@ SET(SOURCE_TARBALL_OUTPUT)
 
 IF(DEFINED SOURCE_TARBALL_OUTPUT_DIR)
     IF(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
-	SET(SOURCE_TARBALL_OUTPUT 
+	SET(SOURCE_TARBALL_OUTPUT
 	    ${SOURCE_TARBALL_OUTPUT_DIR}/${SOURCE_TARBALL_OUTPUT_PREFIX}.${SOURCE_TARBALL_POSTFIX})
     ELSE(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
-	SET(SOURCE_TARBALL_OUTPUT 
+	SET(SOURCE_TARBALL_OUTPUT
 	    ${SOURCE_TARBALL_OUTPUT_DIR}/${SOURCE_TARBALL_ORIG})
     ENDIF(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
 ELSE(DEFINED SOURCE_TARBALL_OUTPUT_DIR)
     IF(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
-	SET(SOURCE_TARBALL_OUTPUT 
+	SET(SOURCE_TARBALL_OUTPUT
 	    ${SOURCE_TARBALL_OUTPUT_PREFIX}.${SOURCE_TARBALL_POSTFIX})
     ELSE(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
-	SET(SOURCE_TARBALL_OUTPUT 
+	SET(SOURCE_TARBALL_OUTPUT
 	    ${SOURCE_TARBALL_ORIG})
     ENDIF(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
 ENDIF(DEFINED SOURCE_TARBALL_OUTPUT_DIR)
@@ -87,11 +94,9 @@ ELSE(DEFINED SOURCE_TARBALL_OUTPUT_DIR)
 	    )
     ENDIF(DEFINED SOURCE_TARBALL_OUTPUT_PREFIX)
 ENDIF(DEFINED SOURCE_TARBALL_OUTPUT_DIR)
-#MESSAGE("SOURCE_TARBALL_ORIG=${SOURCE_TARBALL_ORIG}")
-#MESSAGE("SOURCE_TARBALL_OUTPUT=${SOURCE_TARBALL_OUTPUT}")
 
 SET(CMAKE_GENERATED_FILES "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
-    "\\\\.directory$" "CMakeCache\\\\.txt$" 
+    "\\\\.directory$" "CMakeCache\\\\.txt$"
     "/install_manifest.txt$"
     "/cmake_.*install\\\\.cmake$" "/CPack.*\\\\.cmake$" "/CTestTestfile\\\\.cmake$"
     "Makefile$"
@@ -101,7 +106,7 @@ SET(COMMON_IGNORED_FILES
     "/\\\\.svn/"  "/CVS/" "/\\\\.git/"  "\\\\.gitignore$"
     "~$" "\\\\.swp$" "\\\\.log$" "\\\\.bak$" "\\\\.old$"
     "\\\\.gmo$"
-    "\\\\.tar.gz$" "\\\\.tar.bz2$" "/src/config\\\\.h$" "NO_PACK") 
+    "\\\\.tar.gz$" "\\\\.tar.bz2$" "/src/config\\\\.h$" "NO_PACK")
 
 SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${CMAKE_GENERATED_FILES} ${COMMON_IGNORED_FILES})
 
