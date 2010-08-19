@@ -1,56 +1,56 @@
 # - Module that help to get/set variables.
 # Defines the following macros:
-#    COMMAND_OUTPUT_TO_VARIABLE(var cmd)
-#      - Store command output to a variable, without new line characters (\n and \r).
-#        This macro is suitable for command that output one line result.
-#        Note that the var will be set to ${var_name}-NOVALUE if cmd does not have
-#        any output.
-#        * Parameters:
-#          var: A variable that stores the result.
-#          cmd: A command.
+#   COMMAND_OUTPUT_TO_VARIABLE(var cmd)
+#     - Store command output to a variable, without new line characters (\n and \r).
+#       This macro is suitable for command that output one line result.
+#       Note that the var will be set to ${var_name}-NOVALUE if cmd does not have
+#       any output.
+#       * Parameters:
+#         var: A variable that stores the result.
+#         cmd: A command.
 #
-#    SETTING_FILE_GET_ATTRIBUTE(var attr_name setting_file [UNQUOTED] [setting_sign])
-#      - Get an attribute value from a setting file.
-#        * Parameters:
-#          var: Variable to store the attribute value.
-#          attr_name: Name of the attribute.
-#          setting_file: Setting filename.
-#          UNQUOTED: (Optional) remove the double quote mark around the string.
-#          setting_sign: (Optional) The symbol that separate attribute name and its value.
-#            Default value: "="
+#   SETTING_FILE_GET_ATTRIBUTE(var attr_name setting_file [UNQUOTED] [setting_sign])
+#     - Get an attribute value from a setting file.
+#       * Parameters:
+#         var: Variable to store the attribute value.
+#         attr_name: Name of the attribute.
+#         setting_file: Setting filename.
+#         UNQUOTED: (Optional) remove the double quote mark around the string.
+#         setting_sign: (Optional) The symbol that separate attribute name and its value.
+#           Default value: "="
 #
-#    SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [NOREPLACE] [setting_sign])
-#      - Get all attribute values from a setting file.
-#        '#' is used to comment out setting.
-#        * Parameters:
-#          setting_file: Setting filename.
-#          UNQUOTED: (Optional) remove the double quote mark around the string.
-#          NOREPLACE (Optional) Without this parameter, this macro replaces
-#            previous defined variables, use NOREPLACE to prevent this.
-#          setting_sign: (Optional) The symbol that separate attribute name and its value.
-#            Default value: "="
+#   SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [NOREPLACE] [setting_sign])
+#     - Get all attribute values from a setting file.
+#       '#' is used to comment out setting.
+#       * Parameters:
+#         setting_file: Setting filename.
+#         UNQUOTED: (Optional) remove the double quote mark around the string.
+#         NOREPLACE (Optional) Without this parameter, this macro replaces
+#           previous defined variables, use NOREPLACE to prevent this.
+#         setting_sign: (Optional) The symbol that separate attribute name and its value.
+#           Default value: "="
 #
-#    GET_ENV(var default_value [env])
-#      - Get the value of a environment variable, or use default
-#        if the environment variable does not exist or is empty.
-#        * Parameters:
-#          var: Variable to be set
-#          default_value: Default value of the var
-#          env: (Optional) The name of environment variable. Only need if different from var.
+#   GET_ENV(var default_value [env])
+#     - Get the value of a environment variable, or use default
+#       if the environment variable does not exist or is empty.
+#       * Parameters:
+#         var: Variable to be set
+#         default_value: Default value of the var
+#         env: (Optional) The name of environment variable. Only need if different from var.
 #
-#    SET_COMPILE_ENV(var default_value [env])
-#      - Add compiler environment with a variable and its value.
-#        If the variable is not defined yet, then a default value is assigned to it first.
-#        * Parameters:
-#          var: Variable to be set
-#          default_value: Default value of the var
-#          env: (Optional)The name of environment variable. Only need if different from var.
+#   SET_COMPILE_ENV(var default_value [env])
+#     - Add compiler environment with a variable and its value.
+#       If the variable is not defined yet, then a default value is assigned to it first.
+#       * Parameters:
+#         var: Variable to be set
+#         default_value: Default value of the var
+#         env: (Optional)The name of environment variable. Only need if different from var.
 #
-#    SET_VAR(var untrimmed_value)
-#      - Trim an set the value to a variable.
-#        * Parameters:
-#          var: Variable to be set
-#          untrimmed_value: Untrimmed values that may have space, \t, \n, \r in the front or back of the string.
+#   SET_VAR(var untrimmed_value)
+#     - Trim an set the value to a variable.
+#       * Parameters:
+#         var: Variable to be set
+#         untrimmed_value: Untrimmed values that may have space, \t, \n, \r in the front or back of the string.
 #
 INCLUDE(SupportCmake-2.4)
 IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
