@@ -13,9 +13,9 @@ SET(CMAKE_C_FLAGS "-Wall")
 
 SET(RELEASE_FILE ${CMAKE_SOURCE_DIR}/RELEASE-NOTES.txt)
 SET(RPM_RELEASE_FILE ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt)
-SETTING_FILE_GET_ATTRIBUTE(PRJ_VER_PATTERN "PRJ_VER" ${RELEASE_FILE})
+SETTING_FILE_GET_ATTRIBUTE(PRJ_VER "PRJ_VER" ${RELEASE_FILE})
 #MESSAGE("PRJ_VER_PATTERN=${PRJ_VER_PATTERN}")
-SETTING_FILE_GET_ATTRIBUTE(PRJ_VER_RELEASE "RPM_RELEASE" ${RPM_RELEASE_FILE})
+#SETTING_FILE_GET_ATTRIBUTE(PRJ_VER_RELEASE "RPM_RELEASE" ${RPM_RELEASE_FILE})
 
 SET(SO_VER_MAJOR "1")
 SET(SO_VER_MINOR "0")
@@ -66,7 +66,7 @@ INCLUDE(common.CMakeLists.txt)
 # RPM configuration
 ####################################################################
 FILE(READ ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog RPM_CHANGELOG)
-GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
+#GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
 
 ####################################################################
 # Definitions
@@ -147,26 +147,29 @@ INCLUDE(GConf)
 
 SET(CPACK_RESOURCE_FILE_LICENSE
     ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
+INCLUDE(PackSource)
 
-SET(PRJ_COMMON_IGNORE_FILES
-    "/docs/"
-    "\\\\.cache$"  "\\\\.spec$"
-    "messages.po$"
+SET(MY_IGNORE_FILES_COMMON
+    "/docs/"  "\\\\.spec$"
+    "messages.po$" "/SRPMS/" "/RPMS/""/SOURCES/" "/BUILD/" "/BUILDROOT/" "/FedPkg/"
 )
 
 # GOB_GENERATED source codes are now excluded,
 # As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
 # Is fixed from Fedora 11
-SET(PRJ_COMMON_IGNORE_FILES
-    ${PRJ_COMMON_IGNORE_FILES} "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
+SET(PRJ_IGNORE_FILES_COMMON
+    ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
 )
 
-SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/bin/"
-    "\\\\.xml$" "\\\\.schemas")
-SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/src/"
-    "\\\\.spec$" "\\\\.in$" "\\\\.pot$")
+SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES} ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
 
-INCLUDE(CPack)
+#SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/bin/"
+#    "\\\\.xml$" "\\\\.schemas")
+#SET(CPACK_PACKAGE_IGNORE_FILES ${CPACK_BINARY_IGNORE_FILES} ${PRJ_COMMON_IGNORE_FILES} "/src/"
+#    "\\\\.spec$" "\\\\.in$" "\\\\.pot$")
 
-ADD_DEPENDENCIES(pack_src pot_file)
+#MESSAGE("PRJ_IGNORE_FILES_SOURCE=${PRJ_IGNORE_FILES_SOURCE}")
+PACK_SOURCE(${PRJ_VER} "SOURCES" ${PRJ_IGNORE_FILES_SOURCE})
+
+#ADD_DEPENDENCIES(pack_src pot_file)
 

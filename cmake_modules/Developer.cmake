@@ -45,7 +45,7 @@
 # * Produced targets: upload_pkg_release
 #
 
-INCLUDE(BasicMacros)
+INCLUDE(ManageVariable)
 IF(NOT DEFINED HOSTING_SERVICE_PROVIDER)
     SET(HOSTING_SERVICE_PROVIDER "hosting service provider")
 ENDIF(NOT DEFINED HOSTING_SERVICE_PROVIDER)

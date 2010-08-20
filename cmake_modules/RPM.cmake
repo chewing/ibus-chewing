@@ -62,7 +62,7 @@
 #     Depends on rpm_remove_old
 #
 
-INCLUDE(SourceTarball)
+INCLUDE(PackSource)
 SET (SPEC_FILE_WARNING "This file is generated, please modified the .spec.in file instead!")
 
 IF(NOT DEFINED DIST_TAG)
