@@ -3,38 +3,26 @@
 # undesirable. We avoid this by using the sane default ignore list.
 #
 # Defines following macro:
-#   PACK_SOURCE(packedSourceFile
-#     [IGNORE excludeFilePatternList]
-#   )
-#   - Pack the source file as packedSourceFile
+#   PACK_SOURCE(outputDir [generator])
+#   - Pack source files as <projectName>-<PRJ_VER>-Source.<packFormat>,
+#     Arguments:
+#     + outputDir: Directory to write source tarball.
+#     + generator: (Optional) Method to make tarball. Basically this argument
+#       is passed as CPACK_GENERATOR. Default to TGZ.
+#     Variable to be read:
+#     + PROJECT_NAME: Project name
+#     + PRJ_VER: Project version
+#     + PACK_SOURCE_IGNORE_FILES: A list of regex filename pattern to indicate
+#       the files to be exclude.
+#     Output Variable:
+#     + PACK_SOURCE_FILE_NAME: The final output file, including the output
+#       directory.
+#     Target:
+#     + pack_src: Pack source files like package_source, but also check
+#       version.
+# Defines following target:
+#     pack_remove_old: Remove old source tarballs.
 #
-# Source Tarball handling. Required by RPM.cmake
-# To use: INCLUDE(SourceTarball)
-#
-# Includes: Version
-#
-#===================================================================
-# Variables:
-#   Predefined:
-#     CMAKE_GENERATED_FILES: Pattern of CMake generated files.
-#          They are excluded from packing.
-#     COMMON_IGNORED_FILES: Pattern of backup files and version control system
-#          files such as CVS, SVN and git.
-#          They are excluded from packing.
-#   Output:
-#     SOURCE_TARBALL_ORIG_PREFIX: The prefix of CPack packed file.
-#     SOURCE_TARBALL_ORIG_POSTFIX: The postfix of CPack packed file.
-#     SOURCE_TARBALL_ORIG: The filename of CPack packed file.
-#     SOURCE_TARBALL_OUTPUT: output filename of target pack_src, including
-#     output_dir.
-#
-#   Optional:
-#     SOURCE_TARBALL_OUTPUT_DIR: Set the output directory for package files.
-#     SOURCE_TARBALL_OUTPUT_PREFIX: Set the prefix of package files.
-#
-#===================================================================
-# Targets:
-# pack_src: Make source tarball for rpm packaging.
 #
 IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
     SET (_PACK_SOURCE_CMAKE_ "DEFINED")
@@ -67,6 +55,14 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	    SET(CPACK_GENERATOR "TGZ")
 	ENDIF(${ARGV2})
 	SET(CPACK_SOURCE_GENERATOR ${CPACK_GENERATOR})
+	IF(${CPACK_GENERATOR} STREQUAL "TGZ")
+	    SET(_pack_source_ext "tar.gz")
+	ELSEIF(${CPACK_GENERATOR} STREQUAL "TBZ2")
+	    SET(_pack_source_ext "tar.bz2")
+	ELSEIF(${CPACK_GENERATOR} STREQUAL "ZIP")
+	    SET(_pack_source_ext "zip")
+	ENDIF(${CPACK_GENERATOR} STREQUAL "TGZ")
+
 	SET(CPACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES})
 	SET(CPACK_PACKAGE_VERSION ${PRJ_VER})
 
@@ -82,14 +78,32 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 	ENDIF(DEFINED PROJECT_DESCRIPTION)
 
-	SET(PACK_SOURCE_FILE_NAME "${outputDir}/${PROJECT_NAME}-${PRJ_VER}-Source"
 	SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${outputDir}/${PROJECT_NAME}-${PRJ_VER}-Source")
-	MESSAGE("CPACK_SOURCE_PACKAGE_FILE_NAME=${CPACK_SOURCE_PACKAGE_FILE_NAME}")
+	SET(PACK_SOURCE_FILE_NAME
+	    "${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
+	MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
 	INCLUDE(CPack)
+	UNSET(_pack_source_ext)
+
+	ADD_CUSTOM_COMMAND(OUTPUT ${PACK_SOURCE_FILE_NAME}
+	    COMMAND make pack_src
+	    COMMENT "Packing the source"
+	    )
+
+	ADD_CUSTOM_TARGET(pack_src
+	    COMMAND make package_source
+	    )
+
+	ADD_DEPENDENCIES(pack_src version_check)
     ENDMACRO(PACK_SOURCE packedSourceFile)
+
+    ADD_CUSTOM_TARGET(pack_remove_old
+	COMMAND find .
+	-name '${PROJECT_NAME}*.tar.[bg]z*' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${SOURCE_TARBALL_POSTFIX}'
+	-print -delete
+	COMMENT "Removing the old tarballs .."
+	)
+
+    ADD_DEPENDENCIES(pack_remove_old version_check)
 ENDIF(NOT DEFINED _PACK_SOURCE_CMAKE_)
-
-#SET(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES} ${CMAKE_GENERATED_FILES} ${COMMON_IGNORED_FILES})
-
-#ADD_DEPENDENCIES(pack_src version_check)
 
