@@ -17,9 +17,9 @@
 
 IF(NOT DEFINED _DATE_TIME_FORMAT_CMAKE_)
     SET(_DATE_TIME_FORMAT_CMAKE_ "DEFINED")
-    INCLUDE(ManageVariable)
 
     MACRO(TODAY date_var format)
+	INCLUDE(ManageVariable)
 	SET(_locale ${ARGV2})
 	IF(_locale)
 	    SET(ENV{LC_ALL} ${_locale})
