@@ -1,37 +1,59 @@
 # - RPM generation, maintaining (remove old rpm) and verification (rpmlint).
+# This module provides macros that provides various rpm building and
+# verification targets.
+# Read following variables:
+#   RPM_DIST_TAG: (optional) Current distribution tag such as el5, fc10.
+#     Default: Distribution tag from rpm --showrc
 #
-# To use: INCLUDE(RPM)
-# Included: SourceTarball
+#   RPM_BUILD_TOPDIR: Directory of  the rpm topdir.
+#     Default: ${CMAKE_BINARY_DIR}
 #
-#===================================================================
-# Variables:
-# RPM_DIST_TAG: Current distribution tag such as el5, fc10.
-#         Default: Distribution tag from rpm --showrc
+#   RPM_BUILD_SPECS: Directory of  spec files.
+#     Default: ${RPM_BUILD_TOPDIR}/SPECS
 #
-# RPM_BUILD_TOPDIR: Directory of  the rpm topdir.
-#         Default: ${CMAKE_BINARY_DIR}
-# RPM_BUILD_SPECS: Directory of  spec files.
-#         Default: ${RPM_BUILD_TOPDIR}/SPECS
-# RPM_BUILD_SOURCES: Directory of source (tar.gz or zip) files.
-#         Default: ${RPM_BUILD_TOPDIR}/SOURCES
-# RPM_BUILD_SRPMS: Directory of source rpm files.
-#         Default: ${RPM_BUILD_TOPDIR}/SRPMS
-# RPM_BUILD_RPMS: Directory of generated rpm files.
-#         Default: ${RPM_BUILD_TOPDIR}/RPMS
-# RPM_BUILD_BUILD:  Directory for RPM build.
-#         Default: ${RPM_BUILD_TOPDIR}/BUILD
-# RPM_BUILD_BUILDROOT:  Directory for RPM build.
-#         Default: ${RPM_BUILD_TOPDIR}/BUILDROOT
+#   RPM_BUILD_SOURCES: Directory of source (tar.gz or zip) files.
+#     Default: ${RPM_BUILD_TOPDIR}/SOURCES
 #
-# RPM_SOURCE_FILES: Source and patch file for RPM build.
-#         Default: ${RPM_BUILD_SOURCES}/${PROJECT_NAME}-${PRJ_VER}-Source
-#                   with suffix of either tar.gz, tar.bz2, tgz, tbz, zip
-# SRPM_FILE: Generated srpm file.
-#         Default: ${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER_FULL}.${RPM_DIST_TAG}.src.rpm
-# RPM_IS_NO_ARCH: Set it if this rpm is noarch, it also
-#         hide rpm_mock_i386 and rpm_mock_x86_64 for noarch package
+#   RPM_BUILD_SRPMS: Directory of source rpm files.
+#     Default: ${RPM_BUILD_TOPDIR}/SRPMS
 #
-# MOCK_RPM_DIST_TAG: Prefix of mock configure file, such as "fedora-11", "fedora-rawhide", "epel-5"/
+#   RPM_BUILD_RPMS: Directory of generated rpm files.
+#     Default: ${RPM_BUILD_TOPDIR}/RPMS
+#
+#   RPM_BUILD_BUILD:  Directory for RPM build.
+#     Default: ${RPM_BUILD_TOPDIR}/BUILD
+#
+#   RPM_BUILD_BUILDROOT:  Directory for RPM build.
+#     Default: ${RPM_BUILD_TOPDIR}/BUILDROOT
+#
+# Defines following Macros:
+#   PACK_RPM(spec_in [generator])
+#   - Generate spec and pack rpm  according to the spec_in file.
+#     It calls PackSource, so no need to call it manually,
+#     note that environment variables for PackSource should be defined
+#     before calling this macro.
+#     Arguments:
+#     + spec_in: RPM spec input template.
+#     + generator: CPack Generator to be passed to PACK_SOURCE. Default is
+#       TGZ.
+#     Targets:
+#     + srpm: Build srpm (rpmbuild -bs).
+#     + rpm: Build rpm and srpm (rpmbuild -ba)
+#     + rpmlint: Run rpmlint to generated rpms.
+#     + rpm_remove_old: Remove old rpms.
+#     + pkg_remove_old: Remove old source tarballs and rpms.
+#     This macro defines following variables:
+#     + PRJ_SRPM_FILE_NAME: Filename of generated SRPM file
+#
+#   USE_MOCK(spec_in)
+#   - Add mock related targets.
+#     Arguments:
+#     + spec_in: RPM spec input template.
+#     Targets:
+#     + rpm_mock_i386: Make i386 rpm
+#     + rpm_mock_x86_64: Make x86_64 rpm
+#     This macor reads following variables?:
+#     + MOCK_RPM_DIST_TAG: Prefix of mock configure file, such as "fedora-11", "fedora-rawhide", "epel-5".
 #         Default: Convert from RPM_DIST_TAG
 #
 #===================================================================
@@ -142,6 +164,8 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	SET(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER}-${PRJ_RELEASE}.src.rpm")
 
         # Update RPM_ChangeLog
+	FILE(READ "${RPM_BUILD_SPECS}/RPM-ChangeLog.prev" RPM_CHANGELOG_PREV)
+	CONFIGURE_FILE(${RPM_BUILD_SPECS}/RPM-ChangeLog.in ${RPM_BUILD_SPECS}/RPM-ChangeLog)
 
 	# Generate spec
 	CONFIGURE_FILE(${spec_in} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
@@ -208,40 +232,48 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	    COMMENT "Removing the old rpms.."
 	    )
 
-	#	ADD_CUSTOM_TARGET(pkg_remove_old
-	#    )
+	ADD_CUSTOM_TARGET(pkg_remove_old
+	)
 
-	#ADD_DEPENDENCIES(pkg_remove_old rpm_remove_old pack_remove_old)
+	ADD_DEPENDENCIES(pkg_remove_old rpm_remove_old pack_remove_old)
     ENDMACRO(PACK_RPM spec_in)
 
-IF(NOT DEFINED MOCK_RPM_DIST_TAG)
-    STRING(REGEX MATCH "^fc([1-9][0-9]*)"  _fedora_mock_dist "${RPM_DIST_TAG}")
-    STRING(REGEX MATCH "^el([1-9][0-9]*)"  _el_mock_dist "${RPM_DIST_TAG}")
+    MACRO(USE_MOCK ${spec_in})
+	FIND_PROGRAM(MOCK NAME "mock")
+	IF("${MOCK}" STREQUAL "MOCK-NOTFOUND")
+	    MESSAGE(FATAL_ERROR "mock is not found in PATH!")
+	ENDIF("${MOCK}" STREQUAL "MOCK-NOTFOUND")
 
-    IF (_fedora_mock_dist)
-        STRING(REGEX REPLACE "^fc([1-9][0-9]*)" "fedora-\\1" MOCK_RPM_DIST_TAG "${RPM_DIST_TAG}")
-    ELSEIF (_el_mock_dist)
-        STRING(REGEX REPLACE "^el([1-9][0-9]*)" "epel-\\1" MOCK_RPM_DIST_TAG "${RPM_DIST_TAG}")
-    ELSE (_fedora_mock_dist)
-	SET(MOCK_RPM_DIST_TAG "fedora-devel")
-    ENDIF(_fedora_mock_dist)
-    #MESSAGE ("MOCK_RPM_DIST_TAG=${MOCK_RPM_DIST_TAG}")
-ENDIF(NOT DEFINED MOCK_RPM_DIST_TAG)
+	IF(NOT DEFINED MOCK_RPM_DIST_TAG)
+	    STRING(REGEX MATCH "^fc([1-9][0-9]*)"  _fedora_mock_dist "${RPM_DIST_TAG}")
+	    STRING(REGEX MATCH "^el([1-9][0-9]*)"  _el_mock_dist "${RPM_DIST_TAG}")
 
-IF(NOT RPM_IS_NOARCH)
-    ADD_CUSTOM_TARGET(rpm_mock_i386
-	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/i386
-	COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-i386" --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
-	)
+	    IF (_fedora_mock_dist)
+		STRING(REGEX REPLACE "^fc([1-9][0-9]*)" "fedora-\\1" MOCK_RPM_DIST_TAG "${RPM_DIST_TAG}")
+	    ELSEIF (_el_mock_dist)
+		STRING(REGEX REPLACE "^el([1-9][0-9]*)" "epel-\\1" MOCK_RPM_DIST_TAG "${RPM_DIST_TAG}")
+	    ELSE (_fedora_mock_dist)
+		SET(MOCK_RPM_DIST_TAG "fedora-devel")
+	    ENDIF(_fedora_mock_dist)
+	    #MESSAGE ("MOCK_RPM_DIST_TAG=${MOCK_RPM_DIST_TAG}")
+	ENDIF(NOT DEFINED MOCK_RPM_DIST_TAG)
 
-    ADD_CUSTOM_TARGET(rpm_mock_x86_64
-	COMMAND ${CMAKE_COMMAND} -E make_directory RPMS/x86_64
-	COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-x86_64" --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
-	)
+	SETTING_FILE_GET_ATTRIBUTE(_archStr BuildArch ${spec_in} ":")
+	IF("${_archStr}" STREQUAL noarch)
+	    ADD_CUSTOM_TARGET(rpm_mock_i386
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i386
+		COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-i386" --resultdir="${RPM_BUILD_RPMS}/i386" ${SRPM_FILE}
+		DEPENDS $PRJ_SRPM_FILE_NAME
+		)
 
-    ADD_DEPENDENCIES(rpm_mock_i386 srpm)
-    ADD_DEPENDENCIES(rpm_mock_x86_64 srpm)
-ENDIF(NOT RPM_IS_NOARCH)
+	    ADD_CUSTOM_TARGET(rpm_mock_x86_64
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/x86_64
+		COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-x86_64" --resultdir="${RPM_BUILD_RPMS}/x86_64" ${SRPM_FILE}
+		DEPENDS $PRJ_SRPM_FILE_NAME
+		)
+
+	ENDIF("${_archStr}" STREQUAL noarch)
+    ENDMACRO(USE_MOCK)
 
 ENDIF(NOT DEFINED _PACK_RPM_CMAKE_)
 

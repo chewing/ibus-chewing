@@ -1,27 +1,36 @@
 # - Module that manage version
 # Defines following macros:
-#   LOAD_RELEASE_FILE(filename)
-#   - Load release file information, this file should have at least one line
-#     that shows:
-#     PRJ_VER=<version>
+#   LOAD_RELEASE_FILE(releaseFile)
+#   - Load release file information.
+#     Arguments:
+#     + releaseFile: release file to be read.
+#       This file should contain following definition:
+#       PRJ_VER: Release version.
+#       SUMMARY: Summary of the release. Will be output as CHANGE_SUMMARY.
+#       and a [Changes] section tag, below which listed the change in the
+#       release.
 #     This macro also set following variables:
-#       PRJ_VER: Project version.
+#       PRJ_VER: Release version.
 #       CHANGE_SUMMARY: Summary of changes.
-#       CHANGELOG_ITEMS: Items for change logs
+#       CHANGELOG_ITEMS: Lines below the [Changes] tag.
 #
 
 IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
     SET(_MANAGE_VERSION_CMAKE_ "DEFINED")
     INCLUDE(ManageVariable)
-    MACRO(LOAD_RELEASE_FILE filename)
-	SETTING_FILE_GET_ATTRIBUTE(PRJ_VER "PRJ_VER" "${filename}")
-	SETTING_FILE_GET_ATTRIBUTE(CHANGE_SUMMARY "SUMMARY" "${filename}")
-	COMMAND_OUTPUT_TO_VARIABLE(_grep_line grep -F "[Changes]" -n -m 1 ${filename})
-	#MESSAGE("_grep_line=|${_grep_line}")
+
+    MACRO(LOAD_RELEASE_FILE releaseFile)
+	SETTING_FILE_GET_ATTRIBUTE(PRJ_VER "PRJ_VER" "${releaseFile}")
+	SETTING_FILE_GET_ATTRIBUTE(CHANGE_SUMMARY "SUMMARY" "${releaseFile}")
+	COMMAND_OUTPUT_TO_VARIABLE(_grep_line grep -F "[Changes]" -n -m 1 ${releaseFile})
+	#MESSAGE("_grep_line=|${_grep_line}|")
+	IF("${_grep_line}" STREQUAL "")
+	    MESSAGE(FATAL_ERROR "${releaseFile} does not have a [Changes] tag!")
+	ENDIF("${_grep_line}" STREQUAL "")
 	STRING(REGEX REPLACE ":.*" "" _line_num "${_grep_line}")
 	MATH(EXPR _line_num ${_line_num}+1)
 
-	COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +${_line_num} ${filename})
+	COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +${_line_num} ${releaseFile})
 	INCLUDE(DateTimeFormat)
 	FILE(WRITE "ChangeLog" "* ${TODAY_CHANGELOG} - ${MAINTAINER} - ${PRJ_VER}\n")
 	FILE(APPEND "ChangeLog" "${CHANGELOG_ITEMS}\n")
@@ -36,7 +45,7 @@ IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
 	    COMMAND test \"`${_version_check_cmd}`\" = \"\" -o \"`${_version_check_cmd}`\" = "${PRJ_VER}"
 	    || echo Inconsistent version detected. Fixing.. && ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
 	    )
-    ENDMACRO(LOAD_RELEASE_FILE filename)
+    ENDMACRO(LOAD_RELEASE_FILE releaseFile)
 
 ENDIF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
 

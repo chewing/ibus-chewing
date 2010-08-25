@@ -23,23 +23,8 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 INCLUDE(ManageVersion)
 LOAD_RELEASE_FILE("${RELEASE_FILE}")
-
-#MESSAGE("### CHANGE_SUMMARY=${CHANGE_SUMMARY}")
-
-# Changelog items
-COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +4 ${RELEASE_FILE})
-#MESSAGE("### CHANGELOG_ITEMS=${CHANGELOG_ITEMS}|")
-
-STRING(COMPARE GREATER "${PRJ_VER_RELEASE}" "1" NEED_RPM_RELEASE_INFO)
-IF(${NEED_RPM_RELEASE_INFO})
-    SETTING_FILE_GET_ATTRIBUTE(RPM_RELEASE_SUMMARY "RPM_RELEASE_SUMMARY" ${RPM_RELEASE_FILE})
-    COMMAND_OUTPUT_TO_VARIABLE(RPM_CHANGELOG_ITEMS tail -n +5 ${RPM_RELEASE_FILE})
-ELSE(${NEED_RPM_RELEASE_INFO})
-    SET(RPM_RELEASE_SUMMARY ${CHANGE_SUMMARY})
-    SET(RPM_CHANGELOG_ITEMS ${CHANGELOG_ITEMS})
-ENDIF(${NEED_RPM_RELEASE_INFO})
-#MESSAGE("### RPM_RELEASE_SUMMARY=${RPM_RELEASE_SUMMARY}")
-#MESSAGE("### RPM_CHANGELOG_ITEMS=|${RPM_CHANGELOG_ITEMS}|")
+INCLUDE(ManageVariable)
+SET_USUAL_COMPILE_ENV()
 
 
 #==================================================================
@@ -62,17 +47,10 @@ INCLUDE(common.CMakeLists.txt)
 # Post Include setting
 ####################################################################
 
-####################################################################
-# RPM configuration
-####################################################################
-FILE(READ ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog RPM_CHANGELOG)
-#GENERATE_SPEC(SPECS/${PROJECT_NAME}.spec.in)
 
 ####################################################################
 # Definitions
 ####################################################################
-ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER_FULL}"')
-ADD_DEFINITIONS(-DPKGDATADIR='"${PROJECT_DATADIR}"')
 ADD_DEFINITIONS(-DSYSTEMDIR='"${PROJECT_DATADIR}"')
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 
