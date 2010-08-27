@@ -32,6 +32,9 @@ IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
 
 	COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +${_line_num} ${releaseFile})
 	INCLUDE(DateTimeFormat)
+	FILE(READ "ChangeLog.prev" CHANGELOG_PREV)
+	CONFIGURE_FILE(ChangeLog.in ChangeLog)
+
 	FILE(WRITE "ChangeLog" "* ${TODAY_CHANGELOG} - ${MAINTAINER} - ${PRJ_VER}\n")
 	FILE(APPEND "ChangeLog" "${CHANGELOG_ITEMS}\n")
 	FILE(READ "ChangeLog.prev" _changelog_prev)

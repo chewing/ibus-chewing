@@ -5,9 +5,11 @@
 # Defines following variable:
 #   PACK_SOURCE_IGNORE_FILES_DEFAULT: Default list of file that should not be packed.
 # Defines following macro:
-#   PACK_SOURCE(outputDir [generator])
+#   PACK_SOURCE(var outputDir [generator])
 #   - Pack source files as <projectName>-<PRJ_VER>-Source.<packFormat>,
 #     Arguments:
+#     + var: The filename of source package is outputted to this var.
+#            Path is excluded.
 #     + outputDir: Directory to write source tarball.
 #     + generator: (Optional) Method to make tarball. Basically this argument
 #       is passed as CPACK_GENERATOR. Default to TGZ.
@@ -16,9 +18,6 @@
 #     + PRJ_VER: Project version
 #     + PACK_SOURCE_IGNORE_FILES: A list of regex filename pattern to indicate
 #       the files to be excluded.
-#     Output Variable:
-#     + PACK_SOURCE_FILE_NAME: The final output file, including the output
-#       directory.
 #     Target:
 #     + pack_src: Pack source files like package_source, but also check
 #       version.
@@ -43,9 +42,6 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	)
 
     SET(PACK_SOURCE_IGNORE_FILES_DEFAULT ${PACK_SOURCE_IGNORE_FILES_COMMON} ${PACK_SOURCE_IGNORE_FILES_CMAKE})
-    IF(NOT DEFINED PACK_SOURCE_IGNORE_FILES)
-	SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES_DEFAULT})
-    ENDIF(NOT DEFINED PACK_SOURCE_IGNORE_FILES)
 
     INCLUDE(ManageVersion)
     MACRO(GET_RELATIVE_PATH var pwd target)
@@ -77,15 +73,19 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	ENDIF("${_res}" STREQUAL "${_targetAbs}")
     ENDMACRO(GET_RELATIVE_PATH var pwd target)
 
-    MACRO(PACK_SOURCE outputDir)
+    MACRO(PACK_SOURCE var outputDir)
+	IF(NOT DEFINED PACK_SOURCE_IGNORE_FILES)
+	    SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES_DEFAULT})
+	ENDIF(NOT DEFINED PACK_SOURCE_IGNORE_FILES)
+
 	IF(${PRJ_VER} STREQUAL "")
 	    MESSAGE(FATAL_ERROR "PRJ_VER not defined")
 	ENDIF(${PRJ_VER} STREQUAL "")
-	IF(${ARGV2})
-	    SET(CPACK_GENERATOR "${ARGV2}")
-	ELSE(${ARGV2})
+	IF(${ARGV3})
+	    SET(CPACK_GENERATOR "${ARGV3}")
+	ELSE(${ARGV3})
 	    SET(CPACK_GENERATOR "TGZ")
-	ENDIF(${ARGV2})
+	ENDIF(${ARGV3})
 	SET(CPACK_SOURCE_GENERATOR ${CPACK_GENERATOR})
 	IF(${CPACK_GENERATOR} STREQUAL "TGZ")
 	    SET(_pack_source_ext "tar.gz")
@@ -102,7 +102,6 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	GET_RELATIVE_PATH(_outputDir_rel ${CMAKE_BINARY_DIR} ${outputDir})
 	#MESSAGE("#_outputDir_rel=${_outputDir_rel}")
 
-
 	IF(EXISTS ${CMAKE_SOURCE_DIR}/COPYING)
 	    SET(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/README)
 	ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/COPYING)
@@ -116,14 +115,15 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	ENDIF(DEFINED PROJECT_DESCRIPTION)
 
 	SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${_outputDir_rel}/${PROJECT_NAME}-${PRJ_VER}-Source")
-	SET(PACK_SOURCE_FILE_NAME
-	    "${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
-	MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
+	SET(_path_source_path "${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
+	SET(${var} "${PROJECT_NAME}-${PRJ_VER}-Source.${_pack_source_ext}")
+	#MESSAGE("_pach_source_path=${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
+
 	INCLUDE(CPack)
 
-	ADD_CUSTOM_COMMAND(OUTPUT ${PACK_SOURCE_FILE_NAME}
-	    COMMAND make pack_src
-	    COMMENT "Packing the source"
+	ADD_CUSTOM_COMMAND(OUTPUT ${_path_source_path}
+	   COMMAND make pack_src
+	   COMMENT "Packing the source"
 	    )
 
 	ADD_CUSTOM_TARGET(pack_src
@@ -132,7 +132,7 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	    )
 
 	ADD_DEPENDENCIES(pack_src version_check)
-    ENDMACRO(PACK_SOURCE packedSourceFile)
+    ENDMACRO(PACK_SOURCE var outputDir)
 
     ADD_CUSTOM_TARGET(pack_remove_old
 	COMMAND find .

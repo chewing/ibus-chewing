@@ -71,7 +71,7 @@ start_component (void)
         IBusComponent *component;
 //        component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
         component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                _("Chewing component"), PKGDATADIR, "GPLv2+",
+                _("Chewing component"), PROJECT_DATADIR, "GPLv2+",
                 _("Peng Huang, Ding-Yi Chen"),
                 "http://code.google.com/p/ibus",
                 LIBEXEC_DIR "/ibus-engine-chewing --ibus",
@@ -81,7 +81,7 @@ start_component (void)
                 ibus_engine_desc_new("chewing", _("Chewing"),
                 "Chinese chewing input method",
                 "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-                PKGDATADIR "/icons/" PROJECT_NAME ".png",
+                PROJECT_DATADIR "/icons/" PROJECT_NAME ".png",
                 "us")
         );
 

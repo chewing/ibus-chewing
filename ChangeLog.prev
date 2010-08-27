@@ -181,18 +181,3 @@ Fix the errors which Funda Wang as pointing out:
 - This is a barely working version for with IBus C.
 - The build system is converted from autotool to CMake.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
