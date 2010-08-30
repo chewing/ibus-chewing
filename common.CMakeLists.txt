@@ -49,18 +49,6 @@ ENDIF()
 #CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog.in ${CMAKE_SOURCE_DIR}/SPECS/RPM-ChangeLog)
 
 #====================================================================
-# Package handling
-#
-
-SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
-
-#IF(EXISTS ${DEVELOPER_SETTING_FILE})
-#    INCLUDE(FedoraDeveloper)
-# ELSE(EXISTS ${DEVELOPER_SETTING_FILE})
-#    INCLUDE(RPM)
-#ENDIF(EXISTS ${DEVELOPER_SETTING_FILE})
-
-#====================================================================
 # Doxygen Document generation
 #
 IF (GENERATE_DOXYFILE)

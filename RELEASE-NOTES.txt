@@ -1,8 +1,8 @@
-PRJ_VER=1.3.6.20100816
+PRJ_VER=1.3.6.20100818
 SUMMARY=Resolves: #608991
 [Changes]
 - Resolves: #608991
 - Update CMake macros to use new GIT infrastructure
 - Fixed Issue 1022: chewing commit some text in reset method (patched by Peng Huang).
-- Fixed Issue 1032: [ibus-chewing] Chewing not commit some signle chinese char into appliction when press enter
+- Fixed Issue 1032: [ibus-chewing] Chewing not commit some single chinese char into application when press enter
 

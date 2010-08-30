@@ -37,7 +37,7 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
     SET(PACK_SOURCE_IGNORE_FILES_CMAKE "/CMakeFiles/" "_CPack_Packages/" "/Testing/"
 	"\\\\.directory$" "CMakeCache\\\\.txt$"
 	"/install_manifest.txt$"
-	"/cmake_.*install\\\\.cmake$" "/CPack.*\\\\.cmake$" "/CTestTestfile\\\\.cmake$"
+	"/cmake_install\\\\.cmake$" "/cmake_uninstall\\\\.cmake$""/CPack.*\\\\.cmake$" "/CTestTestfile\\\\.cmake$"
 	"Makefile$"
 	)
 
@@ -114,29 +114,37 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 	    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 	ENDIF(DEFINED PROJECT_DESCRIPTION)
 
-	SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${_outputDir_rel}/${PROJECT_NAME}-${PRJ_VER}-Source")
-	SET(_path_source_path "${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
-	SET(${var} "${PROJECT_NAME}-${PRJ_VER}-Source.${_pack_source_ext}")
-	#MESSAGE("_pach_source_path=${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
+	SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PRJ_VER}-Source")
+	SET(${var} "${CPACK_SOURCE_PACKAGE_FILE_NAME}.${_pack_source_ext}")
 
 	INCLUDE(CPack)
 
-	ADD_CUSTOM_COMMAND(OUTPUT ${_path_source_path}
+	ADD_CUSTOM_COMMAND(OUTPUT "${_outputDir_rel}/${${var}}"
 	   COMMAND make pack_src
 	   COMMENT "Packing the source"
 	    )
 
-	ADD_CUSTOM_TARGET(pack_src
-	    COMMAND make package_source
-	    DEPENDS ChangeLog
-	    )
+	IF("${_outputDir_rel}" STREQUAL ".")
+	    ADD_CUSTOM_TARGET(pack_src
+		COMMAND make package_source
+		DEPENDS ChangeLog
+		)
+	ELSE("${_outputDir_rel}" STREQUAL ".")
+	    ADD_CUSTOM_TARGET(pack_src
+		COMMAND make package_source
+		COMMAND cmake -E copy ${${var}} "${_outputDir_rel}/"
+		COMMAND cmake -E remove ${${var}}
+		DEPENDS ChangeLog
+		)
+	ENDIF("${_outputDir_rel}" STREQUAL ".")
+
 
 	ADD_DEPENDENCIES(pack_src version_check)
     ENDMACRO(PACK_SOURCE var outputDir)
 
     ADD_CUSTOM_TARGET(pack_remove_old
 	COMMAND find .
-	-name '${PROJECT_NAME}*.tar.[bg]z*' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${SOURCE_TARBALL_POSTFIX}'
+	-name '${PROJECT_NAME}*.${_pack_source_ext}' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${_pack_source_ext}'
 	-print -delete
 	COMMENT "Removing the old tarballs .."
 	)

@@ -28,7 +28,8 @@
 #
 # Defines following variables after include:
 #   RPM_IGNORE_FILES: A list of exclude file patterns for PackSource.
-#     Include it in PACK_SOURCE_IGNORE_FILES before calling PackSource()
+#     This value is appended to PACK_SOURCE_IGNORE_FILES after including
+#     this module.
 #
 # Defines following Macros:
 #   PACK_RPM(var spec_in source0 )
@@ -116,6 +117,9 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	"/${_rpm_build_sources_basename}/" "/${_rpm_build_srpms_basename}/" "/${_rpm_build_rpms_basename}/"
 	"/${_rpm_build_build_basename}/" "/${_rpm_build_buildroot_basename}/" "debug.*s.list")
 
+    SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES}
+	${RPM_IGNORE_FILES})
+
     MACRO(PACK_RPM var spec_in source0)
 	IF(NOT EXISTS ${spec_in})
 	    MESSAGE(FATAL_ERROR "File ${spec_in} not found!")
@@ -137,6 +141,7 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	CONFIGURE_FILE(${RPM_BUILD_SPECS}/RPM-ChangeLog.in ${RPM_BUILD_SPECS}/RPM-ChangeLog)
 
 	# Generate spec
+	SET(SOURCE0 ${source0})
 	CONFIGURE_FILE(${spec_in} ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec)
 	SET_SOURCE_FILES_PROPERTIES(${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec
 	    PROPERTIES GENERATED TRUE
