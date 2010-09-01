@@ -48,6 +48,7 @@ SET(HOSTING_SERVICE_TYPE "git")
 ADD_DEFINITIONS(-DSYSTEMDIR='"${PROJECT_DATADIR}"')
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 
+INCLUDE(UseUninstall)
 ####################################################################
 # Required
 ####################################################################
@@ -133,7 +134,7 @@ SET(PRJ_IGNORE_FILES_COMMON
     ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
 )
 
-SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES_DEFAULT} ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
+SET(PACK_SOURCE_IGNORE_FILES ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
 
 #MESSAGE("PRJ_IGNORE_FILES_SOURCE=${PRJ_IGNORE_FILES_SOURCE}")
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
@@ -141,9 +142,14 @@ MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/ibus-chewing.spec.in" "${PACK_SOURCE_FILE_NAME}")
 MESSAGE("PRJ_SRPM_FILE_NAME=${PRJ_SRPM_FILE_NAME}")
 
-INCLUDE(UseUninstall)
 INCLUDE(UseKojiFedora)
-UseKoji("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
+USE_KOJI_FEDORA("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
 
-#ADD_DEPENDENCIES(pack_src pot_file)
+ADD_DEPENDENCIES(pack_src pot_file)
+
+#====================================================================
+# Hosting Service
+#
+INCLUDE(UseHostingService)
+USE_HOSTING_SERVICE_READ_SETTING_FILE("MAINTAINER_SETTING_NO_PACK")
 
