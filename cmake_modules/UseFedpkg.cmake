@@ -5,9 +5,13 @@
 # Since this module is mainly for Fedora developers/maintainers,
 # This module checks ~/.fedora-upload-ca.cert
 #
+# Reads and defines following variables:
+#   FEDORA_CURRENT_RELEASE_TAGS: Current tags of fedora releases.
+# Defines following variable:
+#   FEDORA_RAWHIDE_TAG: Koji tags for rawhide
 # Defines following macros:
 #   USE_FEDPKG(srpm [NORAWHIDE] [tag1 [tag2 ...])
-#   - Use koji and bodhi targets if ~/.fedora-upload-ca.cert exists.
+#   - Use fedpkg targets if ~/.fedora-upload-ca.cert exists.
 #     If ~/.fedora-upload-ca.cert does not exists, this marcos run as an empty
 #     macro.
 #     Argument:
@@ -18,18 +22,26 @@
 #     Reads following variables:
 #     + FEDPKG_DIR: Directory for fedpkg checkout.
 #       Default: FedPkg.
-#     + BODHI_USER: (Optional) If defined, the specified user
-#       is then use for bodhi update instead of your current login name.
 #     Defines following targets:
-#     + koji_scratch_build: Sent srpm for scratch build
-#     + koji_submit: Submit package to koji for each tag.
-#     + koji_build: Build package with koji for each tag.
-#     + bodhi_new: Submit to bodhi
-# Reads and defines following variables:
-#   FEDORA_CURRENT_RELEASE_TAGS: Current tags of fedora releases.
-# Defines following variable:
-#   FEDORA_RAWHIDE_TAG: Koji tags for rawhide
-#
+#     + fedpkg_scratch_build: Sent srpm for scratch build
+#     + fedpkg_submit: Submit package to koji for each tag.
+#     + fedpkg_build: Build package with koji for each tag.
+#     + fedpkg_update: Submit to bodhi
+#   USE_BODHI([TAGS [tag1 [tag2 ...]] [KARMA karmaValue] )
+#   - Use bodhi targets with bodhi command line client.
+#     Argument:
+#     + TAGS tag1, ....: Dist Tags for submission. Accepts formats like f14,
+#        fc14, el6.
+#     + KARMA karmaValue: Set the karma threshold. Default is 3.
+#     Reads following variables:
+#     + BODHI_UPDATE_TYPE: Type of update. Default is "bugfix".
+#     + BODHI_USER: Login username for bodhi (for -u).
+#     + FEDORA_CURRENT_RELEASE_TAGS: If TAGS is not defined, then it will be
+#       use as default tags.
+#     + SUGGEST_REBOOT: Whether this update require reboot to take effect.
+#       Default is "False".
+#     Defines following targets:
+#     + bodhi_new: Send a new release to bodhi.
 #
 
 IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
@@ -57,9 +69,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    ENDIF(_tag STREQUAL "${FEDORA_RAWHIDE_TAG}")
 
 	    IF(DEFINED _first_branch)
-		SET(FEDPKG_SCRATCH_BUILD_CMD "${FEDPKG_SCRATCH_BUILD_CMD}\; "
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} scratch-build --srpm ${srpm}")
+		SET(FEDPKG_SCRATCH_BUILD_CMD "${FEDPKG_SCRATCH_BUILD_CMD}\; ${FEDPKG} switch-branch ${_branch}\; ${FEDPKG} scratch-build --srpm ${srpm}")
 		SET(FEDPKG_COMMIT_CMD "${FEDPKG_COMMIT_CMD}\; "
 		    "${FEDPKG} switch-branch ${_branch}\; "
 		    "git merge ${_first_branch}\; "
@@ -73,8 +83,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    ELSE(DEFINED _first_branch)
 		SET(_first_branch ${_branch})
 		SET(FEDPKG_SCRATCH_BUILD_CMD
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} scratch-build --srpm ${srpm}")
+		    "${FEDPKG} switch-branch ${_branch}\; ${FEDPKG} scratch-build --srpm ${srpm}")
 		SET(FEDPKG_COMMIT_CMD
 		    "${FEDPKG} switch-branch ${_branch}\; "
 		    "${FEDPKG} import  ${srpm}"
@@ -130,12 +139,13 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    ENDIF(_rawhide EQUAL 1)
 
 	    ## Make target commands for the released dist
-	    _use_fedpkg_make_cmds(${_koji_dist_tags} srpm)
+	    _use_fedpkg_make_cmds("${srpm}" "${_koji_dist_tags}")
 
 	    #MESSAGE(FEDPKG_SCRATCH_BUILD_CMD=${FEDPKG_SCRATCH_BUILD_CMD})
 	    ADD_CUSTOM_TARGET(fedpkg_scratch_build
-		COMMAND eval ${FEDPKG_SCRATCH_BUILD_CMD}
+		COMMAND eval "${FEDPKG_SCRATCH_BUILD_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
+		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Start Koji scratch build"
 		VERBATIM
 		)
@@ -144,59 +154,28 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    ADD_CUSTOM_TARGET(fedpkg_commit
 		COMMAND echo "${FEDPKG_COMMIT_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
-		COMMENT "Submitting to Koji"
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
+		COMMENT "Submitting to Koji"
 		VERBATIM
 		)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_build
 		COMMAND echo "${FEDPKG_BUILD_CMD}"
-		COMMENT "Building on Koji"
+		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
+		COMMENT "Building on Koji"
 		VERBATIM
 		)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_update
 		COMMAND echo "${FEDPKG_UPDATE_CMD}"
-		COMMENT "Updating on Bodhi"
+		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
+		COMMENT "Updating on Bodhi"
 		VERBATIM
 		)
-
-	    #====================================================================
-	    # Bodhi (Fedora update system)
-	    #
-
-	    IF(DEFINED BODHI_DIST_TAGS)
-		SET(${_bodhi_dist_tags} ${BODHI_DIST_TAGS})
-	    ENDIF(DEFINED BODHI_DIST_TAGS)
-
-	    FOREACH(_bodhi_tag ${_bodhi_dist_tags})
-		IF (DEFINED BODHI_NEW_CMD)
-		    SET (BODHI_NEW_CMD "${BODHI_NEW_CMD} ; ")
-		ELSE ()
-		    SET (BODHI_NEW_CMD "")
-		ENDIF ()
-		IF(DEFINED RPM_RELEASE_SUMMARY)
-		    SET(commentArg "--comment=\"${RPM_RELEASE_SUMMARY}\"")
-		ELSEIF(DEFINED CHANGE_SUMMARY)
-		    SET(commentArg "--comment=\"${CHANGE_SUMMARY}\"")
-		ENDIF()
-		SET (BODHI_NEW_CMD
-		    "${BODHI_NEW_CMD} bodhi --new --type=bugfix ${commentArg} ${PROJECT_NAME}-${PRJ_VER_FULL}.${_bodhi_tag}")
-	    ENDFOREACH(_bodhi_tag)
-
-	    #MESSAGE(BODHI_NEW_CMD=${BODHI_NEW_CMD})
-	    IF(DEFINED BODHI_NEW_CMD)
-		ADD_CUSTOM_TARGET(bodhi_new
-		    COMMAND eval "${BODHI_NEW_CMD}"
-		    DEPENDS ${BODHI_DEPENDS}
-		    COMMENT "Send new package to bodhi"
-		    VERBATIM
-		    )
-	    ENDIF(DEFINED BODHI_NEW_CMD)
 
 	ENDIF(EXISTS $ENV{HOME}/.fedora-upload-ca.cert)
     ENDMACRO(USE_FEDPKG srpm)
@@ -206,7 +185,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	IF(_tag_replace STREQUAL "")
 	    SET(${tag_out} ${tag_in})
 	ELSE(_tag_replace STREQUAL "")
-	    SET(${tag_out} ${tag_replace})
+	    SET(${tag_out} ${_tag_replace})
 	ENDIF(_tag_replace STREQUAL "")
     ENDMACRO(_use_bodhi_convert_tag tag_out tag_in)
 
@@ -243,14 +222,22 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 		ENDIF(_arg STREQUAL "TAGS")
 	    ENDFOREACH(_arg ${ARGN})
 
-	    IF(_tags)
+	    IF(NOT _tags)
 		SET(_tags ${FEDORA_CURRENT_RELEASE_TAGS})
-	    ENDIF(_tags)
+	    ENDIF(NOT _tags)
 	    SET(_bodhi_template_file "bodhi.template")
-	    FILE(REMOVE ${_bodhi_template_file})
+	    #FILE(REMOVE ${_bodhi_template_file})
+
+	    IF(NOT _autokarma)
+		SET(_autokarma "True")
+	    ENDIF(NOT _autokarma)
+
+	    IF(NOT _stable_karma)
+		SET(_stable_karma "3")
+	    ENDIF(NOT _stable_karma)
 
 	    FOREACH(_tag ${_tags})
-		_use_bodhi_convert_add_tag(_bodhi_tag ${_tag})
+		_use_bodhi_convert_tag(_bodhi_tag ${_tag})
 
 		FILE(APPEND ${_bodhi_template_file} "[${PROJECT_NAME}-${PRJ_VER}-${PRJ_RELEASE_VER}.${_bodhi_tag}]\n\n")
 
@@ -271,12 +258,16 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 		IF(SUGGEST_REBOOT)
 		    FILE(APPEND ${_bodhi_template_file} "suggest_reboot=True\n")
 		ELSE(SUGGEST_REBOOT)
-		    FILE(APPEND ${_bodhi_template_file} "suggest_reboot=False\n")
+		    FILE(APPEND ${_bodhi_template_file} "suggest_reboot=False\n\n")
 		ENDIF(SUGGEST_REBOOT)
-
 	    ENDFOREACH(_tag ${_tags})
+
+	    IF(BODHI_USER)
+		SET(_bodhi_login -u ${BODHI_USER})
+	    ENDIF(BODHI_USER)
+
 	    ADD_CUSTOM_TARGET(bodhi_new
-		COMMAND bodhi --new --file ${_bodhi_template_file}
+		COMMAND bodhi --new ${_bodhi_login} --file ${_bodhi_template_file}
 		COMMENT "Send new package to bodhi"
 		VERBATIM
 		)

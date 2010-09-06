@@ -116,6 +116,12 @@ SET(GCONF_SCHEMAS_FILE ${CMAKE_BINARY_DIR}/data/${PROJECT_NAME}.schemas)
 INCLUDE(UseGConf)
 
 #====================================================================
+# Hosting Service
+#
+INCLUDE(UseHostingService)
+USE_HOSTING_SERVICE_READ_SETTING_FILE("MAINTAINER_SETTING_NO_PACK")
+
+#====================================================================
 # Pack configuration
 #
 SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
@@ -138,18 +144,14 @@ SET(PACK_SOURCE_IGNORE_FILES ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\
 
 #MESSAGE("PRJ_IGNORE_FILES_SOURCE=${PRJ_IGNORE_FILES_SOURCE}")
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
-MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
+#MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/ibus-chewing.spec.in" "${PACK_SOURCE_FILE_NAME}")
-MESSAGE("PRJ_SRPM_FILE_NAME=${PRJ_SRPM_FILE_NAME}")
+#MESSAGE("PRJ_SRPM_FILE_NAME=${PRJ_SRPM_FILE_NAME}")
 
 INCLUDE(UseFedpkg)
 USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
+USE_BODHI()
 
 ADD_DEPENDENCIES(pack_src pot_file)
 
-#====================================================================
-# Hosting Service
-#
-INCLUDE(UseHostingService)
-USE_HOSTING_SERVICE_READ_SETTING_FILE("MAINTAINER_SETTING_NO_PACK")
 
