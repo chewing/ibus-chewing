@@ -3,7 +3,7 @@
 <component>
     <name>org.freedesktop.IBus.Chewing</name>
     <description>Chewing Component</description>
-    <version>@PRJ_VER_FULL@</version>
+    <version>@PRJ_VER@</version>
     <license>GPLv2+</license>
     <author>Peng Huang, Ding-Yi Chen</author>
     <homepage>http://code.google.com/p/ibus</homepage>
@@ -17,7 +17,7 @@
 	    <language>zh_TW</language>
 	    <license>GPLv2+</license>
 	    <author>Peng Huang, Ding-Yi Chen</author>
-            <icon>@PROJECT_DATADIR@/icons/@PROJECT_NAME@.png</icon>
+            <icon>@PROJECT_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>
         </engine>
     </engines>

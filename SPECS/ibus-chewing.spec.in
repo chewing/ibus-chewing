@@ -96,7 +96,7 @@ fi
 %config(noreplace) %{_sysconfdir}/gconf/schemas/%{name}.schemas
 
 %changelog
-* @TODAY_CHANGELOG@ @MAINTAINER@ - @PRJ_VER@-@PRJ_RELEASE_NUMBER@
+* @TODAY_CHANGELOG@ @MAINTAINER@ - @PRJ_VER@-@PRJ_RELEASE_NO@
 @CHANGELOG_ITEMS@
 
 @RPM_CHANGELOG_PREV@

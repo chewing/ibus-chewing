@@ -24,8 +24,11 @@
 #       the files to be excluded. Note that cmake generated file
 #       (PACK_SOURCE_IGNORE_FILE_CMAKE) is already in this list.
 #     Target:
-#     + pack_src: Pack source files like package_source, but also check
-#       version.
+#     + pack_src: Pack source files like package_source.
+#       This target depends on version_check.
+#     + clean_pack_src: Remove all source packages.
+#     + clean_old_pack_src: Remove all old source package.
+#       This target depends on version_check.
 #
 #
 IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
@@ -49,10 +52,11 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
     MACRO(PACK_SOURCE var outputDir)
 	SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES}
 	    ${PACK_SOURCE_IGNORE_FILES_CMAKE} ${PACK_SOURCE_IGNORE_FILES_DEFAULT})
+	#MESSAGE("PACK_SOURCE_IGNORE_FILES=${PACK_SOURCE_IGNORE_FILES}")
 
-	IF(${PRJ_VER} STREQUAL "")
+	IF(PRJ_VER STREQUAL "")
 	    MESSAGE(FATAL_ERROR "PRJ_VER not defined")
-	ENDIF(${PRJ_VER} STREQUAL "")
+	ENDIF(PRJ_VER STREQUAL "")
 	IF(${ARGV3})
 	    SET(CPACK_GENERATOR "${ARGV3}")
 	ELSE(${ARGV3})
@@ -93,6 +97,7 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 
 	ADD_CUSTOM_COMMAND(OUTPUT "${_outputDir_rel}/${${var}}"
 	   COMMAND make pack_src
+	   DEPENDS ChangeLog ${RELEASE_FILE}
 	   COMMENT "Packing the source"
 	    )
 
@@ -110,17 +115,25 @@ IF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 		)
 	ENDIF("${_outputDir_rel}" STREQUAL ".")
 
-
 	ADD_DEPENDENCIES(pack_src version_check)
+
+	ADD_CUSTOM_TARGET(clean_old_pack_src
+	    COMMAND find .
+	    -name '${PROJECT_NAME}*.${_pack_source_ext}' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${_pack_source_ext}'
+	    -print -delete
+	    COMMENT "Cleaning old source packages"
+	    )
+
+	ADD_DEPENDENCIES(clean_old_pack_src version_check)
+
+	ADD_CUSTOM_TARGET(clean_pack_src
+	    COMMAND find .
+	    -name '${PROJECT_NAME}*.${_pack_source_ext}'
+	    -print -delete
+	    COMMENT "Cleaning all source packages"
+	    )
     ENDMACRO(PACK_SOURCE var outputDir)
 
-    ADD_CUSTOM_TARGET(pack_remove_old
-	COMMAND find .
-	-name '${PROJECT_NAME}*.${_pack_source_ext}' ! -name '${PROJECT_NAME}-${PRJ_VER}-*.${_pack_source_ext}'
-	-print -delete
-	COMMENT "Removing the old tarballs .."
-	)
 
-    ADD_DEPENDENCIES(pack_remove_old version_check)
 ENDIF(NOT DEFINED _PACK_SOURCE_CMAKE_)
 

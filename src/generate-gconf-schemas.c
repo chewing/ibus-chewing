@@ -40,7 +40,7 @@ int main (gint argc, gchar *argv[])
 
     /* Init i18n messages */
     setlocale (LC_ALL, "");
-    bindtextdomain(PROJECT_NAME, DATADIR "/locale");
+    bindtextdomain(PROJECT_NAME, DATA_DIR "/locale");
     textdomain(PROJECT_NAME);
 
     context = g_option_context_new("schemasFile");

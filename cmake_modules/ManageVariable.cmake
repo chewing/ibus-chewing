@@ -38,14 +38,6 @@
 #         default_value: Default value of the var
 #         env: (Optional) The name of environment variable. Only need if different from var.
 #
-#   SET_COMPILE_ENV(var default_value [env])
-#     - Add compiler environment with a variable and its value.
-#       If the variable is not defined yet, then a default value is assigned to it first.
-#       * Parameters:
-#         var: Variable to be set
-#         default_value: Default value of the var
-#         env: (Optional)The name of environment variable. Only need if different from var.
-#
 #   SET_VAR(var untrimmed_value)
 #     - Trim an set the value to a variable.
 #       * Parameters:
@@ -153,48 +145,6 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	ENDIF()
 	# MESSAGE("Variable ${var}=${${var}}")
     ENDMACRO(GET_ENV var default_value)
-
-    MACRO(SET_COMPILE_ENV var default_value)
-	IF(${ARGC} GREATER 2)
-	    SET(_env ${ARGV2})
-	ELSE(${ARGC} GREATER 2)
-	    SET(_env ${var})
-	ENDIF(${ARGC} GREATER 2)
-	IF(NOT DEFINED ${var})
-	    SET(${var} "${default_value}")
-	ENDIF(NOT DEFINED ${var})
-	ADD_DEFINITIONS(-D${_env}='"${${var}}"')
-    ENDMACRO(SET_COMPILE_ENV var default_value)
-
-    MACRO(SET_USUAL_COMPILE_ENV)
-	ADD_DEFINITIONS(-DCMAKE_INSTALL_PREFIX='"${CMAKE_INSTALL_PREFIX}"')
-
-	SET_COMPILE_ENV(datadir "${CMAKE_INSTALL_PREFIX}/share" DATADIR )
-	SET_COMPILE_ENV(docdir "${datadir}" DOCDIR )
-	SET_COMPILE_ENV(SYSCONF_INSTALL_DIR "/etc" SYSCONFDIR)
-	SET_COMPILE_ENV(LIBEXEC_DIR "${CMAKE_INSTALL_PREFIX}/libexec")
-
-	IF(NOT DEFINED IS_64)
-	    IF( $ENV{MACHTYPE} MATCHES "64")
-		SET(IS_64 "64")
-	    ELSE()
-		SET(IS_64 "")
-	    ENDIF()
-	ENDIF()
-	ADD_DEFINITIONS(-DIS_64='"${IS64}"')
-
-	IF(DEFINED PROJECT_NAME)
-	    ADD_DEFINITIONS(-DPROJECT_NAME='"${PROJECT_NAME}"')
-
-	    SET_COMPILE_ENV(PROJECT_DATADIR "${datadir}/${PROJECT_NAME}")
-
-	    IF(DEFINED PRJ_VER)
-		ADD_DEFINITIONS(-DPRJ_VERSION='"${PRJ_VER}"')
-		ADD_DEFINITIONS(-DPRJ_VER='"${PRJ_VER}"')
-		SET_COMPILE_ENV(PROJECT_DOCDIR "${datadir}/${PROJECT_NAME}--${PRJ_VER}")
-	    ENDIF(DEFINED PRJ_VER)
-	ENDIF(DEFINED PROJECT_NAME)
-    ENDMACRO(SET_USUAL_COMPILE_ENV)
 
     MACRO(SET_VAR var untrimmedValue)
 	SET(_UNQUOTED "")

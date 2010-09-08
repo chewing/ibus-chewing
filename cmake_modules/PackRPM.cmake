@@ -47,9 +47,14 @@
 #     + srpm: Build srpm (rpmbuild -bs).
 #     + rpm: Build rpm and srpm (rpmbuild -ba)
 #     + rpmlint: Run rpmlint to generated rpms.
-#     + rpm_remove_old: Remove old rpms.
-#     + pkg_remove_old: Remove old source tarballs and rpms.
+#     + clean_rpm": Clean all rpm and build files.
+#     + clean_pkg": Clean all source packages, rpm and build files.
+#     + clean_old_rpm: Remove old rpm and build files.
+#     + clean_old_pkg: Remove old source packages and rpms.
 #     This macro defines following variables:
+#     + PRJ_RELEASE: Project release with distribution tags. (e.g. 1.fc13)
+#     + PRJ_RELEASE_NO: Project release number, without distribution tags. (e.g. 1)
+#     + RPM_BUILD_ARCH: Arch build
 #     + PRJ_SRPM_PATH: Filename of generated SRPM file, including relative path.
 #
 #   USE_MOCK(spec_in)
@@ -133,7 +138,7 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	INCLUDE(ManageVariable)
 	SETTING_FILE_GET_ATTRIBUTE(_releaseStr Release ${spec_in} ":")
 	STRING(REPLACE "%{?dist}" ".${RPM_DIST_TAG}" PRJ_RELEASE ${_releaseStr})
-	STRING(REPLACE "%{?dist}" "" PRJ_RELEASE_NUMBER ${_releaseStr})
+	STRING(REPLACE "%{?dist}" "" PRJ_RELEASE_NO ${_releaseStr})
 	#MESSAGE("_releaseTag=${_releaseTag} _releaseStr=${_releaseStr}")
 
         # Update RPM_ChangeLog
@@ -184,6 +189,7 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	ADD_CUSTOM_TARGET(srpm
 	    DEPENDS ${RPM_BUILD_SOURCES}/${source0}
 	    )
+	ADD_DEPENDENCIES(srpm version_check)
 
 	ADD_CUSTOM_TARGET(rpm
 	    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_SRPMS}
@@ -197,22 +203,39 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	    ${RPM_BUILD_SRPMS} ${RPM_BUILD_RPMS} ${RPM_BUILD_BUILD} ${RPM_BUILD_BUILDROOT}
 	    )
 
+	ADD_DEPENDENCIES(rpm version_check)
+
 	ADD_CUSTOM_TARGET(rpmlint find .
-	    -name '${PROJECT_NAME}*-${PRJ_VER}-${PRJ_RELEASE}*.rpm'
+	    -name '${PROJECT_NAME}*-${PRJ_VER}-${PRJ_RELEASE_NO}.*.rpm'
 	    -print -exec rpmlint '{}' '\\;'
+	    DEPENDS ${_prj_srpm_path}
 	    )
 
-	ADD_CUSTOM_TARGET(rpm_remove_old
+	ADD_CUSTOM_TARGET(clean_old_rpm
 	    COMMAND find .
-	    -name '${PROJECT_NAME}*.rpm' ! -name '${PROJECT_NAME}*-${PRJ_VER}-${PRJ_RELEASE}.*.rpm'
+	    -name '${PROJECT_NAME}*.rpm' ! -name '${PROJECT_NAME}*-${PRJ_VER}-${PRJ_RELEASE_NO}.*.rpm'
 	    -print -delete
-	    COMMENT "Removing the old rpms.."
+	    COMMAND find ${RPM_BUILD_BUILD}
+	    -path '${PROJECT_NAME}*' ! -path '${RPM_BUILD_BUILD}/${PROJECT_NAME}-${PRJ_VER}-*'
+	    -print -delete
+	    COMMENT "Cleaning old rpms and build."
 	    )
 
-	ADD_CUSTOM_TARGET(pkg_remove_old
+	ADD_CUSTOM_TARGET(clean_old_pkg
 	)
 
-	ADD_DEPENDENCIES(pkg_remove_old rpm_remove_old pack_remove_old)
+	ADD_DEPENDENCIES(clean_old_pkg clean_old_rpm clean_old_pack_src)
+
+	ADD_CUSTOM_TARGET(clean_rpm
+	    COMMAND find . -name '${PROJECT_NAME}*.rpm' -print -delete
+	    COMMENT "Cleaning rpms.."
+	    )
+	ADD_CUSTOM_TARGET(clean_pkg
+	    )
+
+	ADD_DEPENDENCIES(clean_rpm clean_old_rpm)
+	ADD_DEPENDENCIES(clean_pkg clean_rpm clean_pack_src)
+
     ENDMACRO(PACK_RPM var spec_in source0)
 
     MACRO(USE_MOCK ${srpm} ${spec_in})

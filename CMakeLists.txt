@@ -23,29 +23,17 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 INCLUDE(ManageVersion)
 LOAD_RELEASE_FILE("${RELEASE_FILE}")
-INCLUDE(ManageVariable)
+INCLUDE(CompileFlags)
 SET_USUAL_COMPILE_ENV()
-
-
-#==================================================================
-# Developer setting.
-#
-SET(HOSTING_SERVICE_PROVIDER "GitHub" )
-SET(HOSTING_SERVICE_TYPE "git")
 
 ####################################################################
 # Includes
-####################################################################
-
-####################################################################
-# Post Include setting
 ####################################################################
 
 
 ####################################################################
 # Definitions
 ####################################################################
-ADD_DEFINITIONS(-DSYSTEMDIR='"${PROJECT_DATADIR}"')
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 
 INCLUDE(UseUninstall)
@@ -75,8 +63,8 @@ ENDIF()
 PKG_CHECK_MODULES(XTST REQUIRED xtst x11)
 
 PKG_CHECK_MODULES(CHEWING chewing>=0.3.2)
-COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATADIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
-ADD_DEFINITIONS(-DCHEWING_DATADIR='"${CHEWING_DATADIR}"')
+COMMAND_OUTPUT_TO_VARIABLE(CHEWING_DATA_DIR ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing)
+ADD_DEFINITIONS(-DCHEWING_DATA_DIR='"${CHEWING_DATA_DIR}"')
 
 FIND_PROGRAM(GOB2 gob2)
 IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
@@ -98,16 +86,16 @@ ADD_SUBDIRECTORY(src bin)
 #====================================================================
 # Files to be install.
 #
-SET(MAIN_DOCS AUTHORS README ChangeLog NEWS COPYING)
+SET(MAIN_DOCS AUTHORS README ChangeLog NEWS COPYING USER-GUIDE)
 
 #INSTALL(FILES ${MAIN_DOCS}
-#    DESTINATION "${PROJECT_DOCDIR}")
+#    DESTINATION "${PROJECT_DOC_DIR}")
 
 INSTALL(DIRECTORY icons
-    DESTINATION  ${PROJECT_DATADIR})
+    DESTINATION  ${PROJECT_DATA_DIR})
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/chewing.xml
-    DESTINATION "${datadir}/ibus/component")
+    DESTINATION "${DATA_DIR}/ibus/component")
 
 #====================================================================
 # Schemas
@@ -128,9 +116,10 @@ SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
 
 INCLUDE(PackSource)
 INCLUDE(PackRPM)
+INCLUDE(UseFedpkg)
 
 SET(MY_IGNORE_FILES_COMMON
-    "/docs/"  "\\\\.spec$" "messages.po$" "/FedPkg/"
+    "/docs/"  "\\\\.spec$" "messages.po$" "\\\\.orig$"
 )
 
 # GOB_GENERATED source codes are now excluded,
@@ -140,15 +129,12 @@ SET(PRJ_IGNORE_FILES_COMMON
     ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
 )
 
-SET(PACK_SOURCE_IGNORE_FILES ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
+SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES} ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
+#MESSAGE("PACK_SOURCE_IGNORE_FILES=${PACK_SOURCE_IGNORE_FILES}")
 
-#MESSAGE("PRJ_IGNORE_FILES_SOURCE=${PRJ_IGNORE_FILES_SOURCE}")
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
-#MESSAGE("PACK_SOURCE_FILE_NAME=${PACK_SOURCE_FILE_NAME}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/ibus-chewing.spec.in" "${PACK_SOURCE_FILE_NAME}")
-#MESSAGE("PRJ_SRPM_FILE_NAME=${PRJ_SRPM_FILE_NAME}")
 
-INCLUDE(UseFedpkg)
 USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
 USE_BODHI()
 

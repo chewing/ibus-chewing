@@ -13,17 +13,18 @@
 #       PRJ_VER: Release version.
 #       CHANGE_SUMMARY: Summary of changes.
 #       CHANGELOG_ITEMS: Lines below the [Changes] tag.
+#       RELEASE_FILE: The loaded release file.
 #
 
 IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
     SET(_MANAGE_VERSION_CMAKE_ "DEFINED")
+    MESSAGE("CMAKE_HOST_SYSTEM=${CMAKE_HOST_SYSTEM}")
+    MESSAGE("CMAKE_HOST_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}")
+    MESSAGE("CMAKE_HOST_SYSTEM_PROCESSOR=${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    MESSAGE("CMAKE_HOST_SYSTEM_VERSION=${CMAKE_HOST_SYSTEM_VERSION}")
     INCLUDE(ManageVariable)
 
     MACRO(LOAD_RELEASE_FILE releaseFile)
-	#	SETTING_FILE_GET_ATTRIBUTE(PRJ_VER "PRJ_VER" "${releaseFile}")
-	#SETTING_FILE_GET_ATTRIBUTE(CHANGE_SUMMARY "SUMMARY" "${releaseFile}")
-	#SETTING_FILE_GET_ATTRIBUTE(UPDATE_TYPE "UPDATE_TYPE" "${releaseFile}")
-	#SETTING_FILE_GET_ATTRIBUTE(REDHAT_BUGZILLA "UPDATE_TYPE" "${releaseFile}")
 	COMMAND_OUTPUT_TO_VARIABLE(_grep_line grep -F "[Changes]" -n -m 1 ${releaseFile})
 	#MESSAGE("_grep_line=|${_grep_line}|")
 	IF("${_grep_line}" STREQUAL "")
@@ -32,21 +33,38 @@ IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
 	STRING(REGEX REPLACE ":.*" "" _line_num "${_grep_line}")
 	MATH(EXPR _setting_line_num ${_line_num}-1)
 	COMMAND_OUTPUT_TO_VARIABLE(_releaseFile_head head -n ${_setting_line_num} ${releaseFile})
-	FILE(WRITE "${releaseFile}_NO_PACK" "${_releaseFile_head}")
-	SETTING_FILE_GET_ALL_ATTRIBUTES("${releaseFile}_NO_PACK")
+	FILE(WRITE "${releaseFile}_NO_PACK_HEAD" "${_releaseFile_head}")
+	SETTING_FILE_GET_ALL_ATTRIBUTES("${releaseFile}_NO_PACK_HEAD")
 
 	MATH(EXPR _line_num ${_line_num}+1)
-
 	COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +${_line_num} ${releaseFile})
+	FILE(WRITE "${releaseFile}_NO_PACK_CHANGELOG_ITEM" "${CHANGELOG_ITEMS}")
 
 	INCLUDE(DateTimeFormat)
 	FILE(READ "ChangeLog.prev" CHANGELOG_PREV)
-	CONFIGURE_FILE(ChangeLog.in ChangeLog)
+	#CONFIGURE_FILE(ChangeLog.in ChangeLog)
 
-	FILE(WRITE "ChangeLog" "* ${TODAY_CHANGELOG} - ${MAINTAINER} - ${PRJ_VER}\n")
-	FILE(APPEND "ChangeLog" "${CHANGELOG_ITEMS}\n")
-	FILE(READ "ChangeLog.prev" _changelog_prev)
-	FILE(APPEND "ChangeLog" "${_changelog_prev}")
+	SET_SOURCE_FILES_PROPERTIES(ChangeLog PROPERTIES GENERATED TRUE)
+
+	ADD_CUSTOM_TARGET(changelog ALL
+	    DEPENDS ChangeLog
+	    )
+
+	ADD_CUSTOM_COMMAND(OUTPUT ChangeLog
+	    COMMAND ${CMAKE_COMMAND} -E echo "* ${TODAY_CHANGELOG} - ${MAINTAINER} - ${PRJ_VER}" > ChangeLog
+	    COMMAND cat ${releaseFile}_NO_PACK_CHANGELOG_ITEM  >> ChangeLog
+	    COMMAND ${CMAKE_COMMAND} -E echo "" >> ChangeLog
+	    COMMAND cat ChangeLog.prev >> ChangeLog
+	    COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}
+	    DEPENDS ${releaseFile} ChangeLog.prev
+	    COMMENT "ChangeLog is older than ${releaseFile}. Rebuilding"
+	    VERBATIM
+	    )
+
+	#FILE(WRITE "ChangeLog" "* ${TODAY_CHANGELOG} - ${MAINTAINER} - ${PRJ_VER}\n")
+	#FILE(APPEND "ChangeLog" "${CHANGELOG_ITEMS}\n")
+	#FILE(READ "ChangeLog.prev" _changelog_prev)
+	#FILE(APPEND "ChangeLog" "${_changelog_prev}")
 
 	# PRJ_VER won't be updated until the execution of cmake .
 	SET(_version_check_cmd grep -e 'PRJ_VER=' ${RELEASE_FILE} |  tr -d '\\r\\n' | sed -e s/PRJ_VER=//)

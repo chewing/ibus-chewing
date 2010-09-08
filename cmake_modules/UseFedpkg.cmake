@@ -50,8 +50,14 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	SET(FEDORA_CURRENT_RELEASE_TAGS f14 f13 f12)
     ENDIF(NOT DEFINED FEDORA_CURRENT_RELEASE_TAGS)
     SET(FEDORA_RAWHIDE_TAG rawhide)
-    MESSAGE("CMAKE_HOST_SYSTEM=${CMAKE_HOST_SYSTEM} "
-	"CMAKE_HOST_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}")
+    IF(NOT DEFINED FEDPKG_DIR)
+	SET(FEDPKG_DIR "FedPkg")
+    ELSEIF (FEDPKG_DIR STREQUAL "")
+	SET(FEDPKG_DIR "FedPkg")
+    ENDIF(NOT DEFINED FEDPKG_DIR)
+    SET(_bodhi_template_file "bodhi.template")
+    SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES} "/${FEDPKG_DIR}/"
+	"/bodhi\\\\.template$")
 
     MACRO(_use_fedpkg_make_cmds srpm tags)
 	#commit
@@ -69,25 +75,28 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    ENDIF(_tag STREQUAL "${FEDORA_RAWHIDE_TAG}")
 
 	    IF(DEFINED _first_branch)
-		SET(FEDPKG_SCRATCH_BUILD_CMD "${FEDPKG_SCRATCH_BUILD_CMD}\; ${FEDPKG} switch-branch ${_branch}\; ${FEDPKG} scratch-build --srpm ${srpm}")
-		SET(FEDPKG_COMMIT_CMD "${FEDPKG_COMMIT_CMD}\; "
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "git merge ${_first_branch}\; "
-		    "git push\; ")
-		SET(FEDPKG_BUILD_CMD "${FEDPKG_BUILD_CMD}\; "
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} build")
-		SET(FEDPKG_UPDATE_CMD "${FEDPKG_UPDATE_CMD}\; "
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} update")
+		SET(FEDPKG_SCRATCH_BUILD_CMD "${FEDPKG_SCRATCH_BUILD_CMD}"
+		   " ${FEDPKG} switch-branch ${_branch}"
+		   " ${FEDPKG} scratch-build --srpm ${srpm}")
+		SET(FEDPKG_COMMIT_CMD "${FEDPKG_COMMIT_CMD}"
+		    " ${FEDPKG} switch-branch ${_branch}"
+		    " git merge ${_first_branch}"
+		    " git push")
+		SET(FEDPKG_BUILD_CMD "${FEDPKG_BUILD_CMD} "
+		    " ${FEDPKG} switch-branch ${_branch}"
+		    " ${FEDPKG} build")
+		SET(FEDPKG_UPDATE_CMD "${FEDPKG_UPDATE_CMD}"
+		    " ${FEDPKG} switch-branch ${_branch}"
+		    " ${FEDPKG} update")
 	    ELSE(DEFINED _first_branch)
 		SET(_first_branch ${_branch})
 		SET(FEDPKG_SCRATCH_BUILD_CMD
-		    "${FEDPKG} switch-branch ${_branch}\; ${FEDPKG} scratch-build --srpm ${srpm}")
+		    "${FEDPKG} switch-branch ${_branch}"
+		    "${FEDPKG} scratch-build --srpm ${srpm}")
 		SET(FEDPKG_COMMIT_CMD
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} import  ${srpm}"
-		    "${FEDPKG} commit ${COMMIT_MSG} -p"
+		    "${FEDPKG} switch-branch ${_branch}"
+		    " ${FEDPKG} import  ${srpm}"
+		    " ${FEDPKG} commit ${COMMIT_MSG} -p"
 		    )
 		SET(FEDPKG_BUILD_CMD
 		    "${FEDPKG} switch-branch ${_branch}\; "
@@ -105,11 +114,6 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    IF(FEDPKG STREQUAL "FEDPKG-NOTFOUND")
 		MESSAGE(FATAL-ERROR "Program fedpkg is not found!")
 	    ENDIF(FEDPKG STREQUAL "FEDPKG-NOTFOUND")
-	    IF(NOT DEFINED FEDPKG_DIR)
-		SET(FEDPKG_DIR "FedPkg")
-	    ELSEIF (FEDPKG_DIR STREQUAL "")
-		SET(FEDPKG_DIR "FedPkg")
-	    ENDIF(NOT DEFINED FEDPKG_DIR)
 	    ADD_CUSTOM_COMMAND(OUTPUT ${FEDPKG_DIR}
 		COMMAND mkdir -p ${FEDPKG_DIR}
 		)
@@ -152,7 +156,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE(FEDPKG_COMMIT_CMD=${FEDPKG_COMMIT_CMD})
 	    ADD_CUSTOM_TARGET(fedpkg_commit
-		COMMAND echo "${FEDPKG_COMMIT_CMD}"
+		COMMAND eval "${FEDPKG_COMMIT_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Submitting to Koji"
@@ -161,7 +165,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_build
-		COMMAND echo "${FEDPKG_BUILD_CMD}"
+		COMMAND eval "${FEDPKG_BUILD_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Building on Koji"
@@ -170,7 +174,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_update
-		COMMAND echo "${FEDPKG_UPDATE_CMD}"
+		COMMAND eval "${FEDPKG_UPDATE_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm}
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Updating on Bodhi"
@@ -225,8 +229,6 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    IF(NOT _tags)
 		SET(_tags ${FEDORA_CURRENT_RELEASE_TAGS})
 	    ENDIF(NOT _tags)
-	    SET(_bodhi_template_file "bodhi.template")
-	    #FILE(REMOVE ${_bodhi_template_file})
 
 	    IF(NOT _autokarma)
 		SET(_autokarma "True")
@@ -239,7 +241,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 	    FOREACH(_tag ${_tags})
 		_use_bodhi_convert_tag(_bodhi_tag ${_tag})
 
-		FILE(APPEND ${_bodhi_template_file} "[${PROJECT_NAME}-${PRJ_VER}-${PRJ_RELEASE_VER}.${_bodhi_tag}]\n\n")
+		FILE(APPEND ${_bodhi_template_file} "[${PROJECT_NAME}-${PRJ_VER}-${PRJ_RELEASE_NO}.${_bodhi_tag}]\n\n")
 
 		IF(BODHI_UPDATE_TYPE)
 		    FILE(APPEND ${_bodhi_template_file} "type=${BODHI_UPDATE_TYPE}\n\n")

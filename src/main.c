@@ -69,9 +69,9 @@ start_component (void)
         ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
     }else {
         IBusComponent *component;
-//        component = ibus_component_new_from_file ( DATADIR "/ibus/component/chewing.xml");
+//        component = ibus_component_new_from_file ( DATA_DIR "/ibus/component/chewing.xml");
         component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                _("Chewing component"), PROJECT_DATADIR, "GPLv2+",
+                _("Chewing component"), PROJECT_DATA_DIR, "GPLv2+",
                 _("Peng Huang, Ding-Yi Chen"),
                 "http://code.google.com/p/ibus",
                 LIBEXEC_DIR "/ibus-engine-chewing --ibus",
@@ -81,7 +81,7 @@ start_component (void)
                 ibus_engine_desc_new("chewing", _("Chewing"),
                 "Chinese chewing input method",
                 "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-                PROJECT_DATADIR "/icons/" PROJECT_NAME ".png",
+                PROJECT_DATA_DIR "/icons/" PROJECT_NAME ".png",
                 "us")
         );
 
@@ -135,7 +135,7 @@ main (gint argc, gchar *argv[])
 
     /* Init i18n messages */
     setlocale (LC_ALL, "zh_TW.utf8");
-    bindtextdomain(PROJECT_NAME, DATADIR "/locale");
+    bindtextdomain(PROJECT_NAME, DATA_DIR "/locale");
     textdomain(PROJECT_NAME);
 
     context = g_option_context_new ("- ibus chewing engine component");

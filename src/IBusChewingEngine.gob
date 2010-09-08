@@ -220,7 +220,7 @@ class IBus:Chewing:Engine from IBus:Engine{
         g_object_ref_sink (
 	    ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
-		PROJECT_DATADIR "/icons/settings.png", NULL, TRUE, TRUE,
+		PROJECT_DATA_DIR "/icons/settings.png", NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
@@ -254,7 +254,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    gchar buf[100];
 	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	    chewing_Init(CHEWING_DATADIR, buf);
+	    chewing_Init(CHEWING_DATA_DIR, buf);
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
@@ -856,6 +856,7 @@ class IBus:Chewing:Engine from IBus:Engine{
              }
 #endif
 	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
+	    self_update(self);
 	}
 	if (chewing_commit_Check(self->context)){
 	    G_DEBUG_MSG(3,"[I3]  force_commit() has something to commit. buffer=%d, commit=%d",
