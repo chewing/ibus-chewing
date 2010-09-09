@@ -1,8 +1,11 @@
-PRJ_VER=1.3.6.20100901
+PRJ_VER=1.3.6.20100906
 SUMMARY=Resolves: #608991; Fixed Upstream issue 1022, 1032; Clean the CMake script
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
+- Input style of ibus-chewing is decommissioned under ibus >=1.3.
+  Now the input style is determined solely on the setting of
+  "Embed preedit in application window" in IBus.
 - Resolves: #608991
 - Fixed Issue 1022: chewing commit some text in reset method
   (patched by Peng Huang).

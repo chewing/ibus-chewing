@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-08 16:39+1000\n"
+"POT-Creation-Date: 2010-09-10 01:42+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Big5"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:348
+#: ../src/IBusChewingEngine-def.c:356
 msgid "Candidate per page"
 msgstr ""
 
@@ -70,11 +70,11 @@ msgstr ""
 msgid "Chi"
 msgstr "中"
 
-#: ../src/IBusChewingEngine-def.c:354
+#: ../src/IBusChewingEngine-def.c:362
 msgid "Choose phrases from backward"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:358
+#: ../src/IBusChewingEngine-def.c:366
 msgid "Choose phrases from the back, without moving cursor."
 msgstr ""
 
@@ -129,17 +129,17 @@ msgid ""
 "be inputted with Shift."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:346
+#: ../src/IBusChewingEngine-def.c:354
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:332
+#: ../src/IBusChewingEngine-def.c:339
 msgid "Input Style"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:337
+#: ../src/IBusChewingEngine-def.c:344
 msgid ""
 "Input style determines where the preedit strings be shown and edited.\n"
 "\"in application window\": Preedit strings are edited on the target "
@@ -173,7 +173,7 @@ msgid ""
 "symbols"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:352
+#: ../src/IBusChewingEngine-def.c:360
 msgid "Number of candidate per page."
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "Peng Huang, Ding-Yi Chen"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:342
+#: ../src/IBusChewingEngine-def.c:350
 msgid "Plain Zhuyin mode"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: ../src/IBusChewingEngine-def.c:360
+#: ../src/IBusChewingEngine-def.c:368
 msgid "Space to select"
 msgstr ""
 

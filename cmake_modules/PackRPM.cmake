@@ -238,11 +238,11 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 
     ENDMACRO(PACK_RPM var spec_in source0)
 
-    MACRO(USE_MOCK ${srpm} ${spec_in})
-	FIND_PROGRAM(MOCK NAME "mock")
-	IF("${MOCK}" STREQUAL "MOCK-NOTFOUND")
+    MACRO(USE_MOCK spec_in)
+	FIND_PROGRAM(MOCK mock)
+	IF(MOCK STREQUAL "MOCK-NOTFOUND")
 	    MESSAGE(FATAL_ERROR "mock is not found in PATH!")
-	ENDIF("${MOCK}" STREQUAL "MOCK-NOTFOUND")
+	ENDIF(MOCK STREQUAL "MOCK-NOTFOUND")
 
 	IF(NOT DEFINED MOCK_RPM_DIST_TAG)
 	    STRING(REGEX MATCH "^fc([1-9][0-9]*)"  _fedora_mock_dist "${RPM_DIST_TAG}")
@@ -259,20 +259,21 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	ENDIF(NOT DEFINED MOCK_RPM_DIST_TAG)
 
 	SETTING_FILE_GET_ATTRIBUTE(_archStr BuildArch ${spec_in} ":")
-	IF("${_archStr}" STREQUAL noarch)
+	IF(NOT _archStr STREQUAL "noarch")
+	    SET(_prj_srpm_path "${RPM_BUILD_SRPMS}/${PROJECT_NAME}-${PRJ_VER}-${PRJ_RELEASE}.src.rpm")
 	    ADD_CUSTOM_TARGET(rpm_mock_i386
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/i386
-		COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-i386" --resultdir="${RPM_BUILD_RPMS}/i386" ${RPM_BUILD_SRPMS}/${srpm}
-		DEPENDS ${RPM_BUILD_SRPMS}/${srpm}
+		COMMAND ${MOCK} -r  "${MOCK_RPM_DIST_TAG}-i386" --resultdir="${RPM_BUILD_RPMS}/i386" ${_prj_srpm_path}
+		DEPENDS ${_prj_srpm_path}
 		)
 
 	    ADD_CUSTOM_TARGET(rpm_mock_x86_64
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_RPMS}/x86_64
-		COMMAND mock -r  "${MOCK_RPM_DIST_TAG}-x86_64" --resultdir="${RPM_BUILD_RPMS}/x86_64" ${RPM_BUILD_SRPMS}/${srpm}
-		DEPENDS ${RPM_BUILD_SRPMS}/${srpm}
+		COMMAND ${MOCK} -r  "${MOCK_RPM_DIST_TAG}-x86_64" --resultdir="${RPM_BUILD_RPMS}/x86_64" ${_prj_srpm_path}
+		DEPENDS ${_prj_srpm_path}
 		)
 
-	ENDIF("${_archStr}" STREQUAL noarch)
+	ENDIF(NOT _archStr STREQUAL "noarch")
     ENDMACRO(USE_MOCK)
 
 ENDIF(NOT DEFINED _PACK_RPM_CMAKE_)

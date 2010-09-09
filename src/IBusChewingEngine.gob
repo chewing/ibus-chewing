@@ -854,6 +854,15 @@ class IBus:Chewing:Engine from IBus:Engine{
             if (!chewing_commit_Check(self->context)){
 		chewing_handle_Enter(self->context);
              }
+#else
+	    if (self->_priv->inputStyle==CHEWING_INPUT_STYLE_IN_CANDIDATE){
+		/* But if in IN_CANDIDATE mode, still need to simulate enter.
+		 */
+		if (!chewing_commit_Check(self->context)){
+		    chewing_handle_Enter(self->context);
+		}
+	    }
+
 #endif
 	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
 	    self_update(self);

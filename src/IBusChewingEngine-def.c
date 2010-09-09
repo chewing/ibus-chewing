@@ -195,6 +195,7 @@ static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value)
 #endif
 }
 
+#if IBUS_VERSION < 10300
 static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -207,8 +208,9 @@ static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
 	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
     }
     ibus_chewing_engine_force_commit(engine);
-#endif
+#endif /* IBUS_CHEWING_MAIN */
 }
+#endif
 
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
@@ -329,6 +331,13 @@ this option determines how these status be synchronized. Valid values:\n\
 	N_("Always input numbers when number keys from key pad is inputted."),
     },
 
+/*
+ * Input style is decommissioned for ibus 1.3,
+ * because ibus 1.3 has built-in support of input style.
+ * Using built-in input style provides extra benefit,
+ * like typed text won't be lost when focus-out and disable event.
+ */
+#if IBUS_VERSION < 10300
     {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
 	"in candidate window", inputStyles, NULL,  0, 1,
 	NULL, inputStyle_set_callback,
@@ -338,6 +347,7 @@ this option determines how these status be synchronized. Valid values:\n\
 		"\"in application window\": Preedit strings are edited on the target application window.\n"
 		"\"in candidate window\": Preedit strings are edited on the candidate selection window."),
     },
+#endif
 
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),
 	"0", NULL, NULL, 0, 1,
