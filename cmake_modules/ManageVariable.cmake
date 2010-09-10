@@ -70,19 +70,29 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
     MACRO(SETTING_FILE_GET_ATTRIBUTE var attr_name setting_file)
 	SET(setting_sign "=")
 	SET(_UNQUOTED "")
+	SET(_NOESCAPE_SEMICOLON "")
 	FOREACH(_arg ${ARGN})
 	    IF (${_arg} STREQUAL "UNQUOTED")
 		SET(_UNQUOTED "UNQUOTED")
 	    ELSE(${_arg} STREQUAL "UNQUOTED")
 		SET(setting_sign ${_arg})
+	    ELSEIF (${_arg} STREQUAL "NOESCAPE_SEMICOLON")
+		SET(_NOESCAPE_SEMICOLON "NOESCAPE_SEMICOLON")
 	    ENDIF(${_arg} STREQUAL "UNQUOTED")
 	ENDFOREACH(_arg)
 	SET(_find_pattern "\n[ \\t]*(${attr_name}\)[ \\t]*${setting_sign}\([^\n]*\)")
 
-	FILE(READ ${setting_file} _txt_content)
-	SET(_txt_content "\n${_txt_content}\n")
-	# Escape ';'
-	STRING(REPLACE ";" "\\;" _txt_content "${_txt_content}")
+	# Use "#" to Escape ';', "#@" for original "#"
+	IF(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+	    FILE(READ "${setting_file}" _txt_content)
+	ELSE(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+	    EXECUTE_PROCESS(COMMAND sed -e "s/#/#@/g" ${setting_file}
+		COMMAND sed -e "s/\;/#/g"
+		OUTPUT_VARIABLE _txt_content
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+	ENDIF(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+
 	STRING(REGEX MATCHALL "${_find_pattern}" _matched_lines "${_txt_content}")
 	#MESSAGE("_matched_lines=|${_matched_lines}|")
 	SET(_result_line)
@@ -90,6 +100,15 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	FOREACH(_line ${_matched_lines})
 	    #MESSAGE("### _line=|${_line}|")
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
+
+	    # Replace semicolon back.
+	    STRING(REGEX REPLACE "#[^@]" "\\\\;" _result_line
+		"${_result_line}")
+	    STRING(REGEX REPLACE "#@" "#" _result_line
+		"${_result_line}")
+	    STRING(REGEX REPLACE "\\\\;" ";" _result_line
+		"${_result_line}")
+
 	    SET_VAR(${var} "${_result_line}")
 	ENDFOREACH()
     ENDMACRO(SETTING_FILE_GET_ATTRIBUTE var attr_name setting_file)
@@ -100,7 +119,6 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	SET(_NOREPLACE "")
 	SET(_NOESCAPE_SEMICOLON "")
 	SET(SED "sed")
-	SET(_semicolon_replace_str "@")
 	FOREACH(_arg ${ARGN})
 	    IF (${_arg} STREQUAL "UNQUOTED")
 		SET(_UNQUOTED "UNQUOTED")
@@ -114,12 +132,12 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	ENDFOREACH(_arg)
 	SET(_find_pattern "\n[ \\t]*([A-Za-z0-9_]*\)[ \\t]*${setting_sign}\([^\n]*\)")
 
-	# Escape ';'
+	# Use "#" to Escape ';', "#@" for original "#"
 	IF(NOT _NOESCAPE_SEMICOLON STREQUAL "")
 	    FILE(READ "${setting_file}" _txt_content)
 	ELSE(NOT _NOESCAPE_SEMICOLON STREQUAL "")
-	    EXECUTE_PROCESS(COMMAND sed -e "s/${_semicolon_replace_str}/${_semicolon_replace_str}${_semicolon_replace_str}/g" ${setting_file}
-		COMMAND sed -e "s/\;/${_semicolon_replace_str}/g"
+	    EXECUTE_PROCESS(COMMAND sed -e "s/#/#@/g" ${setting_file}
+		COMMAND sed -e "s/\;/#/g"
 		OUTPUT_VARIABLE _txt_content
 		OUTPUT_STRIP_TRAILING_WHITESPACE
 		)
@@ -137,13 +155,22 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	    #MESSAGE("### _line=|${_line}|")
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\1" _var "${_line}")
 	    STRING(REGEX REPLACE "${_find_pattern}" "\\2" _result_line "${_line}")
+
+	    # Replace semicolon back.
+	    STRING(REGEX REPLACE "#[^@]" "\\\\;" _result_line
+		"${_result_line}")
+	    STRING(REGEX REPLACE "#@" "#" _result_line
+		"${_result_line}")
+	    STRING(REGEX REPLACE "\\\\;" ";" _result_line
+		"${_result_line}")
+
 	    IF (NOT "${_var}" STREQUAL "")
 		IF ("${_NOREPLACE}" STREQUAL "" OR "${${_var}}" STREQUAL "" )
-		    MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
+		    #MESSAGE("### _var=${_var} _result_line=|${_result_line}|")
 		    SET_VAR(${_var} "${_result_line}")
 		ELSE("${_NOREPLACE}" STREQUAL "" OR "${${_var}}" STREQUAL "")
 		    SET(val ${${_var}})
-		    MESSAGE("### ${_var} is already defined as ${val}")
+		    #MESSAGE("### ${_var} is already defined as ${val}")
 		ENDIF("${_NOREPLACE}" STREQUAL "" OR "${${_var}}" STREQUAL "")
 	    ENDIF(NOT "${_var}" STREQUAL "")
 	ENDFOREACH()

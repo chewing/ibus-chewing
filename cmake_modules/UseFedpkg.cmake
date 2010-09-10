@@ -99,11 +99,11 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 		    " ${FEDPKG} commit ${COMMIT_MSG} -p"
 		    )
 		SET(FEDPKG_BUILD_CMD
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} build")
+		    "${FEDPKG} switch-branch ${_branch}"
+		    " ${FEDPKG} build")
 		SET(FEDPKG_UPDATE_CMD
-		    "${FEDPKG} switch-branch ${_branch}\; "
-		    "${FEDPKG} update")
+		    "${FEDPKG} switch-branch ${_branch}"
+		    " ${FEDPKG} update")
 	    ENDIF(DEFINED _first_branch)
 	ENDFOREACH(_tag ${tags})
     ENDMACRO(_use_fedpkg_make_cmds tags srpm)
@@ -156,7 +156,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE(FEDPKG_COMMIT_CMD=${FEDPKG_COMMIT_CMD})
 	    ADD_CUSTOM_TARGET(fedpkg_commit
-		COMMAND echo "${FEDPKG_COMMIT_CMD}"
+		COMMAND eval "${FEDPKG_COMMIT_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm} ChangeLog
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Submitting to Koji"
@@ -165,7 +165,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_build
-		COMMAND echo "${FEDPKG_BUILD_CMD}"
+		COMMAND eval "${FEDPKG_BUILD_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm} ChangeLog
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Building on Koji"
@@ -174,7 +174,7 @@ IF(NOT DEFINED _USE_FEDPKG_CMAKE_)
 
 	    #MESSAGE("FEDPKG_BUILD_CMD=${FEDPKG_BUILD_CMD}")
 	    ADD_CUSTOM_TARGET(fedpkg_update
-		COMMAND echo "${FEDPKG_UPDATE_CMD}"
+		COMMAND eval "${FEDPKG_UPDATE_CMD}"
 		DEPENDS ${FEDPKG_DIR}/${PROJECT_NAME} ${srpm} ChangeLog
 		WORKING_DIRECTORY ${FEDPKG_DIR}/${PROJECT_NAME}
 		COMMENT "Updating on Bodhi"
