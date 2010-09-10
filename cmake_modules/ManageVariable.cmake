@@ -9,17 +9,20 @@
 #         var: A variable that stores the result.
 #         cmd: A command.
 #
-#   SETTING_FILE_GET_ATTRIBUTE(var attr_name setting_file [UNQUOTED] [setting_sign])
+#   SETTING_FILE_GET_ATTRIBUTE(var attr_name setting_file [UNQUOTED]
+#     [NOESCAPE_SEMICOLON] [setting_sign])
 #     - Get an attribute value from a setting file.
 #       * Parameters:
 #         var: Variable to store the attribute value.
 #         attr_name: Name of the attribute.
 #         setting_file: Setting filename.
 #         UNQUOTED: (Optional) remove the double quote mark around the string.
+#         NOESCAPE_SEMICOLON: Escape semicolons.
 #         setting_sign: (Optional) The symbol that separate attribute name and its value.
 #           Default value: "="
 #
-#   SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [NOREPLACE] [setting_sign])
+#   SETTING_FILE_GET_ALL_ATTRIBUTES(setting_file [UNQUOTED] [NOREPLACE]
+#     [NOESCAPE_SEMICOLON] [setting_sign])
 #     - Get all attribute values from a setting file.
 #       '#' is used to comment out setting.
 #       * Parameters:
@@ -27,6 +30,7 @@
 #         UNQUOTED: (Optional) remove the double quote mark around the string.
 #         NOREPLACE (Optional) Without this parameter, this macro replaces
 #           previous defined variables, use NOREPLACE to prevent this.
+#         NOESCAPE_SEMICOLON: Escape semicolons.
 #         setting_sign: (Optional) The symbol that separate attribute name and its value.
 #           Default value: "="
 #
@@ -52,9 +56,10 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	EXECUTE_PROCESS(
 	    COMMAND ${cmd} ${ARGN}
 	    OUTPUT_VARIABLE _cmd_output
+	    OUTPUT_STRIP_TRAILING_WHITESPACE
 	    )
 	IF(_cmd_output)
-	    STRING_TRIM(${var} ${_cmd_output})
+	    SET(${var} ${_cmd_output})
 	ELSE(_cmd_output)
 	    SET(var "${var}-NOVALUE")
 	ENDIF(_cmd_output)
@@ -93,26 +98,42 @@ IF(NOT DEFINED _MANAGE_VARIABLE_CMAKE_)
 	SET(setting_sign "=")
 	SET(_UNQUOTED "")
 	SET(_NOREPLACE "")
+	SET(_NOESCAPE_SEMICOLON "")
+	SET(SED "sed")
 	FOREACH(_arg ${ARGN})
 	    IF (${_arg} STREQUAL "UNQUOTED")
 		SET(_UNQUOTED "UNQUOTED")
 	    ELSEIF (${_arg} STREQUAL "NOREPLACE")
 		SET(_NOREPLACE "NOREPLACE")
+	    ELSEIF (${_arg} STREQUAL "NOESCAPE_SEMICOLON")
+		SET(_NOESCAPE_SEMICOLON "NOESCAPE_SEMICOLON")
 	    ELSE(${_arg} STREQUAL "UNQUOTED")
 		SET(setting_sign ${_arg})
 	    ENDIF(${_arg} STREQUAL "UNQUOTED")
 	ENDFOREACH(_arg)
 	SET(_find_pattern "\n[ \\t]*([A-Za-z0-9_]*\)[ \\t]*${setting_sign}\([^\n]*\)")
 
-	FILE(READ ${setting_file} _txt_content)
+	IF(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+	    FILE(READ "${setting_file}" _txt_content)
+	ELSE(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+	    EXECUTE_PROCESS(COMMAND sed -e s/a/+/ "${setting_file}"
+	    	OUTPUT_VARIABLE _txt_content
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+	    COMMAND_OUTPUT_TO_VARIABLE(_txt_content sed -e 's/;/+/' ${setting_file})
+	ENDIF(NOT _NOESCAPE_SEMICOLON STREQUAL "")
+
+	MESSAGE("1_txt_content=|${_txt_content}|")
 	SET(_txt_content "\n${_txt_content}\n")
 
+	MESSAGE("_txt_content=|${_txt_content}|")
 	# Escape ';'
-	STRING(REPLACE ";" "\\;" _txt_content "${_txt_content}")
+	IF(NOT _ESCAPE_SEMICOLON STREQUAL "")
+	    STRING(REGEX REPLACE ";" "\\;" _txt_content "${_txt_content}")
+	ENDIF(NOT _ESCAPE_SEMICOLON STREQUAL "")
 
 	STRING(REGEX MATCHALL "${_find_pattern}" _matched_lines "${_txt_content}")
 
-	#MESSAGE("_matched_lines=|${_matched_lines}|")
+	MESSAGE("_matched_lines=|${_matched_lines}|")
 	SET(_result_line)
 	SET(_var)
 

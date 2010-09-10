@@ -182,14 +182,13 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	    --define '_rpmdir ${RPM_BUILD_RPMS}'
 	    --define '_specdir ${RPM_BUILD_SPECS}'
 	    DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec ${RPM_BUILD_SOURCES}/${source0}
-	    ${RPM_BUILD_SRPMS} ${RPM_BUILD_BUILD}
+	    ${RPM_BUILD_SRPMS} ${RPM_BUILD_BUILD} ChangeLog
 	    COMMENT "Building srpm"
 	    )
 
 	ADD_CUSTOM_TARGET(srpm
-	    DEPENDS ${RPM_BUILD_SOURCES}/${source0}
+	    DEPENDS ${_prj_srpm_path}
 	    )
-	ADD_DEPENDENCIES(srpm version_check)
 
 	ADD_CUSTOM_TARGET(rpm
 	    COMMAND ${CMAKE_COMMAND} -E make_directory ${RPM_BUILD_SRPMS}
@@ -201,6 +200,7 @@ IF(NOT DEFINED _PACK_RPM_CMAKE_)
 	    --define '_specdir ${RPM_BUILD_SPECS}'
 	    DEPENDS ${RPM_BUILD_SPECS}/${PROJECT_NAME}.spec ${RPM_BUILD_SOURCES}/${source0}
 	    ${RPM_BUILD_SRPMS} ${RPM_BUILD_RPMS} ${RPM_BUILD_BUILD} ${RPM_BUILD_BUILDROOT}
+	    ChangeLog
 	    )
 
 	ADD_DEPENDENCIES(rpm version_check)

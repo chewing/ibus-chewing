@@ -31,11 +31,15 @@ IF(NOT DEFINED _MANAGE_VERSION_CMAKE_)
 	    MESSAGE(FATAL_ERROR "${releaseFile} does not have a [Changes] tag!")
 	ENDIF("${_grep_line}" STREQUAL "")
 	STRING(REGEX REPLACE ":.*" "" _line_num "${_grep_line}")
+
+	# Read header
 	MATH(EXPR _setting_line_num ${_line_num}-1)
 	COMMAND_OUTPUT_TO_VARIABLE(_releaseFile_head head -n ${_setting_line_num} ${releaseFile})
 	FILE(WRITE "${releaseFile}_NO_PACK_HEAD" "${_releaseFile_head}")
 	SETTING_FILE_GET_ALL_ATTRIBUTES("${releaseFile}_NO_PACK_HEAD")
+	SET(CHANGE_SUMMARY "${SUMMARY}")
 
+	# Read [Changes] Section
 	MATH(EXPR _line_num ${_line_num}+1)
 	COMMAND_OUTPUT_TO_VARIABLE(CHANGELOG_ITEMS tail -n +${_line_num} ${releaseFile})
 	FILE(WRITE "${releaseFile}_NO_PACK_CHANGELOG_ITEM" "${CHANGELOG_ITEMS}")

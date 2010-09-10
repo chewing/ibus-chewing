@@ -117,15 +117,22 @@ SET(MY_IGNORE_FILES_COMMON
 # As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
 # Is fixed from Fedora 11
 SET(PRJ_IGNORE_FILES_COMMON
-    ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]" "src/ibus-chewing-engine.*\\\\.[ch]"
+    ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]"
+    "src/ibus-chewing-engine.*\\\\.[ch]"
 )
 
-SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES} ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
+SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES}
+    ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
 #MESSAGE("PACK_SOURCE_IGNORE_FILES=${PACK_SOURCE_IGNORE_FILES}")
 
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/ibus-chewing.spec.in" "${PACK_SOURCE_FILE_NAME}")
-USE_MOCK("${RPM_BUILD_SPECS}/ibus-chewing.spec.in")
+
+# If mock exists, then add mock related targets.
+FIND_PROGRAM(MOCK_CMD mock)
+IF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
+    USE_MOCK("${RPM_BUILD_SPECS}/ibus-chewing.spec.in")
+ENDIF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
 
 USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
 USE_BODHI()

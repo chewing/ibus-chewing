@@ -191,6 +191,10 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		self_refresh_property(self,"chewing_alnumSize_prop");
 		break;
 	    default:
+		if (keysym>127 || keysym<0){
+		    /* Special keys, must let it through */
+		    return FALSE;
+		}
 		self_handle_Default(self,keysym,TRUE);
 		break;
 	}
