@@ -1,45 +1,39 @@
 cmake_minimum_required(VERSION 2.4)
 ####################################################################
-# Init Definition
-####################################################################
-INCLUDE(init.CMakeLists.txt)
-
-####################################################################
-# Project basic information
-####################################################################
+# Project specific information
+#
 PROJECT(ibus-chewing)
-SET(PROJECT_DESCRIPTION "The Chewing engine for IBus input platform")
+SET(PRJ_SUMMARY "The Chewing engine for IBus input platform")
 SET(CMAKE_C_FLAGS "-Wall")
 
-SET(RELEASE_FILE ${CMAKE_SOURCE_DIR}/RELEASE-NOTES.txt)
-SET(RPM_RELEASE_FILE ${CMAKE_SOURCE_DIR}/SPECS/RPM-RELEASE-NOTES.txt)
-#SETTING_FILE_GET_ATTRIBUTE(PRJ_VER "PRJ_VER" ${RELEASE_FILE})
-#MESSAGE("PRJ_VER_PATTERN=${PRJ_VER_PATTERN}")
-#SETTING_FILE_GET_ATTRIBUTE(PRJ_VER_RELEASE "RPM_RELEASE" ${RPM_RELEASE_FILE})
-
-SET(SO_VER_MAJOR "1")
-SET(SO_VER_MINOR "0")
 SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
-INCLUDE(ManageVersion)
-LOAD_RELEASE_FILE("${RELEASE_FILE}")
-INCLUDE(CompileFlags)
-SET_USUAL_COMPILE_ENV()
+SET(VENDOR "Red Hat, APAC, Inc.")
+SET(LICENSE "GPLv2+")
 
 ####################################################################
 # Includes
-####################################################################
+#
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/Modules)
+MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 
+IF(CMAKE_VERSION)
+    CMAKE_POLICY(SET CMP0005 OLD)
+ENDIF(CMAKE_VERSION)
 
-####################################################################
-# Definitions
-####################################################################
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
-
+INCLUDE(ManageVersion)
+LOAD_RELEASE_FILE("RELEASE-NOTES.txt")
 INCLUDE(UseUninstall)
+
+INCLUDE(CompileEnv)
+SET_USUAL_COMPILE_ENVS()
+
+INCLUDE(CMakeVersion)
+
+
 ####################################################################
 # Required
-####################################################################
+#
 FIND_PACKAGE(PkgConfig)
 PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
 PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0)
@@ -61,69 +55,60 @@ FIND_PROGRAM(GOB2 gob2)
 IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
     MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
 ENDIF()
+####################################################################
+# Building
+#
 
-####################################################################
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
-####################################################################
 SET(TRANSLATED zh_CN zh_TW)
 INCLUDE(UseGettext)
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(src bin)
 
 ####################################################################
-# Packing
-####################################################################
-
-#====================================================================
-# Files to be install.
+# Installing
 #
-SET(MAIN_DOCS AUTHORS README ChangeLog NEWS COPYING USER-GUIDE)
 
-#INSTALL(FILES ${MAIN_DOCS}
-#    DESTINATION "${PROJECT_DOC_DIR}")
+SET(INSTALL_DOCS ${RELEASE_FILE} AUTHORS README ChangeLog COPYING USER-GUIDE)
+STRING_JOIN(PRJ_DOC_LIST " " ${INSTALL_DOCS})
+
+INSTALL(FILES ${INSTALL_DOCS}
+    DESTINATION "${PRJ_DOC_DIR}")
 
 INSTALL(DIRECTORY icons
-    DESTINATION  ${PROJECT_DATA_DIR})
+    DESTINATION  ${PRJ_DATA_DIR})
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/chewing.xml
     DESTINATION "${DATA_DIR}/ibus/component")
 
-#====================================================================
 # Schemas
-#
 SET(GCONF_SCHEMAS_FILE ${CMAKE_BINARY_DIR}/data/${PROJECT_NAME}.schemas)
 INCLUDE(UseGConf)
 
-#====================================================================
-# Hosting Service
+####################################################################
+# Packing
 #
-INCLUDE(UseHostingService)
-USE_HOSTING_SERVICE_READ_SETTING_FILE("MAINTAINER_SETTING_NO_PACK")
-
-#====================================================================
-# Pack configuration
-#
-SET(CPACK_PACKAGE_VENDOR "Red Hat, APAC, Inc.")
-
+SET(MAINTAINER_SETTING "MAINTAINER_SETTING_NO_PACK")
 INCLUDE(PackSource)
 INCLUDE(PackRPM)
 INCLUDE(UseFedpkg)
 
-SET(MY_IGNORE_FILES_COMMON
-    "/docs/"  "\\\\.spec$" "messages.po$" "\\\\.orig$"
-)
+SET(PRJ_IGNORE_FILES_COMMON
+    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$"
+    )
 
 # GOB_GENERATED source codes are now excluded,
 # As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
 # Is fixed from Fedora 11
+
 SET(PRJ_IGNORE_FILES_COMMON
-    ${MY_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]"
+    ${PRJ_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]"
     "src/ibus-chewing-engine.*\\\\.[ch]"
-)
+    )
 
 SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES}
     ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
-#MESSAGE("PACK_SOURCE_IGNORE_FILES=${PACK_SOURCE_IGNORE_FILES}")
 
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/ibus-chewing.spec.in" "${PACK_SOURCE_FILE_NAME}")
@@ -134,9 +119,24 @@ IF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
     USE_MOCK("${RPM_BUILD_SPECS}/ibus-chewing.spec.in")
 ENDIF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
 
-USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
-USE_BODHI()
+IF(EXISTS ${MAINTAINER_SETTING})
+    USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}")
+    USE_BODHI()
+ENDIF(EXISTS ${MAINTAINER_SETTING})
 
 ADD_DEPENDENCIES(pack_src pot_file)
+
+####################################################################
+# Hosting
+#
+INCLUDE(UseHostingService)
+USE_HOSTING_SERVICE_READ_SETTING_FILE("${MAINTAINER_SETTING}"
+    "${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME}")
+
+
+####################################################################
+# Test Suites.
+#
+ENABLE_TESTING()
 
 

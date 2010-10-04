@@ -1,12 +1,12 @@
 Name:       @PROJECT_NAME@
 Version:    @PRJ_VER@
 Release:    1%{?dist}
-Summary:    @PROJECT_DESCRIPTION@
+Summary:    @PRJ_SUMMARY@
 Summary(zh_TW): IBus新酷音輸入法
-License:    GPLv2+
+License:    @LICENSE@
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
-Source0:    http://ibus.googlecode.com/files/@SOURCE0@
+Source0:    http://ibus.googlecode.com/files/@SOURCE_PACKAGE@
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -58,6 +58,11 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
+# We install document using %doc
+(cd $RPM_BUILD_ROOT/@PRJ_DOC_DIR@
+ %__rm -rf @PRJ_DOC_LIST@
+ )
+
 %find_lang %{name}
 
 %pre
@@ -89,7 +94,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS README ChangeLog COPYING USER-GUIDE
+%doc @PRJ_DOC_LIST@
 %{_libexecdir}/ibus-engine-chewing
 %{_datadir}/%{name}
 %{_datadir}/ibus/component/chewing.xml

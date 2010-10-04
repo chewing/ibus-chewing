@@ -220,7 +220,7 @@ class IBus:Chewing:Engine from IBus:Engine{
         g_object_ref_sink (
 	    ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
-		PROJECT_DATA_DIR "/icons/settings.png", NULL, TRUE, TRUE,
+		PRJ_DATA_DIR "/icons/settings.png", NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;

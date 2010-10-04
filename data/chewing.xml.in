@@ -17,7 +17,7 @@
 	    <language>zh_TW</language>
 	    <license>GPLv2+</license>
 	    <author>Peng Huang, Ding-Yi Chen</author>
-            <icon>@PROJECT_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
+            <icon>@PRJ_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>
 	    <rank>80</rank>
         </engine>
