@@ -1,3 +1,7 @@
+* Fri Nov 12 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.8
+- Quick fix for f15 and ibus-1.4 build
+- Version scheme change.
+
 * Fri Sep 10 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.7.20100910
 - Input style of ibus-chewing is decommissioned under ibus >=1.3.
   Now the input style is determined solely on the setting of
