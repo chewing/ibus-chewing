@@ -2,8 +2,8 @@ requires 2.0.0
 
 %alltop{
 /*
- * Copyright © 2009  Red Hat, Inc. All rights reserved.
- * Copyright © 2009  Ding-Yi Chen <dchen at redhat.com>
+ * Copyright © 2009,2010  Red Hat, Inc. All rights reserved.
+ * Copyright © 2009,2010  Ding-Yi Chen <dchen at redhat.com>
  *
  * This file is part of the ibus-chewing Project.
  *
@@ -282,11 +282,18 @@ class IBus:Chewing:Engine from IBus:Engine{
     private  void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
 	G_DEBUG_MSG(3,"[I3] load_setting()");
+#if IBUS_VERSION >= 10399
+	GError *error=NULL;
+	GDBusConnection *connection=ibus_service_get_connection(IBUS_SERVICE(self));
+	self->config=g_object_ref_sink(ibus_config_new (connection, NULL, &error));
+	g_assert(error==NULL);
+#else
 	GList  *connections_list=ibus_service_get_connections(IBUS_SERVICE(self));
 	g_assert(connections_list);
 	g_assert(connections_list->data);
 	IBusConnection *iConnection=(IBusConnection *) connections_list->data;
 	self->config=g_object_ref_sink(ibus_config_new(iConnection));
+#endif
 
 	int i;
 	gchar buf[BUFFER_SIZE_LOCAL];
@@ -294,7 +301,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	for (i=0; propSpecs[i].valueType!=G_TYPE_INVALID;i++){
 	    GValue gValue={0};
 	    G_DEBUG_MSG(4,"[I4]  load_setting(), i=%d",i);
-	    if (ibus_config_get_value(self->config, "engine/Chewing",propSpecs[i].key, &gValue)){
+	    if (ibus_chewing_config_get_value(self->config, "engine/Chewing", propSpecs[i].key, &gValue)){
 		switch(propSpecs[i].valueType){
 		    case G_TYPE_BOOLEAN:
 			buf[0]=(g_value_get_boolean(&gValue))? '1' : '0';
@@ -302,14 +309,16 @@ class IBus:Chewing:Engine from IBus:Engine{
 			break;
 		    case G_TYPE_UINT:
 			g_snprintf(buf,BUFFER_SIZE_LOCAL,"%u",
-				g_value_get_uint(&gValue));
-			break;
+			    g_value_get_uint(&gValue));
+    			break;
 		    case G_TYPE_INT:
 			g_snprintf(buf,BUFFER_SIZE_LOCAL,"%d",
-				g_value_get_int(&gValue));
+			    g_value_get_int(&gValue));
 			break;
 		    case G_TYPE_STRING:
-			g_strlcpy(buf,g_value_get_string(&gValue), BUFFER_SIZE_LOCAL);
+			g_strlcpy(buf,
+	    		    g_value_get_string(&gValue),
+			    BUFFER_SIZE_LOCAL);
 			break;
 		    default:
 			break;
@@ -654,7 +663,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(1,"[I1] save_config(%s,-)",key_suffix);
 	GValue gValue={0};
 	maker_dialog_get_widget_value(MAKER_DIALOG(self->setting_dialog),key_suffix,&gValue);
-	return ibus_config_set_value (self->config,"engine/Chewing",key_suffix,&gValue);
+	return ibus_chewing_config_set_value (self->config, "engine/Chewing", key_suffix,&gValue);
     }
 
     /**

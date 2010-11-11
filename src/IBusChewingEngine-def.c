@@ -387,6 +387,84 @@ this option determines how these status be synchronized. Valid values:\n\
  */
 #ifdef IBUS_CHEWING_MAIN
 
+#if IBUS_VERSION >= 10399
+void g_variant_to_g_value(GVariant *gVar, GValue *gValue){
+    const GVariantType *gVType=g_variant_get_type(gVar);
+    if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_BOOLEAN)){
+	g_value_set_boolean(gValue, g_variant_get_boolean(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT16)){
+	g_value_set_uint(gValue, g_variant_get_uint16(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT32)){
+	g_value_set_uint(gValue, g_variant_get_uint32(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT64)){
+	g_value_set_uint64(gValue, g_variant_get_uint64(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT16)){
+	g_value_set_int(gValue, g_variant_get_int16(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT32)){
+	g_value_set_int(gValue, g_variant_get_int32(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT64)){
+	g_value_set_int64(gValue, g_variant_get_int64(gVar));
+    }else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_STRING)){
+	g_value_set_int64(gValue, g_variant_get_string(gVar, NULL));
+    }
+}
+
+GVariant *g_value_to_g_variant(GValue *gValue){
+    GType gType=g_value_get_gtype(gValue);
+    GVariant *gVar=NULL;
+    switch(gType){
+	case G_TYPE_BOOLEAN:
+	    gVar=g_variant_new_boolean(g_value_get_boolean(gValue));
+	    break;
+	case G_TYPE_UINT:
+	    gVar=g_variant_new_uint32(g_value_get_uint(gValue));
+	    break;
+	case G_TYPE_INT:
+	    gVar=g_variant_new_int32(g_value_get_int(gValue));
+	    break;
+	case G_TYPE_STRING:
+	    gVar=g_variant_new_string(g_value_get_string(gValue));
+	    break;
+	default:
+	    break;
+    }
+    return gVar;
+}
+
+#endif
+
+static gboolean ibus_chewing_config_get_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
+#if IBUS_VERSION >= 10399
+    GVariant *gVar=g_variant_ref_sink(ibus_config_get_value(config, section, key));
+    if (gVar!=NULL){
+	g_variant_to_g_value(gVar, gValue);
+	g_variant_unref(gVar);
+	return TRUE;
+    }else{
+	return FALSE;
+    }
+#else
+    return ibus_config_get_value(config, section, key, gValue);
+#endif
+
+}
+
+static gboolean ibus_chewing_config_set_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
+#if IBUS_VERSION >= 10399
+    GVariant *gVar=g_variant_ref_sink(g_value_to_g_variant(gValue));
+    if (gVar!=NULL){
+	return ibus_config_set_value(config, section, key, gVar);
+    }else{
+	return FALSE;
+    }
+#else
+    return ibus_config_set_value(config, section, key, gValue);
+#endif
+
+}
+
+
+
 static guint keysym_KP_to_normal(guint keysym){
     if (keysym < IBUS_KP_0 || keysym > IBUS_KP_9){
 	switch(keysym){

@@ -34,7 +34,9 @@ static IBusFactory *factory = NULL;
 
 /* options */
 static gboolean ibus = FALSE;
+static gboolean xml = FALSE;
 int ibus_chewing_verbose= 0;
+
 
 static const GOptionEntry entries[] =
 {
@@ -42,6 +44,7 @@ static const GOptionEntry entries[] =
     { "verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
         "Verbose level. The higher the level, the more the debug messages.",
         "[integer]" },
+    { "xml", 'x', 0, G_OPTION_ARG_NONE, &xml, "read chewing engine desc from xml file", NULL },
     { NULL },
 };
 
@@ -58,25 +61,28 @@ ibus_disconnected_cb (IBusBus  *bus,
 static void
 start_component (void)
 {
+    ibus_init();
     bus = ibus_bus_new ();
     g_signal_connect (bus, "disconnected", G_CALLBACK (ibus_disconnected_cb), NULL);
 
-    IBusConnection *iConnection=ibus_bus_get_connection (bus);
-    factory = ibus_factory_new (iConnection);
+    factory = ibus_factory_new (ibus_bus_get_connection (bus));
+
     ibus_factory_add_engine (factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {
         ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
     }else {
-        IBusComponent *component;
-//        component = ibus_component_new_from_file ( DATA_DIR "/ibus/component/chewing.xml");
-        component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                _("Chewing component"), PRJ_DATA_DIR, "GPLv2+",
+        IBusComponent *component=NULL;
+        if (xml){
+            component = ibus_component_new_from_file ( DATA_DIR "/ibus/component/chewing.xml");
+        }else{
+            component=ibus_component_new("org.freedesktop.IBus.Chewing",
+                _("Chewing component"), PRJ_VER, "GPLv2+",
                 _("Peng Huang, Ding-Yi Chen"),
                 "http://code.google.com/p/ibus",
                 LIBEXEC_DIR "/ibus-engine-chewing --ibus",
                 "ibus-chewing");
-
+        }
         ibus_component_add_engine(component,
                 ibus_engine_desc_new("chewing", _("Chewing"),
                 "Chinese chewing input method",

@@ -1,19 +1,7 @@
-PRJ_VER=1.3.7.20100910
-SUMMARY=Resolves: #608991, #632043; Fixed Upstream issue 1022, 1032; Rewrite CMake modules.
+PRJ_VER=1.3.8
+SUMMARY=Quick fix for f15 and ibus-1.4 build
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=#632043
+REDHAT_BUGZILLA=
 [Changes]
-- Input style of ibus-chewing is decommissioned under ibus >=1.3.
-  Now the input style is determined solely on the setting of
-  "Embed preedit in application window" in IBus.
-- Resolves: #608991, #632043
-- Fixed Issue 1022: chewing commit some text in reset method
-  (patched by Peng Huang).
-- Fixed Issue 1032: [ibus-chewing] Chewing not commit some single Chinese
-  char into application when press enter.
-- Rewrite CMake modules to make them cleaner, and documents in cmake module
-  help format.
-- [For developer and distro maintainer]
-  Various targets changed. Use 'make help' to obtain a list of available
-  targets.
-
+- Quick fix for f15 and ibus-1.4 build
+- Version scheme change.

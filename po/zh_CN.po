@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-04 12:29+1000\n"
+"POT-Creation-Date: 2010-11-12 00:27+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:331
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:331
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
@@ -57,12 +57,12 @@ msgstr ""
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/main.c:81
+#: ../src/main.c:87
 #, fuzzy
 msgid "Chewing"
 msgstr "新酷音"
 
-#: ../src/main.c:74
+#: ../src/main.c:80
 msgid "Chewing component"
 msgstr ""
 
@@ -190,7 +190,7 @@ msgid ""
 "\"IM\": Keyboard status follows IM status."
 msgstr ""
 
-#: ../src/main.c:75 ../src/main.c:83
+#: ../src/main.c:81 ../src/main.c:89
 msgid "Peng Huang, Ding-Yi Chen"
 msgstr ""
 
@@ -230,7 +230,7 @@ msgstr ""
 msgid "UTF8"
 msgstr ""
 
-#: ../src/IBusChewingEngine.gob:320
+#: ../src/IBusChewingEngine.gob:329
 msgid "Warning: cannot load configure key"
 msgstr ""
 

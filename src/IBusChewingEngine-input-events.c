@@ -9,7 +9,7 @@ gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
     GValue gValue={0};
     gboolean useSysKeyLayout=TRUE;
-    if (ibus_config_get_value(self->config, "general", "use_system_keyboard_layout", &gValue)){
+    if (ibus_chewing_config_get_value(self->config, "general", "use_system_keyboard_layout", &gValue)){
 	useSysKeyLayout=g_value_get_boolean(&gValue);
     }
     guint keysym;

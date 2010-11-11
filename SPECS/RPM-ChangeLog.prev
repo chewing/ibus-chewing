@@ -1,3 +1,18 @@
+* Fri Sep 10 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.7.20100910-1
+- Input style of ibus-chewing is decommissioned under ibus >=1.3.
+  Now the input style is determined solely on the setting of
+  "Embed preedit in application window" in IBus.
+- Resolves: #608991, #632043
+- Fixed Issue 1022: chewing commit some text in reset method
+  (patched by Peng Huang).
+- Fixed Issue 1032: [ibus-chewing] Chewing not commit some single Chinese
+  char into application when press enter.
+- Rewrite CMake modules to make them cleaner, and documents in cmake module
+  help format.
+- [For developer and distro maintainer]
+  Various targets changed. Use 'make help' to obtain a list of available
+  targets.
+
 * Fri Jul 30 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.6.20100730-1
 - Resolves: #608991
 - Sort of fix upstream issue 993.
@@ -225,4 +240,3 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
-
