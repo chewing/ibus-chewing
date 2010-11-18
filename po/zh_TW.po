@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.2.99.20100317\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-12 00:25+1000\n"
+"POT-Creation-Date: 2010-11-18 11:19+0800\n"
 "PO-Revision-Date: 2010-03-17 10:57+1000\n"
 "Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -180,7 +180,6 @@ msgid ""
 msgstr "預編區可容納中文字數(包含輸入中的注音符號)"
 
 #: ../src/IBusChewingEngine-def.c:362
-#, fuzzy
 msgid "Number of candidate per page."
 msgstr "每頁可顯示候選字詞數。"
 
@@ -189,7 +188,6 @@ msgid "Number pad always input number"
 msgstr "數字版總是輸入數字"
 
 #: ../src/IBusChewingEngine-def.c:320
-#, fuzzy
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -211,7 +209,6 @@ msgid "Plain Zhuyin mode"
 msgstr "單純注音模式"
 
 #: ../src/IBusChewingEngine-def.c:260
-#, fuzzy
 msgid "Select Zhuyin keyboard layout."
 msgstr "選擇注音符號的鍵盤排列。"
 
@@ -249,7 +246,7 @@ msgstr "警告：無法載入設定鍵"
 
 #: ../src/IBusChewingEngine-def.c:41
 msgid "dachen_26"
-msgstr "大千CP26"
+msgstr "大千26鍵"
 
 #: ../src/IBusChewingEngine-def.c:33
 msgid "default"
@@ -266,7 +263,7 @@ msgstr "Dvorak"
 
 #: ../src/IBusChewingEngine-def.c:40
 msgid "dvorak_hsu"
-msgstr "Dvorak許氏"
+msgstr "Dvorak+許氏"
 
 #: ../src/IBusChewingEngine-def.c:37
 msgid "eten"

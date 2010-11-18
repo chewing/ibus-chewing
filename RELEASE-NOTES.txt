@@ -1,7 +1,7 @@
-PRJ_VER=1.3.8
-SUMMARY=Quick fix for f15 and ibus-1.4 build
+PRJ_VER=1.3.9
+SUMMARY=Fixed for f15 ibus-chewing upgrade;Apply patch from Jim Huang.
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
-- Quick fix for f15 and ibus-1.4 build
-- Version scheme change.
+- Fixed for f15 ibus-chewing upgrade
+- Apply Jim Huang's patch for
