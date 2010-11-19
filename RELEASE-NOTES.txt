@@ -1,7 +1,9 @@
-PRJ_VER=1.3.9
-SUMMARY=Fixed for f15 ibus-chewing upgrade;Apply patch from Jim Huang.
+PRJ_VER=1.3.9.2
+SUMMARY=Change that address bug 652909; Update zh_TW.po
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=652909
 [Changes]
-- Fixed for f15 ibus-chewing upgrade
-- Apply Jim Huang's patch for
+- Fixed Bug 652909
+- Added back a Changlog item that mention Nils Philippsen's change.
+- Apply Jim Huang's patch for zh_TW.po
+

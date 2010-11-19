@@ -1,3 +1,6 @@
+* Wed Nov 17 2010 Nils Philippsen <nils@redhat.com> - 1.3.8-2
+- fix scriptlets
+
 * Fri Nov 12 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.8-1
 - Quick fix for f15 and ibus-1.4 build
 - Version scheme change.
