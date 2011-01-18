@@ -1,9 +1,6 @@
-PRJ_VER=1.3.9.2
-SUMMARY=Change that address bug 652909; Update zh_TW.po
+PRJ_VER=1.3.10
+SUMMARY=
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=652909
+REDHAT_BUGZILLA="627794"
 [Changes]
-- Fixed Bug 652909
-- Added back a Changlog item that mention Nils Philippsen's change.
-- Apply Jim Huang's patch for zh_TW.po
-
+- Test

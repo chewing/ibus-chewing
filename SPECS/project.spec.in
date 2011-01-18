@@ -32,12 +32,7 @@ Requires(post): GConf2
 Requires(preun): GConf2
 
 %description
-IBus-chewing is an IBus front-end of Chewing, an intelligent Chinese input
-method for Zhuyin (BoPoMoFo) users.
-It supports various Zhuyin keyboard layout, such as standard (DaChen),
-IBM, Gin-Yeah, Eten, Eten 26, Hsu, Dvorak, Dvorak-Hsu, and DaChen26.
-
-Chewing also support toned Hanyu pinyin input.
+@PRJ_DESCRIPTION@
 
 %description -l zh_TW
 IBus-chewing 是新酷音輸入法的IBus前端。
@@ -67,12 +62,15 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 
 %pre
 if [ "$1" -gt 1 ] ; then
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-[ -r %{_sysconfdir}/gconf/schemas/%{name}.schemas ] &&
-gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas >/dev/null || :
+    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+    [ -r %{_sysconfdir}/gconf/schemas/%{name}.schemas ] &&
+    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas\
+    >/dev/null || :
+
 # Upgrading 1.0.2.20090302-1.fc11 or older?
-[ -r %{_sysconfdir}/gconf/schemas/%{name}.schema ] &&
-gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schema >/dev/null || :
+    [ -r %{_sysconfdir}/gconf/schemas/%{name}.schema ] &&
+    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schema\
+     >/dev/null || :
 fi
 
 %post

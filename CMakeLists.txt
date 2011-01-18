@@ -4,6 +4,14 @@ cmake_minimum_required(VERSION 2.4)
 #
 PROJECT(ibus-chewing)
 SET(PRJ_SUMMARY "The Chewing engine for IBus input platform")
+SET(PRJ_DESCRIPTION
+"IBus-chewing is an IBus front-end of Chewing, an intelligent Chinese input
+method for Zhuyin (BoPoMoFo) users.
+It supports various Zhuyin keyboard layout, such as standard (DaChen),
+IBM, Gin-Yeah, Eten, Eten 26, Hsu, Dvorak, Dvorak-Hsu, and DaChen26.
+
+Chewing also support toned Hanyu pinyin input.")
+
 SET(CMAKE_C_FLAGS "-Wall")
 
 SET(AUTHORS "Peng Huang, Ding-Yi Chen")
@@ -116,21 +124,20 @@ PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/project.spec.in" "${PACK_SOURCE_
 # If mock exists, then add mock related targets.
 FIND_PROGRAM(MOCK_CMD mock)
 IF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
-    USE_MOCK("${RPM_BUILD_SPECS}/project.spec.in")
+    USE_MOCK("${CMAKE_SOURCE_DIR}/SPECS/project.spec.in")
 ENDIF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
 
 IF(EXISTS ${MAINTAINER_SETTING})
-    USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}" )
-    USE_BODHI()
+    USE_FEDPKG("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}" TAGS
+	${FEDORA_RAWHIDE_TAG} ${FEDORA_CURRENT_RELEASE_TAGS} el6)
+    USE_BODHI(TAGS ${FEDORA_CURRENT_RELEASE_TAGS} el6)
 ENDIF(EXISTS ${MAINTAINER_SETTING})
-
-ADD_DEPENDENCIES(pack_src pot_file)
 
 ####################################################################
 # Hosting
 #
-INCLUDE(UseHostingService)
-USE_HOSTING_SERVICE_READ_SETTING_FILE("${MAINTAINER_SETTING}"
+INCLUDE(ManageMaintainerTargets)
+MAINTAINER_SETTING_READ_FILE("${MAINTAINER_SETTING}"
     "${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME}")
 
 
