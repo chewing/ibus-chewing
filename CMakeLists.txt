@@ -22,6 +22,17 @@ SET(LICENSE "GPLv2+")
 ####################################################################
 # Includes
 #
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules )
+MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
+
+INCLUDE(ManageVariable RESULT_VARIABLE MANAGE_VARIABLE)
+IF(MANAGE_VARIABLE STREQUAL "NOTFOUND")
+    MESSAGE(FATAL_ERROR "ManageVariable is not found in CMAKE_MODULE_PATH,
+    please:
+    1) install cmake-fedora, or;
+    2) wget https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz; tar zxvf cmake-fedora-modules-only-latest.tar.gz")
+ENDIF()
+
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules  )
 #MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 

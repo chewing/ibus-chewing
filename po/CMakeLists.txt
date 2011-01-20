@@ -1,5 +1,6 @@
 # Translated languages.
-SET(SOURCES_I18N ../src/IBusChewingEngine.gob ../src/IBusChewingEngine-def.c ../src/main.c)
+SET(SOURCES_I18N ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine.gob 
+  ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine-input-events.c ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine-def.c ../src/main.c)
 
 GETTEXT_CREATE_POT(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pot OPTIONS ${XGETTEXT_OPTIONS_C} SRC ${SOURCES_I18N})
 GETTEXT_CREATE_TRANSLATIONS(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pot ALL ${TRANSLATED}
