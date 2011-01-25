@@ -51,6 +51,11 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 %prep
 %setup -q -n %{name}-%{version}-Source
 
+# RHEL does not have cmake-fedora yet
+%if 0%{?fedora} < 13
+%setup -q -n Modules
+%fi
+
 
 %build
 # $RPM_OPT_FLAGS should be  loaded from cmake macro.

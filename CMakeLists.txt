@@ -33,9 +33,6 @@ IF(MANAGE_VARIABLE STREQUAL "NOTFOUND")
     2) wget https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz; tar zxvf cmake-fedora-modules-only-latest.tar.gz")
 ENDIF()
 
-SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules  )
-#MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
-
 IF(CMAKE_VERSION)
     CMAKE_POLICY(SET CMP0005 OLD)
 ENDIF(CMAKE_VERSION)
@@ -114,7 +111,7 @@ INCLUDE(PackRPM)
 INCLUDE(UseFedpkg)
 
 SET(PRJ_IGNORE_FILES_COMMON
-    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$"
+    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/Modules/"
     )
 
 # GOB_GENERATED source codes are now excluded,
