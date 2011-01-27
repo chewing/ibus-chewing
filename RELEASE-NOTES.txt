@@ -1,9 +1,8 @@
-PRJ_VER=1.3.9.2
-SUMMARY=Change that address bug 652909; Update zh_TW.po
+PRJ_VER=1.3.9.6
+SUMMARY=Resolves: #627794
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=652909
+REDHAT_BUGZILLA=627794
 [Changes]
-- Fixed Bug 652909
-- Added back a Changlog item that mention Nils Philippsen's change.
-- Apply Jim Huang's patch for zh_TW.po
+- Resolves: #627794
+- Replace the "Resolves" string that fail the RHEL build.
 

@@ -1,3 +1,8 @@
+* Thu Jan 27 2011 Ding-Yi Chen <dchen at redhat.com> - 1.3.9.2
+- Fixed Bug 652909
+- Added back a Changlog item that mention Nils Philippsen's change.
+- Apply Jim Huang's patch for zh_TW.po
+
 * Fri Nov 12 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.8
 - Quick fix for f15 and ibus-1.4 build
 - Version scheme change.
@@ -6,7 +11,7 @@
 - Input style of ibus-chewing is decommissioned under ibus >=1.3.
   Now the input style is determined solely on the setting of
   "Embed preedit in application window" in IBus.
-- Resolves: #608991, #632043
+- Fixed: #608991, #632043
 - Fixed Issue 1022: chewing commit some text in reset method
   (patched by Peng Huang).
 - Fixed Issue 1032: [ibus-chewing] Chewing not commit some single Chinese
@@ -18,7 +23,7 @@
   targets.
 
 * Fri Jul 30 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.3.6.20100730
-- Resolves: #608991
+- Fixed: #608991
 - Sort of fix upstream issue 993.
 - Include USER-GUIDE
 - Remove NEWS, as this project does not use it.
@@ -30,14 +35,14 @@
   + spaceAsSelection: FALSE
 
 * Wed Jul 14 2010 Ding-Yi Chen <dchen at redhat.com> - 1.3.5.20100714
-- Resolves: #608991
+- Fixed: #608991
 - Removes Ctrl-v/V Hotkey
 
 * Wed Jul 07 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.3.5.20100706
 - Fixed google issue 965:
   Candidate missing if both "Plain Zhuyin" and "Space As selection" are enabled.
 - Revised Basic.macro
-- Resolved: #608991
+- Fixed: #608991
 
 * Tue Jun 08 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.3.4.20100608
 - ibus-chewing can now use mouse to click on mouse. Thus
@@ -68,7 +73,7 @@
 
 * Tue Feb 16 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100215
 - "Macroize" rpm spec.
-- Resolves: #565388
+- Fixed: #565388
 
 * Fri Feb 12 2010 - Ding-Yi Chen <dchen at redhat.com> - 1.2.99.20100212
 - Fixed Google issue 505.
