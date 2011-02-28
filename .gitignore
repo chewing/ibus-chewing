@@ -27,6 +27,7 @@ libtool
 ltmain.sh
 Makefile
 missing
+Modules/
 *NO_PACK*
 *.o
 *.old
@@ -36,6 +37,7 @@ po/CMakeFiles/
 py-compile
 RPMS/
 *.so
+SOURCES/
 SPECS/RPM-ChangeLog
 src/ibus-chewing-engine*.[ch]
 src/maker-dialog*.[ch]
@@ -45,4 +47,4 @@ stamp-h1
 tags
 *.xml
 CTestTestfile.cmake
-Modules/
+
