@@ -15,9 +15,9 @@ BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake >= 2.4
 
 %if 0%{?fedora} >= 13
-BuildRequires:  cmake-fedora >= 0.4
+BuildRequires:  cmake-fedora >= 0.5
 %else
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.4.0-modules-only.tar.gz
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.5.0-modules-only.tar.gz
 %endif
 
 
@@ -53,8 +53,8 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 
 # RHEL does not have cmake-fedora yet
 %if 0%{?fedora} < 13
-%setup -q -n Modules
-%fi
+tar xzvf %{SOURCE1}
+%endif
 
 
 %build
