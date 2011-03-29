@@ -6,4 +6,6 @@ REDHAT_BUGZILLA=
 - Resolves: 627794
 - Depends on cmake-fedora now.
 - Addressed yusake's comments on d9009bf.
+- Thanks Fred Chien's patch against that candidate window cannot be closed
+  with escape key since selected tone.
 

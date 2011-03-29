@@ -762,6 +762,18 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    }
 		    break;
 		case CHEWING_INPUT_MODE_SELECTING:
+		    /* ESC to cancel input mode */
+		    if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN &&
+			chewing_get_escCleanAllBuf(self->context) &&
+			self->_priv->key_last == IBUS_Escape) {
+
+			/* Close candidate window */
+			self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
+			chewing_handle_Esc(self->context);
+			ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_SHOW_CANDIDATE);
+			break;
+		    }
+
 		    /* Switch to another page */
 		    if (self_is_selectKey(self, self->_priv->key_last)){
 			self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
