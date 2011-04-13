@@ -45,6 +45,6 @@ SRPMS/
 stamp-h1
 *.swp
 tags
-*.xml
+chewing.xml
 CTestTestfile.cmake
 
