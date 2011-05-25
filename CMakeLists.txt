@@ -78,7 +78,7 @@ ENDIF()
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
 SET(TRANSLATED zh_CN zh_TW)
-INCLUDE(UseGettext)
+INCLUDE(ManageTranslation)
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(src bin)
 

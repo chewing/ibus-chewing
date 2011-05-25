@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns="http://flies.openl10n.net/config/v1/">
+    <url>@ZANATA_SERVER@</url>
+    <project>@PROJECT_NAME@</project>
+    <project-version>@PRJ_VER@</project-version>
+    <locales>
+        <locale map-from="zh_TW">zh-Hant</locale>
+        <locale map-from="zh_CN">zh-Hans</locale>
+    </locales>
+</config>
