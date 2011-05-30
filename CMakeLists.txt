@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 2.4)
+# CMake policy 0009 FILE GLOB_RECURSE NEW behavior:
+#  Not follow sym links
+CMAKE_POLICY(SET CMP0009 NEW)
 ####################################################################
 # Project specific information
 #
@@ -77,8 +80,6 @@ ENDIF()
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
-SET(TRANSLATED zh_CN zh_TW)
-INCLUDE(ManageTranslation)
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(src bin)
 
@@ -112,6 +113,7 @@ INCLUDE(ManageReleaseOnFedora)
 
 SET(PRJ_IGNORE_FILES_COMMON
     "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/Modules/"
+    "/\\\\.cache/"
     )
 
 # GOB_GENERATED source codes are now excluded,
