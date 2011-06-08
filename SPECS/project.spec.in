@@ -17,7 +17,7 @@ BuildRequires:  cmake >= 2.4
 %if 0%{?fedora} >= 13
 BuildRequires:  cmake-fedora >= 0.5
 %else
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.5.99-modules-only.tar.gz
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.6.0-modules-only.tar.gz
 %endif
 
 
