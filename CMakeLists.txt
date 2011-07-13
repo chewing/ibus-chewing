@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.6)
+SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install path prefix")
 # CMake policy 0009 FILE GLOB_RECURSE NEW behavior:
 #  Not follow sym links
-CMAKE_POLICY(SET CMP0009 NEW)
+#CMAKE_POLICY(SET CMP0009 NEW)
 ####################################################################
 # Project specific information
 #
@@ -28,8 +29,8 @@ SET(LICENSE "GPLv2+")
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules )
 MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 
-INCLUDE(ManageVariable RESULT_VARIABLE MANAGE_VARIABLE)
-IF(MANAGE_VARIABLE STREQUAL "NOTFOUND")
+INCLUDE(ManageVariable RESULT_VARIABLE MANAGE_VARIABLE_PATH)
+IF(MANAGE_VARIABLE_PATH STREQUAL "NOTFOUND")
     MESSAGE(FATAL_ERROR "ManageVariable is not found in CMAKE_MODULE_PATH,
     please:
     1) install cmake-fedora, or;
@@ -40,6 +41,8 @@ IF(CMAKE_VERSION)
     CMAKE_POLICY(SET CMP0005 OLD)
 ENDIF(CMAKE_VERSION)
 
+INCLUDE(CMakeVersion)
+
 INCLUDE(ManageVersion)
 LOAD_RELEASE_FILE("RELEASE-NOTES.txt")
 INCLUDE(UseUninstall)
@@ -47,7 +50,6 @@ INCLUDE(UseUninstall)
 INCLUDE(CompileEnv)
 SET_USUAL_COMPILE_ENVS()
 
-INCLUDE(CMakeVersion)
 
 
 ####################################################################
@@ -106,9 +108,10 @@ INCLUDE(UseGConf)
 ####################################################################
 # Packing
 #
-SET(MAINTAINER_SETTING "MAINTAINER_SETTING_NO_PACK")
+SET(MAINTAINER_SETTING "${CMAKE_SOURCE_DIR}/MAINTAINER_SETTING_NO_PACK")
 INCLUDE(PackSource)
 INCLUDE(PackRPM)
+INCLUDE(ManageRelease)
 INCLUDE(ManageReleaseOnFedora)
 
 SET(PRJ_IGNORE_FILES_COMMON
@@ -120,34 +123,29 @@ SET(PRJ_IGNORE_FILES_COMMON
 # As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
 # Is fixed from Fedora 11
 
-SET(PRJ_IGNORE_FILES_COMMON
-    ${PRJ_IGNORE_FILES_COMMON}  "src/maker-dialog.*\\\\.[ch]"
+LIST(APPEND PRJ_IGNORE_FILES_COMMON
+    "src/maker-dialog.*\\\\.[ch]"
     "src/ibus-chewing-engine.*\\\\.[ch]"
     )
 
-SET(PACK_SOURCE_IGNORE_FILES ${PACK_SOURCE_IGNORE_FILES}
+LIST(APPEND PACK_SOURCE_IGNORE_FILES
     ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
 
 PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
 PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/project.spec.in" "${PACK_SOURCE_FILE_NAME}")
 
-# If mock exists, then add mock related targets.
-FIND_PROGRAM(MOCK_CMD mock)
-IF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
-    USE_MOCK("${CMAKE_SOURCE_DIR}/SPECS/project.spec.in")
-ENDIF(NOT MOCK_CMD STREQUAL "MOCK_CMD-NOTFOUND")
-
-IF(EXISTS ${MAINTAINER_SETTING})
-    RELEASE_ON_FEDORA("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}"
-	${FEDORA_CURRENT_RELEASE_TAGS} el6 el5)
-ENDIF(EXISTS ${MAINTAINER_SETTING})
+# "Off" Warning is displayed if mock is not installed.
+USE_MOCK("${RPM_BUILD_SPECS}/project.spec.in")
 
 ####################################################################
-# Hosting
+# Hosting and Release
 #
-INCLUDE(ManageMaintainerTargets)
-MAINTAINER_SETTING_READ_FILE("${MAINTAINER_SETTING}"
-    "${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME}")
+
+# "Off" Warning is displayed if ${MAINTAINER_SETTING} does not exist.
+INCLUDE(ManageMessage)
+MANAGE_RELEASE(${MAINTAINER_SETTING} UPLOAD src ${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME})
+RELEASE_ON_FEDORA("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}"
+    TAGS ${FEDORA_CURRENT_RELEASE_TAGS} ${FEDORA_EPEL_RELEASE_TAGS})
 
 
 ####################################################################

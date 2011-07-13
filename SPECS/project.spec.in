@@ -15,9 +15,9 @@ BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake >= 2.4
 
 %if 0%{?fedora} >= 13
-BuildRequires:  cmake-fedora >= 0.5
+BuildRequires:  cmake-fedora >= 0.7.1
 %else
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.6.0-modules-only.tar.gz
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.7.1-modules-only.tar.gz
 %endif
 
 
