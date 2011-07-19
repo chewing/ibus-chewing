@@ -190,6 +190,11 @@ class IBus:Chewing:Engine from IBus:Engine{
     /* Controlling flags */
     protected ChewingFlag chewingFlags=0;
 
+    /* Indicate the string is commited to avoid update() set NEED_COMMIT status
+       again when focus in event is triiger, because the last key is Return key
+       and libchewing is still Commit state. */
+    public guint hasCommit=0;
+
     private guint statusFlags=0;
 
     /* For easy symbol input work around */
@@ -732,7 +737,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(5, "[I5]  determine_input_mode(): TotalChoice=%d", totalChoice);
 	if (chewing_commit_Check(self->context)
 		&& (self->_priv->key_last==IBUS_Return || self->_priv->key_last==IBUS_KP_Enter)){
-	    ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
+		if(!self->hasCommit)
+		  ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 	}
 	if (totalChoice >0){
 	    /* Candidate selection mode ensure. */
@@ -831,6 +837,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(2,"[I2] commit() commit:%s", commit_string);
 	IBusText *iText=g_object_ref_sink(ibus_text_new_from_string(commit_string));
 	ibus_engine_commit_text(IBUS_ENGINE(self),iText);
+	self->hasCommit = 1;
 	g_object_unref(iText);
 	chewing_free(commit_string);
 	return TRUE;
@@ -1064,4 +1071,3 @@ class IBus:Chewing:Engine from IBus:Engine{
 %{
 #include "IBusChewingEngine-input-events.c"
 %}
-
