@@ -88,6 +88,11 @@ enum CHEWING_OUTPUT_CHARSET{
  * ChewingFlag:
  * @PLAIN_ZHUYIN: Plain chewing mode (no AI).
  * @FORCE_LOWERCASE_ENGLISH: Force Lowercase even when CapsLock is on.
+ * @NUMPAD_ALWAYS_NUMBER: Key from num pad should always produce number.
+ * @EASY_SYMBOL_INPUT: Symbols can be inputed by pressing Shift->[key]
+ *
+ * Chewing flags stores configuration switches.
+ * The flags are only changed when initializing or preferences are changed.
  */
 enum CHEWING_FLAG{
     PLAIN_ZHUYIN=		0x1,
@@ -99,7 +104,14 @@ enum CHEWING_FLAG{
 /**
  * EngineStatus:
  * @INITIALIZED:	Engine is initialized.
+ * @ENABLED:            Engine is enabled.
+ * @FOCUS_IN:		Engine gets focus.
+ * @SHOW_CANDIDATE:     Whether the candidate selection should be shown.                      Important for Plain Zhuyin.
  * @NEED_COMMIT:        Something to commit.
+ FORCE_COMMIT:       The engine should commit
+ *
+ * Engine status show the current states of engine,
+ * Thus this will change quite often.
  *
  * libChewing does not have direct method to clean commit buffer.
  * Thus NEED_COMMIT is needed to prevent unnecessary commit.
@@ -1017,8 +1029,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     focus_out(IBus:Engine *engine){
 	Self *self=SELF(engine);
 	G_DEBUG_MSG(2,"[I2] focus_out(): statusFlags=%d",self->_priv->statusFlags);
-	self_force_commit(self);
 	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FOCUS_IN);
+	self_force_commit(self);
 	G_DEBUG_MSG(5,"[I5]  focus_out(): return");
     }
 
