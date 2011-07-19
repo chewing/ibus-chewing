@@ -925,7 +925,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	/* Always clean buffer */
 	self_clean_chewing_buffer(self);
-	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
+	ibus_chewing_engine_clear_status_flag(self,
+		ENGINE_STATUS_FORCE_COMMIT | ENGINE_STATUS_NEED_COMMIT);
 
 	ibus_lookup_table_clear(self->table);
 	/* Save KBType type, becaue chewing_Reset() will reset it to default.
@@ -1020,6 +1021,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	}
 	self_refresh_property_list(self);
+
+	/* Shouldn't have anything to commit when Focus-in */
+	self_clean_chewing_buffer(self);
+	ibus_chewing_engine_clear_status_flag(self,
+		ENGINE_STATUS_FORCE_COMMIT | ENGINE_STATUS_NEED_COMMIT);
+
 	self_update(self);
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FOCUS_IN);
 	G_DEBUG_MSG(4,"[I4] focus_in(): return");
