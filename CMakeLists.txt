@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
-SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install path prefix")
-# CMake policy 0009 FILE GLOB_RECURSE NEW behavior:
-#  Not follow sym links
-#CMAKE_POLICY(SET CMP0009 NEW)
+# CMP0011 should be set here, otherwise policy set in module won't affect
+# here.
+CMAKE_POLICY(SET CMP0011 OLD)
 ####################################################################
 # Project specific information
 #
@@ -27,29 +26,19 @@ SET(LICENSE "GPLv2+")
 # Includes
 #
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules )
-MESSAGE("CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 
-INCLUDE(ManageVariable RESULT_VARIABLE MANAGE_VARIABLE_PATH)
-IF(MANAGE_VARIABLE_PATH STREQUAL "NOTFOUND")
-    MESSAGE(FATAL_ERROR "ManageVariable is not found in CMAKE_MODULE_PATH,
+INCLUDE(ManageEnvironment RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
+IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
+    MESSAGE(FATAL_ERROR "ManageEnvironment is not found in CMAKE_MODULE_PATH,
     please:
     1) install cmake-fedora, or;
-    2) wget https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz; tar zxvf cmake-fedora-modules-only-latest.tar.gz")
-ENDIF()
-
-IF(CMAKE_VERSION)
-    CMAKE_POLICY(SET CMP0005 OLD)
-ENDIF(CMAKE_VERSION)
-
-INCLUDE(CMakeVersion)
+    2) wget -P SOURCES https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz
+    tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
+ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
 INCLUDE(ManageVersion)
 LOAD_RELEASE_FILE("RELEASE-NOTES.txt")
 INCLUDE(UseUninstall)
-
-INCLUDE(CompileEnv)
-SET_USUAL_COMPILE_ENVS()
-
 
 
 ####################################################################
@@ -137,15 +126,21 @@ PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/project.spec.in" "${PACK_SOURCE_
 # "Off" Warning is displayed if mock is not installed.
 USE_MOCK("${RPM_BUILD_SPECS}/project.spec.in")
 
-####################################################################
+
+#####################################################################
 # Hosting and Release
 #
 
 # "Off" Warning is displayed if ${MAINTAINER_SETTING} does not exist.
-INCLUDE(ManageMessage)
 MANAGE_RELEASE(${MAINTAINER_SETTING} UPLOAD src ${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME})
+
+# Set to "True" to build against updates-candidate if possible.
+#SET(FEDORA_CANDIDATE_PREFERRED 1 CACHE BOOL FEDORA_CANDIDATE_PREFERRED)
+
+# Set to "True" to build against testing-candidate if possible.
+#SET(EPEL_CANDIDATE_PREFERRED 1 CACHE BOOL EPEL_CANDIDATE_PREFERRED)
 RELEASE_ON_FEDORA("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}"
-    TAGS ${FEDORA_CURRENT_RELEASE_TAGS} ${FEDORA_EPEL_RELEASE_TAGS})
+    TAGS ${FEDORA_CURRENT_RELEASE_TAGS})
 
 
 ####################################################################

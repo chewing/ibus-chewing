@@ -1,7 +1,7 @@
 PRJ_VER=1.3.10
 SUMMARY=Fixed rhbz 627794
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=627794
 [Changes]
 - Resolves: 627794
 - Depends on cmake-fedora now.
