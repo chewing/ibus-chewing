@@ -71,10 +71,16 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    break;
 		case IBUS_space:
 		case IBUS_KP_Space:
-		    /**
-		     * Fix for space in Temporary English mode.
-		     */
-		    chewing_handle_Space(self->context);
+		    if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) {
+			if (chewing_cand_TotalChoice(self->context) == 0) {
+			    chewing_handle_Space(self->context);
+			}
+		    } else {
+			/**
+			 * Fix for space in Temporary English mode.
+			 */
+			chewing_handle_Space(self->context);
+		    }
 		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE ||
 			    self->inputMode==CHEWING_INPUT_MODE_BYPASS )
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
