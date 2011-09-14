@@ -8,4 +8,6 @@ REDHAT_BUGZILLA=627794
 - Addressed yusake's comments on d9009bf.
 - Thanks Fred Chien's patch against that candidate window cannot be closed
   with escape key since selected tone.
+- Thanks Fourdollar's patch for Fix plain zhuyin with space as selection problem.
+
 
