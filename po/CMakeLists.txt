@@ -9,6 +9,6 @@ USE_GETTEXT(ALL SRCS ${SOURCES_I18N} LOCALES ${SUPPORTED_TRANSLATION}
     XGETTEXT_OPTIONS ${XGETTEXT_OPTIONS_C})
 
 IF(EXISTS $ENV{HOME}/.config/zanata.ini)
-    SET(ZANATA_SERVER "https://fedora.zanata.org/zanata/" CACHE STRING "ZANATA Server URL")
-    USE_ZANATA("${ZANATA_SERVER}" SRCDIR "." TRANSDIR ".")
+    SET(ZANATA_SERVER "https://translate.zanata.org/zanata/" CACHE STRING "ZANATA Server URL")
+    USE_ZANATA("${ZANATA_SERVER}")
 ENDIF(EXISTS $ENV{HOME}/.config/zanata.ini)
