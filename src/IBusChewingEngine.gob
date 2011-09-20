@@ -33,6 +33,7 @@ requires 2.0.0
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <ctype.h>
+#include "ibus-chewing-util.h"
 %}
 
 enum CHEWING_KBTYPE{
@@ -140,11 +141,11 @@ extern GtkResponseType button_responses[];
 #define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= f
 #define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~f
 
-#if IBUS_VERSION <= 10100
+#if IBUS_COMPAT_VERSION <= 10100
 /* Dummy data structure for ibus 1.1 and early. */
 typedef void IBusKeymap;
 IBusKeymap *ibus_keymap_get(gchar *keymap_name);
-#endif /* IBUS_VERSION */
+#endif /* IBUS_COMPAT_VERSION */
 
 #define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
 
@@ -158,11 +159,11 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, guint keyval,
 void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state);
 void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state);
 
-#if IBUS_VERSION >= 10200
+#if IBUS_COMPAT_VERSION >= 10200
 gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 	guint keyval_ignore,  guint  keycode,   guint  modifiers);
 
-#endif /* IBUS_VERSION */
+#endif /* IBUS_COMPAT_VERSION */
 %}
 
 %{
@@ -173,9 +174,9 @@ extern gboolean ibus_chewing_verbose;
 #include "IBusChewingEngine-def.c"
 
 
-#if IBUS_VERSION <= 10200
+#if IBUS_COMPAT_VERSION <= 10200
 IBusKeymap *ibus_keymap_get(gchar *keymap_name){
-#if IBUS_VERSION <= 10100
+#if IBUS_COMPAT_VERSION <= 10100
     /*  IBUS 1.1 */
     return NULL;
 #else
@@ -237,7 +238,7 @@ class IBus:Chewing:Engine from IBus:Engine{
         g_object_ref_sink (
 	    ibus_property_new("chewing_settings_prop",PROP_TYPE_TOGGLE,
 	       	SELF_GET_CLASS(self)->settings_prop_label,
-		PRJ_DATA_DIR "/icons/settings.png", NULL, TRUE, TRUE,
+		quote_me(PRJ_DATA_DIR) "/icons/settings.png", NULL, TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
@@ -271,7 +272,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    gchar buf[100];
 	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	    chewing_Init(CHEWING_DATA_DIR, buf);
+	    chewing_Init(quote_me(CHEWING_DATA_DIR), buf);
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);
@@ -288,7 +289,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     class_init(klass){
 	ibus_engine_class->property_activate= ibus_chewing_engine_property_activate;
-#if IBUS_VERSION >= 10200
+#if IBUS_COMPAT_VERSION >= 10200
 	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event_1_2;
 	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
 #else
@@ -299,7 +300,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     private  void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
 	G_DEBUG_MSG(3,"[I3] load_setting()");
-#if IBUS_VERSION >= 10399
+#if IBUS_COMPAT_VERSION >= 10399
 	GError *error=NULL;
 	GDBusConnection *connection=ibus_service_get_connection(IBUS_SERVICE(self));
 	self->config=g_object_ref_sink(ibus_config_new (connection, NULL, &error));
@@ -564,14 +565,14 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%x", preeditIText->text, self->_priv->statusFlags);
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
-#if IBUS_VERSION >= 10300
+#if IBUS_COMPAT_VERSION >= 10300
 		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, IBUS_ENGINE_PREEDIT_COMMIT);
 #else
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE);
 #endif
 		break;
 	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-#if IBUS_VERSION >= 10300
+#if IBUS_COMPAT_VERSION >= 10300
 		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE,IBUS_ENGINE_PREEDIT_COMMIT);
 #else
 		ibus_engine_update_preedit_text (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE);
@@ -888,7 +889,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    chewing_handle_Esc(self->context);
 	if (chewing_buffer_Check(self->context)){
 	    G_DEBUG_MSG(3,"[I3]  force_commit() buffer is not empty.");
-#if IBUS_VERSION < 10300
+#if IBUS_COMPAT_VERSION < 10300
 	    /* IBUS 1.2 and earlier does not have ibus_engine_update_preedit_text_with_mode(),
 	     * Thus need to simulate enter. */
             if (!chewing_commit_Check(self->context)){

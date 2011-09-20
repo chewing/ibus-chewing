@@ -26,6 +26,7 @@
 #include <chewing.h>
 #include <glib/gi18n.h>
 #include "ibus-chewing-engine.h"
+#include "ibus-chewing-util.h"
 #include "maker-dialog.h"
 
 MakerDialog *makerDialog=NULL;
@@ -74,20 +75,21 @@ start_component (void)
     }else {
         IBusComponent *component=NULL;
         if (xml){
-            component = ibus_component_new_from_file ( DATA_DIR "/ibus/component/chewing.xml");
+            component = ibus_component_new_from_file (
+                    quote_me(DATA_DIR) "/ibus/component/chewing.xml");
         }else{
             component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                _("Chewing component"), PRJ_VER, "GPLv2+",
+                    _("Chewing component"), quote_me(PRJ_VER), "GPLv2+",
                 _("Peng Huang, Ding-Yi Chen"),
                 "http://code.google.com/p/ibus",
-                LIBEXEC_DIR "/ibus-engine-chewing --ibus",
-                "ibus-chewing");
+                quote_me(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
+                quote_me(PROJECT_NAME));
         }
         ibus_component_add_engine(component,
                 ibus_engine_desc_new("chewing", _("Chewing"),
                 "Chinese chewing input method",
                 "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-                PRJ_DATA_DIR "/icons/" PROJECT_NAME ".png",
+                quote_me(PRJ_DATA_DIR) "/icons/" quote_me(PROJECT_NAME) ".png",
                 "us")
         );
 
@@ -141,12 +143,12 @@ main (gint argc, gchar *argv[])
 
     /* Init i18n messages */
     setlocale (LC_ALL, "zh_TW.utf8");
-    bindtextdomain(PROJECT_NAME, DATA_DIR "/locale");
-    textdomain(PROJECT_NAME);
+    bindtextdomain(quote_me(PROJECT_NAME), quote_me(DATA_DIR) "/locale");
+    textdomain(quote_me(PROJECT_NAME));
 
     context = g_option_context_new ("- ibus chewing engine component");
 
-    g_option_context_add_main_entries (context, entries, "ibus-chewing");
+    g_option_context_add_main_entries (context, entries, quote_me(PROJECT_NAME));
 
     if (!g_option_context_parse (context, &argc, &argv, &error)) {
         g_print ("Option parsing failed: %s\n", error->message);

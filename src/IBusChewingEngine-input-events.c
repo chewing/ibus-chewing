@@ -1,4 +1,4 @@
-#if IBUS_VERSION >= 10200
+#if IBUS_COMPAT_VERSION >= 10200
 /* IBus 1.2 and up */
 gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
 	guint keysym_ignore,  guint  keycode,   guint  modifiers){
@@ -32,12 +32,13 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	return TRUE;
     }
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    G_DEBUG_MSG(2,"***[I2] process_key_event(-, %u(%s), %u) ... proceed.",keysym, keyName_get(keysym), modifiers);
+    G_DEBUG_MSG(2,"***[I2] process_key_event(-, %x(%s), %x) ... proceed.",keysym, keyName_get(keysym), modifiers);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last=keysym;
     if (state==0){
 	guint keysym_tmp=keysym_KP_to_normal(keysym);
 	if (keysym_tmp){
+	    G_DEBUG_MSG(3,"***[I3] process_key_event(): %x is from keypad.", keysym_tmp);
 	    /* Is keypad key */
 	    if ((self->chewingFlags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER) && chewing_get_ChiEngMode(self->context)){
 		chewing_set_ChiEngMode(self->context, 0);

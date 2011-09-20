@@ -195,7 +195,7 @@ static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value)
 #endif
 }
 
-#if IBUS_VERSION < 10300
+#if IBUS_COMPAT_VERSION < 10300
 static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -337,7 +337,7 @@ this option determines how these status be synchronized. Valid values:\n\
  * Using built-in input style provides extra benefit,
  * like typed text won't be lost when focus-out and disable event.
  */
-#if IBUS_VERSION < 10300
+#if IBUS_COMPAT_VERSION < 10300
     {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
 	"in candidate window", inputStyles, NULL,  0, 1,
 	NULL, inputStyle_set_callback,
@@ -387,7 +387,7 @@ this option determines how these status be synchronized. Valid values:\n\
  */
 #ifdef IBUS_CHEWING_MAIN
 
-#if IBUS_VERSION >= 10399
+#if IBUS_COMPAT_VERSION >= 10399
 void g_variant_to_g_value(GVariant *gVar, GValue *gValue){
     const GVariantType *gVType=g_variant_get_type(gVar);
     if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_BOOLEAN)){
@@ -448,7 +448,7 @@ GVariant *g_value_to_g_variant(GValue *gValue){
 #endif
 
 static gboolean ibus_chewing_config_get_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
-#if IBUS_VERSION >= 10399
+#if IBUS_COMPAT_VERSION >= 10399
     GVariant *gVar=ibus_config_get_value(config, section, key);
     if (gVar==NULL){
 	return FALSE;
@@ -464,7 +464,7 @@ static gboolean ibus_chewing_config_get_value(IBusConfig *config, const gchar *s
 }
 
 static gboolean ibus_chewing_config_set_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
-#if IBUS_VERSION >= 10399
+#if IBUS_COMPAT_VERSION >= 10399
     GVariant *gVar=g_variant_ref_sink(g_value_to_g_variant(gValue));
     if (gVar!=NULL){
 	return ibus_config_set_value(config, section, key, gVar);
@@ -551,7 +551,7 @@ const char *keyName_get(guint keyval){
 	case IBUS_Return:
 	    return "Return";
 	case IBUS_KP_Enter:
-	    return "KP_Return";
+	    return "KP_Enter";
 	case IBUS_Escape:
 	    return "Escape";
 	case IBUS_BackSpace:

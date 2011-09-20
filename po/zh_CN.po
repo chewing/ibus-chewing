@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-17 17:08+1000\n"
+"POT-Creation-Date: 2011-09-20 13:03+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peng Huang <shawn.p.huang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,130 +16,130 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:331
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:349
 msgid " No default value, skipped."
 msgstr " 无缺省值，略去。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:331
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:349
 msgid " Use default value:"
 msgstr " 使用缺省值："
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:281
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:281
 msgid "Add phrases in front"
 msgstr "前方加词"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:285
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:285
 #, fuzzy
 msgid "Add phrases in the front."
 msgstr "前方加词"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:331
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:331
 msgid "Always input numbers when number keys from key pad is inputted."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:68
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:68
 msgid "Auto"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:275
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:275
 msgid "Auto move cursor"
 msgstr "自动移游标下一个字"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:279
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:279
 msgid "Automatically move cursor to next character."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:69
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:69
 msgid "Big5"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:358
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:358
 msgid "Candidate per page"
 msgstr ""
 
-#: ../src/main.c:87
+#: ../src/main.c:89
 #, fuzzy
 msgid "Chewing"
 msgstr "新酷音"
 
-#: ../src/main.c:80
+#: ../src/main.c:82
 msgid "Chewing component"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:241
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:259
 msgid "Chi"
 msgstr "中"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:364
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:364
 msgid "Choose phrases from backward"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:368
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:368
 msgid "Choose phrases from the back, without moving cursor."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:287
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:287
 msgid "Easy symbol input"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:291
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:291
 msgid "Easy symbol input."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:2
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:2
 msgid "Editing"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:242
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:260
 msgid "Eng"
 msgstr "英"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:293
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:293
 msgid "Esc clean all buffer"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:297
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:297
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:305
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:305
 msgid "Force lowercase in En mode"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:261
 msgid "Full"
 msgstr "全"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:244
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:262
 msgid "Half"
 msgstr "半"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:272
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:272
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:268
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:268
 msgid "Hsu's selection key"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:309
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:309
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default. Uppercase can still "
 "be inputted with Shift."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:356
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:356
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:341
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:341
 msgid "Input Style"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:346
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:346
 msgid ""
 "Input style determines where the preedit strings be shown and edited.\n"
 "\"in application window\": Preedit strings are edited on the target "
@@ -148,40 +148,40 @@ msgid ""
 "selection window."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:4
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:4
 msgid "Keyboard"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:256
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:256
 #, fuzzy
 msgid "Keyboard Type"
 msgstr "键盘"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:266
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:266
 msgid ""
 "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
 "select the 1st candidate, 's' for 2nd, and so on."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:299
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:299
 msgid "Maximum Chinese characters"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:303
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:303
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:362
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:362
 msgid "Number of candidate per page."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:327
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:327
 msgid "Number pad always input number"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:320
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:320
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -190,117 +190,117 @@ msgid ""
 "\"IM\": Keyboard status follows IM status."
 msgstr ""
 
-#: ../src/main.c:81 ../src/main.c:89
+#: ../src/main.c:83 ../src/main.c:91
 msgid "Peng Huang, Ding-Yi Chen"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:352
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:352
 msgid "Plain Zhuyin mode"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:260
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:260
 msgid "Select Zhuyin keyboard layout."
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:3
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:3
 msgid "Selecting"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:262
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:262
 msgid "Selection keys"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:184
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:197
 msgid "Setting"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:246
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:264
 msgid "Settings"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:370
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:370
 msgid "Space to select"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:314
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:314
 msgid "Sync between CapsLock and IM"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:70
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:70
 msgid "UTF8"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:329
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:347
 msgid "Warning: cannot load configure key"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:41
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:41
 #, fuzzy
 msgid "dachen_26"
 msgstr "大千CP26"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:33
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:33
 #, fuzzy
 msgid "default"
 msgstr "默认"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:61
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:61
 msgctxt "Sync"
 msgid "disable"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:39
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:39
 #, fuzzy
 msgid "dvorak"
 msgstr "Dvorak"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:40
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:40
 #, fuzzy
 msgid "dvorak_hsu"
 msgstr "Dvorak许氏"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:37
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:37
 msgid "eten"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:38
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:38
 msgid "eten26"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:36
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:36
 #, fuzzy
 msgid "gin_yieh"
 msgstr "精业"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:42
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:42
 #, fuzzy
 msgid "hanyu"
 msgstr "汉语"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:34
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:34
 #, fuzzy
 msgid "hsu"
 msgstr "许氏"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:35
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:35
 msgid "ibm"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:75
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:75
 msgid "in application window"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:76
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:76
 msgid "in candidate window"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:63
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:63
 #, fuzzy
 msgctxt "Sync"
 msgid "input method"
 msgstr "新酷音"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine-def.c:62
+#: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-def.c:62
 #, fuzzy
 msgctxt "Sync"
 msgid "keyboard"

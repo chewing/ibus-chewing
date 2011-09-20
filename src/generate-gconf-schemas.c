@@ -1,5 +1,6 @@
 #include "maker-dialog.h"
 #include "IBusChewingEngine-def.c"
+#include "ibus-chewing-util.h"
 
 static gint verbose=0;
 static gchar *schemasFilename=NULL;
@@ -40,8 +41,8 @@ int main (gint argc, gchar *argv[])
 
     /* Init i18n messages */
     setlocale (LC_ALL, "");
-    bindtextdomain(PROJECT_NAME, DATA_DIR "/locale");
-    textdomain(PROJECT_NAME);
+    bindtextdomain(quote_me(PROJECT_NAME), quote_me(DATA_DIR) "/locale");
+    textdomain(quote_me(PROJECT_NAME));
 
     context = g_option_context_new("schemasFile");
 
