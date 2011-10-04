@@ -20,6 +20,8 @@
             <icon>@PRJ_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>
 	    <rank>80</rank>
+	    @HOTKEYS_XML@
+	    @SYMBOL_XML@
         </engine>
     </engines>
 </component>

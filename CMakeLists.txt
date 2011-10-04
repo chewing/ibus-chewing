@@ -49,7 +49,12 @@ INCLUDE(ManageUninstall)
 ####################################################################
 # Required
 #
+
 FIND_PACKAGE(PkgConfig)
+
+# Enable GNOME_SHELL support by set the value to 1
+SET_COMPILE_ENV(GNOME_SHELL 0 DISPLAY BOOL "Enable GNOME Shell support")
+
 PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
 PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0)
 STRING(REGEX REPLACE "^([1-9][0-9]*)\\.([0-9]+)\\.([0-9]+).*" "\\1" IBUS_VERSION_MAJOR "${IBUS_VERSION}")
@@ -76,6 +81,21 @@ ENDIF()
 ####################################################################
 # Building
 #
+
+
+# Generate chewing.xml
+SET(SYMBOL_XML "<symbol>&#x9177;</symbol>")
+IF(NOT GNOME_SHELL)
+    SET(SYMBOL_XML "<!-- ${SYMBOL_XML} -->")
+ENDIF(NOT GNOME_SHELL)
+
+SET_COMPILE_ENV(CHEWING_HOTKEYS "Control+space")
+SET(HOTKEYS_XML "<hotkeys>${CHEWING_HOTKEYS}</hotkeys>")
+IF(NOT GNOME_SHELL)
+    SET(HOTKEYS_XML "<!-- ${HOTKEYS_XML} -->")
+ENDIF(NOT GNOME_SHELL)
+
+
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories

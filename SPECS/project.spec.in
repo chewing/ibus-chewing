@@ -14,10 +14,10 @@ BuildRequires:  gtk2-devel
 BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake >= 2.4
 
-%if 0%{?fedora} >= 13
-BuildRequires:  cmake-fedora >= 0.7.1
+%if 0%{?fedora} >= 14
+BuildRequires:  cmake-fedora >= 0.8.1
 %else
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.7.1-modules-only.tar.gz
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.8.1-modules-only.tar.gz
 %endif
 
 
@@ -59,6 +59,12 @@ tar xzvf %{SOURCE1}
 
 %build
 # $RPM_OPT_FLAGS should be  loaded from cmake macro.
+%if 0%{?fedora} >= 15
+%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DGNOME_SHELL=1 .
+%else
+%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
+%endif
+
 %cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
 %__make VERBOSE=1  %{?_smp_mflags}
 
