@@ -418,7 +418,7 @@ void g_variant_to_g_value(GVariant *gVar, GValue *gValue){
 }
 
 GVariant *g_value_to_g_variant(GValue *gValue){
-    GType gType=g_value_get_gtype(gValue);
+    GType gType=G_VALUE_TYPE(gValue);
     GVariant *gVar=NULL;
     switch(gType){
 	case G_TYPE_BOOLEAN:
