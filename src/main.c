@@ -34,6 +34,7 @@ static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
 /* options */
+static gboolean showFlags=FALSE;
 static gboolean ibus = FALSE;
 static gboolean xml = FALSE;
 int ibus_chewing_verbose= 0;
@@ -41,6 +42,7 @@ int ibus_chewing_verbose= 0;
 
 static const GOptionEntry entries[] =
 {
+    { "show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags, "Show compile flag only", NULL },
     { "ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL },
     { "verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
         "Verbose level. The higher the level, the more the debug messages.",
@@ -134,6 +136,7 @@ void determine_locale(){
     G_DEBUG_MSG(1,"[I1] determine_locale %s",localeStr);
 }
 
+
 int
 main (gint argc, gchar *argv[])
 {
@@ -156,6 +159,13 @@ main (gint argc, gchar *argv[])
     }
 
     g_option_context_free (context);
-    start_component ();
+
+    if (showFlags){
+        printf("PROJECT_NAME=" quote_me(PROJECT_NAME) "\n");
+        printf("DATA_DIR=" quote_me(DATA_DIR) "\n");
+        printf("CHEWING_DATA_DIR=" quote_me(CHEWING_DATA_DIR) "\n");
+    }else{
+        start_component ();
+    }
     return 0;
 }
