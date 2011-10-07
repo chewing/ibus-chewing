@@ -21,7 +21,8 @@
 #ifndef _IBUS_CHEWING_UTIL_H_
 #define _IBUS_CHEWING_UTIL_H_
 
-#define quote_me(s) #s
+#define quote_me_(s) #s
+#define quote_me(s) quote_me_(s)
 
 #endif /* _IBUS_CHEWING_UTIL_H_ */
 
