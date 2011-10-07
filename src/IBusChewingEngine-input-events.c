@@ -16,9 +16,11 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine *self, guint keysy
 	// English mode.
 	kSym=keysym;
     }else{
-	kSym=ibus_keymap_lookup_keysym(self->keymap_us,keycode,modifiers);
+	/* ibus_keymap_lookup_keysym only handles keycode under 256 */
+	if ((kSym=ibus_keymap_lookup_keysym(self->keymap_us,keycode,modifiers))==IBUS_VoidSymbol){
+	    kSym=keysym;
+	}
     }
-
     return kSym;
 }
 
@@ -32,7 +34,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
     guint kSym=ibus_chewing_engine_keycode_to_keysym(self,keysym, keycode, modifiers);
 
-    G_DEBUG_MSG(2,"***[I2] process_key_event(-, %x(%s), %x) ... proceed.",kSym, keyName_get(kSym), modifiers);
+    G_DEBUG_MSG(2,"***[I2] process_key_event(-, %x(%s), %x, %x) orig keysym=%x... proceed.",kSym, keyName_get(kSym), keycode, modifiers,keysym);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last=kSym;
     if (state==0){

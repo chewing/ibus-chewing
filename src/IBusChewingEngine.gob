@@ -579,7 +579,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     protected void refresh_property(self,const gchar  *prop_name){
-	G_DEBUG_MSG(2,"[I2] refresh_property(%s)",prop_name);
+	G_DEBUG_MSG(5,"[I5] refresh_property(%s)",prop_name);
 	if (strcmp(prop_name,"chewing_chieng_prop")==0){
 	    if (chewing_get_ChiEngMode(self->context)){
 		/* Chinese  */
@@ -599,7 +599,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	    ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
 	}
-	G_DEBUG_MSG(2,"[I2] refresh_property(%s) finished",prop_name);
     }
 
     /**
@@ -1027,7 +1026,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_show(IBus:Engine *engine, const gchar  *prop_name){
-	G_DEBUG_MSG(3,"[I3] property_show(-, %s)",prop_name);
+	G_DEBUG_MSG(5,"[I5] property_show(-, %s)",prop_name);
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,TRUE);
@@ -1036,7 +1035,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     override (IBus:Engine) void
     property_hide(IBus:Engine *engine, const gchar  *prop_name){
-	G_DEBUG_MSG(3,"[I3] property_hide(-, %s)",prop_name);
+	G_DEBUG_MSG(5,"[I5] property_hide(-, %s)",prop_name);
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,FALSE);
