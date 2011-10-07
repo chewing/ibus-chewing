@@ -195,23 +195,6 @@ static void numpadAlwaysNumber_set_callback(PropertyContext *ctx, GValue *value)
 #endif
 }
 
-#if IBUS_COMPAT_VERSION < 10300
-static void inputStyle_set_callback(PropertyContext *ctx, GValue *value){
-#ifdef IBUS_CHEWING_MAIN
-    IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
-    const gchar *str=g_value_get_string(value);
-    if (strcmp(str,"in application window")==0){
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
-    }else  if (strcmp(str,"in candidate window")==0){
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_CANDIDATE;
-    }else{
-	engine->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
-    }
-    ibus_chewing_engine_force_commit(engine);
-#endif /* IBUS_CHEWING_MAIN */
-}
-#endif
-
 static void candPerPage_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
@@ -330,25 +313,6 @@ this option determines how these status be synchronized. Valid values:\n\
 	0, 0, 0,
 	N_("Always input numbers when number keys from key pad is inputted."),
     },
-
-/*
- * Input style is decommissioned for ibus 1.3,
- * because ibus 1.3 has built-in support of input style.
- * Using built-in input style provides extra benefit,
- * like typed text won't be lost when focus-out and disable event.
- */
-#if IBUS_COMPAT_VERSION < 10300
-    {G_TYPE_STRING, "inputStyle", "Editing", N_("Input Style"),
-	"in candidate window", inputStyles, NULL,  0, 1,
-	NULL, inputStyle_set_callback,
-	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
-       	0, 0,
-	N_("Input style determines where the preedit strings be shown and edited.\n"
-		"\"in application window\": Preedit strings are edited on the target application window.\n"
-		"\"in candidate window\": Preedit strings are edited on the candidate selection window."),
-    },
-#endif
-
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),
 	"0", NULL, NULL, 0, 1,
 	NULL, plainZhuyin_set_callback,
@@ -476,8 +440,6 @@ static gboolean ibus_chewing_config_set_value(IBusConfig *config, const gchar *s
 #endif
 
 }
-
-
 
 static guint keysym_KP_to_normal(guint keysym){
     if (keysym < IBUS_KP_0 || keysym > IBUS_KP_9){

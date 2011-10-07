@@ -14,3 +14,4 @@ REDHAT_BUGZILLA=727018, 726335
   with escape key since selected tone.
 - Thanks Fourdollar's patch for Fix plain zhuyin with space as selection problem.
 - Thanks Scott Tsai to point out GType usage.
+- Remove support for ibus-1.2 and prior.

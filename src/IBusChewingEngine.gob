@@ -141,12 +141,6 @@ extern GtkResponseType button_responses[];
 #define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= f
 #define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~f
 
-#if IBUS_COMPAT_VERSION <= 10100
-/* Dummy data structure for ibus 1.1 and early. */
-typedef void IBusKeymap;
-IBusKeymap *ibus_keymap_get(gchar *keymap_name);
-#endif /* IBUS_COMPAT_VERSION */
-
 #define G_DEBUG_MSG(level, msg, args...) if (level<=ibus_chewing_verbose) g_debug(msg, ##args)
 
 %}
@@ -155,15 +149,10 @@ IBusKeymap *ibus_keymap_get(gchar *keymap_name);
 void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, gboolean shiftPressed);
 #define self_handle_Default ibus_chewing_engine_handle_Default
 
-gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, guint keyval, guint  modifiers);
+gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, guint keysym,  guint keycode, guint modifiers);
 void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state);
 void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state);
 
-#if IBUS_COMPAT_VERSION >= 10200
-gboolean ibus_chewing_engine_process_key_event_1_2(IBusEngine *engine,
-	guint keyval_ignore,  guint  keycode,   guint  modifiers);
-
-#endif /* IBUS_COMPAT_VERSION */
 %}
 
 %{
@@ -172,19 +161,6 @@ extern gboolean ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
-
-
-#if IBUS_COMPAT_VERSION <= 10200
-IBusKeymap *ibus_keymap_get(gchar *keymap_name){
-#if IBUS_COMPAT_VERSION <= 10100
-    /*  IBUS 1.1 */
-    return NULL;
-#else
-    return ibus_keymap_new(keymap_name);
-#endif
-}
-#endif
-
 %}
 
 class IBus:Chewing:Engine from IBus:Engine{
@@ -290,12 +266,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     class_init(klass){
 	ibus_engine_class->property_activate= ibus_chewing_engine_property_activate;
-#if IBUS_COMPAT_VERSION >= 10200
-	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event_1_2;
-	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
-#else
 	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event;
-#endif
+	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
     }
 
     private  void load_setting(self){
@@ -566,18 +538,10 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%x", preeditIText->text, self->_priv->statusFlags);
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
-#if IBUS_COMPAT_VERSION >= 10300
 		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, IBUS_ENGINE_PREEDIT_COMMIT);
-#else
-		ibus_engine_update_preedit_text (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE);
-#endif
 		break;
 	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-#if IBUS_COMPAT_VERSION >= 10300
 		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE,IBUS_ENGINE_PREEDIT_COMMIT);
-#else
-		ibus_engine_update_preedit_text (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE);
-#endif
 		break;
 	}
 	G_DEBUG_MSG(5,"[I5]  update_preedit(): return");
@@ -890,13 +854,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    chewing_handle_Esc(self->context);
 	if (chewing_buffer_Check(self->context)){
 	    G_DEBUG_MSG(3,"[I3]  force_commit() buffer is not empty.");
-#if IBUS_COMPAT_VERSION < 10300
-	    /* IBUS 1.2 and earlier does not have ibus_engine_update_preedit_text_with_mode(),
-	     * Thus need to simulate enter. */
-            if (!chewing_commit_Check(self->context)){
-		chewing_handle_Enter(self->context);
-             }
-#else
 	    if (self->_priv->inputStyle==CHEWING_INPUT_STYLE_IN_CANDIDATE){
 		/* But if in IN_CANDIDATE mode, still need to simulate enter.
 		 */
@@ -904,8 +861,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 		    chewing_handle_Enter(self->context);
 		}
 	    }
-
-#endif
 	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FORCE_COMMIT);
 	    self_update(self);
 	}
