@@ -107,9 +107,9 @@ enum CHEWING_FLAG{
  * @INITIALIZED:	Engine is initialized.
  * @ENABLED:            Engine is enabled.
  * @FOCUS_IN:		Engine gets focus.
- * @SHOW_CANDIDATE:     Whether the candidate selection should be shown.                      Important for Plain Zhuyin.
- * @NEED_COMMIT:        Something to commit.
- FORCE_COMMIT:       The engine should commit
+ * @SHOW_CANDIDATE:     Whether the candidate selection should be shown. Important for Plain Zhuyin.
+ * @NEED_COMMIT:        There's Something to commit.
+ * @FORCE_COMMIT:       The engine should commit
  *
  * Engine status show the current states of engine,
  * Thus this will change quite often.
@@ -569,9 +569,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_update_lookup_table(self);
 	gboolean ret=TRUE;
 
-	if (chewing_keystroke_CheckAbsorb(self->context)){
-	    ret=TRUE;
-	}else if (chewing_keystroke_CheckIgnore(self->context)){
+        if (chewing_keystroke_CheckIgnore(self->context)){
 	    ret=FALSE;
 	}
 	G_DEBUG_MSG(4,"[I4]  update() return %s",(ret)? "TRUE": "FALSE");
@@ -993,7 +991,13 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	G_DEBUG_MSG(2,"[I2] focus_out(): statusFlags=%d",self->_priv->statusFlags);
 	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FOCUS_IN);
-	self_force_commit(self);
+
+	/*
+	 * force commit is no longer needed,
+	 * as ibus_engine_update_preedit_text_with_mode now send to focus out with
+	 * IBUS_ENGINE_PREEDIT_COMMIT
+	 */
+//	self_force_commit(self);
 	G_DEBUG_MSG(5,"[I5]  focus_out(): return");
     }
 
