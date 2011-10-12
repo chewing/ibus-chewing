@@ -559,7 +559,7 @@ const char *keyName_get(guint keyval){
 	case IBUS_KP_End:
 	    return "KP_End";
 	case IBUS_Tab:
-	    return "Table";
+	    return "Tab";
 	case IBUS_Caps_Lock:
 	    return "Caps";
 	case IBUS_Shift_L:
@@ -574,6 +574,16 @@ const char *keyName_get(guint keyval){
 	    return "Control_L";
 	case IBUS_Control_R:
 	    return "Control_R";
+	case IBUS_Super_L:
+	    return "Super_L";
+	case IBUS_Super_R:
+	    return "Super_R";
+	case IBUS_ISO_Lock:
+	    return "ISO_Lock";
+	case IBUS_ISO_Level3_Lock:
+	    return "ISO_Level3_Lock";
+	case IBUS_ISO_Level3_Shift:
+	    return "ISO_Level3_Shift";
 	default:
 	    if (keyval>='0' && keyval<='9'){
 		return &numConst[(keyval-'0')*2];

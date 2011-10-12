@@ -1,14 +1,15 @@
 PRJ_VER=1.3.10
-SUMMARY=Fixed 727018, 726335; Fixed Google issue 1281, 1303
+SUMMARY=Fixed 727018, 726335; Fixed Google issue 1245, 1274, 1281, 1303
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=727018, 726335
 [Changes]
-- Fixed Bug 727018 - ibus compose file needs a symbol tag for gnome-shell
 - Fixed Bug 726335 (Google issue 1281)- [abrt] ibus-chewing-1.3.9.2-3.fc15: g_atomic_int_get:
   Process /usr/libexec/ibus-engine-chewing was killed by signal 11 (SIGSEGV) using patch from Scott Tsai
+- Fixed Bug 727018 - ibus compose file needs a symbol tag for gnome-shell
+- Fixed characters duplication problem (Google issue 1245, GitHub ibus-chewing issue 2)
 - Fixed KP-Enter not been able to commit preedit buffer. (Google issue 1303, GitHub ibus-chewing issue 4)
 - Depends on cmake-fedora now.
-- Addressed yusake's comments on d9009bf.
+- Fixed issue 1274, which is addressed by yusake's comments on d9009bf.
 - Add compile flag for GNOME3.
 - Add command line option: showFlags
 - ibus-gnome special symbol

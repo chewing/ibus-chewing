@@ -54,6 +54,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	    switch (kSym){
 		case IBUS_Return:
 		case IBUS_KP_Enter:
+		    ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    chewing_handle_Enter(self->context);
 		    break;
 		case IBUS_Escape:
@@ -170,6 +171,12 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	}
     }else if (state==IBUS_SHIFT_MASK){
 	switch(kSym){
+	    case IBUS_Return:
+	    case IBUS_KP_Enter:
+		/* Same with Shift Enter and Shift KP_Enter */
+		ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
+		chewing_handle_Enter(self->context);
+		break;
 	    case IBUS_Left:
 		if (self->inputMode==CHEWING_INPUT_MODE_BYPASS)
 		    return FALSE;
@@ -229,7 +236,6 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, g
     G_DEBUG_MSG(2,"[I2] handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
 	    keyval,(self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
     ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
-    self->hasCommit=1;
 #ifdef EASY_SYMBOL_INPUT_WORK_AROUND
     if (self->chewingFlags & CHEWING_FLAG_EASY_SYMBOL_INPUT){
 	/* If shift is pressed, turn on the  easySymbolInput, turn off
