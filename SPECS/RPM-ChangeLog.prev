@@ -1,3 +1,19 @@
+* Thu Dec 15 2011 Ding-Yi Chen <dchen at redhat.com> - 1.3.10-1
+- Fixed Bug 726335 (Google issue 1281)- [abrt] ibus-chewing-1.3.9.2-3.fc15: g_atomic_int_get:
+  Process /usr/libexec/ibus-engine-chewing was killed by signal 11 (SIGSEGV) using patch from Scott Tsai
+- Fixed Bug 727018 - ibus compose file needs a symbol tag for gnome-shell
+- Fixed characters duplication problem (Google issue 1245, GitHub ibus-chewing issue 2)
+- Fixed KP-Enter not been able to commit preedit buffer. (Google issue 1303, GitHub ibus-chewing issue 4)
+- Depends on cmake-fedora now.
+- Fixed issue 1274, which is addressed by yusake's comments on d9009bf.
+- Add compile flag for GNOME3.
+- Add command line option: showFlags
+- ibus-gnome special symbol
+- Thanks Fred Chien's patch against that candidate window cannot be closed
+  with escape key since selected tone.
+- Thanks Fourdollar's patch for Fix plain zhuyin with space as selection problem.
+- Remove support for ibus-1.2 and prior.
+
 * Tue Feb 01 2011 Ding-Yi Chen <dchen at redhat.com> - 1.3.5.20100714-3
 - Resolves: #627794
 - Add USER-GUIDE
