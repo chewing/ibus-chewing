@@ -784,7 +784,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    }
 	}
 
-	if (chewing_buffer_Len(self->context)+ zhuyin_count==0){
+	if (totalChoice + chewing_buffer_Len(self->context) + zhuyin_count==0){
 	    /* If preedit buffer is empty, then enter BYPASS mode.*/
 	    /* So cursor keys can be used freely. */
 	    self->inputMode=CHEWING_INPUT_MODE_BYPASS;
