@@ -395,10 +395,10 @@ GVariant *g_value_to_g_variant(GValue *gValue){
 	    gVar=g_variant_new_uint64(g_value_get_uint(gValue));
 	    break;
 	case G_TYPE_INT:
-	    gVar=g_variant_new_int32(g_value_get_uint(gValue));
+	    gVar=g_variant_new_int32(g_value_get_int(gValue));
 	    break;
 	case G_TYPE_INT64:
-	    gVar=g_variant_new_int64(g_value_get_uint(gValue));
+	    gVar=g_variant_new_int64(g_value_get_int(gValue));
 	    break;
 	case G_TYPE_STRING:
 	    gVar=g_variant_new_string(g_value_get_string(gValue));
