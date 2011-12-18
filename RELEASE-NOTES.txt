@@ -4,6 +4,7 @@ BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
 - Google Issue 1329, Github Issue 3: Merge with buganini at gmail.com
+- Merge pull request #13 from hiroshiyui to Fix wrong data type conversion
 - [TODO] Google Issue 1374: ibus-chewing: cannot save the preference with gnomeshell
 - [TODO] whether Google Issue 1351 is related to 1374
 - [TODO] Google Issue 1079: Use shift key to switch to English mode in ibus-chewing
