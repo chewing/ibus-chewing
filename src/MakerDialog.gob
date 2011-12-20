@@ -138,7 +138,7 @@ class Maker:Dialog from Gtk:Dialog{
 	}
 
 	GtkWidget *dialog_vbox = GTK_DIALOG(dialog)->vbox;
-	// gtk_widget_show (dialog_vbox);
+	gtk_widget_show(dialog_vbox);
 
 	if (notebook_pages>0){
 	    self->dialog_notebook = gtk_notebook_new();
@@ -146,11 +146,11 @@ class Maker:Dialog from Gtk:Dialog{
 	    for (i=0;i<notebook_pages;i++){
 		GtkWidget *label=gtk_label_new(_(notebook_page_labels[i]));
 		self_widget_register(self, label, notebook_page_labels[i], "label");
-		// gtk_widget_show(label);
+		gtk_widget_show(label);
 
 		GtkWidget *vbox=gtk_vbox_new(self->vbox_homogeneous,self->vbox_spacing);
 		self_widget_register(self, vbox, notebook_page_labels[i], "vbox");
-		// gtk_widget_show(vbox);
+		gtk_widget_show(vbox);
 		gtk_notebook_append_page (GTK_NOTEBOOK(self->dialog_notebook), vbox,label);
 	    }
 	}
@@ -203,7 +203,7 @@ class Maker:Dialog from Gtk:Dialog{
 	if (pSpec->tooltip){
 	    gtk_widget_set_tooltip_text (label,_(pSpec->tooltip));
 	}
-	//gtk_widget_show(label);
+	gtk_widget_show(label);
 	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *widget=NULL;
@@ -364,7 +364,6 @@ class Maker:Dialog from Gtk:Dialog{
 		caculate_max_label_width_callback, (gpointer) &wAlignment);
 	g_hash_table_foreach(self->_priv->notebookContentTable,
 		set_label_width_callback, (gpointer) &wAlignment);
-	//gtk_widget_show_all(GTK_WIDGET(self));
     }
 
     public void reload_property_value(self, const gchar *key){

@@ -343,7 +343,7 @@ static void set_label_width_callback(gpointer key, gpointer value, gpointer user
     GtkWidget *widget=maker_dialog_get_widget(wAlignment->self,key,"label");
     gtk_widget_set_size_request(widget, wAlignment->currentMaxWidth,-1);
     gtk_misc_set_alignment (GTK_MISC(widget),wAlignment->xalign,wAlignment->yalign);
-    //gtk_widget_show(widget);
+    gtk_widget_show(widget);
 }
 
 /**
