@@ -280,7 +280,7 @@ PropertySpec propSpecs[]={
 	N_("Escape key cleans the text in pre-edit-buffer."),
     },
     {G_TYPE_INT, "maxChiSymbolLen", "Editing", N_("Maximum Chinese characters"),
-	"20", NULL, NULL,  12, 50,
+	"20", NULL, NULL,  8, 50,
 	NULL, maxChiSymbolLen_set_callback,
 	0, 0, 0,
 	N_("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
