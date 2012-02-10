@@ -154,8 +154,14 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    break;
 		case IBUS_Shift_L:
 		case IBUS_Shift_R:
-		    /* Some QT application will sneak these through */
-		    return FALSE;
+		    /* When Chi->Eng with incomplete character */
+		    if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+			/* chewing_zuin_Check==0 means incomplete character */
+			/* Send a space to finish the character */
+			chewing_handle_Space(self->context);
+		    }
+    		    chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+		    break;
 		case IBUS_Alt_L:
 		case IBUS_Alt_R:
 		    /* Some QT application will sneak these through */
