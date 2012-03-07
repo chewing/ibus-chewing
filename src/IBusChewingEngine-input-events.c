@@ -86,7 +86,8 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 			chewing_handle_Space(self->context);
 		    }
 		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE ||
-			    self->inputMode==CHEWING_INPUT_MODE_BYPASS )
+			    self->inputMode==CHEWING_INPUT_MODE_BYPASS ||
+			    self->inputMode==CHEWING_INPUT_MODE_EDITING )
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    break;
 		case IBUS_Page_Up:
