@@ -6,7 +6,8 @@ Summary(zh_TW): IBus新酷音輸入法
 License:    @LICENSE@
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
-Source0:    http://ibus.googlecode.com/files/%{name}-%{version}-Source.@PACK_SOURCE_FILE_EXTENSION@
+Source0:    http://ibus.googlecode.com/files/%{name}-%{version}-Source.@SOURCE_ARCHIVE_FILE_EXTENSION@
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.99.2-modules-only.tar.gz
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gettext-devel
@@ -14,19 +15,8 @@ BuildRequires:  gtk2-devel
 BuildRequires:  ibus-devel >= 1.1
 BuildRequires:  cmake >= 2.4
 
-%if 0%{?fedora} >= 14
-BuildRequires:  cmake-fedora >= 0.8.1
-%else
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.8.1-modules-only.tar.gz
-%endif
-
-
 # Make sure gob2 is patched against https://bugzilla.redhat.com/show_bug.cgi?id=519108
-%if 0%{?fedora} == 11
-BuildRequires:  gob2 >= 2.0.15-5
-%else
 BuildRequires:  gob2 >= 2.0.16-4
-%endif
 BuildRequires:  libchewing-devel >= 0.3.2-16
 BuildRequires:  pkgconfig
 BuildRequires:  GConf2-devel
@@ -50,11 +40,7 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 
 %prep
 %setup -q -n %{name}-%{version}-Source
-
-# RHEL does not have cmake-fedora yet
-%if 0%{?fedora} < 13
 tar xzvf %{SOURCE1}
-%endif
 
 
 %build

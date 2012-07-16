@@ -7,6 +7,12 @@ CMAKE_POLICY(SET CMP0011 OLD)
 # Default CMAKE_INSTALL_PREFIX should be set before PROJECT()
 SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
 
+# Whether to build on fedora
+SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "1" CACHE STRING "Enable fedora build")
+
+# Message level M_OFF (4)
+SET(MANAGE_MESSAGE_LEVEL 4 CACHE STRING "Message (Verbose) Level")
+
 ####################################################################
 # Project specific information
 #
@@ -42,7 +48,7 @@ IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
 INCLUDE(ManageVersion)
-LOAD_RELEASE_FILE("RELEASE-NOTES.txt")
+RELEASE_NOTES_READ_FILE()
 INCLUDE(ManageUninstall)
 
 
@@ -106,7 +112,7 @@ ADD_SUBDIRECTORY(src bin)
 # Installing
 #
 
-SET(INSTALL_DOCS ${RELEASE_FILE} AUTHORS README ChangeLog COPYING USER-GUIDE)
+SET(INSTALL_DOCS ${RELEASE_NOTES_FILE} AUTHORS README ChangeLog COPYING USER-GUIDE)
 STRING_JOIN(PRJ_DOC_LIST " " ${INSTALL_DOCS})
 
 INSTALL(FILES ${INSTALL_DOCS}
@@ -123,11 +129,20 @@ SET(GCONF_SCHEMAS_FILE ${CMAKE_BINARY_DIR}/data/${PROJECT_NAME}.schemas)
 INCLUDE(UseGConf)
 
 ####################################################################
+# Source Version Control
+#
+INCLUDE(ManageSourceVersionControl)
+MANAGE_SOURCE_VERSION_CONTROL_GIT()
+
+####################################################################
 # Packing
 #
-SET(MAINTAINER_SETTING "${CMAKE_SOURCE_DIR}/MAINTAINER_SETTING_NO_PACK")
-INCLUDE(PackSource)
-INCLUDE(PackRPM)
+INCLUDE(ManageArchive)
+
+IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    INCLUDE(ManageRPM)
+    INCLUDE(ManageReleaseFedora)
+ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 INCLUDE(ManageRelease)
 INCLUDE(ManageReleaseOnFedora)
 
@@ -145,30 +160,35 @@ LIST(APPEND PRJ_IGNORE_FILES_COMMON
     "src/ibus-chewing-engine.*\\\\.[ch]"
     )
 
-LIST(APPEND PACK_SOURCE_IGNORE_FILES
+LIST(APPEND SOURCE_ARCHIVE_IGNORE_FILES
     ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
 
-PACK_SOURCE(PACK_SOURCE_FILE_NAME "${RPM_BUILD_SOURCES}")
-PACK_RPM(PRJ_SRPM_FILE_NAME "${RPM_BUILD_SPECS}/project.spec.in" "${PACK_SOURCE_FILE_NAME}")
+IF(RPM_BUILD_SOURCES)
+    SET(SOURCE_ARCHIVE_DIR ${RPM_BUILD_SOURCES})
+ELSE(RPM_BUILD_SOURCES)
+    SET(SOURCE_ARCHIVE_DIR ${CMAKE_BINARY_DIR}/SOURCES)
+ENDIF(RPM_BUILD_SOURCES)
 
-# "Off" Warning is displayed if mock is not installed.
-USE_MOCK("${RPM_BUILD_SPECS}/project.spec.in")
-
+PACK_SOURCE_ARCHIVE("${SOURCE_ARCHIVE_DIR}")
+IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    PACK_RPM()
+    RELEASE_FEDORA(fedora epel)
+    # "Off" Warning is displayed if mock is not installed.
+    RPM_MOCK_BUILD()
+    MANAGE_RELEASE(release_fedora)
+ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 #####################################################################
 # Hosting and Release
 #
 
-# "Off" Warning is displayed if ${MAINTAINER_SETTING} does not exist.
-MANAGE_RELEASE(${MAINTAINER_SETTING} UPLOAD src ${RPM_BUILD_SOURCES}/${PACK_SOURCE_FILE_NAME})
+#INCLUDE(ManageUpload)
+#ADD_CUSTOM_TARGET(upload
+#    COMMENT "Uploading all files"
+#    )
 
-# Set to "True" to build against updates-candidate if possible.
-#SET(FEDORA_CANDIDATE_PREFERRED 1 CACHE BOOL FEDORA_CANDIDATE_PREFERRED)
-
-# Set to "True" to build against testing-candidate if possible.
-#SET(EPEL_CANDIDATE_PREFERRED 1 CACHE BOOL EPEL_CANDIDATE_PREFERRED)
-RELEASE_ON_FEDORA("${RPM_BUILD_SRPMS}/${PRJ_SRPM_FILE_NAME}"
-    TAGS ${FEDORA_CURRENT_RELEASE_TAGS})
+#MANAGE_UPLOAD_CMD(scp src UPLOAD_FILES ${SOURCE_ARCHIVE_FILE})
+#ADD_DEPENDENCIES(upload upload_src)
 
 
 ####################################################################
