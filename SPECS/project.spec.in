@@ -7,7 +7,6 @@ License:    @LICENSE@
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
 Source0:    http://ibus.googlecode.com/files/%{name}-%{version}-Source.@SOURCE_ARCHIVE_FILE_EXTENSION@
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.99.3-modules-only.tar.gz
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gettext-devel
@@ -40,8 +39,6 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 
 %prep
 %setup -q -n %{name}-%{version}-Source
-tar xzvf %{SOURCE1}
-
 
 %build
 # $RPM_OPT_FLAGS should be  loaded from cmake macro.

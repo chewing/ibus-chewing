@@ -1,0 +1,3 @@
+[submodule "cmake-fedora"]
+	path = cmake-fedora
+	url = ssh://git.fedorahosted.org/git/cmake-fedora.git

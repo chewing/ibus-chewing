@@ -42,8 +42,9 @@ INCLUDE(ManageEnvironment RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
 IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
     MESSAGE(FATAL_ERROR "ManageEnvironment is not found in CMAKE_MODULE_PATH,
     please:
-    1) install cmake-fedora, or;
-    2) wget -P SOURCES https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz
+    1) git submodule init; git submodule update
+    2) or install cmake-fedora/
+    3) wget -P SOURCES https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz
     tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
 ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
@@ -101,8 +102,6 @@ IF(NOT GNOME_SHELL)
     SET(HOTKEYS_XML "<!-- ${HOTKEYS_XML} -->")
 ENDIF(NOT GNOME_SHELL)
 
-
-
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
 ADD_SUBDIRECTORY(po)
@@ -146,7 +145,7 @@ ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 INCLUDE(ManageRelease)
 
 SET(PRJ_IGNORE_FILES_COMMON
-    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/Modules/"
+    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/cmake-fedora/"
     "/\\\\.cache/"
     )
 
@@ -157,6 +156,9 @@ SET(PRJ_IGNORE_FILES_COMMON
 LIST(APPEND PRJ_IGNORE_FILES_COMMON
     "src/maker-dialog.*\\\\.[ch]"
     "src/ibus-chewing-engine.*\\\\.[ch]"
+    "/SPECS/" "/BUILD/" "/BUILDROOT/" "/SOURCES/" "/SRPMS/" "/RPMS/"
+    "\\\\.swo$" "\\\\.rej$"
+    "/FedPkg/" "/\\\\."
     )
 
 LIST(APPEND SOURCE_ARCHIVE_IGNORE_FILES
