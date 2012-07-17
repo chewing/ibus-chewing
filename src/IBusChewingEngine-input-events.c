@@ -96,6 +96,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 			 * Fix for space in Temporary English mode.
 			 */
 			chewing_handle_Space(self->context);
+			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    }
 		    if (self->inputMode==CHEWING_INPUT_MODE_SELECTION_DONE ||
 			    self->inputMode==CHEWING_INPUT_MODE_BYPASS ||
