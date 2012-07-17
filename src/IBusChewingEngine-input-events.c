@@ -27,12 +27,24 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine *self, guint keysy
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	guint keysym,  guint keycode, guint modifiers){
     gboolean result=TRUE;
+
+    IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
+    guint kSym=ibus_chewing_engine_keycode_to_keysym(self,keysym, keycode, modifiers);
+
     if (modifiers & IBUS_RELEASE_MASK){
+	if(!keysym_KP_to_normal(kSym) && (kSym==IBUS_Shift_L || kSym==IBUS_Shift_R) && self->_priv->key_last==kSym){
+		/* When Chi->Eng with incomplete character */
+		if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+			/* chewing_zuin_Check==0 means incomplete character */
+			/* Send a space to finish the character */
+			chewing_handle_Space(self->context);
+		}
+		chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+		return self_update(self);
+	}
 	/* Skip release event */
 	return TRUE;
     }
-    IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
-    guint kSym=ibus_chewing_engine_keycode_to_keysym(self,keysym, keycode, modifiers);
 
     G_DEBUG_MSG(2,"***[I2] process_key_event(-, %x(%s), %x, %x) orig keysym=%x... proceed.",kSym, keyName_get(kSym), keycode, modifiers,keysym);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
