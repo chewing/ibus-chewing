@@ -8,7 +8,7 @@ CMAKE_POLICY(SET CMP0011 OLD)
 SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
 
 # Whether to build on fedora
-SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "1" CACHE STRING "Enable fedora build")
+SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
 # Message level M_OFF (4)
 SET(MANAGE_MESSAGE_LEVEL 4 CACHE STRING "Message (Verbose) Level")
@@ -144,7 +144,6 @@ IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     INCLUDE(ManageReleaseFedora)
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 INCLUDE(ManageRelease)
-INCLUDE(ManageReleaseOnFedora)
 
 SET(PRJ_IGNORE_FILES_COMMON
     "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/Modules/"

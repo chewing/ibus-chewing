@@ -43,7 +43,9 @@ src/ibus-chewing-engine*.[ch]
 src/maker-dialog*.[ch]
 SRPMS/
 stamp-h1
-*.swp
+*.sw[op]
+*.rej
+*.bak
 tags
 *.xml
 CTestTestfile.cmake
