@@ -7,13 +7,13 @@ License:    @LICENSE@
 Group:      System Environment/Libraries
 URL:        http://code.google.com/p/ibus/
 Source0:    http://ibus.googlecode.com/files/%{name}-%{version}-Source.@SOURCE_ARCHIVE_FILE_EXTENSION@
-Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.99.2-modules-only.tar.gz
+Source1:    https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-0.99.3-modules-only.tar.gz
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gettext-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  ibus-devel >= 1.1
-BuildRequires:  cmake >= 2.4
+BuildRequires:  cmake >= 2.6.2
 
 # Make sure gob2 is patched against https://bugzilla.redhat.com/show_bug.cgi?id=519108
 BuildRequires:  gob2 >= 2.0.16-4
