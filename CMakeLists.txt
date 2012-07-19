@@ -173,7 +173,7 @@ ENDIF(RPM_BUILD_SOURCES)
 PACK_SOURCE_ARCHIVE("${SOURCE_ARCHIVE_DIR}")
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     PACK_RPM()
-    RELEASE_FEDORA(fedora epel)
+    RELEASE_FEDORA(fedora)
     # "Off" Warning is displayed if mock is not installed.
     RPM_MOCK_BUILD()
     MANAGE_RELEASE(release_fedora)
