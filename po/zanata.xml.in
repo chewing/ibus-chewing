@@ -2,7 +2,8 @@
 <config xmlns="http://zanata.org/namespace/config/">
     <url>@ZANATA_SERVER@</url>
     <project>@PROJECT_NAME@</project>
-    <project-version>@PRJ_VER@</project-version>
+    <project-version>master</project-version>
+    <project-type>gettext</project-type>
     <locales>
         <locale map-from="zh_TW">zh-Hant-TW</locale>
         <locale map-from="zh_CN">zh-Hans-CN</locale>

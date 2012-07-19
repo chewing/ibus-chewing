@@ -125,7 +125,7 @@ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/chewing.xml
 
 # Schemas
 SET(GCONF_SCHEMAS_FILE ${CMAKE_BINARY_DIR}/data/${PROJECT_NAME}.schemas)
-INCLUDE(UseGConf)
+INCLUDE(ManageGConf)
 
 ####################################################################
 # Source Version Control
