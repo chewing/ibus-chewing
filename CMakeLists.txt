@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6.2)
 
 # CMP0011 should be set here, otherwise policy set in module won't affect
 # here.
@@ -12,6 +12,9 @@ SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
 # Message level M_OFF (4)
 SET(MANAGE_MESSAGE_LEVEL 4 CACHE STRING "Message (Verbose) Level")
+
+# Default support Gnome shell
+SET(GNOME_SHELL 1)
 
 ####################################################################
 # Project specific information

@@ -1,3 +1,4 @@
+%global message_level 6
 Name:       @PROJECT_NAME@
 Version:    @PRJ_VER@
 Release:    1%{?dist}
@@ -41,14 +42,13 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 %setup -q -n %{name}-%{version}-Source
 
 %build
-# $RPM_OPT_FLAGS should be  loaded from cmake macro.
-%if 0%{?fedora} >= 15
-%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DGNOME_SHELL=1 .
-%else
-%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
-%endif
+# $RPM_OPT_FLAGS should be loaded from cmake macro.
 
-%cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo .
+%if 0%{?rhel} <= 6
+%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} -DGNOME_SHELL=0 .
+%else
+%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} .
+%endif
 %__make VERBOSE=1  %{?_smp_mflags}
 
 %install

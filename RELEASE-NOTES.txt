@@ -1,15 +1,15 @@
-PRJ_VER=1.3.97
-SUMMARY=Google Issue 1089; 1329; 1427; GitHub issue 5
+PRJ_VER=1.4.0
+SUMMARY=Google Issue 1089, 1329, 1351, 1374, 1427; GitHub issue 5
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
 - Merge pull request #13 from hiroshiyui to Fix wrong data type conversion
-- [TODO] Google Issue 1374: ibus-chewing: cannot save the preference with gnomeshell
-- [TODO] whether Google Issue 1351 is related to 1374
 - Fixed: Google Issue 1079: Use shift key to switch to English mode in ibus-chewing
 	Also list as GitHub pull request #17
 - Fixed: Google Issue 1089: Ibus-chewing cause window flicker when compiz enabled
 - Fixed: Google Issue 1329, Github Issue 3: Merge with buganini at gmail.com
+- Fixed: Google Issue 1351: ibus-chewing 1.3.10 mistakenly send uncommitted charactor.
+- Fixed: Google Issue 1374: ibus-chewing: cannot save the preference with gnomeshell
 - Fixed: Google Issue 1427: ibus-chewing-1.3.10 is not compatible with ibus-1.4.0 and higher
         Also list as GitHub pull request #16
 - Fixed: GitHub Issue 5: Word missing when with libchewing-0.3.3 and  ibus-chewing 1.3.10
