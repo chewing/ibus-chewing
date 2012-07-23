@@ -1,5 +1,5 @@
 PRJ_VER=1.4.0
-SUMMARY=Google Issue 1089, 1329, 1351, 1374, 1427; GitHub issue 5
+SUMMARY=Google Issue 1079, 1089, 1329, 1351, 1374, 1427; GitHub issue 5
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
