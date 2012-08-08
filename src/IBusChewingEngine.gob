@@ -473,16 +473,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	gint cursorRight=0;
 	gint charLen=(gint) g_utf8_strlen(iText->text, -1);
-	switch(self->inputMode){
-	    case CHEWING_INPUT_MODE_SELECTING:
-		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
-		break;
-	    case CHEWING_INPUT_MODE_EDITING:
-	    case CHEWING_INPUT_MODE_SELECTION_DONE:
-	    default: /* BYPASS */
-		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
-		break;
-	}
+
+	cursorRight=*chiSymbolCursor + zhuyin_item_written;
 
 	G_DEBUG_MSG(5,"[I5]  decorate_preedit() charLen=%d cursorRight=%d", charLen, cursorRight);
 	if (*chiSymbolCursor< cursorRight){
