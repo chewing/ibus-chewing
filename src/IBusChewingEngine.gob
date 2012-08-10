@@ -473,16 +473,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 
 	gint cursorRight=0;
 	gint charLen=(gint) g_utf8_strlen(iText->text, -1);
-	switch(self->inputMode){
-	    case CHEWING_INPUT_MODE_SELECTING:
-		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
-		break;
-	    case CHEWING_INPUT_MODE_EDITING:
-	    case CHEWING_INPUT_MODE_SELECTION_DONE:
-	    default: /* BYPASS */
-		cursorRight=*chiSymbolCursor + MAX(zhuyin_item_written, 1);
-		break;
-	}
+
+	cursorRight=*chiSymbolCursor + zhuyin_item_written;
 
 	G_DEBUG_MSG(5,"[I5]  decorate_preedit() charLen=%d cursorRight=%d", charLen, cursorRight);
 	if (*chiSymbolCursor< cursorRight){
@@ -536,12 +528,17 @@ class IBus:Chewing:Engine from IBus:Engine{
 
     private void update_preedit(self, IBusText *preeditIText,gint chiSymbolCursor){
 	G_DEBUG_MSG(5,"[I5] update_preedit() text=%s statusFlags=%x", preeditIText->text, self->_priv->statusFlags);
+	int mode;
+	if(g_utf8_strlen(preeditIText->text, -1)>0)
+		mode=IBUS_ENGINE_PREEDIT_COMMIT;
+	else
+		mode=IBUS_ENGINE_PREEDIT_CLEAR;
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
-		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, IBUS_ENGINE_PREEDIT_COMMIT);
+		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, mode);
 		break;
 	    case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE,IBUS_ENGINE_PREEDIT_COMMIT);
+		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE, mode);
 		break;
 	}
 	G_DEBUG_MSG(5,"[I5]  update_preedit(): return");
