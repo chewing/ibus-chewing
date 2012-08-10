@@ -3,7 +3,11 @@ SUMMARY=
 BODHI_UPDATE_TYPE=bugfix
 REDHAT_BUGZILLA=
 [Changes]
+- Fixed GitHub issue #7: highlighted text be cut after switch back to pure ibus
+  by merging pull request #24 from buganini
 - Fixed GitHub issue #20: Shift key will send duplicated strings
-  By merging pull request #22 from buganini
+  by merging pull request #22 from buganini
 - Fixed GitHub issue #21: somethings wrong with cmake
+- Fixed GitHub issue #25: Weird symbol when input with somethings highlighted
+  by merging pull request #26 from buganini
 
