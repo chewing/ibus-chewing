@@ -41,6 +41,13 @@ SET(LICENSE "GPLv2+")
 #
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules )
 
+# Create a link if Modules/ does not exists
+IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
+    IF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
+	EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
+    ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
+ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
+
 INCLUDE(ManageEnvironment RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
 IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
     MESSAGE(FATAL_ERROR "ManageEnvironment is not found in CMAKE_MODULE_PATH,
