@@ -838,7 +838,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self_commit(self);
 	    committed =TRUE;
 	}
-	if (chewing_buffer_Check(self->context)){
+	if (!chewing_buffer_Check(self->context)){
 	    /* Buffer is empty, safe to clear the ENGINE_STATUS_NEED_COMMIT */
 	    ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
 	}
