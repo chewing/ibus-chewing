@@ -1,7 +1,7 @@
 PRJ_VER=1.4.1
-SUMMARY=
+SUMMARY=Fixed RHBZ 713033,745371; GitHub 7,20,21,25
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=713033,745371
 [Changes]
 - Fixed GitHub issue #7: highlighted text be cut after switch back to pure ibus
   by merging pull request #24 from buganini
@@ -10,4 +10,6 @@ REDHAT_BUGZILLA=
 - Fixed GitHub issue #21: somethings wrong with cmake
 - Fixed GitHub issue #25: Weird symbol when input with somethings highlighted
   by merging pull request #26 from buganini
+- Fixed: Bug 713033 -  [zh_TW] ibus-chewing problem
+- Fixed: Bug 745371 -  ibus-chewing: mode confusion In Temporary English mode and Chinese mode later on
 
