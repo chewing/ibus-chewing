@@ -45,9 +45,9 @@ IBus-chewing 是新酷音輸入法的IBus前端。
 # $RPM_OPT_FLAGS should be loaded from cmake macro.
 
 %if 0%{?rhel} <= 6
-%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} -DGNOME_SHELL=0 .
+%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} -DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=1 -DGNOME_SHELL=0 .
 %else
-%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} .
+%cmake -DMANAGE_MESSAGE_LEVEL=%{message_level} -DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=1 .
 %endif
 %__make VERBOSE=1  %{?_smp_mflags}
 
