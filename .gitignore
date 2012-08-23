@@ -28,7 +28,7 @@ libtool
 ltmain.sh
 Makefile
 missing
-Modules/
+Modules
 *NO_PACK*
 *.o
 *.old
