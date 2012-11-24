@@ -477,25 +477,60 @@ class IBus:Chewing:Engine from IBus:Engine{
 	cursorRight=*chiSymbolCursor + zhuyin_item_written;
 
 	G_DEBUG_MSG(5,"[I5]  decorate_preedit() charLen=%d cursorRight=%d", charLen, cursorRight);
-	if (*chiSymbolCursor< cursorRight){
-	    ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff,
-		    *chiSymbolCursor, cursorRight);
-	    ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00000000,
-		    *chiSymbolCursor, cursorRight);
-	}
 
 	IntervalType it;
 	chewing_interval_Enumerate(self->context);
-	while(chewing_interval_hasNext(self->context)){
-	    chewing_interval_Get(self->context,&it);
-	    G_DEBUG_MSG(6,"[I6]  decorate_preedit() it.from=%d it.to=%d", it.from, it.to);
-	    if (it.to-it.from >1){
-		ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, IBUS_ATTR_UNDERLINE_DOUBLE,
-			it.from, it.to);
-	    }
+
+	it.from=0;
+	it.to=charLen;
+	int phase=1;
+	int last=0;
+	int i;
+	if(chewing_interval_hasNext(self->context))
+		chewing_interval_Get(self->context,&it);
+
+	for(i=0;i<charLen;++i){
+		if(
+		    (i==it.from) ||
+		    (i==it.to-1) ||
+		    (*chiSymbolCursor==cursorRight && i==*chiSymbolCursor) ||
+		    (*chiSymbolCursor!=cursorRight && i==cursorRight-1)){
+			if((*chiSymbolCursor==cursorRight && i==*chiSymbolCursor) || (*chiSymbolCursor!=cursorRight && i==cursorRight-1)){
+				if(last < i+1){
+					ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, IBUS_ATTR_UNDERLINE_DOUBLE,
+					    last, i+1);
+					phase*=-1;
+					ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00ffffff,
+					    last, i+1);
+					ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00000000,
+					    last, i+1);
+				}
+				last=i+1;
+			}else if(i==it.to-1){
+				if(last < i+1){
+					ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, (phase>0)?IBUS_ATTR_UNDERLINE_SINGLE:IBUS_ATTR_UNDERLINE_LOW,
+					    last, i+1);
+					phase*=-1;
+				}
+				last=i+1;
+				if(chewing_interval_hasNext(self->context)){
+					chewing_interval_Get(self->context,&it);
+					if(it.from>=*chiSymbolCursor){
+						it.from+=zhuyin_item_written;
+						it.to+=zhuyin_item_written;
+					}
+				}
+			}else{
+				if(last < i){
+					ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, (phase>0)?IBUS_ATTR_UNDERLINE_SINGLE:IBUS_ATTR_UNDERLINE_LOW,
+					    last, i);
+					phase*=-1;
+				}
+				last=i;
+			}
+		}		
 	}
-	ibus_text_append_attribute (iText, IBUS_ATTR_TYPE_UNDERLINE, IBUS_ATTR_UNDERLINE_SINGLE,
-		0, -1);
+
 	return iText;
     }
 
