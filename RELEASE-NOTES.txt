@@ -1,22 +1,8 @@
-PRJ_VER=1.4.2
-SUMMARY=Fixed RHBZ 713033,745371; GitHub 7,20,21,25,27; Google Issue 1172, 1426, 1428, 1481, 1490
+PRJ_VER=1.4.3
+SUMMARY=Fixed GitHub issue 30
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=713033,745371
+REDHAT_BUGZILLA=
 [Changes]
-- Fixed GitHub issue #7: highlighted text be cut after switch back to pure ibus
-  by merging pull request #24 from buganini
-- Fixed GitHub issue #20: Shift key will send duplicated strings
-  by merging pull request #22 from buganini
-- Fixed GitHub issue #21: somethings wrong with cmake
-- Fixed GitHub issue #25: Weird symbol when input with somethings highlighted
-  by merging pull request #26 from buganini
-- Fixed GitHub issue #27: Local path committed into tree
-- Fixed: Bug 713033 -  [zh_TW] ibus-chewing problem
-- Fixed: Bug 745371 -  ibus-chewing: mode confusion In Temporary English mode and Chinese mode later on
-- Fixed: Google Issue 1172: [ibus-chewing] move elf file to standard directory.
-- Fixed: Google Issue 1426: ibus-chewing-1.3.10 installs directory /gconf to root filesystem
-- Fixed: Google Issue 1428: ibus-chewing-1.3.10 fails to save it's settings
-- Fixed: Google Issue 1481: Some characters are missing when a long string in preedit buffer.
-- Fixed: Google Issue 1490: Cannot change INSTAL prefix for ibus-chewing-1.4.0
-
+- Fixed GitHub issue #30: Rework decorate_preedit
+  by merging pull request #30 from buganini
 

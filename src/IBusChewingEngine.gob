@@ -528,7 +528,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 				}
 				last=i;
 			}
-		}		
+		}
 	}
 
 	return iText;
@@ -568,6 +568,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 		mode=IBUS_ENGINE_PREEDIT_COMMIT;
 	else
 		mode=IBUS_ENGINE_PREEDIT_CLEAR;
+
+	ibus_engine_update_preedit_text (IBUS_ENGINE(self),SELF_GET_CLASS(self)->emptyText, 0, TRUE);
 	switch (self->_priv->inputStyle){
 	    case CHEWING_INPUT_STYLE_IN_APPLICATION:
 		ibus_engine_update_preedit_text_with_mode (IBUS_ENGINE(self),preeditIText, chiSymbolCursor, TRUE, mode);
@@ -1077,19 +1079,19 @@ class IBus:Chewing:Engine from IBus:Engine{
       if (ibus_property_get_state(self->settings_prop)==PROP_STATE_UNCHECKED)
 #else
 	    if (self->settings_prop->state==PROP_STATE_UNCHECKED)
-#endif      
+#endif
       {
-      
+
 		gtk_widget_show_all(self->setting_dialog);
 		if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))==GTK_RESPONSE_OK){
 		    self_save_config_all(self);
-		}    
+		}
 		gtk_widget_hide(self->setting_dialog);
 #if IBUS_CHECK_VERSION(1, 4, 0)
     ibus_property_set_state(self->settings_prop,PROP_STATE_UNCHECKED);
-#else    
+#else
 		self->settings_prop->state=PROP_STATE_UNCHECKED;
-#endif    
+#endif
 	    }
 	}else{
 	    G_DEBUG_MSG(3,"[I3]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);
