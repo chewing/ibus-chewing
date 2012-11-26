@@ -10,32 +10,36 @@ LINK_DIRECTORIES(${GTK2_LIBRARY_DIRS} ${IBUS_LIBRARY_DIRS}
 # Sources
 #
 SET(IBUS_CHEWING_GOB_GENERATED
-    ${CMAKE_SOURCE_DIR}/src/ibus-chewing-engine.c
-    ${CMAKE_SOURCE_DIR}/src/ibus-chewing-engine.h
-    ${CMAKE_SOURCE_DIR}/src/ibus-chewing-engine-private.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine-private.h
     )
 
 SET(MAKER_DIALOG_GOB_GENERATED
-    ${CMAKE_SOURCE_DIR}/src/maker-dialog.c
-    ${CMAKE_SOURCE_DIR}/src/maker-dialog.h
-    ${CMAKE_SOURCE_DIR}/src/maker-dialog-private.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog-private.h
     )
 
 ADD_CUSTOM_COMMAND(OUTPUT ${IBUS_CHEWING_GOB_GENERATED}
-    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${GOB2_CMD} ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${GOB2_CMD} ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS IBusChewingEngine.gob IBusChewingEngine-def.c ibus-chewing-util.h
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 ADD_CUSTOM_COMMAND(OUTPUT ${MAKER_DIALOG_GOB_GENERATED}
-    COMMAND ${GOB2} ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${GOB2_CMD} ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob -o ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS MakerDialog.gob
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+SET(GOB_GENERATED
+    ${IBUS_CHEWING_GOB_GENERATED} ${MAKER_DIALOG_GOB_GENERATED}
+    )
+
 ADD_CUSTOM_TARGET(gob2
-    DEPENDS ${IBUS_CHEWING_GOB_GENERATED} ${MAKER_DIALOG_GOB_GENERATED}
+    DEPENDS ${GOB_GENERATED}
       ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-input-events.c
     COMMENT "Preprocess with gob2."
 )

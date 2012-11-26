@@ -108,8 +108,8 @@ EXECUTE_PROCESS(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing
 SET_COMPILE_ENV(CHEWING_DATA_DIR "${CHEWING_DATA_DIR}" DISPLAY PATH
     "Chewing data dir")
 
-FIND_PROGRAM(GOB2 gob2)
-IF(${GOB2} STREQUAL "GOB2-NOTFOUND")
+FIND_PROGRAM(GOB2_CMD gob2)
+IF(${GOB2_CMD} STREQUAL "GOB2_CMD-NOTFOUND")
     MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
 ENDIF()
 ####################################################################
