@@ -5,4 +5,6 @@ REDHAT_BUGZILLA=
 [Changes]
 - Fixed GitHub issue #30: Rework decorate_preedit
   by merging pull request #30 from buganini
+- Fixed GitHub issue #31: Properly refresh property
+  by merging pull request #31 from buganini
 
