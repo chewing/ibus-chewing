@@ -40,6 +40,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 			chewing_handle_Space(self->context);
 		}
 		chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+		self_refresh_property(self,"chewing_chieng_prop");
 		return self_update(self);
 	}
 	/* Skip release event */
