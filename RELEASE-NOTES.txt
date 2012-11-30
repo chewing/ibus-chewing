@@ -1,10 +1,7 @@
-PRJ_VER=1.4.3
-SUMMARY=Fixed GitHub issue 30
+PRJ_VER=1.4.4
+SUMMARY=Fixed RHBZ 842856
 BODHI_UPDATE_TYPE=bugfix
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=842856
 [Changes]
-- Fixed GitHub issue #30: Rework decorate_preedit
-  by merging pull request #30 from buganini
-- Fixed GitHub issue #31: Properly refresh property
-  by merging pull request #31 from buganini
+- Bug 842856 - ibus-chewing 1.4.3-1 not built with $RPM_OPT_FLAGS
 
