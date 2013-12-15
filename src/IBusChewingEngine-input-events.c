@@ -29,6 +29,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     gboolean result=TRUE;
 
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
+    if (ibus_chewing_engine_is_password(self)) return FALSE;
     guint kSym=ibus_chewing_engine_keycode_to_keysym(self,keysym, keycode, modifiers);
 
     if (modifiers & IBUS_RELEASE_MASK){
@@ -282,6 +283,7 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, g
 void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state){
     G_DEBUG_MSG(2,"***[I2] candidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
+    if (ibus_chewing_engine_is_password(self)) return;
     if (index >= chewing_get_candPerPage(self->context) || index <0) {
 	G_DEBUG_MSG(3,"[I3]  candidate_clicked() index out of ranged");
 	return;
@@ -329,3 +331,17 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *pro
     if (needRefresh)
 	self_refresh_property(self,prop_name);
 }
+
+#if IBUS_CHECK_VERSION(1, 5, 4)
+void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, guint hints){
+    G_DEBUG_MSG(5,"[I5] set_content_type(%d, %d)", purpose, hints);
+
+    Self *self=SELF(engine);
+    if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
+	purpose == IBUS_INPUT_PURPOSE_PIN) {
+	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_IS_PASSWORD);
+    } else {
+	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_IS_PASSWORD);
+    }
+}
+#endif
