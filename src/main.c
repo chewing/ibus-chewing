@@ -163,7 +163,7 @@ main (gint argc, gchar *argv[])
     if (showFlags){
         printf("PROJECT_NAME=" quote_me(PROJECT_NAME) "\n");
         printf("DATA_DIR=" quote_me(DATA_DIR) "\n");
-        printf("CHEWING_DATA_DIR=" quote_me(CHEWING_DATA_DIR) "\n");
+        printf("CHEWING_DATADIR=" quote_me(CHEWING_DATADIR) "\n");
     }else{
         start_component ();
     }

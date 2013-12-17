@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6.2)
 
+
 # CMP0011 should be set here, otherwise policy set in module won't affect
 # here.
 CMAKE_POLICY(SET CMP0011 OLD)
@@ -11,22 +12,16 @@ SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
 SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
 # Message level M_OFF (4)
-SET(MANAGE_MESSAGE_LEVEL 4 CACHE STRING "Message (Verbose) Level")
-
-# Default support Gnome shell
-SET(GNOME_SHELL 1)
-
-# Libchewing Version
-SET(LIBCHEWING_VER 0.3.3)
-
-# IBUS Version
-SET(IBUS_VER 1.3)
+SET(MANAGE_MESSAGE_LEVEL 5 CACHE STRING "Message (Verbose) Level")
 
 ####################################################################
 # Project specific information
 #
 PROJECT(ibus-chewing)
 SET(PRJ_SUMMARY "The Chewing engine for IBus input platform")
+SET(SUMMARY_TRANSLATIONS
+    "zh_TW" "IBus新酷音輸入法")
+
 SET(PRJ_DESCRIPTION
 "IBus-chewing is an IBus front-end of Chewing, an intelligent Chinese input
 method for Zhuyin (BoPoMoFo) users.
@@ -34,6 +29,14 @@ It supports various Zhuyin keyboard layout, such as standard (DaChen),
 IBM, Gin-Yeah, Eten, Eten 26, Hsu, Dvorak, Dvorak-Hsu, and DaChen26.
 
 Chewing also support toned Hanyu pinyin input.")
+SET(DESCRIPTION_TRANSLATIONS
+"zh_TW"
+"IBus-chewing 是新酷音輸入法的IBus前端。
+新酷音輸入法是個智慧型注音輸入法，支援多種鍵盤布局，諸如：
+標準注音鍵盤、IBM、精業、倚天、倚天26鍵、許氏、Dvorak、Dvorak許氏
+及大千26鍵。
+
+本輸入法也同時支援帶調漢語拼音輸入。")
 
 SET(CMAKE_C_FLAGS "-Wall")
 
@@ -41,11 +44,15 @@ SET(AUTHORS "Peng Huang, Ding-Yi Chen")
 SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 SET(VENDOR "Red Hat, APAC, Inc.")
 SET(LICENSE "GPLv2+")
+SET(PRJ_GROUP "System Environment/Libraries")
+SET(URL_TEMPLATE "http://code.google.com/p/ibus/")
+SET(SOURCE_DOWNLOAD_URL_TEMPLATE "http://ibus.googlecode.com/files/%{name}-%{version}-Source.tar.gz")
+SET(HAS_TRANSLATION 1)
 
 ####################################################################
 # Includes
 #
-SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules )
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR})
 
 # Create a link if Modules/ does not exists
 IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
@@ -53,6 +60,13 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
 	EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
     ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
 ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
+
+IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Templates/fedora/project.spec.in)
+    IF(NOT EXISTS ${CMAKE_SOURCE_DIR}/rpm/project.spec.in)
+	EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake-fedora/Templates/fedora/project.spec.in ${CMAKE_SOURCE_DIR}/rpm
+	    )
+    ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/rpm/project.spec.in)
+ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Templates/fedora/project.spec.in)
 
 # Use standard FHS if Fedora build is not enabled
 IF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
@@ -62,7 +76,6 @@ IF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 	SET(LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Library dir")
     ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "64")
     SET(LIBEXEC_DIR "${LIB_DIR}" CACHE PATH "LIBEXEC dir")
-    MESSAGE("*Hi")
 ENDIF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 INCLUDE(ManageEnvironment RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
@@ -75,22 +88,54 @@ IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
     tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
 ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
+INCLUDE(ManageMessage)
 INCLUDE(ManageVersion)
 RELEASE_NOTES_READ_FILE()
+INCLUDE(ManageFile)
+INCLUDE(ManageSourceVersionControl)
 INCLUDE(ManageUninstall)
-
+INCLUDE(ManageVariable)
+INCLUDE(ManageDependency)
 
 ####################################################################
-# Required
+# Dependencies
 #
 
-FIND_PACKAGE(PkgConfig)
-
 # Enable GNOME_SHELL support by set the value to 1
-SET_COMPILE_ENV(GNOME_SHELL 0 DISPLAY BOOL "Enable GNOME Shell support")
+SET_COMPILE_ENV(GNOME_SHELL 1 DISPLAY BOOL "Enable GNOME Shell support")
 
-PKG_CHECK_MODULES(GTK2 REQUIRED gtk+-2.0)
-PKG_CHECK_MODULES(IBUS REQUIRED ibus-1.0>=${IBUS_VER})
+SET(IBUS_MIN_VER "1.3")
+SET(CHEWING_MIN_VER "0.3.3")
+## Requires
+MANAGE_DEPENDENCY(REQUIRES GTK2  REQUIRED)
+MANAGE_DEPENDENCY(REQUIRES IBUS VER "${IBUS_MIN_VER}" REQUIRED)
+MANAGE_DEPENDENCY(REQUIRES CHEWING VER "${CHEWING_MIN_VER}" REQUIRED 
+    FEDORA_NAME "libchewing"
+    )
+
+SET(BUILD_REQUIRES "" CACHE INTERNAL "Build Requires")
+## Build requires
+MANAGE_DEPENDENCY(BUILD_REQUIRES CMAKE VER "2.6.2" REQUIRED)
+MANAGE_DEPENDENCY(BUILD_REQUIRES GOB2 VER "2.0.16" REQUIRED
+    PROGRAM_NAMES "gob2"
+    )
+MANAGE_DEPENDENCY(BUILD_REQUIRES GTK2 REQUIRED 
+    PKG_CONFIG "gtk+-2.0" DEVEL
+    )
+MANAGE_DEPENDENCY(BUILD_REQUIRES IBUS VER "${IBUS_MIN_VER}" REQUIRED
+    PKG_CONFIG "ibus-1.0" DEVEL
+    )
+MANAGE_DEPENDENCY(BUILD_REQUIRES CHEWING VER "${CHEWING_MIN_VER}" REQUIRED 
+    PKG_CONFIG "chewing" FEDORA_NAME "libchewing" DEVEL
+    )
+MANAGE_DEPENDENCY(BUILD_REQUIRES X11 REQUIRED
+    PKG_CONFIG "x11" FEDORA_NAME "libX11" DEVEL
+    )
+MANAGE_DEPENDENCY(BUILD_REQUIRES XTST REQUIRED
+    PKG_CONFIG "xtst" FEDORA_NAME "libXtst" DEVEL
+    )
+M_MSG(${M_INFO1} "CHEWING_DATADIR=${CHEWING_DATADIR}")
+
 STRING(REGEX REPLACE "^([1-9][0-9]*)\\.([0-9]+)\\.([0-9]+).*" "\\1" IBUS_VERSION_MAJOR "${IBUS_VERSION}")
 STRING(REGEX REPLACE "^([1-9][0-9]*)\\.([0-9]+)\\.([0-9]+).*" "\\2" IBUS_VERSION_MINOR "${IBUS_VERSION}")
 STRING(REGEX REPLACE "^([1-9][0-9]*)\\.([0-9]+)\\.([0-9]+).*" "\\3" IBUS_VERSION_PATCH "${IBUS_VERSION}")
@@ -101,21 +146,12 @@ MESSAGE("IBUS_VERSION=${IBUS_VERSION} IBUS_COMPAT_VERSION=${IBUS_COMPAT_VERSION}
 SET_COMPILE_ENV(IBUS_COMPAT_VERSION "${IBUS_COMPAT_VERSION}"
     DISPLAY STRING "IBUS_COMPAT_VERSION")
 
-PKG_CHECK_MODULES(XTST REQUIRED xtst x11)
-PKG_CHECK_MODULES(CHEWING chewing>=${LIBCHEWING_VER})
-EXECUTE_PROCESS(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=datadir chewing
-    OUTPUT_VARIABLE CHEWING_DATA_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
-SET_COMPILE_ENV(CHEWING_DATA_DIR "${CHEWING_DATA_DIR}" DISPLAY PATH
+SET_COMPILE_ENV(CHEWING_DATADIR "${CHEWING_DATADIR}" DISPLAY PATH
     "Chewing data dir")
 
-FIND_PROGRAM(GOB2_CMD gob2)
-IF(${GOB2_CMD} STREQUAL "GOB2_CMD-NOTFOUND")
-    MESSAGE(FATAL_ERROR "gob2 not found, install gob2 please.")
-ENDIF()
 ####################################################################
 # Building
 #
-
 
 # Generate chewing.xml
 SET(SYMBOL_XML "<symbol>&#x9177;</symbol>")
@@ -138,72 +174,46 @@ ADD_SUBDIRECTORY(src bin)
 # Installing
 #
 
-SET(INSTALL_DOCS ${RELEASE_NOTES_FILE} AUTHORS README ChangeLog COPYING USER-GUIDE)
-STRING_JOIN(PRJ_DOC_LIST " " ${INSTALL_DOCS})
-
-INSTALL(FILES ${INSTALL_DOCS}
-    DESTINATION "${PRJ_DOC_DIR}")
-
-INSTALL(DIRECTORY icons
-    DESTINATION  ${PRJ_DATA_DIR})
-
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/chewing.xml
-    DESTINATION "${DATA_DIR}/ibus/component")
+MANAGE_SOURCE_VERSION_CONTROL_GIT()
+MANAGE_FILE_INSTALL(PRJ_DOC AUTHORS README ChangeLog COPYING USER-GUIDE)
+MANAGE_FILE_INSTALL(PRJ_DATA icons)
+MANAGE_FILE_INSTALL(DATA ${CMAKE_BINARY_DIR}/data/chewing.xml DEST_SUBDIR "ibus/component")
 
 # Schemas
-SET(GCONF_SCHEMAS_FILE ${CMAKE_BINARY_DIR}/data/${PROJECT_NAME}.schemas)
+SET(GCONF_SCHEMAS_FILE ${IBUS_CHEWING_SCHEMAS})
 INCLUDE(ManageGConf)
-
-####################################################################
-# Source Version Control
-#
-INCLUDE(ManageSourceVersionControl)
-MANAGE_SOURCE_VERSION_CONTROL_GIT()
 
 ####################################################################
 # Packing
 #
 INCLUDE(ManageArchive)
 
+SET(SOURCE_ARCHIVE_DIR ".")
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-    INCLUDE(ManageRPM)
-    INCLUDE(ManageReleaseFedora)
+    ADD_SUBDIRECTORY(rpm)
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 INCLUDE(ManageRelease)
-
-SET(PRJ_IGNORE_FILES_COMMON
-    "/doc/"  "\\\\.spec$" "messages.po$" "\\\\.orig$" "/cmake-fedora/"
-    "/\\\\.cache/"
-    )
 
 # GOB_GENERATED source codes are now excluded,
 # As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
 # Is fixed from Fedora 11
 
-LIST(APPEND PRJ_IGNORE_FILES_COMMON
-    "src/maker-dialog.*\\\\.[ch]"
-    "src/ibus-chewing-engine.*\\\\.[ch]"
-    "/SPECS/" "/BUILD/" "/BUILDROOT/" "/SOURCES/" "/SRPMS/" "/RPMS/"
-    "\\\\.swo$" "\\\\.rej$"
-    "/FedPkg/" "/\\\\."
+PACK_SOURCE_ARCHIVE(${RPM_BUILD_SOURCES}
+    GITIGNORE ${CMAKE_SOURCE_DIR}/.gitignore
+    INCLUDE ChangeLog ${PROJECT_NAME}.pot
     )
 
-LIST(APPEND SOURCE_ARCHIVE_IGNORE_FILES
-    ${PRJ_IGNORE_FILES_COMMON} "/bin/" "\\\\.xml$" "\\\\.schemas")
-
-IF(RPM_BUILD_SOURCES)
-    SET(SOURCE_ARCHIVE_DIR ${RPM_BUILD_SOURCES})
-ELSE(RPM_BUILD_SOURCES)
-    SET(SOURCE_ARCHIVE_DIR ${CMAKE_BINARY_DIR}/SOURCES)
-ENDIF(RPM_BUILD_SOURCES)
-
-PACK_SOURCE_ARCHIVE("${SOURCE_ARCHIVE_DIR}")
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    M_MSG(${M_INFO1} "BUILD_REQUIRES=${BUILD_REQUIRES}")
+    M_MSG(${M_INFO1} "REQUIRES=${REQUIRES}")
+    ## PACK_RPM NEED to be here, otherwise it cannot find the tarball
     PACK_RPM()
     RELEASE_FEDORA(fedora)
     # "Off" Warning is displayed if mock is not installed.
     RPM_MOCK_BUILD()
     MANAGE_RELEASE(release_fedora)
+ELSE(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    MANAGE_RELEASE()
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 #####################################################################

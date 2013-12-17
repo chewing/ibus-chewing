@@ -248,8 +248,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    gchar buf[100];
 	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	    G_DEBUG_MSG(6,"[I6] init() CHEWING_DATA_DIR=%s",  quote_me(CHEWING_DATA_DIR) );
-	    chewing_Init(quote_me(CHEWING_DATA_DIR), buf);
+	    G_DEBUG_MSG(6,"[I6] init() CHEWING_DATADIR=%s",  quote_me(CHEWING_DATADIR) );
+	    chewing_Init(quote_me(CHEWING_DATADIR), buf);
 
 	    self->context=chewing_new();
 	    chewing_set_ChiEngMode(self->context,CHINESE_MODE);

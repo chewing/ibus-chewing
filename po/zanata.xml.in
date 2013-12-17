@@ -5,7 +5,10 @@
     <project-version>master</project-version>
     <project-type>gettext</project-type>
     <locales>
-        <locale map-from="zh_TW">zh-Hant-TW</locale>
-        <locale map-from="zh_CN">zh-Hans-CN</locale>
+	<locale map-from="fr_FR">fr</locale>
+	<locale map-from="ja_JP">ja</locale>
+	<locale map-from="ko_KR">ko</locale>
+	<locale map-from="zh_CN">zh-CN</locale>
+	<locale map-from="zh_TW">zh-TW</locale>
     </locales>
 </config>
