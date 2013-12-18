@@ -110,6 +110,7 @@ enum CHEWING_FLAG{
  * @SHOW_CANDIDATE:     Whether the candidate selection should be shown. Important for Plain Zhuyin.
  * @NEED_COMMIT:        There's Something to commit.
  * @FORCE_COMMIT:       The engine should commit
+ * @IS_PASSWORD:        Current input is password.
  *
  * Engine status show the current states of engine,
  * Thus this will change quite often.
@@ -124,6 +125,7 @@ enum ENGINE_STATUS{
     SHOW_CANDIDATE=		0x8,
     NEED_COMMIT=		0x10,
     FORCE_COMMIT=		0x20,
+    IS_PASSWORD=		0x40,
 } Engine:Status;
 
 %h{
@@ -152,6 +154,7 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, g
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, guint keysym,  guint keycode, guint modifiers);
 void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state);
 void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state);
+void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, guint hints);
 
 %}
 
@@ -268,6 +271,9 @@ class IBus:Chewing:Engine from IBus:Engine{
 	ibus_engine_class->property_activate= ibus_chewing_engine_property_activate;
 	ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event;
 	ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
+#if IBUS_CHECK_VERSION(1, 5, 4)
+	ibus_engine_class->set_content_type = ibus_chewing_engine_set_content_type;
+#endif
     }
 
     private  void load_setting(self){
@@ -633,6 +639,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
+    protected gboolean is_password(self){
+	G_DEBUG_MSG(5, "[I5] is_password = %d", self->chewingFlags & ENGINE_STATUS_IS_PASSWORD);
+	return !!(self->_priv->statusFlags & ENGINE_STATUS_IS_PASSWORD);
+    }
+
     /**
      * refresh_property_list:
      * @self: this instances.
@@ -952,6 +963,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     page_up(IBus:Engine *engine){
 	Self *self=SELF(engine);
+	if (self_is_password(self)) return;
 	chewing_handle_PageUp(self->context);
 	self_update(self);
     }
@@ -960,6 +972,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     page_down(IBus:Engine *engine){
 	Self *self=SELF(engine);
+	if (self_is_password(self)) return;
 	chewing_handle_PageDown(self->context);
 	self_update(self);
     }
@@ -967,6 +980,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     cursor_up(IBus:Engine *engine){
 	Self *self=SELF(engine);
+	if (self_is_password(self)) return;
 	chewing_handle_Up(self->context);
 	self_update(self);
     }
@@ -974,6 +988,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     override (IBus:Engine) void
     cursor_down(IBus:Engine *engine){
 	Self *self=SELF(engine);
+	if (self_is_password(self)) return;
 	chewing_handle_Down(self->context);
 	self_update(self);
     }
