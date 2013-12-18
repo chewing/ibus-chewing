@@ -279,7 +279,7 @@ class IBus:Chewing:Engine from IBus:Engine{
     private  void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
 	G_DEBUG_MSG(3,"[I3] load_setting()");
-#if IBUS_COMPAT_VERSION >= 10399
+#if IBUS_CHECK_VERSION(1, 4, 0)
 	GError *error=NULL;
 	GDBusConnection *connection=ibus_service_get_connection(IBUS_SERVICE(self));
 	self->config=g_object_ref_sink(ibus_config_new (connection, NULL, &error));
