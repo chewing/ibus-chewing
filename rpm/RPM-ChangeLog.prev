@@ -1,3 +1,12 @@
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 20 2013 Ville Skyttä <ville.skytta@iki.fi> - 1.4.3-3
+- Build with $RPM_OPT_FLAGS (#842856).
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Nov 26 2012 Ding-Yi Chen <dchen at redhat.com> - 1.4.3-1
 - Fixed GitHub issue #30: Rework decorate_preedit
   by merging pull request #30 from buganini
@@ -234,7 +243,7 @@ behind when toggling ibus off- Use WM's revised ibus-chewing icon.
 - Hide ibus-chewing-panel when ibus-chewing is focus-out
 
 * Mon May 11 2009 Ding-Yi Chen <dchen at redhat.com> - 1.0.9.20090508-1
-  Now commit is forced when switch of ibus-chewing or current application loses focus.
+Now commit is forced when switch of ibus-chewing or current application loses focus.
 - New ibus-chewing.png is contribute by WM.
 - input-keyboard.png is no longer needed and removed.
 - ibus-engine-chewing -v option now need an integer as verbose level.
@@ -310,3 +319,4 @@ Fix the errors which Funda Wang as pointing out:
 
 * Fri Aug 15 2008 Huang Peng <shawn.p.huang@gmail.com> - 0.1.1.20081023-1
 - The first version.
+
