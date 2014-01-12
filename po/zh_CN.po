@@ -6,7 +6,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2013-12-17 02:25+1000\n"
+        "POT-Creation-Date: 2013-12-19 12:03+1000\n"
         "PO-Revision-Date: 2012-11-28 08:19-0500\n"
         "Last-Translator: leahliu <lliu@redhat.com>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "X-Generator: Zanata 3.0.3\n"
         "Plural-Forms: nplurals=1; plural=0\n"
 
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " No default value, skipped."
 msgstr  " 无缺省值，略去。"
 
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " Use default value:"
 msgstr  " 使用缺省值："
 
@@ -73,7 +73,7 @@ msgstr  "酷音（Chewing）"
 msgid   "Chewing component"
 msgstr  "酷音组件"
 
-#: ../src/IBusChewingEngine.gob:235
+#: ../src/IBusChewingEngine.gob:238
 msgid   "Chi"
 msgstr  "中"
 
@@ -102,7 +102,7 @@ msgstr  "轻松输入符号"
 msgid   "Editing"
 msgstr  "编辑中"
 
-#: ../src/IBusChewingEngine.gob:236
+#: ../src/IBusChewingEngine.gob:239
 msgid   "Eng"
 msgstr  "英"
 
@@ -121,11 +121,11 @@ msgstr  "按 Esc 键可清除所有预编辑缓冲中的文本。"
 msgid   "Force lowercase in En mode"
 msgstr  "在 En 模式中强制使用小写"
 
-#: ../src/IBusChewingEngine.gob:237
+#: ../src/IBusChewingEngine.gob:240
 msgid   "Full"
 msgstr  "全"
 
-#: ../src/IBusChewingEngine.gob:238
+#: ../src/IBusChewingEngine.gob:241
 msgid   "Half"
 msgstr  "半"
 
@@ -230,12 +230,12 @@ msgid   "Selection keys"
 msgstr  "选择键"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author leahliu
-#: ../src/IBusChewingEngine.gob:173
+#: ../src/IBusChewingEngine.gob:176
 msgid   "Setting"
 msgstr  "设置"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author leahliu
-#: ../src/IBusChewingEngine.gob:240
+#: ../src/IBusChewingEngine.gob:243
 msgid   "Settings"
 msgstr  "设置"
 
@@ -255,7 +255,7 @@ msgid   "UTF8"
 msgstr  "UTF8"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author leahliu
-#: ../src/IBusChewingEngine.gob:320
+#: ../src/IBusChewingEngine.gob:326
 msgid   "Warning: cannot load configure key"
 msgstr  "警告：无法载入配置键"
 

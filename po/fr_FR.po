@@ -2,7 +2,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: ibus-chewing 1.4.3\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2013-12-17 02:25+1000\n"
+        "POT-Creation-Date: 2013-12-19 12:03+1000\n"
         "PO-Revision-Date: 2012-11-28 08:19-0500\n"
         "Last-Translator: samfreemanz <sfriedma@redhat.com>\n"
         "Language-Team: French\n"
@@ -14,12 +14,12 @@ msgstr  "Project-Id-Version: ibus-chewing 1.4.3\n"
         "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " No default value, skipped."
 msgstr  "Aucune valeur par défaut, ignoré."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " Use default value:"
 msgstr  "Utiliser la valeur par défaut :"
 
@@ -75,7 +75,7 @@ msgid   "Chewing component"
 msgstr  "Composant Chewing"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:235
+#: ../src/IBusChewingEngine.gob:238
 msgid   "Chi"
 msgstr  "Chi"
 
@@ -105,7 +105,7 @@ msgid   "Editing"
 msgstr  "Modifier"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:236
+#: ../src/IBusChewingEngine.gob:239
 msgid   "Eng"
 msgstr  "Eng"
 
@@ -126,12 +126,12 @@ msgid   "Force lowercase in En mode"
 msgstr  "Force les minuscules en mode En"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:237
+#: ../src/IBusChewingEngine.gob:240
 msgid   "Full"
 msgstr  "Plein"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:238
+#: ../src/IBusChewingEngine.gob:241
 msgid   "Half"
 msgstr  "Moitié"
 
@@ -244,12 +244,12 @@ msgid   "Selection keys"
 msgstr  "Touches de sélection"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:173
+#: ../src/IBusChewingEngine.gob:176
 msgid   "Setting"
 msgstr  "Paramétrer"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:240
+#: ../src/IBusChewingEngine.gob:243
 msgid   "Settings"
 msgstr  "Paramètres"
 
@@ -269,7 +269,7 @@ msgid   "UTF8"
 msgstr  "UTF8"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: ../src/IBusChewingEngine.gob:320
+#: ../src/IBusChewingEngine.gob:326
 msgid   "Warning: cannot load configure key"
 msgstr  "Avertissement : chargement de la touche de configuration impossible"
 

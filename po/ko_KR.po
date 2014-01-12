@@ -3,7 +3,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: ibus-chewing 1.4.3\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2013-12-17 02:25+1000\n"
+        "POT-Creation-Date: 2013-12-19 12:03+1000\n"
         "PO-Revision-Date: 2012-12-04 10:53-0500\n"
         "Last-Translator: mkim <mkim@redhat.com>\n"
         "Language-Team: Korean\n"
@@ -15,12 +15,12 @@ msgstr  "Project-Id-Version: ibus-chewing 1.4.3\n"
         "Plural-Forms: nplurals=1; plural=0\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " No default value, skipped."
 msgstr  "디폴트 값이 없음, 생략함. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:322
+#: ../src/IBusChewingEngine.gob:328
 msgid   " Use default value:"
 msgstr  "디폴트 값 사용: "
 
@@ -75,7 +75,7 @@ msgid   "Chewing component"
 msgstr  "Chewing 구성 요소 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:235
+#: ../src/IBusChewingEngine.gob:238
 msgid   "Chi"
 msgstr  "Chi"
 
@@ -105,7 +105,7 @@ msgid   "Editing"
 msgstr  "편집 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:236
+#: ../src/IBusChewingEngine.gob:239
 msgid   "Eng"
 msgstr  "Eng"
 
@@ -125,12 +125,12 @@ msgid   "Force lowercase in En mode"
 msgstr  "En 모드에서 소문자를 강제 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:237
+#: ../src/IBusChewingEngine.gob:240
 msgid   "Full"
 msgstr  "전체 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:238
+#: ../src/IBusChewingEngine.gob:241
 msgid   "Half"
 msgstr  "반 "
 
@@ -239,12 +239,12 @@ msgid   "Selection keys"
 msgstr  "선택 키 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:173
+#: ../src/IBusChewingEngine.gob:176
 msgid   "Setting"
 msgstr  "설정 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:240
+#: ../src/IBusChewingEngine.gob:243
 msgid   "Settings"
 msgstr  "설정 "
 
@@ -264,7 +264,7 @@ msgid   "UTF8"
 msgstr  "UTF8"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: ../src/IBusChewingEngine.gob:320
+#: ../src/IBusChewingEngine.gob:326
 msgid   "Warning: cannot load configure key"
 msgstr  "경고: 설정 키를 불러올 수 없음 "
 
