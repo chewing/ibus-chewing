@@ -30,17 +30,25 @@ fi
 "
 )
 
-RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT post ""
-"export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
-"
-)
-
 RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT preun ""
 "if [ \"$1\" -eq 0 ] ; then
     export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
     gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
 fi
+"
+    )
+
+RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT post ""
+"export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
+[ -x %{_bindir}/ibus ] && \\
+  %{_bindir}/ibus write-cache --system &>/dev/null || :
+"
+)
+
+RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT postun ""
+"[ -x %{_bindir}/ibus ] && \\
+  %{_bindir}/ibus write-cache --system &>/dev/null || :
 "
 )
 

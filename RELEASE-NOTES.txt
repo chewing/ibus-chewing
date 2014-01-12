@@ -1,7 +1,8 @@
 PRJ_VER=1.4.5
-SUMMARY=Fixed RHBZ 842856, 1027030; Added translations:fr_FR, ja_JP, ko_KR
-REDHAT_BUGZILLA=1045868
+SUMMARY=Fixed RHBZ 1027031 1013977 1045868
+REDHAT_BUGZILLA=1045868,1045868
 [Changes]
 - Resloves Bug 1027031 - CVE-2013-4509 ibus-chewing: ibus: visible password entry flaw [rhel-7.0]
+- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in %post and %postun
 - Resloves Bug 1045868 - ibus-chewing *again* not built with $RPM_OPT_FLAGS
 
