@@ -358,7 +358,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	}
     }
 
-    private gchar *make_preedit_string(self, glong *zhuyin_item_written_ptr){
+    private gchar *make_preedit_string(self, gint *zhuyin_item_written_ptr){
 	gchar *buff_str=chewing_buffer_String(self->context);
 	G_DEBUG_MSG(4, "[I4] make_preedit_string(): chewing_buffer_String=%s ",
 		buff_str);
@@ -368,7 +368,7 @@ class IBus:Chewing:Engine from IBus:Engine{
         int zhuyin_tone=-1;
 
 	gchar *zhuyin_str=chewing_zuin_String(self->context,&zhuyin_count);
-	*zhuyin_item_written_ptr= (glong) zhuyin_count;
+	*zhuyin_item_written_ptr= zhuyin_count;
 	G_DEBUG_MSG(5, "[I5]  make_preedit_string(): chewing_zuin_String=%s count=%d inputMode=%d",
 		zhuyin_str,zhuyin_count,self->inputMode);
 
@@ -591,7 +591,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	G_DEBUG_MSG(3,"[I3] update() statusFlags=%x", self->_priv->statusFlags);
 	self_determine_input_mode(self);
 	gint chiSymbolCursor;
-	glong zhuyin_item_written;
+	gint zhuyin_item_written;
 	self_check_commit(self);
 	gchar *preeditBuf=self_make_preedit_string(self, &zhuyin_item_written);
 	IBusText *iText=self_decorate_preedit(self, preeditBuf, &chiSymbolCursor, zhuyin_item_written);
