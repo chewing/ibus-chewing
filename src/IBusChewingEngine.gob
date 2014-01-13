@@ -636,10 +636,16 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* Chinese  */
 		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
 		ibus_property_set_tooltip(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_tooltip_chi);
+#if IBUS_CHECK_VERSION(1.5.4)
+		ibus_property_set_symbol(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
+#endif		
 	    }else{
 		/* English */
 		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
 		ibus_property_set_tooltip(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_tooltip_eng);
+#if IBUS_CHECK_VERSION(1.5.4)
+		ibus_property_set_symbol(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
+#endif		
 	    }
 	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
