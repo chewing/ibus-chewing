@@ -16,7 +16,7 @@ RPM_SPEC_STRING_ADD_TAG(RPM_SPEC_REQUIRES_OUTPUT
     )
 
 RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT pre ""
-"if [ \"$1\" -gt 1 ] \; then
+"if [ \"$1\" -gt 1 ] ; then
     export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
     [ -r %{_sysconfdir}/gconf/schemas/%{name}.schemas ] &&
     gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/%{name}.schemas\\
@@ -62,5 +62,4 @@ RELEASE_FEDORA(fedora)
 # "Off" Warning is displayed if mock is not installed.
 RPM_MOCK_BUILD()
 MANAGE_RELEASE(release_fedora)
-
 
