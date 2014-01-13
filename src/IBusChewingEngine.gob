@@ -199,7 +199,9 @@ class IBus:Chewing:Engine from IBus:Engine{
         g_object_ref_sink (
             ibus_property_new("chewing_chieng_prop",PROP_TYPE_NORMAL,
 		SELF_GET_CLASS(self)->chieng_prop_label_chi,
-		NULL, NULL, TRUE, TRUE,
+		NULL, 
+		SELF_GET_CLASS(self)->chieng_prop_tooltip_chi,
+	       	TRUE, TRUE,
 		PROP_STATE_UNCHECKED, NULL))
         }
         destroywith g_object_unref;
@@ -235,13 +237,25 @@ class IBus:Chewing:Engine from IBus:Engine{
     private guint key_last=0;
     private gchar zhuyin_latest[ZHUYIN_BUFFER_SIZE];
 
-    classwide IBusText *chieng_prop_label_chi={g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))};
-    classwide IBusText *chieng_prop_label_eng={g_object_ref_sink(ibus_text_new_from_static_string(_("Eng")))};
-    classwide IBusText *alnumSize_prop_label_full={g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))};
-    classwide IBusText *alnumSize_prop_label_half={g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))};
+    classwide IBusText *chieng_prop_label_chi={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))};
+    classwide IBusText *chieng_prop_label_eng={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Eng")))};
+    classwide IBusText *chewing_prop_tooltip_chi={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to English")))};
+    };
+    classwide IBusText *chewing_prop_tooltip_eng={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to Chinese")))};
+    };
+    classwide IBusText *alnumSize_prop_label_full={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))};
+    classwide IBusText *alnumSize_prop_label_half={
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))};
 
-    classwide IBusText *settings_prop_label={g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))};
-    classwide IBusText *emptyText={g_object_ref_sink(ibus_text_new_from_static_string(""))};
+    classwide IBusText *settings_prop_label={
+    g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))};
+    classwide IBusText *emptyText={
+	g_object_ref_sink(ibus_text_new_from_static_string(""))};
 
     init (self) {
           /* initialize the object here */
@@ -406,7 +420,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    default:
 		/* BYPASS */
 		break;
-
 	}
 
 	gsize len=strlen(zhuyin_str)+strlen(buff_str);
@@ -622,9 +635,11 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    if (chewing_get_ChiEngMode(self->context)){
 		/* Chinese  */
 		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_chi);
+		ibus_property_set_tooltip(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_tooltip_chi);
 	    }else{
 		/* English */
 		ibus_property_set_label(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
+		ibus_property_set_tooltip(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_tooltip_eng);
 	    }
 	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
@@ -1079,34 +1094,27 @@ class IBus:Chewing:Engine from IBus:Engine{
     }
 
     override (IBus:Engine) void
-    property_activate(IBus:Engine *engine, const gchar  *prop_name, guint  prop_state){
+    property_activate(IBus:Engine *engine, const gchar  *prop_name,
+      guint  prop_state){
 	G_DEBUG_MSG(3,"[I3] property_activate(-, %s, %u)", prop_name, prop_state);
 	Self *self=SELF(engine);
 	gboolean needRefresh=TRUE;
-	if (strcmp(prop_name,"chewing_chieng_prop")==0){
-	    /* Toggle Chinese <-> English */
-	    chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+        if (strcmp(prop_name,"chewing_chieng_prop")==0){
+            /* Toggle Chinese <-> English */
+            chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
-	    /* Toggle Full <-> Half */
-	    chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
+             /* Toggle Full <-> Half */
+             chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
 	}else if (strcmp(prop_name,"chewing_settings_prop")==0){
-#if IBUS_CHECK_VERSION(1, 4, 0)
-      if (ibus_property_get_state(self->settings_prop)==PROP_STATE_UNCHECKED)
-#else
-	    if (self->settings_prop->state==PROP_STATE_UNCHECKED)
-#endif
-      {
-
-		gtk_widget_show_all(self->setting_dialog);
-		if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))==GTK_RESPONSE_OK){
+            if (ibus_chewing_property_get_state(self->settings_prop)
+              ==PROP_STATE_UNCHECKED){
+	        gtk_widget_show_all(self->setting_dialog);
+	        if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))
+		  ==GTK_RESPONSE_OK){
 		    self_save_config_all(self);
 		}
 		gtk_widget_hide(self->setting_dialog);
-#if IBUS_CHECK_VERSION(1, 4, 0)
-    ibus_property_set_state(self->settings_prop,PROP_STATE_UNCHECKED);
-#else
-		self->settings_prop->state=PROP_STATE_UNCHECKED;
-#endif
+		ibus_property_set_state(self->settings_prop,PROP_STATE_UNCHECKED);
 	    }
 	}else{
 	    G_DEBUG_MSG(3,"[I3]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);

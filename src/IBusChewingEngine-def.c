@@ -424,7 +424,6 @@ static gboolean ibus_chewing_config_get_value(IBusConfig *config, const gchar *s
 #else
     return ibus_config_get_value(config, section, key, gValue);
 #endif
-
 }
 
 static gboolean ibus_chewing_config_set_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
@@ -438,7 +437,14 @@ static gboolean ibus_chewing_config_set_value(IBusConfig *config, const gchar *s
 #else
     return ibus_config_set_value(config, section, key, gValue);
 #endif
+}
 
+static gboolean ibus_chewing_property_get_state(IBusProperty *prop){
+#if IBUS_CHECK_VERSION(1, 4, 0)
+    return ibus_property_get_state(prop);
+#else
+    return prop->state;
+#endif
 }
 
 static guint keysym_KP_to_normal(guint keysym){
