@@ -1,0 +1,366 @@
+# fvalen <fvalen@fedoraproject.org>, 2012. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: ibus-chewing 1.4.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-15 20:08+1000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2012-11-28 08:19-0500\n"
+"Last-Translator: fvalen <fvalen@fedoraproject.org>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"X-Generator: Zanata 3.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:354
+msgid " No default value, skipped."
+msgstr "Nessun valore predefinito, operazione saltata."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:354
+msgid " Use default value:"
+msgstr "Usa il valore predefinito:"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:264
+msgid "Add phrases in front"
+msgstr "Aggiungi espressioni davanti"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:268
+msgid "Add phrases in the front."
+msgstr "Aggiungi espressioni davanti."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:314
+msgid "Always input numbers when number keys from key pad is inputted."
+msgstr ""
+"Inserisci sempre i numeri quando i tasti numerici della tastiera sono "
+"inseriti."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:68
+msgid "Auto"
+msgstr "Auto"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:258
+msgid "Auto move cursor"
+msgstr "Sposta automaticamente il cursore"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:262
+msgid "Automatically move cursor to next character."
+msgstr "Sposta automaticamente il cursore al carattere successivo."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:69
+msgid "Big5"
+msgstr "Big5"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:322
+msgid "Candidate per page"
+msgstr "Candidato per pagina"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/main.c:91
+msgid "Chewing"
+msgstr "Chewing"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/main.c:84
+msgid "Chewing component"
+msgstr "Componente Chewing"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:248
+msgid "Chi"
+msgstr "Chi"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:328
+msgid "Choose phrases from backward"
+msgstr "Seleziona espressioni all'indietro"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:332
+msgid "Choose phrases from the back, without moving cursor."
+msgstr "Seleziona espressioni all'indietro senza spostare il cursore."
+
+#: ../src/IBusChewingEngine.gob:254
+msgid "Click to switch to Chinese"
+msgstr ""
+
+#: ../src/IBusChewingEngine.gob:252
+msgid "Click to switch to English"
+msgstr ""
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:270
+msgid "Easy symbol input"
+msgstr "Input simbolo semplice"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:274
+msgid "Easy symbol input."
+msgstr "Input simbolo semplice."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:2
+msgid "Editing"
+msgstr "Modifica"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:250
+msgid "Eng"
+msgstr "Eng"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:276
+msgid "Esc clean all buffer"
+msgstr "Pulisci con Esc tutto il buffer"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:280
+msgid "Escape key cleans the text in pre-edit-buffer."
+msgstr "Il tasto Escape rimuove il testo in pre-edit-buffer."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:288
+msgid "Force lowercase in En mode"
+msgstr "Forza minuscolo in modalità En"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:256
+msgid "Full"
+msgstr "Completo"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:258
+msgid "Half"
+msgstr "Metà"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:255
+msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
+msgstr ""
+"Tasti di selezione della tastiera di Hsu, 1 per asdfjkl789, 2 per asdfzxcv89 "
+"."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:251
+msgid "Hsu's selection key"
+msgstr "Tasto di selezione di Hsu"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:292
+msgid ""
+"Ignore CapsLock status and input lowercase by default.\n"
+"It is handy if you wish to enter lowercase by default. Uppercase can still "
+"be inputted with Shift."
+msgstr ""
+"Ignora CapsLock ed input minuscolo per impostazione predefinita. ¶ È utile "
+"se inserisci il minuscolo per impostazione predefinita. Il maiuscolo può "
+"ancora essere inserito con il tasto Maiusc \"Shift\"."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:320
+msgid ""
+"In plain Zhuyin mode, automatic candidate selection and related options are "
+"disabled or ignored."
+msgstr ""
+"In modalità semplice Zhuyin, la selezione del candidato automatica e le "
+"opzioni relative sono disabilitate o ignorate."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:4
+msgid "Keyboard"
+msgstr "Tastiera"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:239
+msgid "Keyboard Type"
+msgstr "Tipo di tastiera"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:249
+msgid ""
+"Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
+"select the 1st candidate, 's' for 2nd, and so on."
+msgstr ""
+"Tasti usati per selezionare il candidato. Per esempio \"asdfghjkl;\", "
+"premere 'a' per selezionare il primo candidato, 's' per selezionare il "
+"secondo e così via."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:282
+msgid "Maximum Chinese characters"
+msgstr "Numero massimo di caratteri cinesi"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:286
+msgid ""
+"Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
+"symbols"
+msgstr ""
+"Numero massimo di caratteri cinesi in pre-edit buffer, incluso l'input dei "
+"simboli Zhuyin"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:326
+msgid "Number of candidate per page."
+msgstr "Numero di candicati per pagina."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:310
+msgid "Number pad always input number"
+msgstr "Il tastierino numerico inserisce sempre il numero"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:303
+msgid ""
+"Occasionally, the CapsLock status does not match the IM, this option "
+"determines how these status be synchronized. Valid values:\n"
+"\"disable\": Do nothing.\n"
+"\"keyboard\": IM status follows keyboard status.\n"
+"\"IM\": Keyboard status follows IM status."
+msgstr ""
+"Talvolta lo stato di Capslock non corrisponde all'IM, questa opzione "
+"determina come sincronizzare lo stato. I valori validi sono:¶\n"
+"\"disable\": Non fare niente.¶\n"
+"\"keyboard\": lo stato IM segue lo stato della tastiera.¶\n"
+"\"IM\": lo stato della tastiera segue lo stato IM."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/main.c:85 ../src/main.c:93
+msgid "Peng Huang, Ding-Yi Chen"
+msgstr "Peng Huang, Ding-Yi Chen"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:316
+msgid "Plain Zhuyin mode"
+msgstr "Modalità Zhuyin semplice"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:243
+msgid "Select Zhuyin keyboard layout."
+msgstr "Seleziona il layout della tastiera Zhuyin"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:3
+msgid "Selecting"
+msgstr "Selezione"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:245
+msgid "Selection keys"
+msgstr "Tasti di selezione"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:180
+msgid "Setting"
+msgstr "Impostazione"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:261
+msgid "Settings"
+msgstr "Impostazioni"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:334
+msgid "Space to select"
+msgstr "Spazio da selezionare"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:297
+msgid "Sync between CapsLock and IM"
+msgstr "Sincronizza tra CapsLock e IM"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:70
+msgid "UTF8"
+msgstr "UTF8"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine.gob:352
+msgid "Warning: cannot load configure key"
+msgstr "Attenzione: impossibile caricare la chiave di configurazione"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:41
+msgid "dachen_26"
+msgstr "dachen_26"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:33
+msgid "default"
+msgstr "default"
+
+#: ../src/IBusChewingEngine-def.c:61
+msgctxt "Sync"
+msgid "disable"
+msgstr ""
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:39
+msgid "dvorak"
+msgstr "dvorak"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:40
+msgid "dvorak_hsu"
+msgstr "dvorak_hsu"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:37
+msgid "eten"
+msgstr "eten"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:38
+msgid "eten26"
+msgstr "eten26"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:36
+msgid "gin_yieh"
+msgstr "gin_yieh"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:42
+msgid "hanyu"
+msgstr "hanyu"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:34
+msgid "hsu"
+msgstr "hsu"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:35
+msgid "ibm"
+msgstr "ibm"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:75
+msgid "in application window"
+msgstr "nella finestra dell'applicazione"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
+#: ../src/IBusChewingEngine-def.c:76
+msgid "in candidate window"
+msgstr "nella finestra del candidato"
+
+#: ../src/IBusChewingEngine-def.c:63
+msgctxt "Sync"
+msgid "input method"
+msgstr ""
+
+#: ../src/IBusChewingEngine-def.c:62
+msgctxt "Sync"
+msgid "keyboard"
+msgstr ""
