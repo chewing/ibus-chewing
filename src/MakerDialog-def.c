@@ -1,6 +1,6 @@
 static gint verboseLevel=0;
 
-void G_DEBUG_MSG(gint level, const char *format, ...){
+void IBUS_CHEWING_LOG(gint level, const char *format, ...){
     va_list ap;
     if (level<verboseLevel){
         va_start(ap, format);
@@ -30,20 +30,20 @@ static void listStore_append(GtkListStore *listStore,const gchar *str,
 
     if (propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION){
 	if (translationContext || propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT){
-	    G_DEBUG_MSG(5,"*** str=%s, _(str)=%s",str,g_dpgettext2(NULL,translationContext,str));
+	    IBUS_CHEWING_LOG(5,"*** str=%s, _(str)=%s",str,g_dpgettext2(NULL,translationContext,str));
 	    gtk_list_store_set (listStore, &iter,
 		    0, str,
 		    1, g_dpgettext2(NULL,translationContext,str),
 		    -1);
 	}else{
-	    G_DEBUG_MSG(5,"*** str=%s, _(str)=%s",str,_(str));
+	    IBUS_CHEWING_LOG(5,"*** str=%s, _(str)=%s",str,_(str));
 	    gtk_list_store_set (listStore, &iter,
 		    0, str,
 		    1, _(str),
 		    -1);
 	}
     }else{
-	G_DEBUG_MSG(5,"*** str=%s",str);
+	IBUS_CHEWING_LOG(5,"*** str=%s",str);
 	gtk_list_store_set (listStore, &iter,
 		0, str,
 		-1);
@@ -55,7 +55,7 @@ static gint listStore_find_string(GtkListStore *listStore,const gchar *str,
 	const gchar *translationContext,
 	MakerDialogPropertyFlags propertyFlags){
     g_assert(str);
-    G_DEBUG_MSG(4,"*** listStore_find_string(%s,%u)",str,propertyFlags);
+    IBUS_CHEWING_LOG(4,"*** listStore_find_string(%s,%u)",str,propertyFlags);
     int i=0,index=-1;
     GtkTreeIter iter;
     GValue gValue={0};
@@ -75,7 +75,7 @@ static gint listStore_find_string(GtkListStore *listStore,const gchar *str,
 	listStore_append(listStore, str,translationContext,propertyFlags);
 	index=i;
     }
-    G_DEBUG_MSG(4,",listStore_find_string(%s,%u) index=%d",str,propertyFlags,index);
+    IBUS_CHEWING_LOG(4,",listStore_find_string(%s,%u) index=%d",str,propertyFlags,index);
     return index;
 }
 
@@ -118,7 +118,7 @@ static void on_comboBox_changed_wrap (GtkComboBox *comboBox, gpointer    user_da
     PropertyContext *ctx=(PropertyContext *)user_data;
     GValue value={0};
     combo_get_active_text(comboBox, &value);
-    G_DEBUG_MSG(2,"on_comboBox_changed_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    IBUS_CHEWING_LOG(2,"on_comboBox_changed_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
     ctx->spec->setFunc(ctx,&value);
 }
 
@@ -128,7 +128,7 @@ static void on_entry_activate_wrap (GtkEntry *entry, gpointer    user_data)
     GValue value={0};
     g_value_init(&value, ctx->spec->valueType);
     g_value_set_string(&value,gtk_entry_get_text(entry));
-    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    IBUS_CHEWING_LOG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
     ctx->spec->setFunc(ctx,&value);
 }
 
@@ -140,17 +140,17 @@ static void on_spinButton_value_changed_wrap (GtkSpinButton *button, gpointer   
     switch(ctx->spec->valueType){
 	case G_TYPE_INT:
 	    g_value_set_int(&value,(gint) gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%d",
+	    IBUS_CHEWING_LOG(2,"on_spinButton_value_changed_wrap(), key=%s value=%d",
 		    ctx->spec->key,g_value_get_int(&value));
 	    break;
 	case G_TYPE_UINT:
 	    g_value_set_uint(&value,(guint) gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%u",
+	    IBUS_CHEWING_LOG(2,"on_spinButton_value_changed_wrap(), key=%s value=%u",
 		    ctx->spec->key,g_value_get_uint(&value));
 	    break;
 	case G_TYPE_DOUBLE:
 	    g_value_set_uint(&value, gtk_spin_button_get_value(button));
-	    G_DEBUG_MSG(2,"on_spinButton_value_changed_wrap(), key=%s value=%g",
+	    IBUS_CHEWING_LOG(2,"on_spinButton_value_changed_wrap(), key=%s value=%g",
 		    ctx->spec->key,g_value_get_double(&value));
 	    break;
 	default:
@@ -165,7 +165,7 @@ static void on_toggleButton_toggled_wrap (GtkToggleButton *button, gpointer    u
     GValue value={0};
     g_value_init(&value, ctx->spec->valueType);
     g_value_set_boolean(&value, gtk_toggle_button_get_active(button));
-    G_DEBUG_MSG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
+    IBUS_CHEWING_LOG(2,"on_entry_activate_wrap(), key=%s value=%s",ctx->spec->key,g_value_get_string(&value));
     ctx->spec->setFunc(ctx,&value);
 }
 
@@ -251,7 +251,7 @@ static void xml_tags_write(FILE *outF, const gchar *tagName, XmlTagsType type,
 	indentLevel--;
 
     GString *strBuf=xml_tags_to_string(tagName, type, attribute, value, indentLevel);
-    G_DEBUG_MSG(3,",xml_tags_write:%s",strBuf->str);
+    IBUS_CHEWING_LOG(3,",xml_tags_write:%s",strBuf->str);
     fprintf(outF,"%s\n",strBuf->str);
 
     if (type==XML_TAG_TYPE_BEGIN_ONLY)

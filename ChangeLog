@@ -8,6 +8,7 @@
     "keyboard" cause bug 1028911 for GNOME Shell.
   + Now Sync from "input method" can control Caps LED in GNOME shell.
 - Translation added: de_DE, es_ES, it_IT, pt_BR, uk_UA
+- Set environment IBUS_CHEWING_LOGFILE for ibus-chewing log. 
 
 * Mon Dec 23 2013 Ding-Yi Chen <dchen at redhat.com> - 1.4.4
 - Resolves Bug 842856 - ibus-chewing 1.4.3-1 not built with $RPM_OPT_FLAGS

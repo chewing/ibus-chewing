@@ -88,7 +88,7 @@ struct _PropertyContext{
 %}
 
 %{
-void G_DEBUG_MSG(gint level, const char *format, ...);
+void IBUS_CHEWING_LOG(gint level, const char *format, ...);
 #include "MakerDialog-def.c"
 %}
 
@@ -171,7 +171,7 @@ class Maker:Dialog from Gtk:Dialog{
      * Add a property without GUI automation involved.
      */
     public PropertyContext *add_property_no_gui(self, PropertySpec *pSpec, gpointer user_data){
-	G_DEBUG_MSG(2,"::add_property_no_gui(%s,-)",pSpec->key);
+	IBUS_CHEWING_LOG(2,"::add_property_no_gui(%s,-)",pSpec->key);
 	PropertyContext *ctx=propertyContext_new(pSpec,user_data);
 	g_ptr_array_add(self->_priv->propList,ctx);
 	g_hash_table_insert(self->_priv->notebookContentTable, pSpec->key, pSpec->pageName);
@@ -191,7 +191,7 @@ class Maker:Dialog from Gtk:Dialog{
      * If @initValue is not NULL, it will be the initial value of the widget.
      */
     public gboolean add_property(self, PropertySpec *pSpec, const gchar *initValue, gpointer user_data){
-	G_DEBUG_MSG(2,"::add_property(%s,%s,-)",pSpec->key,initValue);
+	IBUS_CHEWING_LOG(2,"::add_property(%s,%s,-)",pSpec->key,initValue);
 
 	GtkWidget *vbox=self_get_base_vbox(self, pSpec->pageName);
 	g_assert(vbox);
@@ -432,10 +432,10 @@ class Maker:Dialog from Gtk:Dialog{
      */
     public gboolean write_gconf_schemas_file(self, const gchar *filename,
 	    const gchar * owner, const gchar *schemasHome, const gchar *locales){
-	G_DEBUG_MSG(2,"::output_gconf_schemes_file(%s)",filename);
+	IBUS_CHEWING_LOG(2,"::output_gconf_schemes_file(%s)",filename);
 	FILE *outF=fopen(filename,"w");
 	if (outF==NULL){
-	    G_DEBUG_MSG(1,"::output_gconf_schemes_file(%s) file %s cannot be written!",
+	    IBUS_CHEWING_LOG(1,"::output_gconf_schemes_file(%s) file %s cannot be written!",
 		    filename,filename);
 	    return FALSE;
 	}
@@ -451,7 +451,7 @@ class Maker:Dialog from Gtk:Dialog{
 	xml_tags_write(outF,"gconfschemafile",XML_TAG_TYPE_END_ONLY,NULL,NULL);
 	if (fclose(outF))
 	    return FALSE;
-	G_DEBUG_MSG(2,"::output_gconf_schemes_file(%s) ... done.",filename);
+	IBUS_CHEWING_LOG(2,"::output_gconf_schemes_file(%s) ... done.",filename);
 	return TRUE;
     }
 
@@ -466,7 +466,7 @@ class Maker:Dialog from Gtk:Dialog{
      * @see_also: set_widget_value()
      */
     public void apply_widget_value(self, const gchar *key){
-	G_DEBUG_MSG(2,"::apply_widget_value(%s)",key);
+	IBUS_CHEWING_LOG(2,"::apply_widget_value(%s)",key);
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
@@ -485,7 +485,7 @@ class Maker:Dialog from Gtk:Dialog{
 
 
     public GValue *get_widget_value(self, const gchar *key, GValue *gValue){
-	G_DEBUG_MSG(2,"::get_widget_value(%s)",key);
+	IBUS_CHEWING_LOG(2,"::get_widget_value(%s)",key);
 	PropertyContext *ctx=self_get_propertyContext_by_key(self,key);
 	if (!ctx){
 	    /* Not found */
@@ -508,7 +508,7 @@ class Maker:Dialog from Gtk:Dialog{
 	    case G_TYPE_STRING:
 		if (ctx->spec->validValues){
 		    const char *str=combo_get_active_text (GTK_COMBO_BOX(widget),gValue);
-		    G_DEBUG_MSG(3,"::get_widget_value(%s) %s",
+		    IBUS_CHEWING_LOG(3,"::get_widget_value(%s) %s",
 			    key,str);
 		}else{
 		    g_value_set_string(gValue, gtk_entry_get_text (GTK_ENTRY(widget)));
@@ -578,7 +578,7 @@ class Maker:Dialog from Gtk:Dialog{
     }
 
     public GtkWidget *get_widget_by_id(self, const gchar *id){
-	G_DEBUG_MSG(3,"*** get_widget_by_id(%s)",id);
+	IBUS_CHEWING_LOG(3,"*** get_widget_by_id(%s)",id);
 	return (GtkWidget *) g_hash_table_lookup (self->_priv->widgetTable, id);
     }
 
@@ -621,7 +621,7 @@ class Maker:Dialog from Gtk:Dialog{
 	widget_get_id(buf, STRING_BUFFER_SIZE_DEFAULT, widget_label, widget_type);
 	gchar *chunk_ret=g_string_chunk_insert(self->_priv->widgetIds,buf);
 	g_hash_table_insert(self->_priv->widgetTable, chunk_ret,widget);
-	G_DEBUG_MSG(3,"*** widget_register(-,%s,%s) widget registered as %s",
+	IBUS_CHEWING_LOG(3,"*** widget_register(-,%s,%s) widget registered as %s",
 		widget_label,(widget_type)? (widget_type) : "", chunk_ret);
     }
 

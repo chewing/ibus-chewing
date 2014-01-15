@@ -133,7 +133,7 @@ void determine_locale(){
     g_strlcat(localeStr,".utf8",STRING_BUFFER_SIZE);
 #undef STRING_BUFFER_SIZE
     setlocale (LC_ALL, localeStr);
-    G_DEBUG_MSG(1,"[I1] determine_locale %s",localeStr);
+    IBUS_CHEWING_LOG(1,"[I1] determine_locale %s",localeStr);
 }
 
 

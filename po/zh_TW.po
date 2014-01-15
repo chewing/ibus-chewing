@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: ibus-chewing 1.4.5\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2014-01-15 20:08+1000\n"
+        "POT-Creation-Date: 2014-01-15 21:09+1000\n"
         "PO-Revision-Date: 2014-01-15 05:25-0500\n"
         "Last-Translator: dchen <dchen@fedoraproject.org>\n"
         "Language-Team: Chinese (Traditional Han, Taiwan)\n"
@@ -18,11 +18,11 @@ msgstr  "Project-Id-Version: ibus-chewing 1.4.5\n"
         "X-Generator: Zanata 3.0.3\n"
         "Plural-Forms: nplurals=1; plural=0\n"
 
-#: ../src/IBusChewingEngine.gob:354
+#: ../src/IBusChewingEngine.gob:367
 msgid   " No default value, skipped."
 msgstr  " 無預設值，略去。"
 
-#: ../src/IBusChewingEngine.gob:354
+#: ../src/IBusChewingEngine.gob:367
 msgid   " Use default value:"
 msgstr  " 使用預設值："
 
@@ -68,7 +68,7 @@ msgstr  "新酷音"
 msgid   "Chewing component"
 msgstr  "酷音元件"
 
-#: ../src/IBusChewingEngine.gob:248
+#: ../src/IBusChewingEngine.gob:255
 msgid   "Chi"
 msgstr  "中"
 
@@ -81,11 +81,11 @@ msgstr  "後方選詞"
 msgid   "Choose phrases from the back, without moving cursor."
 msgstr  "直接由後方選詞，不必把游標移到候選詞前。"
 
-#: ../src/IBusChewingEngine.gob:254
+#: ../src/IBusChewingEngine.gob:261
 msgid   "Click to switch to Chinese"
 msgstr  "點擊以切換至中文"
 
-#: ../src/IBusChewingEngine.gob:252
+#: ../src/IBusChewingEngine.gob:259
 msgid   "Click to switch to English"
 msgstr  "點擊以切換至英文"
 
@@ -101,7 +101,7 @@ msgstr  "簡易符號輸入。"
 msgid   "Editing"
 msgstr  "編輯"
 
-#: ../src/IBusChewingEngine.gob:250
+#: ../src/IBusChewingEngine.gob:257
 msgid   "Eng"
 msgstr  "英"
 
@@ -117,11 +117,11 @@ msgstr  "Esc 鍵清預編區。"
 msgid   "Force lowercase in En mode"
 msgstr  "CapsLock時英數仍用小寫"
 
-#: ../src/IBusChewingEngine.gob:256
+#: ../src/IBusChewingEngine.gob:263
 msgid   "Full"
 msgstr  "全"
 
-#: ../src/IBusChewingEngine.gob:258
+#: ../src/IBusChewingEngine.gob:265
 msgid   "Half"
 msgstr  "半"
 
@@ -208,11 +208,11 @@ msgstr  "選字"
 msgid   "Selection keys"
 msgstr  "選字按鍵"
 
-#: ../src/IBusChewingEngine.gob:180
+#: ../src/IBusChewingEngine.gob:187
 msgid   "Setting"
 msgstr  "設定"
 
-#: ../src/IBusChewingEngine.gob:261
+#: ../src/IBusChewingEngine.gob:268
 msgid   "Settings"
 msgstr  "設定"
 
@@ -229,7 +229,7 @@ msgstr  "CapsLock與輸入法狀態同步"
 msgid   "UTF8"
 msgstr  "UTF8"
 
-#: ../src/IBusChewingEngine.gob:352
+#: ../src/IBusChewingEngine.gob:365
 msgid   "Warning: cannot load configure key"
 msgstr  "警告：無法載入設定鍵"
 

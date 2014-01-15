@@ -658,7 +658,7 @@ static void set_caps_led(gboolean on,Display *pDisplay){
 static void key_send_fake_event(KeySym key, Display *pDisplay)
 {
     KeyCode keyCode = XKeysymToKeycode(pDisplay, key);
-    G_DEBUG_MSG(2,"key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
+    IBUS_CHEWING_LOG(2,"key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
     XTestFakeKeyEvent(pDisplay, keyCode, True, CurrentTime);
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
 
