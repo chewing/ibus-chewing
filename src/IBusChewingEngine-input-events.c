@@ -33,16 +33,16 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
     guint kSym=ibus_chewing_engine_keycode_to_keysym(self,keysym, keycode, modifiers);
 
     if (modifiers & IBUS_RELEASE_MASK){
-	if(!keysym_KP_to_normal(kSym) && (kSym==IBUS_Shift_L || kSym==IBUS_Shift_R) && self->_priv->key_last==kSym){
-		/* When Chi->Eng with incomplete character */
-		if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
-			/* chewing_zuin_Check==0 means incomplete character */
-			/* Send a space to finish the character */
-			chewing_handle_Space(self->context);
-		}
-		chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
-		self_refresh_property(self,"chewing_chieng_prop");
-		return self_update(self);
+	if (!keysym_KP_to_normal(kSym) && (kSym==IBUS_Shift_L || kSym==IBUS_Shift_R) && self->_priv->key_last==kSym){
+	    /* When Chi->Eng with incomplete character */
+	    if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+	        /* chewing_zuin_Check==0 means incomplete character */
+	        /* Send a space to finish the character */
+	        chewing_handle_Space(self->context);
+	     }
+             chewing_set_ChiEngMode(self->context, ! chewing_get_ChiEngMode(self->context));
+	     self_refresh_property(self,"chewing_chieng_prop");
+	     return self_update(self);
 	}
 	/* Skip release event */
 	return TRUE;

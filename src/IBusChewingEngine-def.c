@@ -57,7 +57,7 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE+1]={
     NULL
 };
 
-const gchar *syncCapsLockLocal_strs[]={
+const gchar *syncCapsLock_strs[]={
     NC_("Sync","disable"),
     NC_("Sync","keyboard"),
     NC_("Sync","input method"),
@@ -170,7 +170,7 @@ static void forceLowercaseEnglish_set_callback(PropertyContext *ctx, GValue *val
 #endif
 }
 
-static void syncCapsLockLocal_set_callback(PropertyContext *ctx, GValue *value){
+static void syncCapsLock_set_callback(PropertyContext *ctx, GValue *value){
 #ifdef IBUS_CHEWING_MAIN
     IBusChewingEngine *engine=(IBusChewingEngine *) ctx->userData;
     const gchar *str=g_value_get_string(value);
@@ -294,9 +294,9 @@ It is handy if you wish to enter lowercase by default. Uppercase can still be in
     },
 
     /* Sync between CapsLock and IM */
-    {G_TYPE_STRING, "syncCapsLockLocal", "Editing", N_("Sync between CapsLock and IM"),
-	"keyboard", syncCapsLockLocal_strs,  "Sync", 0, 1,
-	NULL, syncCapsLockLocal_set_callback,
+    {G_TYPE_STRING, "syncCapsLock", "Editing", N_("Sync between CapsLock and IM"),
+	"disable", syncCapsLock_strs,  "Sync", 0, 1,
+	NULL, syncCapsLock_set_callback,
 	MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE | MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION |
 	    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT,
        	0, 0,
@@ -408,8 +408,37 @@ GVariant *g_value_to_g_variant(GValue *gValue){
     }
     return gVar;
 }
-
 #endif
+
+static void ibus_chewing_log_handler(const gchar *log_domain, 
+	GLogLevelFlags log_level, const gchar *message, gpointer user_data){
+    GString *str=g_string_new(NULL);
+    IBusChewingEngine *engine=(IBusChewingEngine *) user_data;
+    if (log_level & G_LOG_LEVEL_ERROR){
+	g_string_printf(str, "%s [EE] %s\n", log_domain, message);
+    }else if (log_level & G_LOG_LEVEL_CRITICAL){
+	g_string_printf(str, "%s [CC] %s\n", log_domain, message);
+    }else if (log_level & G_LOG_LEVEL_WARNING){
+	g_string_printf(str, "%s [WW] %s\n", log_domain, message);
+    }else if (log_level & G_LOG_LEVEL_MESSAGE){
+	g_string_printf(str, "%s [MM] %s\n", log_domain, message);
+    }else if (log_level & G_LOG_LEVEL_INFO){
+	g_string_printf(str, "%s [II] %s\n", log_domain, message);
+    }else if (log_level & G_LOG_LEVEL_DEBUG){
+	g_string_printf(str, "%s [DD] %s\n", log_domain, message);
+    }else{
+	g_string_printf(str, "%s [%d] %s\n", log_domain, log_level,message);
+    }
+    if (str->len){
+	if (engine->logFile){
+	    fputs(str->str, engine->logFile);
+	}else{
+	    fputs(str->str, stderr);
+	}    
+    }
+    g_string_free(str,TRUE);
+    return;
+}
 
 static gboolean ibus_chewing_config_get_value(IBusConfig *config, const gchar *section, const gchar *key, GValue *gValue){
 #if IBUS_CHECK_VERSION(1, 4, 0)
@@ -603,30 +632,25 @@ const char *keyName_get(guint keyval){
     return "Others";
 }
 
+#define CAPS_LOCK_MASK 2
+static gboolean is_caps_led_on(Display *pDisplay){
+    XKeyboardState retState;
+    XGetKeyboardControl(pDisplay,&retState);
+    return (retState.led_mask & 1) ? TRUE : FALSE;
+}
+
+static void set_caps_led(gboolean on,Display *pDisplay){
+    XKeyboardControl control;
+    control.led_mode = (on)? LedModeOn: LedModeOff;
+    control.led = CAPS_LOCK_MASK;
+    guint flags=(on)? CAPS_LOCK_MASK: 0;
+    XChangeKeyboardControl(pDisplay, KBLedMode, &control);
+    XkbLockModifiers(pDisplay, XkbUseCoreKbd, control.led, flags);
+    XFlush(pDisplay);
+}
 
 /*
- * From http://www.thelinuxpimp.com/files/keylockx.c
- */
-//static guint key_get_state(KeySym key, Display *pDisplay){
-//    guint     keyMask = 0;
-//    XModifierKeymap* map = XGetModifierMapping(pDisplay);
-//    KeyCode keyCode = XKeysymToKeycode(pDisplay,key);
-//    if(keyCode == NoSymbol) return 0;
-//    int i = 0;
-//    while(i < 8) {
-//        if( map->modifiermap[map->max_keypermod * i] == keyCode) {
-//            keyMask = 1 << i;
-//        }
-//        i++;
-//    }
-//    XFreeModifiermap(map);
-//    guint mask_return=keyModifier_get(pDisplay);
-
-//    return (mask_return & keyMask) != 0;
-//}
-
-/*
- * From send_fake_key_eve() eve.c gcin
+ * From send_fake_key_event() event.c gcin
  */
 static void key_send_fake_event(KeySym key, Display *pDisplay)
 {
