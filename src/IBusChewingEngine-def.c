@@ -530,6 +530,7 @@ static void add_tone(char *str, gint tone){
 /*--------------------------------------------
  * Key modifier functions
  */
+#if 0
 static guint keyModifier_get(Display *pDisplay){
     Window    root_retrun, child_retrun;
     int     root_x_return, root_y_return, win_x_return, win_y_return;
@@ -538,6 +539,7 @@ static guint keyModifier_get(Display *pDisplay){
 	    &root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return );
     return mask_return;
 }
+#endif
 
 const char numConst[]="0\0""1\0""2\0""3\0""4\0""5\0""6\0""7\0""8\0""9";
 const char alphaConstL[]="a\0b\0c\0d\0e\0f\0g\0h\0i\0j\0k\0l\0m\0n\0o\0p\0q\0r\0s\0t\0u\0v\0w\0x\0y\0z";
@@ -649,6 +651,7 @@ static void set_caps_led(gboolean on,Display *pDisplay){
     XFlush(pDisplay);
 }
 
+#if 0
 /*
  * From send_fake_key_event() event.c gcin
  */
@@ -660,6 +663,7 @@ static void key_send_fake_event(KeySym key, Display *pDisplay)
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
 
 }
+#endif
 
 #endif
 
