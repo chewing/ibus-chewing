@@ -192,9 +192,8 @@ IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     ADD_SUBDIRECTORY(rpm)
     M_MSG(${M_INFO1} "BUILD_REQUIRES=${BUILD_REQUIRES}")
     M_MSG(${M_INFO1} "REQUIRES=${REQUIRES}")
-    ## PACK_RPM NEED to be here, otherwise it cannot find the tarball
 ELSE(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-    MANAGE_RELEASE()
+    MANAGE_RELEASE(tag_push)
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 
@@ -203,7 +202,7 @@ ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
     )
 
 #####################################################################
-# Hosting and Release
+# Hosting Release
 #
 
 #INCLUDE(ManageUpload)

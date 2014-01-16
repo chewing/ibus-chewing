@@ -1,15 +1,6 @@
-PRJ_VER=1.4.5
-SUMMARY=Fixed RHBZ 1013977 1027031 1028911 1045868
+PRJ_VER=1.4.6
+SUMMARY=Fixed Build for RHEL7
 REDHAT_BUGZILLA=1027031,1028911,1045868
 [Changes]
-- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in %post and %postun
-- Resolves Bug 1027031 - CVE-2013-4509 ibus-chewing: ibus: visible password entry flaw [rhel-7.0]
-- Resolves Bug 1028911 - [zh_TW]'Chinese<->English' switch does not work when clicking on the Chewing menu list.
-- Resolves Bug 1045868 - ibus-chewing *again* not built with $RPM_OPT_FLAGS
-- Option "Sync between caps lock and IM":
-  + Default of  is changed to "disable",  because the previous default
-    "keyboard" cause bug 1028911 for GNOME Shell.
-  + Now Sync from "input method" can control Caps LED in GNOME shell.
-- Translation added: de_DE, es_ES, it_IT, pt_BR, uk_UA
-- Set environment IBUS_CHEWING_LOGFILE for ibus-chewing log. 
+- Fixed Build for RHEL7
 
