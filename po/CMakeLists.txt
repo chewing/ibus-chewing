@@ -7,7 +7,7 @@ SET(SOURCES_I18N ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine.gob
     ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine-def.c 
     ${CMAKE_SOURCE_DIR}/src/main.c)
 
-MANAGE_GETTEXT(ALL SRCS ${SOURCES_I18N})
+MANAGE_GETTEXT(SRCS ${SOURCES_I18N})
 
 SET(ZANATA_SERVER "https://translate.zanata.org/zanata/")
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/zanata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/zanata.xml @ONLY)

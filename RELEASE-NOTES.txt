@@ -1,6 +1,8 @@
-PRJ_VER=1.4.6
+PRJ_VER=1.4.7
 SUMMARY=Fixed Build for RHEL7
 REDHAT_BUGZILLA=1027031,1028911,1045868
 [Changes]
-- Fixed Build for RHEL7
+- Target "translation" is built separately with all, 
+  in order to tame multiple job make.
+
 

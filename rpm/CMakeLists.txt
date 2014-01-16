@@ -15,6 +15,8 @@ RPM_SPEC_STRING_ADD_TAG(RPM_SPEC_REQUIRES_OUTPUT
     Requires preun "GConf2"
     )
 
+RPM_SPEC_STRING_ADD(RPM_SPEC_BUILD_OUTPUT "make VERBOSE=1 translations")
+
 RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT pre ""
 "if [ \"$1\" -gt 1 ] ; then
     export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
