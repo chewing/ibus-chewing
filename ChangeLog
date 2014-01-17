@@ -1,3 +1,6 @@
+* Fri Jan 17 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.8
+
+
 * Thu Jan 16 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.7
 - Target "translation" is built separately with all, 
   in order to tame multiple job make.
