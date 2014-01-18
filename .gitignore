@@ -21,6 +21,7 @@ CMakeCache.txt
 cmake-fedora/
 cmake_*install.cmake
 CPack*Config.cmake
+CTestTestfile.cmake
 CVS/
 data/*.schemas
 debug*s.list
@@ -48,5 +49,5 @@ stamp-h1
 *.bak
 tags
 *.xml
-CTestTestfile.cmake
+arch/PKGBUILD
 

@@ -3,4 +3,3 @@ SUMMARY=
 REDHAT_BUGZILLA=
 [Changes]
 
-
