@@ -92,7 +92,6 @@ INCLUDE(ManageUninstall)
 INCLUDE(ManageVariable)
 INCLUDE(ManageDependency)
 
-
 ####################################################################
 # Dependencies
 #
@@ -197,7 +196,6 @@ IF(DISTRO_ARCH)
     ADD_SUBDIRECTORY(arch)
 ENDIF(DISTRO_ARCH)
 MANAGE_RELEASE(${_release_targets})
-
 
 ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
     COMMAND make pot_file

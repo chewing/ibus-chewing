@@ -63,5 +63,4 @@ PACK_RPM()
 RELEASE_FEDORA(fedora)
 # "Off" Warning is displayed if mock is not installed.
 RPM_MOCK_BUILD()
-MANAGE_RELEASE(tag_push release_fedora)
 
