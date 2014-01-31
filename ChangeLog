@@ -1,4 +1,4 @@
-* Tue Jan 28 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.8
+* Fri Jan 31 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.9
 - Resolves Bug 1054937 - Broken %defattr in ibus-chewing
 
 * Thu Jan 16 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.7
