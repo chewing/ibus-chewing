@@ -1,3 +1,6 @@
+* Sat Feb 01 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.10.1
+- Resolves Bug 1054937 - Broken %defattr in ibus-chewing
+
 * Sat Feb 01 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.10
 - Resolves Bug 1054937 - Broken %defattr in ibus-chewing
 
