@@ -1,5 +1,5 @@
-PRJ_VER=1.4.10.1
-SUMMARY=Resolves Bug 1054937
-REDHAT_BUGZILLA=1054937
+PRJ_VER=1.4.11
+SUMMARY=
+REDHAT_BUGZILLA=
 [Changes]
-- Resolves Bug 1054937 - Broken %defattr in ibus-chewing
+- github is now hosting the ibus-chewing tarballs.

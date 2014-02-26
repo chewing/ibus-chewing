@@ -45,7 +45,7 @@ SET(VENDOR "Red Hat, APAC, Inc.")
 SET(LICENSE "GPLv2+")
 SET(PRJ_GROUP "System Environment/Libraries")
 SET(RPM_SPEC_URL "http://code.google.com/p/ibus/")
-SET(RPM_SPEC_SOURCES "http://ibus.googlecode.com/files/%{name}-%{version}-Source.tar.gz")
+SET(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
 SET(HAS_TRANSLATION 1)
 
 
