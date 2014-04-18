@@ -97,6 +97,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 			/**
 			 * Fix for space in Temporary English mode.
 			 */
+            chewing_set_easySymbolInput(self->context, 0); /* fixed #33 first space wouldn't be committed */
 			chewing_handle_Space(self->context);
 			ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_NEED_COMMIT);
 		    }
