@@ -112,7 +112,6 @@ enum CHEWING_FLAG{
  * @NEED_COMMIT:        There's Something to commit.
  * @FORCE_COMMIT:       The engine should commit
  * @IS_PASSWORD:        Current input is password.
- * @IS_ENGLISH:		English mode
  *
  * Engine status show the current states of engine,
  * Thus this will change quite often.
