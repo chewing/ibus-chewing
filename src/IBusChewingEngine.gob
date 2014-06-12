@@ -141,8 +141,8 @@ extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
 #define ZHUYIN_BUFFER_SIZE 12
 
-#define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= f
-#define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~f
+#define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= (f)
+#define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~(f)
 
 #define IBUS_CHEWING_LOG(level, msg, args...) \
 switch (level){\
