@@ -1065,7 +1065,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self_load_setting(self);
         }
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_ENABLED);
-	self_refresh_property_list(self);
 	self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
     }
 
@@ -1074,7 +1073,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	IBUS_CHEWING_LOG(2,"[I2] disable()");
 	Self *self=SELF(engine);
 	ibus_chewing_engine_clear_status_flag(self,ENGINE_STATUS_ENABLED);
-	self_hide_property_list(self);
 	self->inputMode=CHEWING_INPUT_MODE_BYPASS;
     }
 
@@ -1102,6 +1100,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	IBUS_CHEWING_LOG(2,"***[I2] focus_out(): statusFlags=%x",self->_priv->statusFlags);
 	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FOCUS_IN);
+	self_hide_property_list(self);
 
 	/*
 	 * force commit is no longer needed,
