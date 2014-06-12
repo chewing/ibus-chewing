@@ -1167,7 +1167,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,TRUE);
-	ibus_engine_update_property(engine,prop);
     }
 
     override (IBus:Engine) void
@@ -1176,7 +1175,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,FALSE);
-	ibus_engine_update_property(engine,prop);
     }
 }
 
