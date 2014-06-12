@@ -112,6 +112,7 @@ enum CHEWING_FLAG{
  * @NEED_COMMIT:        There's Something to commit.
  * @FORCE_COMMIT:       The engine should commit
  * @IS_PASSWORD:        Current input is password.
+ * @PROPERTIES_REGISTERED: Engine registered the properties.
  *
  * Engine status show the current states of engine,
  * Thus this will change quite often.
@@ -127,6 +128,7 @@ enum ENGINE_STATUS{
     NEED_COMMIT=		0x10,
     FORCE_COMMIT=		0x20,
     IS_PASSWORD=		0x40,
+    PROPERTIES_REGISTERED=	0x80,
 } Engine:Status;
 
 %h{
@@ -689,7 +691,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 		ibus_property_set_symbol(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
 #endif
 	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
+	    if (self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)
+		ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    if (chewing_get_ShapeMode(self->context)){
 		/* Full-Sized Shape */
@@ -698,7 +701,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* Half-Sized Shape */
 		ibus_property_set_label(self->alnumSize_prop,SELF_GET_CLASS(self)->alnumSize_prop_label_half);
 	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
+	    if (self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)
+		ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
 	}
     }
 
@@ -719,11 +723,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_refresh_property(self,"chewing_alnumSize_prop");
 
 	self_refresh_property(self,"chewing_settings_prop");
-	if (self->_priv->statusFlags & (ENGINE_STATUS_ENABLED | ENGINE_STATUS_FOCUS_IN)){
-	    ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
+	if (!(self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)){
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_chieng_prop");
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_alnumSize_prop");
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_settings_prop");
+	    ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
+	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_PROPERTIES_REGISTERED);
 	}
     }
 
@@ -1099,7 +1104,8 @@ class IBus:Chewing:Engine from IBus:Engine{
     focus_out(IBus:Engine *engine){
 	Self *self=SELF(engine);
 	IBUS_CHEWING_LOG(2,"***[I2] focus_out(): statusFlags=%x",self->_priv->statusFlags);
-	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FOCUS_IN);
+	ibus_chewing_engine_clear_status_flag(self,
+		ENGINE_STATUS_FOCUS_IN | ENGINE_STATUS_PROPERTIES_REGISTERED);
 	self_hide_property_list(self);
 
 	/*
