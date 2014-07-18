@@ -112,7 +112,7 @@ enum CHEWING_FLAG{
  * @NEED_COMMIT:        There's Something to commit.
  * @FORCE_COMMIT:       The engine should commit
  * @IS_PASSWORD:        Current input is password.
- * @IS_ENGLISH:		English mode
+ * @PROPERTIES_REGISTERED: Engine registered the properties.
  *
  * Engine status show the current states of engine,
  * Thus this will change quite often.
@@ -128,6 +128,7 @@ enum ENGINE_STATUS{
     NEED_COMMIT=		0x10,
     FORCE_COMMIT=		0x20,
     IS_PASSWORD=		0x40,
+    PROPERTIES_REGISTERED=	0x80,
 } Engine:Status;
 
 %h{
@@ -142,8 +143,8 @@ extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
 #define ZHUYIN_BUFFER_SIZE 12
 
-#define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= f
-#define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~f
+#define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= (f)
+#define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~(f)
 
 #define IBUS_CHEWING_LOG(level, msg, args...) \
 switch (level){\
@@ -690,7 +691,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 		ibus_property_set_symbol(self->chieng_prop,SELF_GET_CLASS(self)->chieng_prop_label_eng);
 #endif
 	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
+	    if (self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)
+		ibus_engine_update_property(IBUS_ENGINE(self),self->chieng_prop);
 	}else if (strcmp(prop_name,"chewing_alnumSize_prop")==0){
 	    if (chewing_get_ShapeMode(self->context)){
 		/* Full-Sized Shape */
@@ -699,7 +701,8 @@ class IBus:Chewing:Engine from IBus:Engine{
 		/* Half-Sized Shape */
 		ibus_property_set_label(self->alnumSize_prop,SELF_GET_CLASS(self)->alnumSize_prop_label_half);
 	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
+	    if (self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)
+		ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
 	}
     }
 
@@ -720,11 +723,12 @@ class IBus:Chewing:Engine from IBus:Engine{
 	self_refresh_property(self,"chewing_alnumSize_prop");
 
 	self_refresh_property(self,"chewing_settings_prop");
-	if (self->_priv->statusFlags & (ENGINE_STATUS_ENABLED | ENGINE_STATUS_FOCUS_IN)){
-	    ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
+	if (!(self->_priv->statusFlags & ENGINE_STATUS_PROPERTIES_REGISTERED)){
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_chieng_prop");
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_alnumSize_prop");
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),"chewing_settings_prop");
+	    ibus_engine_register_properties(IBUS_ENGINE(self),self->prop_list);
+	    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_PROPERTIES_REGISTERED);
 	}
     }
 
@@ -1066,7 +1070,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	    self_load_setting(self);
         }
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_ENABLED);
-	self_refresh_property_list(self);
 	self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
     }
 
@@ -1075,7 +1078,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	IBUS_CHEWING_LOG(2,"[I2] disable()");
 	Self *self=SELF(engine);
 	ibus_chewing_engine_clear_status_flag(self,ENGINE_STATUS_ENABLED);
-	self_hide_property_list(self);
 	self->inputMode=CHEWING_INPUT_MODE_BYPASS;
     }
 
@@ -1102,7 +1104,9 @@ class IBus:Chewing:Engine from IBus:Engine{
     focus_out(IBus:Engine *engine){
 	Self *self=SELF(engine);
 	IBUS_CHEWING_LOG(2,"***[I2] focus_out(): statusFlags=%x",self->_priv->statusFlags);
-	ibus_chewing_engine_clear_status_flag(self, ENGINE_STATUS_FOCUS_IN);
+	ibus_chewing_engine_clear_status_flag(self,
+		ENGINE_STATUS_FOCUS_IN | ENGINE_STATUS_PROPERTIES_REGISTERED);
+	self_hide_property_list(self);
 
 	/*
 	 * force commit is no longer needed,
@@ -1168,7 +1172,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,TRUE);
-	ibus_engine_update_property(engine,prop);
     }
 
     override (IBus:Engine) void
@@ -1177,7 +1180,6 @@ class IBus:Chewing:Engine from IBus:Engine{
 	Self *self=SELF(engine);
 	IBusProperty *prop=self_get_iBusProperty(self, prop_name);
 	ibus_property_set_visible(prop,FALSE);
-	ibus_engine_update_property(engine,prop);
     }
 }
 
