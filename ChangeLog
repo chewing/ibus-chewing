@@ -1,3 +1,6 @@
+* Mon Aug 11 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+- github is now hosting the ibus-chewing tarballs.
+
 * Sat Feb 01 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.10.1
 - Resolves Bug 1054937 - Broken %defattr in ibus-chewing
 

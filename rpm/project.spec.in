@@ -22,19 +22,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # $RPM_OPT_FLAGS should be loaded from cmake macro.
 @RPM_SPEC_BUILD_OUTPUT@
 
-%install
-@RPM_SPEC_INSTALL_OUTPUT@
+%clean
+rm -rf %{buildroot}
 
-@RPM_SPEC_PRJ_DOC_REMOVAL_OUTPUT@
+@RPM_SPEC_INSTALL_SECTION_OUTPUT@
 
 @RPM_SPEC_SCRIPT_OUTPUT@
-%clean
 
 @RPM_SPEC_FILES_SECTION_OUTPUT@
 
-%changelog
-* @TODAY_CHANGELOG@ @MAINTAINER@ - @PRJ_VER@-@RPM_RELEASE_NO@
-@CHANGELOG_ITEMS@
-
-@RPM_CHANGELOG_PREV@
+@RPM_SPEC_CHANGELOG_SECTION_OUTPUT@
 

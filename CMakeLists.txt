@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.6.2)
 
 # CMP0011: New: Included scripts do automatic cmake_policy PUSH and POP.
-#     Old: cmake_policy in included script affect the caller.
+#          Old: cmake_policy in included script affect the caller.
+# It should be set here, otherwise policy set in modules won't affect here.
 CMAKE_POLICY(SET CMP0011 OLD)
 
 # Default CMAKE_INSTALL_PREFIX should be set before PROJECT()
@@ -10,8 +11,8 @@ SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
 # Whether to build on fedora
 SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
-# Message level M_OFF (4)
-SET(MANAGE_MESSAGE_LEVEL 5 CACHE STRING "Message (Verbose) Level")
+# Message level M_OFF (5)
+SET(MANAGE_MESSAGE_LEVEL 10 CACHE STRING "Message (Verbose) Level")
 
 ####################################################################
 # Project specific information
@@ -46,27 +47,26 @@ SET(LICENSE "GPLv2+")
 SET(PRJ_GROUP "System Environment/Libraries")
 SET(RPM_SPEC_URL "http://code.google.com/p/ibus/")
 SET(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
-SET(HAS_TRANSLATION 1)
 
 
 ####################################################################
 # Includes
 #
-SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR})
+LIST(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/Modules ${CMAKE_SOURCE_DIR})
 
 # Create a link if Modules/ does not exists
 IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
     IF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
-	EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
+        EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
     ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
 ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
 
 # Use standard FHS if Fedora build is not enabled
 IF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     IF(CMAKE_SYSTEM_PROCESSOR MATCHES "64")
-	SET(LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib64" CACHE PATH "Library dir")
+        SET(LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib64" CACHE PATH "Library dir")
     ELSE(CMAKE_SYSTEM_PROCESSOR MATCHES "64")
-	SET(LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Library dir")
+        SET(LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Library dir")
     ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "64")
     SET(LIBEXEC_DIR "${LIB_DIR}" CACHE PATH "LIBEXEC dir")
 ENDIF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
@@ -74,11 +74,11 @@ ENDIF(NOT CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 INCLUDE(ManageEnvironment RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
 IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
     MESSAGE(FATAL_ERROR "ManageEnvironment is not found in CMAKE_MODULE_PATH,
-    please:
-    1) git submodule init; git submodule update
-    2) or install cmake-fedora/
+Please do either:
+    1) install cmake-fedora
+    2) git submodule init; git submodule update
     3) wget -P SOURCES https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz
-    tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
+       tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
 ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
 MANAGE_CMAKE_POLICY(CMP0017 NEW)
@@ -86,11 +86,14 @@ MANAGE_CMAKE_POLICY(CMP0017 NEW)
 INCLUDE(ManageMessage)
 INCLUDE(ManageVersion)
 RELEASE_NOTES_READ_FILE()
+INCLUDE(ManageArchive)
+INCLUDE(ManageDependency)
 INCLUDE(ManageFile)
 INCLUDE(ManageSourceVersionControl)
+INCLUDE(ManageTarget)
 INCLUDE(ManageUninstall)
-INCLUDE(ManageVariable)
-INCLUDE(ManageDependency)
+
+ENABLE_TESTING()
 
 ####################################################################
 # Dependencies
@@ -105,7 +108,6 @@ ENDIF(IBUS_CHEWING_LOGFILE)
 SET(IBUS_MIN_VER "1.3")
 SET(CHEWING_MIN_VER "0.3.3")
 ## Requires
-MANAGE_DEPENDENCY(REQUIRES GCONF2 REQUIRED FEDORA_NAME "GConf2")
 MANAGE_DEPENDENCY(REQUIRES GTK2  REQUIRED)
 MANAGE_DEPENDENCY(REQUIRES IBUS VER "${IBUS_MIN_VER}" REQUIRED)
 MANAGE_DEPENDENCY(REQUIRES CHEWING VER "${CHEWING_MIN_VER}" REQUIRED 
@@ -156,53 +158,46 @@ ENDIF(NOT GNOME_SHELL)
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
-ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(src bin)
+ADD_SUBDIRECTORY(po)
 
 ####################################################################
 # Installing
 #
 
-MANAGE_SOURCE_VERSION_CONTROL_GIT()
-MANAGE_FILE_INSTALL(PRJ_DOC AUTHORS README ChangeLog COPYING USER-GUIDE)
-MANAGE_FILE_INSTALL(PRJ_DATA icons)
-MANAGE_FILE_INSTALL(DATA ${CMAKE_BINARY_DIR}/data/chewing.xml DEST_SUBDIR "ibus/component")
+INSTALL(FILES AUTHORS README ChangeLog COPYING USER-GUIDE
+    DESTINATION ${PRJ_DOC_DIR}
+    )
 
-# Schemas
-SET(GCONF_SCHEMAS_FILE ${IBUS_CHEWING_SCHEMAS})
-INCLUDE(ManageGConf)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml 
+    DESTINATION "${DATA_DIR}/ibus/component")
+
+INSTALL(DIRECTORY icons
+    DESTINATION "${DATA_DIR}/ibus/component"
+    )
+
+MANAGE_SOURCE_VERSION_CONTROL_GIT()
 
 ####################################################################
 # Packing
 #
-INCLUDE(ManageArchive)
-# GOB_GENERATED source codes are now excluded,
-# As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
-# Is fixed from Fedora 11
-PACK_SOURCE_ARCHIVE(${RPM_BUILD_SOURCES}
+SET(SOURCE_ARCHIVE_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Source Archive Dir")
+PACK_SOURCE_ARCHIVE("${SOURCE_ARCHIVE_DIR}"
     GITIGNORE ${CMAKE_SOURCE_DIR}/.gitignore
     INCLUDE ${PROJECT_NAME}.pot
     )
 
 INCLUDE(ManageRelease)
 
-SET(SOURCE_ARCHIVE_DIR ".")
-SET(_release_targets "tag_push")
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    SET(RPM_BUILD_SOURCES ${SOURCE_ARCHIVE_DIR})
     ADD_SUBDIRECTORY(rpm)
     LIST(APPEND _releaset_targets "release_fedora")
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-IF(DISTRO_ARCH)
-    ADD_SUBDIRECTORY(arch)
-ENDIF(DISTRO_ARCH)
-MANAGE_RELEASE(${_release_targets})
 
-ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
-    COMMAND make pot_file
-    )
 
 #####################################################################
-# Hosting Release
+# Hosting
 #
 
 #INCLUDE(ManageUpload)
@@ -210,13 +205,22 @@ ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
 #    COMMENT "Uploading all files"
 #    )
 
-#MANAGE_UPLOAD_CMD(scp src UPLOAD_FILES ${SOURCE_ARCHIVE_FILE})
-#ADD_DEPENDENCIES(upload upload_src)
+####################################################################
+# Custom
+#
 
+####################################################################
+# Release
+#
+
+INCLUDE(ManageRelease)
+SET(releaseTarget "tag_push")
+IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    LIST(APPEND releaseTargets release_fedora)
+ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+MANAGE_RELEASE(${releaseTargets})
 
 ####################################################################
 # Test Suites.
 #
-ENABLE_TESTING()
-
 
