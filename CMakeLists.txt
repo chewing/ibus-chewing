@@ -10,8 +10,8 @@ SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
 # Whether to build on fedora
 SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
-# Message level M_OFF (4)
-SET(MANAGE_MESSAGE_LEVEL 5 CACHE STRING "Message (Verbose) Level")
+# Message level M_OFF (5)
+SET(MANAGE_MESSAGE_LEVEL 10 CACHE STRING "Message (Verbose) Level")
 
 ####################################################################
 # Project specific information
@@ -46,7 +46,6 @@ SET(LICENSE "GPLv2+")
 SET(PRJ_GROUP "System Environment/Libraries")
 SET(RPM_SPEC_URL "http://code.google.com/p/ibus/")
 SET(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
-SET(HAS_TRANSLATION 1)
 
 
 ####################################################################
@@ -86,11 +85,14 @@ MANAGE_CMAKE_POLICY(CMP0017 NEW)
 INCLUDE(ManageMessage)
 INCLUDE(ManageVersion)
 RELEASE_NOTES_READ_FILE()
+INCLUDE(ManageArchive)
+INCLUDE(ManageDependency)
 INCLUDE(ManageFile)
 INCLUDE(ManageSourceVersionControl)
+INCLUDE(ManageTarget)
 INCLUDE(ManageUninstall)
-INCLUDE(ManageVariable)
-INCLUDE(ManageDependency)
+
+ENABLE_TESTING()
 
 ####################################################################
 # Dependencies
@@ -163,28 +165,40 @@ ADD_SUBDIRECTORY(src bin)
 # Installing
 #
 
+INSTALL(FILES AUTHORS README ChangeLog COPYING USER-GUIDE
+    DESTINATION ${PRJ_DOC_DIR}
+    )
+
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml 
+    DESTINATION "ibus/component")
+
+INSTALL(DIRECTORY icons
+    DESTINATION "${DATA_DIR}/ibus/component"
+    )
+
 MANAGE_SOURCE_VERSION_CONTROL_GIT()
-MANAGE_FILE_INSTALL(PRJ_DOC AUTHORS README ChangeLog COPYING USER-GUIDE)
-MANAGE_FILE_INSTALL(PRJ_DATA icons)
-MANAGE_FILE_INSTALL(DATA ${CMAKE_BINARY_DIR}/data/chewing.xml DEST_SUBDIR "ibus/component")
 
 # Schemas
-SET(GCONF_SCHEMAS_FILE ${IBUS_CHEWING_SCHEMAS})
 INCLUDE(ManageGConf)
+MANAGE_GCONF_SCHEMAS()
 
 ####################################################################
 # Packing
 #
-INCLUDE(ManageArchive)
-# GOB_GENERATED source codes are now excluded,
-# As Bug 519108 (https://bugzilla.redhat.com/show_bug.cgi?id=519108)
-# Is fixed from Fedora 11
-PACK_SOURCE_ARCHIVE(${RPM_BUILD_SOURCES}
+SET(SOURCE_ARCHIVE_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Source Archive Dir")
+PACK_SOURCE_ARCHIVE("${SOURCE_ARCHIVE_DIR}"
     GITIGNORE ${CMAKE_SOURCE_DIR}/.gitignore
     INCLUDE ${PROJECT_NAME}.pot
     )
 
 INCLUDE(ManageRelease)
+
+IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    SET(RPM_BUILD_SOURCES ${SOURCE_ARCHIVE_DIR})
+    INCLUDE(ManageRPM)
+    PACK_RPM(SPEC_IN "Templates/fedora/project.spec.in")
+    RPM_MOCK_BUILD()
+ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 SET(SOURCE_ARCHIVE_DIR ".")
 SET(_release_targets "tag_push")
@@ -192,17 +206,9 @@ IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     ADD_SUBDIRECTORY(rpm)
     LIST(APPEND _releaset_targets "release_fedora")
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-IF(DISTRO_ARCH)
-    ADD_SUBDIRECTORY(arch)
-ENDIF(DISTRO_ARCH)
-MANAGE_RELEASE(${_release_targets})
-
-ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
-    COMMAND make pot_file
-    )
 
 #####################################################################
-# Hosting Release
+# Hosting 
 #
 
 #INCLUDE(ManageUpload)
@@ -210,13 +216,25 @@ ADD_CUSTOM_COMMAND(OUTPUT po/${PROJECT_NAME}.pot
 #    COMMENT "Uploading all files"
 #    )
 
-#MANAGE_UPLOAD_CMD(scp src UPLOAD_FILES ${SOURCE_ARCHIVE_FILE})
-#ADD_DEPENDENCIES(upload upload_src)
+####################################################################
+# Custom
+#
 
+####################################################################
+# Release
+#
+ADD_DEPENDENCIES(upload tag_push)
+INCLUDE(ManageRelease)
+IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    INCLUDE(ManageReleaseFedora)
+    RELEASE_FEDORA(fedora)
+    # "Off" Warning is displayed if mock is not installed.
+    MANAGE_RELEASE(upload tag_push release_fedora)
+ELSE(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+    MANAGE_RELEASE(upload tag_push)
+ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 
 ####################################################################
 # Test Suites.
 #
-ENABLE_TESTING()
-
 
