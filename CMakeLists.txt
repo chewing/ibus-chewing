@@ -158,8 +158,8 @@ ENDIF(NOT GNOME_SHELL)
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
 # Sub directories
-ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(src bin)
+ADD_SUBDIRECTORY(po)
 
 ####################################################################
 # Installing
@@ -195,17 +195,10 @@ INCLUDE(ManageRelease)
 
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     SET(RPM_BUILD_SOURCES ${SOURCE_ARCHIVE_DIR})
-    INCLUDE(ManageRPM)
-    PACK_RPM(SPEC_IN "Templates/fedora/project.spec.in")
-    RPM_MOCK_BUILD()
-ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-
-SET(SOURCE_ARCHIVE_DIR ".")
-SET(_release_targets "tag_push")
-IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     ADD_SUBDIRECTORY(rpm)
     LIST(APPEND _releaset_targets "release_fedora")
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+
 
 #####################################################################
 # Hosting 
@@ -223,16 +216,13 @@ ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 ####################################################################
 # Release
 #
-ADD_DEPENDENCIES(upload tag_push)
+
 INCLUDE(ManageRelease)
+SET(releaseTarget "tag_push")
 IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-    INCLUDE(ManageReleaseFedora)
-    RELEASE_FEDORA(fedora)
-    # "Off" Warning is displayed if mock is not installed.
-    MANAGE_RELEASE(upload tag_push release_fedora)
-ELSE(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
-    MANAGE_RELEASE(upload tag_push)
+    LIST(APPEND releaseTargets release_fedora)
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
+MANAGE_RELEASE(${releaseTargets})
 
 ####################################################################
 # Test Suites.
