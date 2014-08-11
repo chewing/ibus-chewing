@@ -26,7 +26,7 @@
     <locale map-from="mr_IN">mr</locale>
     <locale map-from="fi_FI">fi</locale>
     <locale map-from="is_IS">is</locale>
-    <locale map-from="it_CH">it</locale>
+    <locale map-from="it_IT">it</locale>
     <locale map-from="nb_NO">nb</locale>
     <locale map-from="az_AZ">az</locale>
     <locale>eo</locale>
@@ -47,7 +47,7 @@
     <locale map-from="xh_ZA">xh</locale>
     <locale map-from="pl_PL">pl</locale>
     <locale map-from="ca_AD">ca</locale>
-    <locale map-from="fr_BE">fr</locale>
+    <locale map-from="fr_FR">fr</locale>
     <locale map-from="sr_RS">sr-Cyrl</locale>
     <locale map-from="bn_IN">bn-IN</locale>
     <locale map-from="tr_CY">tr</locale>
