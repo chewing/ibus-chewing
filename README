@@ -1,7 +1,22 @@
-ibus-chewing
-It is a Chinese input engine for IBus.
+IBus-Chewing is an IBus front-end of Chewing, an intelligent Chinese input
+method for Zhuyin (BoPoMoFo) users.
 
-It is released under GPLv2, see COPYING for detail.
+Following documents provides further instruction:
 
-See USER-GUIDE for usage documentation; INSTALL for installation.
+COPYING   : GPLv2 Licence
+USER-GUIDE: How to use ibus-chewing
+INSTALL   : Installation instruction.
+
+Bugs and enhancement can be filed to:
+Red Hat Bugzilla: https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&component=ibus-chewing
+GitHub ibus-chewing issues: https://github.com/definite/ibus-chewing/issues
+Google Code IBus: http://code.google.com/p/ibus/issues/list
+
+For debugging ibus-chewing, run
+
+export IBUS_CHEWING_LOGFILE=/tmp/somefile
+ibus-daemon -Rr
+
+then the debug message will be output to that file.
+However after debugging, please unset the environment and remove the file.
 

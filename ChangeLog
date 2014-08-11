@@ -1,5 +1,13 @@
-* Mon Aug 11 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+* Thu Aug 14 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
 - github is now hosting the ibus-chewing tarballs.
+- Resolves Bug 1013977 - Slow focus change with ibus-chewing
+    Fixed github issue #45: Optimize properties handling.
+    Thanks Ueno.
+- Fixed github issue #43: First space not able to input
+    Thanks FreedomKnight.
+- Fixed github issue #44: Update input-events (for libchewing-0.4.0)
+    Thanks hiunnhue.
+- 
 
 * Sat Feb 01 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.10.1
 - Resolves Bug 1054937 - Broken %defattr in ibus-chewing
@@ -18,7 +26,7 @@
 - Fixed Build for RHEL7
 
 * Wed Jan 15 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.5
-- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in %post and %postun
+- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in post and postun
 - Resolves Bug 1027031 - CVE-2013-4509 ibus-chewing: ibus: visible password entry flaw [rhel-7.0]
 - Resolves Bug 1028911 - [zh_TW]'Chinese<->English' switch does not work when clicking on the Chewing menu list.
 - Resolves Bug 1045868 - ibus-chewing *again* not built with $RPM_OPT_FLAGS
