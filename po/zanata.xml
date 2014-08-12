@@ -30,16 +30,16 @@
     <locale map-from="nb_NO">nb</locale>
     <locale map-from="az_AZ">az</locale>
     <locale>eo</locale>
-    <locale map-from="ar_AE">ar</locale>
+    <locale map-from="ar_SA">ar</locale>
     <locale map-from="as_IN">as</locale>
-    <locale map-from="el_CY">el</locale>
+    <locale map-from="el_GR">el</locale>
     <locale map-from="am_ET">am</locale>
     <locale map-from="de_DE">de-DE</locale>
     <locale map-from="sr_RS@latin">sr-Latn</locale>
     <locale map-from="eu_ES">eu</locale>
     <locale map-from="et_EE">et</locale>
-    <locale map-from="nl_AW">nl</locale>
-    <locale map-from="es_AR">es</locale>
+    <locale map-from="nl_NL">nl</locale>
+    <locale map-from="es_ES">es</locale>
     <locale map-from="af_ZA">af</locale>
     <locale map-from="nn_NO">nn</locale>
     <locale map-from="ja_JP">ja</locale>
@@ -50,7 +50,7 @@
     <locale map-from="fr_FR">fr</locale>
     <locale map-from="sr_RS">sr-Cyrl</locale>
     <locale map-from="bn_IN">bn-IN</locale>
-    <locale map-from="tr_CY">tr</locale>
+    <locale map-from="tr_TR">tr</locale>
     <locale map-from="bg_BG">bg</locale>
     <locale map-from="de_CH">de-CH</locale>
     <locale map-from="pa_IN">pa</locale>
@@ -77,11 +77,11 @@
     <locale map-from="gl_ES">gl</locale>
     <locale map-from="zh_CN">zh-CN</locale>
     <locale map-from="da_DK">da</locale>
-    <locale map-from="sv_FI">sv</locale>
+    <locale map-from="sv_SE">sv</locale>
     <locale map-from="ta_IN">ta-IN</locale>
     <locale map-from="nds_DE">nds</locale>
-    <locale map-from="sq_AL">sq</locale>
-    <locale map-from="de_AT">de</locale>
+    <locale map-from="sq_MK">sq</locale>
+    <locale map-from="de_DE">de</locale>
     <locale map-from="brx_IN">brx</locale>
     <locale>la</locale>
     <locale map-from="he_IL">he</locale>
