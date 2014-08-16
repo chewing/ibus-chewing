@@ -25,5 +25,11 @@
 #define quote_me_(s) #s
 #define quote_me(s) quote_me_(s)
 
+#define CHEWING_CHECK_VERSION(major,minor,patch)	\
+    (CHEWING_MAJOR_VERSION > (major) || \
+     (CHEWING_MAJOR_VERSION == (major) && CHEWING_MINOR_VERSION > (minor)) || \
+     (CHEWING_MAJOR_VERSION == (major) && CHEWING_MINOR_VERSION == (minor) && \
+      CHEWING_MICRO_VERSION >= (patch)))
+
 #endif /* _IBUS_CHEWING_UTIL_H_ */
 

@@ -34,7 +34,15 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 
     if (modifiers & IBUS_RELEASE_MASK){
 	if (!keysym_KP_to_normal(kSym) && (kSym==IBUS_Shift_L || kSym==IBUS_Shift_R) && self->_priv->key_last==kSym){
-             chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
+#if  !CHEWING_CHECK_VERSION(0,4,0)
+	    /* When Chi->Eng with incomplete character */
+	    if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+		/* chewing_zuin_Check==0 means incomplete character */
+		/* Send a space to finish the character */
+		chewing_handle_Space(self->context);
+	    }
+#endif	    
+	    chewing_set_ChiEngMode(self->context, !chewing_get_ChiEngMode(self->context));
 	     self_refresh_property(self,"chewing_chieng_prop");
 	     return self_update(self);
 	}
@@ -154,6 +162,14 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 		    chewing_handle_Tab(self->context);
 		    break;
 		case IBUS_Caps_Lock:
+#if  !CHEWING_CHECK_VERSION(0,4,0)
+		    /* When Chi->Eng with incomplete character */
+		    if (chewing_get_ChiEngMode(self->context) && !chewing_zuin_Check(self->context)){
+			/* chewing_zuin_Check==0 means incomplete character */
+			/* Send a space to finish the character */
+			chewing_handle_Space(self->context);
+		    }
+#endif	    
 		    chewing_handle_Capslock(self->context);
 		    self_refresh_property(self,"chewing_chieng_prop");
 		    break;
@@ -208,6 +224,9 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	    case IBUS_space:
 	    case IBUS_KP_Space:
 		chewing_handle_ShiftSpace(self->context);
+#if  !CHEWING_CHECK_VERSION(0,4,0)
+		chewing_set_ShapeMode(self->context, !chewing_get_ShapeMode(self->context));
+#endif
 		self_refresh_property(self,"chewing_alnumSize_prop");
 		break;
 	    default:
