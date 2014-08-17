@@ -12,7 +12,7 @@ requires 2.0.0
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that ill be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -146,17 +146,6 @@ extern GtkResponseType button_responses[];
 #define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= (f)
 #define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~(f)
 
-#define IBUS_CHEWING_LOG(level, msg, args...) \
-switch (level){\
-    case 0:\
-	   g_warning(msg, ##args);break;\
-    case 1:\
-	   g_message(msg, ##args);break;\
-    case 2:\
-	   g_log(G_LOG_DOMAIN, G_LOG_LEVEL_INFO, msg, ##args);break;\
-    default:\
-	   g_debug(msg, ##args);break;\
-}
 %}
 
 %privateheader{
@@ -172,7 +161,6 @@ void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, gui
 
 %{
 extern gint ibus_chewing_verbose;
-//extern IBusConfig *iConfig;
 
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
@@ -197,9 +185,11 @@ class IBus:Chewing:Engine from IBus:Engine{
     /* Log file */
     protected FILE *logFile=NULL;
 
-    /* Indicate the string is commited to avoid update() set NEED_COMMIT status
-       again when focus in event is triiger, because the last key is Return key
-       and libchewing is still Commit state. */
+    /* Indicate the string is committed to avoid update() set
+     * NEED_COMMIT status
+     * again when focus in event is trigger, 
+     * because the last key is Return key
+     * and libchewing is still Commit state. */
     //public guint hasCommit=0;
 
     private guint statusFlags=0;
@@ -253,25 +243,36 @@ class IBus:Chewing:Engine from IBus:Engine{
     private gchar zhuyin_latest[ZHUYIN_BUFFER_SIZE];
 
     classwide IBusText *chieng_prop_label_chi={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))
+    };
     classwide IBusText *chieng_prop_label_eng={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Eng")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Eng")))
+    };
     classwide IBusText *chieng_prop_tooltip_chi={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to English")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to English")))
+    };
     classwide IBusText *chieng_prop_tooltip_eng={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to Chinese")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Click to switch to Chinese")))
+    };
     classwide IBusText *alnumSize_prop_label_full={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))
+    };
     classwide IBusText *alnumSize_prop_label_half={
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))};
-
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))
+    };
     classwide IBusText *settings_prop_label={
-    g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))};
+	g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))
+    };
     classwide IBusText *emptyText={
-	g_object_ref_sink(ibus_text_new_from_static_string(""))};
+	g_object_ref_sink(ibus_text_new_from_static_string(""))
+    };
 
     init (self) {
           /* initialize the object here */
+	IBUS_CHEWING_LOG(1,"****[I1] init() %sinitialized",(self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED)? "": "un" );
+	if (self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED){
+	    return;
+	}
 
 	gchar *logFilename=getenv ("IBUS_CHEWING_LOGFILE");
 	if (logFilename!=NULL){
@@ -285,26 +286,23 @@ class IBus:Chewing:Engine from IBus:Engine{
 		| G_LOG_FLAG_RECURSION, 
 		ibus_chewing_log_handler, self);
 	
-	IBUS_CHEWING_LOG(1,"****[I1] init() %sinitialized",(self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED)? "": "un" );
-	if (!(self->_priv->statusFlags & ENGINE_STATUS_INITIALIZED)){
-	    maker_dialog_set_verbose_level(MAKER_DIALOG(self->setting_dialog),ibus_chewing_verbose);
-	    gchar buf[100];
-	    g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
+	maker_dialog_set_verbose_level(MAKER_DIALOG(self->setting_dialog),ibus_chewing_verbose);
+	gchar buf[100];
+	g_snprintf(buf,100,"%s/.chewing",getenv("HOME"));
 
-	    IBUS_CHEWING_LOG(6,"[I6] init() CHEWING_DATADIR=%s",  quote_me(CHEWING_DATADIR) );
-	    chewing_Init(quote_me(CHEWING_DATADIR), buf);
+	IBUS_CHEWING_LOG(6,"[I6] init() CHEWING_DATADIR=%s",  quote_me(CHEWING_DATADIR) );
+	chewing_Init(quote_me(CHEWING_DATADIR), buf);
 
-	    self->context=chewing_new();
-	    chewing_set_ChiEngMode(self->context, CHINESE_MODE);
-	    self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
+	self->context=chewing_new();
+	chewing_set_ChiEngMode(self->context, CHINESE_MODE);
+	self->inputMode=CHEWING_INPUT_MODE_SELECTION_DONE;
 
-	    /* init properties */
-	    ibus_prop_list_append(self->prop_list,self->chieng_prop);
-	    ibus_prop_list_append(self->prop_list,self->alnumSize_prop);
-	    ibus_prop_list_append(self->prop_list,self->settings_prop);
+	/* init properties */
+	ibus_prop_list_append(self->prop_list,self->chieng_prop);
+	ibus_prop_list_append(self->prop_list,self->alnumSize_prop);
+	ibus_prop_list_append(self->prop_list,self->settings_prop);
 
-	    ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_INITIALIZED);
-	}
+	ibus_chewing_engine_set_status_flag(self,ENGINE_STATUS_INITIALIZED);
     }
 
     class_init(klass){
@@ -316,7 +314,7 @@ class IBus:Chewing:Engine from IBus:Engine{
 #endif
     }
 
-    private  void load_setting(self){
+    private void load_setting(self){
 #define BUFFER_SIZE_LOCAL 200
 	IBUS_CHEWING_LOG(3,"[I3] load_setting()");
 #if IBUS_CHECK_VERSION(1, 4, 0)

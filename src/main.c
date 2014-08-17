@@ -82,14 +82,14 @@ start_component (void)
         }else{
             component=ibus_component_new("org.freedesktop.IBus.Chewing",
                     _("Chewing component"), quote_me(PRJ_VER), "GPLv2+",
-                _("Peng Huang, Ding-Yi Chen"),
-                "http://code.google.com/p/ibus",
-                quote_me(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
-                quote_me(PROJECT_NAME));
+                    _("Peng Huang, Ding-Yi Chen"),
+                    "http://code.google.com/p/ibus",
+                    quote_me(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
+                    quote_me(PROJECT_NAME));
         }
         ibus_component_add_engine(component,
                 ibus_engine_desc_new("chewing", _("Chewing"),
-                "Chinese chewing input method",
+                _("Chinese chewing input method"),
                 "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
                 quote_me(PRJ_DATA_DIR) "/icons/" quote_me(PROJECT_NAME) ".png",
                 "us")
@@ -145,7 +145,7 @@ main (gint argc, gchar *argv[])
     gtk_init(&argc,&argv);
 
     /* Init i18n messages */
-    setlocale (LC_ALL, "zh_TW.utf8");
+    setlocale (LC_ALL, "");
     bindtextdomain(quote_me(PROJECT_NAME), quote_me(DATA_DIR) "/locale");
     textdomain(quote_me(PROJECT_NAME));
 
