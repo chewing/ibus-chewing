@@ -1,4 +1,4 @@
-* Sat Aug 16 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+* Mon Aug 18 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
 - github is now hosting the ibus-chewing tarballs.
 - Resolves Bug 1013977 - Slow focus change with ibus-chewing
     Fixed github issue #45: Optimize properties handling.

@@ -1,4 +1,5 @@
-SET(IBUS_CHEWING_TARGET ibus-engine-chewing)
+SET(IBUS_ENGINE_CHEWING ibus-engine-chewing)
+SET(IBUS_SETUP_CHEWING ibus-setup-chewing)
 SET(IBUS_CHEWING_SCHEMAS ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing.schemas
     CACHE INTERNAL "ibus-chewing.schemas")
 
@@ -47,21 +48,36 @@ ADD_CUSTOM_TARGET(gob2
 )
 
 
-# executable built from some source
-ADD_EXECUTABLE(${IBUS_CHEWING_TARGET}
+ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.h
+    ${GOB_GENERATED_ibus-chewing-engine}
+    ${GOB_GENERATED_maker-dialog}
+    )
+
+ADD_EXECUTABLE(${IBUS_SETUP_CHEWING}
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.h
     ${GOB_GENERATED_ibus-chewing-engine}
     ${GOB_GENERATED_maker-dialog}
     )
 
 ADD_EXECUTABLE(generate-gconf-schemas
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/generate-gconf-schemas.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-util.h
     ${GOB_GENERATED_maker-dialog}
     )
 
 # Link the executable to the library.
-TARGET_LINK_LIBRARIES(${IBUS_CHEWING_TARGET}
+TARGET_LINK_LIBRARIES(${IBUS_ENGINE_CHEWING}
+    ${_ibus_chewing_target_link_libraries}
+    )
+
+TARGET_LINK_LIBRARIES(${IBUS_SETUP_CHEWING}
     ${_ibus_chewing_target_link_libraries}
     )
 
@@ -87,7 +103,7 @@ INCLUDE(ManageGConf)
 MANAGE_GCONF_SCHEMAS()
 
 
-MANAGE_FILE_INSTALL(TARGETS ${IBUS_CHEWING_TARGET} ARGS
+MANAGE_FILE_INSTALL(TARGETS ${IBUS_ENGINE_CHEWING} ARGS
     LIBEXEC DESTINATION ${LIBEXEC_DIR}
     LIBRARY DESTINATION ${LIB_INSTALL_DIR}
     )

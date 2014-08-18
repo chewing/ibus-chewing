@@ -50,13 +50,13 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 	return TRUE;
     }
 
-    IBUS_CHEWING_LOG(2,"***[I2] process_key_event(-, %x(%s), %x, %x) orig keysym=%x... proceed.",kSym, keyName_get(kSym), keycode, modifiers,keysym);
+    IBUS_CHEWING_LOG(MSG,"*** process_key_event(-, %x(%s), %x, %x) orig keysym=%x... proceed.",kSym, keyName_get(kSym), keycode, modifiers,keysym);
     guint state= modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last=kSym;
     if (state==0){
 	guint kSym_tmp=keysym_KP_to_normal(kSym);
 	if (kSym_tmp){
-	    IBUS_CHEWING_LOG(3,"***[I3] process_key_event(): %x is from keypad.", kSym_tmp);
+	    IBUS_CHEWING_LOG(INFO,"*** process_key_event(): %x is from keypad.", kSym_tmp);
 	    /* Is keypad key */
 	    if ((self->chewingFlags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER) && chewing_get_ChiEngMode(self->context)){
 		chewing_set_ChiEngMode(self->context, 0);
@@ -256,7 +256,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine,
 }
 
 void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, gboolean shiftPressed){
-    IBUS_CHEWING_LOG(2,"[I2] handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
+    IBUS_CHEWING_LOG(DEBUG,"handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
 	    keyval,(self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN)? "TRUE": "FALSE",self->inputMode);
     ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
 #ifdef EASY_SYMBOL_INPUT_WORK_AROUND
@@ -288,11 +288,11 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval, g
  * Mouse events
  */
 void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button, guint state){
-    IBUS_CHEWING_LOG(2,"***[I2] candidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
+    IBUS_CHEWING_LOG(INFO,"*** candidate_clicked(-, %u, %u, %u) ... proceed.", index, button, state);
     IBusChewingEngine *self=IBUS_CHEWING_ENGINE(engine);
     if (ibus_chewing_engine_is_password(self)) return;
     if (index >= chewing_get_candPerPage(self->context) || index <0) {
-	IBUS_CHEWING_LOG(3,"[I3]  candidate_clicked() index out of ranged");
+	IBUS_CHEWING_LOG(DEBUG,"candidate_clicked() index out of ranged");
 	return;
     }
     if (self->inputMode==CHEWING_INPUT_MODE_SELECTING){
@@ -300,12 +300,12 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guin
 	ibus_chewing_engine_handle_Default(self, self->_priv->key_last, FALSE);
 	self_update(self);
     } else {
-	IBUS_CHEWING_LOG(3,"[I3] candidate_clicked() ... Wrong mode: %u", self->inputMode);
+	IBUS_CHEWING_LOG(DEBUG,"candidate_clicked() ... Wrong mode: %u", self->inputMode);
     }
 }
 
 void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *prop_name, guint  prop_state){
-    IBUS_CHEWING_LOG(3,"[I3] property_activate(-, %s, %u)", prop_name, prop_state);
+    IBUS_CHEWING_LOG(INFO,"property_activate(-, %s, %u)", prop_name, prop_state);
     Self *self=SELF(engine);
     gboolean needRefresh=TRUE;
     if (strcmp(prop_name,"chewing_chieng_prop")==0){
@@ -332,7 +332,7 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *pro
 #endif
 	}
     }else{
-	IBUS_CHEWING_LOG(3,"[I3]  property_activate(-, %s, %u) not recognized",prop_name, prop_state);
+	IBUS_CHEWING_LOG(DEBUG,"property_activate(-, %s, %u) not recognized",prop_name, prop_state);
 	needRefresh=FALSE;
     }
     if (needRefresh)
@@ -341,7 +341,7 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *pro
 
 #if IBUS_CHECK_VERSION(1, 5, 4)
 void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, guint hints){
-    IBUS_CHEWING_LOG(5,"[I5] set_content_type(%d, %d)", purpose, hints);
+    IBUS_CHEWING_LOG(DEBUG,"ibus_chewing_set_content_type(%d, %d)", purpose, hints);
 
     Self *self=SELF(engine);
     if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||

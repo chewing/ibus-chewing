@@ -1,40 +1,29 @@
-#include <ibusservice.h>
-#include <ibusconfig.h>
+#include <glib.h>
+#include <ibus.h>
+#include "maker-dialog.h"
+#ifndef _IBUS_CHEWING_CONFIG_H_
+#define _IBUS_CHEWING_CONFIG_H_
 
-typedef struct{
+typedef struct {
     IBusConfig *config;
     MakerDialog *settingDialog;
 } IBusChewingConfig;
 
-enum IBUS_CHEWING_CONFIG_FLAG{
-    IBUS_CHEWING_CONFIG_FLAG_INVISIBLE   =0x1,
-    IBUS_CHEWING_CONFIG_FLAG_INSENSITIVE =0x2,
-    IBUS_CHEWING_CONFIG_FLAG_INEDITABLE  =0x4,
-    IBUS_CHEWING_CONFIG_FLAG_HAS_TRANSLATION =0x8,
-    IBUS_CHEWING_CONFIG_FLAG_TRANSLATION_WITH_CONTEXT =0x10,
-} Maker:Dialog:Property:Flag;
+/* GConf/dconf section except "/desktop/ibus" */
 
-typedef struct{
-    GType valueType;
-    gchar key[30];
-    gchar pageName[50];
-    gchar label[200];
-    gchar defaultValue[100];
-    const gchar **validValues;
-    gchar *translationContext;
+#define IBUS_CHEWING_CONFIG_SECTION "engine/Chewing"
 
-    gint min;
-    gint max;
+IBusChewingConfig *IBusChewingConfig_new(IBusService * service);
 
-    CallbackGetFunc getFunc;
-    CallbackSetFunc setFunc;
+void IBusChewingConfig_load(IBusChewingConfig * self);
 
-    MakerDialogPropertyFlags propertyFlags;
-    gint width;
-    gint height;
-    const gchar *tooltip;
-    gpointer userData;
-} IBusChewingConfigPropertySpec;
+void IBusChewingConfig_set_dialog(IBusChewingConfig * self,
+				  MakerDialog * settingDialog);
 
-IBusChewingConfig *IBusChewingConfig_new(IBusService *service, MakerDialog *settingDialog);
+gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
+				     const gchar * key, GValue * gValue);
 
+gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
+				     const gchar * key, GValue * gValue);
+
+#endif				/* _IBUS_CHEWING_CONFIG_H_ */

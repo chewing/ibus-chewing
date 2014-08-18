@@ -31,16 +31,20 @@
      (CHEWING_MAJOR_VERSION == (major) && CHEWING_MINOR_VERSION == (minor) && \
       CHEWING_MICRO_VERSION >= (patch)))
 
+
+typedef enum { ERROR, WARN, MSG, INFO, DEBUG } IBusChewingLogLevel;
+
 #define IBUS_CHEWING_LOG(level, msg, args...) \
     switch (level){\
-	case 0:\
+	case ERROR:\
+	       g_error(msg, ##args);break;\
+	case WARN:\
 	       g_warning(msg, ##args);break;\
-	case 1:\
+	case MSG:\
 	       g_message(msg, ##args);break;\
-	case 2:\
+	case INFO:\
 	       g_log(NULL, G_LOG_LEVEL_INFO, msg, ##args);break;\
 	default:\
 		g_debug(msg, ##args);break;\
     }
-#endif /* _IBUS_CHEWING_UTIL_H_ */
-
+#endif				/* _IBUS_CHEWING_UTIL_H_ */
