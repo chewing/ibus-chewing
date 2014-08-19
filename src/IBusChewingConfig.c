@@ -623,6 +623,7 @@ gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
 #endif
 }
 
+
 /**
  * IBusChewingConfig_save:
  * @self: this instances.

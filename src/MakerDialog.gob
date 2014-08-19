@@ -1,5 +1,5 @@
 requires 2.0.0 
-%alltop {
+%alltop{
 /*
  * Copyright © 2009  Red Hat, Inc. All rights reserved.
  * Copyright © 2009  Ding-Yi Chen <dchen at redhat.com>
@@ -27,7 +27,7 @@ requires 2.0.0
 #include <locale.h>
 %}
 
-%headertop {
+%headertop{
 #ifndef MAKER_DIALOG_H_
 #define MAKER_DIALOG_H_
 %}
@@ -41,7 +41,7 @@ enum MAKER_DIALOG_PROPERTY_FLAG {
 } Maker:Dialog:Property:Flag;
 
 
-%headertop {
+%headertop{
 typedef guint MakerDialogPropertyFlags;
 
 typedef struct _PropertyContext PropertyContext;
@@ -87,7 +87,7 @@ struct _PropertyContext {
 
 %}
 
-% {
+%{
 #include "ibus-chewing-util.h"
 #include "MakerDialog-def.c"
 %}
@@ -416,51 +416,6 @@ class Maker:Dialog from Gtk:Dialog {
 #endif
 
     /**
-     * write_gconf_schemas_file:
-     * @self: A MakerDialog.
-     * @filename: Filename for output.
-     * @owner: Owner of the schemas.
-     * @schemasHome: The "home direcory" of schemas.
-     * @locales: Supported locales, use ';' as delimiter.
-     * @returns: TRUE if succeed; FALSE otherwise.
-     *
-     * Output the parameters as GConf schemes file.
-     */
-		  public gboolean write_gconf_schemas_file(self,
-							   const gchar *
-							   filename,
-							   const gchar *
-							   owner,
-							   const gchar *
-							   schemasHome,
-							   const gchar *
-							   locales) {
-		  IBUS_CHEWING_LOG(INFO, "output_gconf_schemes_file(%s)",
-				   filename);
-		  FILE * outF = fopen(filename, "w"); if (outF == NULL) {
-		  IBUS_CHEWING_LOG(DEBUG,
-				   "output_gconf_schemes_file(%s) file %s cannot be written!",
-				   filename, filename); return FALSE;}
-		  xml_tags_write(outF, "gconfschemafile",
-				 XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
-		  xml_tags_write(outF, "schemalist",
-				 XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
-		  SchemasFileData sData; sData.schemasHome = schemasHome;
-		  sData.owner = owner; sData.locales = locales;
-		  sData.outF = outF;
-		  g_ptr_array_foreach(self->_priv->propList,
-				      ctx_write_callback, &sData);
-		  xml_tags_write(outF, "schemalist", XML_TAG_TYPE_END_ONLY,
-				 NULL, NULL);
-		  xml_tags_write(outF, "gconfschemafile",
-				 XML_TAG_TYPE_END_ONLY, NULL, NULL);
-		  if (fclose(outF))
-		  return FALSE;
-		  IBUS_CHEWING_LOG(DEBUG,
-				   "output_gconf_schemes_file(%s) ... done.",
-				   filename); return TRUE;}
-
-    /**
      * apply_widget_value:
      * @self: A MakerDialog.
      * @key: The key of a property.
@@ -634,4 +589,4 @@ break; default:
 
 		  %headertop {
 #endif				/* MAKER_DIALOG_H_ */
-		  %}
+%}

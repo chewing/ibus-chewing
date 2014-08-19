@@ -1,4 +1,5 @@
-requires 2.0 .0 % alltop {
+requires 2.0.0 
+%alltop{
 /*
  * Copyright © 2009,2010  Red Hat, Inc. All rights reserved.
  * Copyright © 2009,2010  Ding-Yi Chen <dchen at redhat.com>
@@ -129,7 +130,7 @@ enum ENGINE_STATUS {
     PROPERTIES_REGISTERED = 0x80,
 } Engine:Status;
 
-%h {
+%h{
 #include "maker-dialog.h"
 #define GCONF_KEY_PREFIX "/desktop/ibus/engine/Chewing/"
 /* For easy symbol input work around */
@@ -146,7 +147,7 @@ extern GtkResponseType button_responses[];
 
 %}
 
-%privateheader {
+%privateheader{
 void ibus_chewing_engine_handle_Default(IBusChewingEngine * self,
                                         guint keyval,
 					gboolean shiftPressed);
@@ -167,7 +168,7 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 
 %}
 
-% {
+%{
     extern gint ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
@@ -1259,6 +1260,6 @@ class IBus:Chewing:Engine from IBus:Engine {
     }
 }
 
-% {
+%{
 #include "IBusChewingEngine-input-events.c"
 %}
