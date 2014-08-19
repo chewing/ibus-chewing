@@ -1,8 +1,26 @@
+const gchar *page_labels[] = {
+    N_("Editing"),
+    N_("Selecting"),
+    N_("Keyboard"),
+    NULL
+};
+
+const gchar *button_labels[] = {
+    GTK_STOCK_SAVE,
+    NULL
+};
+
+GtkResponseType button_responses[] = {
+    GTK_RESPONSE_OK,
+};
+
 static PropertyContext *propertyContext_new(PropertySpec * spec,
+                                            gpointer parent,
 					    gpointer userData)
 {
     PropertyContext *ctx = g_new(PropertyContext, 1);
     ctx->spec = spec;
+    ctx->parent = parent;
     ctx->userData = userData;
     return ctx;
 }
@@ -101,7 +119,7 @@ static const gchar *combo_get_active_text(GtkComboBox * combo,
 }
 
 
-static void propList_free_deep_callback(gpointer data, gpointer user_data)
+static void propList_free_deep_callback(gpointer data, gpointer userData)
 {
     propertyContext_free(data);
 }
@@ -119,9 +137,9 @@ static gchar *widget_get_id(gchar * buffer, gint buffer_size,
 /*===== Widget Callback function wraps =====*/
 
 static void on_comboBox_changed_wrap(GtkComboBox * comboBox,
-				     gpointer user_data)
+				     gpointer userData)
 {
-    PropertyContext *ctx = (PropertyContext *) user_data;
+    PropertyContext *ctx = (PropertyContext *) userData;
     GValue value = { 0 };
     combo_get_active_text(comboBox, &value);
     IBUS_CHEWING_LOG(INFO, "on_comboBox_changed_wrap(), key=%s value=%s",
@@ -129,9 +147,9 @@ static void on_comboBox_changed_wrap(GtkComboBox * comboBox,
     ctx->spec->setFunc(ctx, &value);
 }
 
-static void on_entry_activate_wrap(GtkEntry * entry, gpointer user_data)
+static void on_entry_activate_wrap(GtkEntry * entry, gpointer userData)
 {
-    PropertyContext *ctx = (PropertyContext *) user_data;
+    PropertyContext *ctx = (PropertyContext *) userData;
     GValue value = { 0 };
     g_value_init(&value, ctx->spec->valueType);
     g_value_set_string(&value, gtk_entry_get_text(entry));
@@ -141,9 +159,9 @@ static void on_entry_activate_wrap(GtkEntry * entry, gpointer user_data)
 }
 
 static void on_spinButton_value_changed_wrap(GtkSpinButton * button,
-					     gpointer user_data)
+					     gpointer userData)
 {
-    PropertyContext *ctx = (PropertyContext *) user_data;
+    PropertyContext *ctx = (PropertyContext *) userData;
     GValue value = { 0 };
     g_value_init(&value, ctx->spec->valueType);
     switch (ctx->spec->valueType) {
@@ -173,9 +191,9 @@ static void on_spinButton_value_changed_wrap(GtkSpinButton * button,
 }
 
 static void on_toggleButton_toggled_wrap(GtkToggleButton * button,
-					 gpointer user_data)
+					 gpointer userData)
 {
-    PropertyContext *ctx = (PropertyContext *) user_data;
+    PropertyContext *ctx = (PropertyContext *) userData;
     GValue value = { 0 };
     g_value_init(&value, ctx->spec->valueType);
     g_value_set_boolean(&value, gtk_toggle_button_get_active(button));
@@ -194,19 +212,19 @@ typedef struct {
     gfloat yalign;
 } WidgetAlignment;
 
-static void caculate_max_label_width_callback(gpointer key, gpointer value,
-					      gpointer user_data)
+static void calculate_max_label_width_callback(gpointer key, gpointer value,
+					      gpointer widgetAlignment)
 {
-    WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
-	if (STRING_IS_EMPTY(value)
-	    || strcmp(wAlignment->pageName, value) != 0)
-	    return;
+    gchar * wKey = (gchar *) key;
+    gchar * pageName = (gchar *) value;
+    WidgetAlignment *wAlignment = (WidgetAlignment *) widgetAlignment;
+    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+	/* Different Page */
+	return;
     }
-    gchar *keyStr = (gchar *) keyStr;
 
     GtkWidget *widget =
-	maker_dialog_get_widget(wAlignment->self, key, "label");
+	maker_dialog_get_widget(wAlignment->self, wKey, "label");
     GtkRequisition requisition;
     gtk_widget_size_request(widget, &requisition);
     wAlignment->currentMaxWidth =
@@ -214,22 +232,27 @@ static void caculate_max_label_width_callback(gpointer key, gpointer value,
 }
 
 static void set_label_width_callback(gpointer key, gpointer value,
-				     gpointer user_data)
+				     gpointer userData)
 {
-    WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
-	if (STRING_IS_EMPTY(value)
-	    || strcmp(wAlignment->pageName, value) != 0)
-	    return;
+    WidgetAlignment *wAlignment = (WidgetAlignment *) userData;
+    gchar * wKey = (gchar *) key;
+    gchar * pageName = (gchar *) value;
+    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+	/* Different Page */
+	return;
     }
-    gchar *keyStr = (gchar *) keyStr;
     GtkWidget *widget =
-	maker_dialog_get_widget(wAlignment->self, key, "label");
+	maker_dialog_get_widget(wAlignment->self, wKey, "label");
     gtk_widget_set_size_request(widget, wAlignment->currentMaxWidth, -1);
     gtk_misc_set_alignment(GTK_MISC(widget), wAlignment->xalign,
 			   wAlignment->yalign);
     gtk_widget_show(widget);
 }
+
+
+/*============================================
+ * Supporting functions
+ */
 
 /**
  * atob:
@@ -251,7 +274,7 @@ gboolean atob(const gchar * string)
     if (strlen(string) <= 0)
 	return FALSE;
     if (string[0] == 'F' || string[0] == 'f' || string[0] == 'N'
-	|| string[0] == 'n')
+	    || string[0] == 'n')
 	return FALSE;
     char *endPtr = NULL;
     long int longValue = strtol(string, &endPtr, 10);
@@ -262,3 +285,4 @@ gboolean atob(const gchar * string)
     }
     return TRUE;
 }
+

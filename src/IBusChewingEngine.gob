@@ -33,6 +33,7 @@ requires 2.0.0
 #include <X11/XKBlib.h>
 #include <ctype.h>
 #include "ibus-chewing-util.h"
+#include "IBusChewingConfig.h"
 %}
 
 enum CHEWING_KBTYPE {
@@ -168,7 +169,7 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 %}
 
 %{
-    extern gint ibus_chewing_verbose;
+extern gint ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
 #include "IBusChewingEngine-def.c"
@@ -180,11 +181,7 @@ class IBus:Chewing:Engine from IBus:Engine {
     public Chewing:Modifier:Sync syncCapsLock_local =
 	CHEWING_MODIFIER_SYNC_DISABLE;
 
-    public GtkWidget *setting_dialog = {
-	GTK_WIDGET(maker_dialog_new_full
-		   (_("Setting"), 3, page_labels, 1, button_labels,
-		    button_responses))
-    };
+    public GtkWidget *sDialog=NULL;
 
     protected gint selKeys[MAX_SELKEY];
 
@@ -245,7 +242,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	{ g_object_ref_sink(ibus_prop_list_new()) }
     destroywith g_object_unref;
 
-    public IBusChewingConfig *config = NULL;
+    public IBusChewingConfig *iConfig = NULL;
 
     protected IBusKeymap *keymap_us = { ibus_keymap_get("us") };
 
@@ -304,8 +301,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 			  | G_LOG_FLAG_RECURSION,
 			  ibus_chewing_log_handler, self);
 
-	maker_dialog_set_verbose_level(MAKER_DIALOG(self->setting_dialog),
-				       ibus_chewing_verbose);
 	gchar buf[100];
 	g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
 
@@ -341,32 +336,11 @@ class IBus:Chewing:Engine from IBus:Engine {
 
     private void load_setting(self) {
 	IBUS_CHEWING_LOG(DEBUG, "load_setting()");
-	if (self->config){
-	    IBusChewingConfig_load(self->config);
+	if (self->iConfig){
+	    IBusChewingConfig_load(self->iConfig);
 	}else{
-	    self->config=IBusChewingConfig_new(IBUS_SERVICE(self));
+	    self->iConfig=IBusChewingConfig_new(IBUS_SERVICE(self));
 	}
-
-#if 0	
-	/* Add property to dialog */
-	    maker_dialog_add_property(MAKER_DIALOG(self->setting_dialog),
-				      &propSpecs[i], buf, self);
-	    maker_dialog_apply_widget_value(MAKER_DIALOG
-					    (self->setting_dialog),
-					    propSpecs[i].key);
-	    if (G_IS_VALUE(&gValue)) {
-		g_value_unset(&gValue);
-	    }
-	}
-
-	for (i = 0; page_labels[i] != NULL; i++) {
-	    maker_dialog_align_labels(MAKER_DIALOG(self->setting_dialog),
-				      page_labels[i], 1.0f, 0.5f);
-	}
-	gtk_widget_show_all(GTK_WIDGET
-			    (MAKER_DIALOG(self->setting_dialog)->
-			     dialog_notebook));
-#endif	
     }
 
     protected void restore_mode(self) {
@@ -1148,7 +1122,7 @@ class IBus:Chewing:Engine from IBus:Engine {
   override(IBus:Engine) void
      focus_in(IBus:Engine * engine) {
 	Self *self = SELF(engine);
-	if (!self->config) {
+	if (!self->iConfig) {
 	    self_load_setting(self);
 	}
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FOCUS_IN);
@@ -1189,57 +1163,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	Self *self = SELF(engine);
 	IBUS_CHEWING_LOG(INFO, "set_capabilities(%x): statusFlags=%x",
 			 caps, self->_priv->statusFlags);
-    }
-
-  override(IBus:Engine) void
-     property_activate(IBus:Engine * engine, const gchar * prop_name,
-		       guint prop_state) {
-	IBUS_CHEWING_LOG(MSG, "property_activate(-, %s, %u)",
-			 prop_name, prop_state);
-	Self *self = SELF(engine);
-	gboolean needRefresh = TRUE;
-
-	if (strcmp(prop_name, "chewing_chieng_prop") == 0) {
-	    /* Toggle Chinese <-> English */
-	    gint isChinese = chewing_get_ChiEngMode(self->context);
-	    gint setChinese = (isChinese) ? 0 : 1;
-	    chewing_set_ChiEngMode(self->context, setChinese);
-	    gint isCapsLockOff = (is_caps_led_on(self->_priv->pDisplay))
-		? 0 : 1;
-	    IBUS_CHEWING_LOG(INFO, "property_activate setChinese=%d isCapsLockOff=%d",
-			     setChinese, isCapsLockOff);
-	    if (self->syncCapsLock_local != CHEWING_MODIFIER_SYNC_DISABLE) {
-		if (setChinese != isCapsLockOff) {
-		    set_caps_led(!setChinese, self->_priv->pDisplay);
-		    IBUS_CHEWING_LOG(DEBUG,
-				     "property_activate setChinese=%d isCapsLockOff=%d",
-				     setChinese, isCapsLockOff);
-		}
-	    }
-	} else if (strcmp(prop_name, "chewing_alnumSize_prop") == 0) {
-	    /* Toggle Full <-> Half */
-	    chewing_set_ShapeMode(self->context,
-				  !chewing_get_ShapeMode(self->context));
-	} else if (strcmp(prop_name, "chewing_settings_prop") == 0) {
-	    if (ibus_chewing_property_get_state(self->settings_prop)
-		== PROP_STATE_UNCHECKED) {
-		gtk_widget_show_all(self->setting_dialog);
-		if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))
-		    == GTK_RESPONSE_OK) {
-		    self_save_config_all(self);
-		}
-		gtk_widget_hide(self->setting_dialog);
-		ibus_property_set_state(self->settings_prop,
-					PROP_STATE_UNCHECKED);
-	    }
-	} else {
-	    IBUS_CHEWING_LOG(DEBUG,
-			     "property_activate(-, %s, %u) not recognized",
-			     prop_name, prop_state);
-	    needRefresh = FALSE;
-	}
-	if (needRefresh)
-	    self_refresh_property(self, prop_name);
     }
 
   override(IBus:Engine) void
