@@ -48,6 +48,9 @@ typedef struct _PropertyContext PropertyContext;
 typedef GValue *(*CallbackGetFunc) (PropertyContext * ctx);
 typedef void (*CallbackSetFunc) (PropertyContext * ctx,
 				 GValue * value);
+typedef gboolean (*CallbackBoolFunc) (PropertyContext * ctx,
+	                                 gpointer value);
+
 
 typedef struct {
     GType valueType;
@@ -372,48 +375,10 @@ class Maker:Dialog from Gtk:Dialog {
 	wAlignment.xalign = xalign; 
 	wAlignment.yalign = yalign;
 	g_hash_table_foreach(self->_priv->notebookContentTable,
-		caculate_max_label_width_callback, (gpointer) & wAlignment);
+	    caculate_max_label_width_callback, (gpointer) & wAlignment);
 	g_hash_table_foreach(self->_priv->notebookContentTable,
-		set_label_width_callback, (gpointer) & wAlignment);
+	    set_label_width_callback, (gpointer) & wAlignment);
     }
-
-#if 0
-    public void reload_property_value(self, const gchar * key) {
-	gboolean boolValue; 
-	gint intValue; 
-	gint uintValue;
-	const gchar * stringValue;
-	PropertyContext * ctx = self_get_propertyContext_by_key(self, key);
-	PropertySpec * pSpec = ctx->spec;
-	GtkWidget * widget =	    self_get_widget_by_key(self, pSpec->key);
-	GValue * gValue; if (pSpec->getFunc) {
-	    gValue = pSpec->getFunc(ctx); switch (pSpec->valueType) {
-		case G_TYPE_BOOLEAN:
-		    boolValue = g_value_get_boolean(gValue); gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), boolValue); break; case G_TYPE_INT:
-			intValue = g_value_get_int(gValue); gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget), (gdouble) intValue); break; case G_TYPE_UINT:
-			uintValue = g_value_get_uint(gValue); gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget), (gdouble) uintValue); break; case G_TYPE_STRING:
-			stringValue = g_value_get_string(gValue);
-		    if (pSpec->validValues) {
-			int index = -1; if (stringValue) {
-			    index =
-				combo_find_string_index(GTK_COMBO_BOX(widget),
-					stringValue,
-					pSpec->translationContext,
-					ctx->spec->propertyFlags);}
-			if (index < 0 && pSpec->defaultValue) {
-			    index =
-				combo_find_string_index(GTK_COMBO_BOX(widget),
-					pSpec->defaultValue,
-					pSpec->translationContext,
-					ctx->spec->propertyFlags);}
-			gtk_combo_box_set_active(GTK_COMBO_BOX(widget), index);}
-		    else {
-			gtk_entry_set_text(GTK_ENTRY(widget), stringValue);}
-		    break; default:
-			break;}
-	}
-    }
-#endif
 
     /**
      * apply_widget_value:
@@ -587,6 +552,6 @@ break; default:
 
 		  }
 
-		  %headertop {
-#endif				/* MAKER_DIALOG_H_ */
+%headertop{
+#endif    /* MAKER_DIALOG_H_ */
 %}

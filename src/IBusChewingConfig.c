@@ -1,4 +1,3 @@
-#include <libintl.h>
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -531,6 +530,8 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 		       "%s /desktop/ibus/" IBUS_CHEWING_CONFIG_SECTION
 		       "/%s.", _("Warning: cannot load configure key"),
 		       key);
+	    guint64 uintValue;
+	    gint64 intValue;
 	    if (defaultValue) {
 		switch (propSpecs[i].valueType) {
 		case G_TYPE_BOOLEAN:
@@ -541,13 +542,11 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 		    }
 		    break;
 		case G_TYPE_UINT:
-		    guint64 uintValue =
-			g_ascii_strtoull(defaultValue, NULL, 10);
+		    uintValue = g_ascii_strtoull(defaultValue, NULL, 10);
 		    g_value_set_uint(&gValue, uintValue);
 		    break;
 		case G_TYPE_INT:
-		    gint64 intValue =
-			g_ascii_strtoull(defaultValue, NULL, 10);
+		    intValue = g_ascii_strtoull(defaultValue, NULL, 10);
 		    g_value_set_int(&gValue, intValue);
 		    break;
 		case G_TYPE_STRING:
@@ -564,7 +563,6 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 		    g_strlcat(logString, _("Use default value:"),
 			      BUFFER_SIZE_LOCAL);
 		    g_strlcat(logString, defaultValue, BUFFER_SIZE_LOCAL);
-		    g_value_unset(&gValue);
 		}
 	    } else {
 		g_strlcat(logString, _("No default value, skipped."),
@@ -608,22 +606,73 @@ gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
 gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
 				     const gchar * key, GValue * gValue)
 {
+    gboolean result = FALSE;
 #if IBUS_CHECK_VERSION(1, 4, 0)
     GVariant *gVar = g_variant_ref_sink(g_value_to_g_variant(gValue));
     if (gVar != NULL) {
-	return ibus_config_set_value(self->config,
-				     IBUS_CHEWING_CONFIG_SECTION, key,
-				     gVar);
-    } else {
-	return FALSE;
+	result = ibus_config_set_value(self->config,
+				       IBUS_CHEWING_CONFIG_SECTION, key,
+				       gVar);
     }
 #else
-    return ibus_config_set_value(self->config, IBUS_CHEWING_CONFIG_SECTION,
-				 key, gValue);
+    result =
+	ibus_config_set_value(self->config, IBUS_CHEWING_CONFIG_SECTION,
+			      gValue);
 #endif
+
+    if (result == FALSE) {
+	IBUS_CHEWING_LOG(WARN,
+			 "IBusChewingConfig_set_value(-, %s, -) %s %s",
+			 key, _("Failed to set variable"), key);
+	return FALSE;
+    }
+
+    if (!self->config) {
+	IBUS_CHEWING_LOG(WARN,
+			 "IBusChewingConfig_set_value(-, %s, -) %s",
+			 key, _("Failed to connect to IBusService"));
+	return FALSE;
+    }
+
+    PropertyContext ctx;
+    ctx.spec = IBusChewingConfig_find_key(key);
+    ctx.spec->setFunc(&ctx, gValue);
+    return TRUE;
 }
 
+PropertySpec *IBusChewingConfig_find_key(const gchar * key)
+{
+    int i;
+    for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
+	if (STRING_EQUALS(propSpecs[i].key, key)) {
+	    return &propSpecs[i];
+	}
+    }
+    return NULL;
+}
 
+gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
+					      CallbackBoolFunc callback,
+					      gpointer userData)
+{
+    int i;
+    gboolean result = TRUE;
+    for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
+	PropertyContext ctx;
+	ctx.spec = &propSpecs[i];
+	gboolean success = callback(&ctx, userData);
+
+	if (!success) {
+	    if (stopOnError) {
+		return FALSE;
+	    }
+	    result = FALSE;
+	}
+    }
+    return result;
+}
+
+#if 0
 /**
  * IBusChewingConfig_save:
  * @self: this instances.
@@ -660,3 +709,4 @@ gboolean IBusChewingConfig_save_all(IBusChewingConfig * self)
     }
     return success;
 }
+#endif

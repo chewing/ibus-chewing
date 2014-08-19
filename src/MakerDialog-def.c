@@ -185,14 +185,6 @@ static void on_toggleButton_toggled_wrap(GtkToggleButton * button,
 }
 
 /*===== End of Widget Callback function wraps =====*/
-static gboolean isEmptyString(const gchar * str)
-{
-    if (!str)
-	return TRUE;
-    if (str[0] == '\0')
-	return TRUE;
-    return FALSE;
-}
 
 typedef struct {
     MakerDialog *self;
@@ -206,8 +198,8 @@ static void caculate_max_label_width_callback(gpointer key, gpointer value,
 					      gpointer user_data)
 {
     WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!isEmptyString(wAlignment->pageName)) {
-	if (isEmptyString(value)
+    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
+	if (STRING_IS_EMPTY(value)
 	    || strcmp(wAlignment->pageName, value) != 0)
 	    return;
     }
@@ -225,8 +217,8 @@ static void set_label_width_callback(gpointer key, gpointer value,
 				     gpointer user_data)
 {
     WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!isEmptyString(wAlignment->pageName)) {
-	if (isEmptyString(value)
+    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
+	if (STRING_IS_EMPTY(value)
 	    || strcmp(wAlignment->pageName, value) != 0)
 	    return;
     }

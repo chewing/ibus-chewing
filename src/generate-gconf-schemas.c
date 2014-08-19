@@ -49,9 +49,9 @@ static GString *xml_tags_to_string(const gchar * tagName, XmlTagsType type,
     if (type != XML_TAG_TYPE_NO_TAG) {
 	g_string_append_printf(strBuf, "<%s%s%s%s%s>",
 			       (type == XML_TAG_TYPE_END_ONLY) ? "/" : "",
-			       (!isEmptyString(tagName)) ? tagName : "",
-			       (!isEmptyString(attribute)) ? " " : "",
-			       (!isEmptyString(attribute)) ? attribute :
+			       (!STRING_IS_EMPTY(tagName)) ? tagName : "",
+			       (!STRING_IS_EMPTY(attribute)) ? " " : "",
+			       (!STRING_IS_EMPTY(attribute)) ? attribute :
 			       "",
 			       (type == XML_TAG_TYPE_EMPTY) ? "/" : "");
     }
@@ -133,10 +133,9 @@ static void ctx_write_locale(PropertyContext * ctx,
 		   NULL);
 }
 
-static void ctx_write_callback(gpointer data, gpointer user_data)
+gboolean ctx_write_callback(PropertyContext * ctx, gpointer userData)
 {
-    PropertyContext *ctx = (PropertyContext *) data;
-    SchemasFileData *sData = (SchemasFileData *) user_data;
+    SchemasFileData *sData = (SchemasFileData *) userData;
     xml_tags_write(sData->outF, "schema", XML_TAG_TYPE_BEGIN_ONLY, NULL,
 		   NULL);
     gchar buf[STRING_BUFFER_SIZE_DEFAULT];
@@ -176,11 +175,11 @@ static void ctx_write_callback(gpointer data, gpointer user_data)
     setlocale(LC_ALL, NULL);
     xml_tags_write(sData->outF, "schema", XML_TAG_TYPE_END_ONLY, NULL,
 		   NULL);
+    return TRUE;
 }
 
 /**
  * write_gconf_schemas_file:
- * @iConfig: An IBusChewingConfig.
  * @filename: Filename for output.
  * @owner: Owner of the schemas.
  * @schemasHome: The "home direcory" of schemas.
@@ -189,14 +188,13 @@ static void ctx_write_callback(gpointer data, gpointer user_data)
  *
  * Output the parameters as GConf schemes file.
  */
-gboolean write_gconf_schemas_file(IBusChewingConfig * iConfig,
-				  const gchar * filename,
+gboolean write_gconf_schemas_file( const gchar * filename,
 				  const gchar * owner,
-				  const gchar *
-				  schemasHome, const gchar * locales)
+				  const gchar * schemasHome,
+				  const gchar * locales)
 {
     IBUS_CHEWING_LOG(INFO,
-		     "IBusChewingConfig_write_gconf_schemes_file(%s)",
+		     "write_gconf_schemes_file(%s)",
 		     filename);
     FILE *outF = fopen(filename, "w");
     if (outF == NULL) {
@@ -214,8 +212,8 @@ gboolean write_gconf_schemas_file(IBusChewingConfig * iConfig,
     sData.owner = owner;
     sData.locales = locales;
     sData.outF = outF;
-    g_ptr_array_foreach(iConfig->_priv->propList, ctx_write_callback,
-			&sData);
+    IBusChewingConfig_foreach_properties(FALSE, ctx_write_callback,
+					 &sData);
     xml_tags_write(outF, "schemalist", XML_TAG_TYPE_END_ONLY, NULL, NULL);
     xml_tags_write(outF, "gconfschemafile",
 		   XML_TAG_TYPE_END_ONLY, NULL, NULL);
@@ -226,29 +224,10 @@ gboolean write_gconf_schemas_file(IBusChewingConfig * iConfig,
     return TRUE;
 }
 
-gboolean schemas_get_definition()
-{
-    MakerDialog *dialog = maker_dialog_new();
-    maker_dialog_set_verbose_level(dialog, verbose);
-    int i;
-    for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
-	maker_dialog_add_property_no_gui(dialog, &propSpecs[i], NULL);
-    }
-    gboolean ret = write_gconf_schemas_file(dialog, schemasFilename,
-					    "ibus-chewing",
-					    "/desktop/ibus/" IBUS_CHEWING_CONFIG_SECTION,
-					    localeStr);
-
-    return ret;
-}
-
 int main(gint argc, gchar * argv[])
 {
     GError *error = NULL;
     GOptionContext *context;
-
-    g_type_init();
-//    gtk_init(&argc,&argv);
 
     /* Init i18n messages */
     setlocale(LC_ALL, "");
@@ -271,9 +250,11 @@ int main(gint argc, gchar * argv[])
 	exit(-1);
     }
     schemasFilename = argv[1];
-    if (schemas_get_definition()) {
-	exit(0);
+    gboolean result=write_gconf_schemas_file(schemasFilename, "ibus-chewing", 
+	    "/desktop/ibus/"  IBUS_CHEWING_CONFIG_SECTION,
+	    localeStr);
+    if (!result){
+	return 1;
     }
-    exit(1);
     return 0;
 }
