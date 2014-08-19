@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns="http://zanata.org/namespace/config/">
+  <url>https://translate.zanata.org/zanata/</url>
+  <project>ibus-chewing</project>
+  <project-version>master</project-version>
+  <project-type>gettext</project-type>
+  <locales>
+    <locale map-from="lv_LV">lv</locale>
+    <locale map-from="ro_RO">ro</locale>
+    <locale map-from="lt_LT">lt</locale>
+    <locale map-from="ru_RU">ru</locale>
+    <locale map-from="hu_HU">hu</locale>
+    <locale map-from="hr_HR">hr</locale>
+    <locale map-from="es_MX">es-MX</locale>
+    <locale map-from="es_ES">es-ES</locale>
+    <locale map-from="mai_IN">mai</locale>
+    <locale map-from="id_ID">id</locale>
+    <locale map-from="mn_MN">mn</locale>
+    <locale map-from="zh_TW">zh-TW</locale>
+    <locale map-from="ml_IN">ml</locale>
+    <locale map-from="vi_VN">vi</locale>
+    <locale map-from="fa_IR">fa</locale>
+    <locale map-from="uk_UA">uk</locale>
+    <locale map-from="pt_PT">pt-PT</locale>
+    <locale map-from="ms_MY">ms</locale>
+    <locale map-from="mr_IN">mr</locale>
+    <locale map-from="fi_FI">fi</locale>
+    <locale map-from="is_IS">is</locale>
+    <locale map-from="it_IT">it</locale>
+    <locale map-from="nb_NO">nb</locale>
+    <locale map-from="az_AZ">az</locale>
+    <locale>eo</locale>
+    <locale map-from="ar_SA">ar</locale>
+    <locale map-from="as_IN">as</locale>
+    <locale map-from="el_GR">el</locale>
+    <locale map-from="am_ET">am</locale>
+    <locale map-from="de_DE">de-DE</locale>
+    <locale map-from="sr_RS@latin">sr-Latn</locale>
+    <locale map-from="eu_ES">eu</locale>
+    <locale map-from="et_EE">et</locale>
+    <locale map-from="nl_NL">nl</locale>
+    <locale map-from="es_ES">es</locale>
+    <locale map-from="af_ZA">af</locale>
+    <locale map-from="nn_NO">nn</locale>
+    <locale map-from="ja_JP">ja</locale>
+    <locale map-from="tl_PH">tl</locale>
+    <locale map-from="xh_ZA">xh</locale>
+    <locale map-from="pl_PL">pl</locale>
+    <locale map-from="ca_AD">ca</locale>
+    <locale map-from="fr_FR">fr</locale>
+    <locale map-from="sr_RS">sr-Cyrl</locale>
+    <locale map-from="bn_IN">bn-IN</locale>
+    <locale map-from="tr_TR">tr</locale>
+    <locale map-from="bg_BG">bg</locale>
+    <locale map-from="de_CH">de-CH</locale>
+    <locale map-from="pa_IN">pa</locale>
+    <locale map-from="ka_GE">ka</locale>
+    <locale map-from="th_TH">th</locale>
+    <locale map-from="kk_KZ">kk</locale>
+    <locale map-from="br_FR">br</locale>
+    <locale map-from="te_IN">te</locale>
+    <locale map-from="kn_IN">kn</locale>
+    <locale>anp</locale>
+    <locale map-from="bs_BA">bs</locale>
+    <locale map-from="ko_KR">ko</locale>
+    <locale map-from="ga_IE">ga</locale>
+    <locale map-from="pt_BR">pt-BR</locale>
+    <locale map-from="ta_IN">ta</locale>
+    <locale map-from="sl_SI">sl</locale>
+    <locale map-from="gu_IN">gu</locale>
+    <locale map-from="cy_GB">cy</locale>
+    <locale map-from="or_IN">or</locale>
+    <locale map-from="si_LK">si</locale>
+    <locale map-from="bn_BD">bn-BD</locale>
+    <locale map-from="sk_SK">sk</locale>
+    <locale map-from="ky_KG">ky</locale>
+    <locale map-from="gl_ES">gl</locale>
+    <locale map-from="zh_CN">zh-CN</locale>
+    <locale map-from="da_DK">da</locale>
+    <locale map-from="sv_SE">sv</locale>
+    <locale map-from="ta_IN">ta-IN</locale>
+    <locale map-from="nds_DE">nds</locale>
+    <locale map-from="sq_MK">sq</locale>
+    <locale map-from="de_DE">de</locale>
+    <locale map-from="brx_IN">brx</locale>
+    <locale>la</locale>
+    <locale map-from="he_IL">he</locale>
+    <locale map-from="ast_ES">ast</locale>
+    <locale map-from="hi_IN">hi</locale>
+    <locale map-from="cs_CZ">cs</locale>
+    <locale map-from="en_GB">en-GB</locale>
+  </locales>
+</config>
