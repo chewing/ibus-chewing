@@ -233,13 +233,14 @@ static void set_label_width_callback(gpointer key, gpointer value,
 				     gpointer user_data)
 {
     WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
+    gchar * wKey = (gchar *) key;
+    gchar * pageName = (gchar *) value;
     if (!STRING_EQUALS(wAlignment->pageName,pageName)){
 	/* Different Page */
 	return;
     }
-    gchar *keyStr = (gchar *) keyStr;
     GtkWidget *widget =
-	maker_dialog_get_widget(wAlignment->self, key, "label");
+	maker_dialog_get_widget(wAlignment->self, wKey, "label");
     gtk_widget_set_size_request(widget, wAlignment->currentMaxWidth, -1);
     gtk_misc_set_alignment(GTK_MISC(widget), wAlignment->xalign,
 			   wAlignment->yalign);

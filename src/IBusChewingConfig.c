@@ -548,13 +548,23 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 #undef BUFFER_SIZE_LOCAL
 }
 
+
 gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
 				     const gchar * key, GValue * gValue)
 {
+    return IBusChewingConfig_get_ibus_value(self,
+					    IBUS_CHEWING_CONFIG_SECTION,
+					    key, gValue);
+}
+
+gboolean IBusChewingConfig_get_ibus_value(IBusChewingConfig * self,
+					  const gchar * section,
+					  const gchar * key,
+					  GValue * gValue)
+{
 #if IBUS_CHECK_VERSION(1, 4, 0)
-    GVariant *gVar =
-	ibus_config_get_value(self->config, IBUS_CHEWING_CONFIG_SECTION,
-			      key);
+    GVariant *gVar = ibus_config_get_value(self->config, section,
+					   key);
     if (gVar == NULL) {
 	return FALSE;
     }
@@ -563,8 +573,7 @@ gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
     g_variant_unref(gVar);
     return TRUE;
 #else
-    return ibus_config_get_value(self->config, IBUS_CHEWING_CONFIG_SECTION,
-				 key, gValue);
+    return ibus_config_get_value(self->config, section, key, gValue);
 #endif
 }
 

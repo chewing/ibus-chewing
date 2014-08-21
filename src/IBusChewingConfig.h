@@ -19,6 +19,12 @@ void IBusChewingConfig_load(IBusChewingConfig * self);
 gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
 				     const gchar * key, GValue * gValue);
 
+
+gboolean IBusChewingConfig_get_ibus_value(IBusChewingConfig * self,
+					  const gchar * section,
+					  const gchar * key,
+					  GValue * gValue);
+
 gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
 				     const gchar * key, GValue * gValue);
 

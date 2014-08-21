@@ -68,6 +68,9 @@ class Maker:Dialog from Gtk:Dialog {
     private GStringChunk *widgetIds =
 	{ g_string_chunk_new(MAKER_DIALOG_ID_LENGTH) }
         destroywith g_string_chunk_free;
+
+    protected IBusChewingConfig * iConfig = NULL;
+
     private GPtrArray *propList = { g_ptr_array_new() }
         destroy {
 	    if (VAR) {
@@ -125,6 +128,10 @@ class Maker:Dialog from Gtk:Dialog {
 	    }
 	}
 	return self;
+    }
+
+    public void set_config(self,IBusChewingConfig *iConfig){
+	self->iConfig=iConfig;
     }
 
     /**
