@@ -1,7 +1,10 @@
+#include <stdio.h>
+#include <glib/gi18n.h>
+#include <locale.h>
 #include "IBusChewingEngine-def.c"
 #include "ibus-chewing-util.h"
 #include "IBusChewingConfig.h"
-
+#define XML_BUFFER_SIZE 1000
 static gint verbose = 0;
 static gchar *schemasFilename = NULL;
 static gchar *localeStr = NULL;
@@ -138,8 +141,8 @@ gboolean ctx_write_callback(PropertyContext * ctx, gpointer userData)
     SchemasFileData *sData = (SchemasFileData *) userData;
     xml_tags_write(sData->outF, "schema", XML_TAG_TYPE_BEGIN_ONLY, NULL,
 		   NULL);
-    gchar buf[STRING_BUFFER_SIZE_DEFAULT];
-    g_snprintf(buf, STRING_BUFFER_SIZE_DEFAULT, "/schemas%s/%s",
+    gchar buf[XML_BUFFER_SIZE];
+    g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
 	       sData->schemasHome, ctx->spec->key);
     xml_tags_write(sData->outF, "key", XML_TAG_TYPE_SHORT, NULL, buf);
     xml_tags_write(sData->outF, "applyto", XML_TAG_TYPE_SHORT, NULL,
@@ -188,14 +191,12 @@ gboolean ctx_write_callback(PropertyContext * ctx, gpointer userData)
  *
  * Output the parameters as GConf schemes file.
  */
-gboolean write_gconf_schemas_file( const gchar * filename,
+gboolean write_gconf_schemas_file(const gchar * filename,
 				  const gchar * owner,
 				  const gchar * schemasHome,
 				  const gchar * locales)
 {
-    IBUS_CHEWING_LOG(INFO,
-		     "write_gconf_schemes_file(%s)",
-		     filename);
+    IBUS_CHEWING_LOG(INFO, "write_gconf_schemes_file(%s)", filename);
     FILE *outF = fopen(filename, "w");
     if (outF == NULL) {
 	IBUS_CHEWING_LOG(DEBUG,
@@ -212,7 +213,7 @@ gboolean write_gconf_schemas_file( const gchar * filename,
     sData.owner = owner;
     sData.locales = locales;
     sData.outF = outF;
-    IBusChewingConfig_foreach_properties(FALSE, ctx_write_callback,
+    IBusChewingConfig_foreach_properties(FALSE, ctx_write_callback, NULL,
 					 &sData);
     xml_tags_write(outF, "schemalist", XML_TAG_TYPE_END_ONLY, NULL, NULL);
     xml_tags_write(outF, "gconfschemafile",
@@ -240,21 +241,23 @@ int main(gint argc, gchar * argv[])
 
     if (!g_option_context_parse(context, &argc, &argv, &error)) {
 	g_print("Option parsing failed: %s\n", error->message);
-	exit(-1);
+	return 1;
     }
     g_option_context_free(context);
     if (!localeStr)
 	localeStr = (gchar *) localeDefault;
     if (argc < 2) {
 	fprintf(stderr, "Specify filename of outputing schemas file!\n");
-	exit(-1);
+	return 1;
     }
     schemasFilename = argv[1];
-    gboolean result=write_gconf_schemas_file(schemasFilename, "ibus-chewing", 
-	    "/desktop/ibus/"  IBUS_CHEWING_CONFIG_SECTION,
-	    localeStr);
-    if (!result){
-	return 1;
+    gboolean result =
+	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
+				 "/desktop/ibus/"
+				 IBUS_CHEWING_CONFIG_SECTION,
+				 localeStr);
+    if (!result) {
+	return 2;
     }
     return 0;
 }

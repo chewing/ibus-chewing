@@ -321,10 +321,10 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar  *pro
 	if (self->settings_prop->state==PROP_STATE_UNCHECKED)
 #endif
 	{
-	    if (gtk_dialog_run(GTK_DIALOG(self->setting_dialog))==GTK_RESPONSE_OK){
+	    if (gtk_dialog_run(GTK_DIALOG(self->sDialog))==GTK_RESPONSE_OK){
 		self_save_config_all(self);
 	    }
-	    gtk_widget_hide(self->setting_dialog);
+	    gtk_widget_hide(self->sDialog);
 #if IBUS_CHECK_VERSION(1, 4, 0)
 		ibus_property_set_state(self->settings_prop,PROP_STATE_UNCHECKED);
 #else

@@ -61,7 +61,10 @@ typedef enum {
      (str[0] == '\0')\
     )
 
-#define STRING_EQUALS(str1, str2) (strcmp(str1, str2)==0)
+#define STRING_EQUALS(str1, str2) \
+    ((str1==NULL && str2==NULL) ||\
+     ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
+    )
 
 
 #endif				/* _IBUS_CHEWING_UTIL_H_ */

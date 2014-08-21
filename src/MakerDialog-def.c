@@ -1,3 +1,19 @@
+const gchar *page_labels[] = {
+    N_("Editing"),
+    N_("Selecting"),
+    N_("Keyboard"),
+    NULL
+};
+
+const gchar *button_labels[] = {
+    GTK_STOCK_SAVE,
+    NULL
+};
+
+GtkResponseType button_responses[] = {
+    GTK_RESPONSE_OK,
+};
+
 static PropertyContext *propertyContext_new(PropertySpec * spec,
 					    gpointer userData)
 {
@@ -194,19 +210,19 @@ typedef struct {
     gfloat yalign;
 } WidgetAlignment;
 
-static void caculate_max_label_width_callback(gpointer key, gpointer value,
-					      gpointer user_data)
+static void calculate_max_label_width_callback(gpointer key, gpointer value,
+					      gpointer widgetAlignment)
 {
-    WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
-	if (STRING_IS_EMPTY(value)
-	    || strcmp(wAlignment->pageName, value) != 0)
-	    return;
+    gchar * wKey = (gchar *) key;
+    gchar * pageName = (gchar *) value;
+    WidgetAlignment *wAlignment = (WidgetAlignment *) widgetAlignment;
+    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+	/* Different Page */
+	return;
     }
-    gchar *keyStr = (gchar *) keyStr;
 
     GtkWidget *widget =
-	maker_dialog_get_widget(wAlignment->self, key, "label");
+	maker_dialog_get_widget(wAlignment->self, wKey, "label");
     GtkRequisition requisition;
     gtk_widget_size_request(widget, &requisition);
     wAlignment->currentMaxWidth =
@@ -217,10 +233,9 @@ static void set_label_width_callback(gpointer key, gpointer value,
 				     gpointer user_data)
 {
     WidgetAlignment *wAlignment = (WidgetAlignment *) user_data;
-    if (!STRING_IS_EMPTY(wAlignment->pageName)) {
-	if (STRING_IS_EMPTY(value)
-	    || strcmp(wAlignment->pageName, value) != 0)
-	    return;
+    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+	/* Different Page */
+	return;
     }
     gchar *keyStr = (gchar *) keyStr;
     GtkWidget *widget =
@@ -230,6 +245,11 @@ static void set_label_width_callback(gpointer key, gpointer value,
 			   wAlignment->yalign);
     gtk_widget_show(widget);
 }
+
+
+/*============================================
+ * Supporting functions
+ */
 
 /**
  * atob:
@@ -251,7 +271,7 @@ gboolean atob(const gchar * string)
     if (strlen(string) <= 0)
 	return FALSE;
     if (string[0] == 'F' || string[0] == 'f' || string[0] == 'N'
-	|| string[0] == 'n')
+	    || string[0] == 'n')
 	return FALSE;
     char *endPtr = NULL;
     long int longValue = strtol(string, &endPtr, 10);
@@ -262,3 +282,51 @@ gboolean atob(const gchar * string)
     }
     return TRUE;
 }
+
+gchar * GValue_to_string(GValue * gValue){
+    static gchar result[MAKER_DIALOG_VALUE_LENGTH];
+    result[0]='\0';
+    GType gType = g_value_get_gtype(gValue);
+    guint uintValue;
+    int intValue;
+    switch(gType){
+    case G_TYPE_BOOLEAN:
+	if (g_value_get_boolean(gValue)){
+	    g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "1");
+	} else {
+	    g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "0");
+	}
+	break;
+    case G_TYPE_UINT:
+	uintValue=g_value_get_uint(gValue);
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%u", uintValue);
+	break;
+    case G_TYPE_INT:
+	intValue=g_value_get_int(gValue);
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d", intValue);
+	break;
+    case G_TYPE_STRING:
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, g_value_get_string(gValue));
+	break;
+    default:
+	break;
+    }
+    return result;
+}
+
+gboolean maker_dialog_add_PropertySpec_callback(PropertyContext * ctx, gpointer userData)
+{
+    PropertySpec * pSpec=ctx->spec;
+    MakerDialog * self=(MakerDialog *) ctx->userData;
+    IBusChewingConfig * iConfig=(IBusChewingConfig *) userData;
+    gchar * strValue;
+    if (iConfig){
+	GValue gValue= {0};
+	IBusChewingConfig_get_value(iConfig, pSpec->key, &gValue);
+	strValue = GValue_to_string(&gValue);
+    } else {
+	strValue = pSpec->defaultValue;
+    }
+    return maker_dialog_add_property(self, pSpec, strValue, NULL);
+}
+

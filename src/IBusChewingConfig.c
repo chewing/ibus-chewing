@@ -1,39 +1,10 @@
 #define GETTEXT_PACKAGE "gtk20"
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include "ibus-chewing-util.h"
 #include "IBusChewingConfig.h"
 
-const gchar *page_labels[] = {
-    N_("Editing"),
-    N_("Selecting"),
-    N_("Keyboard"),
-    NULL
-};
-
-const gchar *button_labels[] = {
-    GTK_STOCK_SAVE,
-    NULL
-};
-
-GtkResponseType button_responses[] = {
-    GTK_RESPONSE_OK,
-};
-
-
-const gchar *toneKeys[] = {
-    "6347",			//Default
-    "jfds",			//hsu
-    "uiop",			//ibm
-    "zaq1",			//gin-yieh
-    "4321",			//eten
-    "kjfd",			//eten26
-    "6347",			//dvorak
-    "thdn",			//dvorak_hsu
-    "yert",			//dachen_26
-    "1234",			//hanyu
-    NULL
-};
 
 const gchar *kbType_ids[] = {
     N_("default"),
@@ -577,12 +548,6 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 #undef BUFFER_SIZE_LOCAL
 }
 
-void IBusChewingConfig_set_dialog(IBusChewingConfig * self,
-				  MakerDialog * dialog)
-{
-    self->settingDialog = dialog;
-}
-
 gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
 				     const gchar * key, GValue * gValue)
 {
@@ -653,6 +618,7 @@ PropertySpec *IBusChewingConfig_find_key(const gchar * key)
 
 gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
 					      CallbackBoolFunc callback,
+					      gpointer ctxData,
 					      gpointer userData)
 {
     int i;
@@ -660,6 +626,7 @@ gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
     for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
 	PropertyContext ctx;
 	ctx.spec = &propSpecs[i];
+	ctx.userData = ctxData;
 	gboolean success = callback(&ctx, userData);
 
 	if (!success) {

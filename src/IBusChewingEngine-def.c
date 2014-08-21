@@ -1,3 +1,16 @@
+const gchar *toneKeys[] = {
+    "6347",			//Default
+    "jfds",			//hsu
+    "uiop",			//ibm
+    "zaq1",			//gin-yieh
+    "4321",			//eten
+    "kjfd",			//eten26
+    "6347",			//dvorak
+    "thdn",			//dvorak_hsu
+    "yert",			//dachen_26
+    "1234",			//hanyu
+    NULL
+};
 
 /*============================================
  * Supporting functions
