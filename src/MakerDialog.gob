@@ -138,15 +138,15 @@ class Maker:Dialog from Gtk:Dialog {
      * add_property_no_gui:
      * @self: A MakerDialog
      * @pSpec: A property spec to be added.
-     * @user_data: user_data to be passed to callback functions.
+     * @userData: userData to be passed to callback functions.
      * @returns: A newly allocated PropertyContext.
      *
      * Add a property without GUI automation involved.
      */
     public PropertyContext * add_property_no_gui(self, PropertySpec * pSpec,
-	    gpointer user_data) {
+	    gpointer parent,  gpointer userData) {
 	IBUS_CHEWING_LOG(INFO, "add_property_no_gui(%s,-)", pSpec->key);
-	PropertyContext * ctx = propertyContext_new(pSpec, user_data);
+	PropertyContext * ctx = propertyContext_new(pSpec, userData);
 	g_ptr_array_add(self->_priv->propList, ctx);
 	g_hash_table_insert(self->_priv->notebookContentTable,
 	    pSpec->key, pSpec->pageName);
@@ -158,7 +158,7 @@ class Maker:Dialog from Gtk:Dialog {
      * @self: A MakerDialog
      * @pSpec: A property spec to be added.
      * @initValue: Initial value of the property.
-     * @user_data: user_data to be passed to callback functions.
+     * @userData: userData to be passed to callback functions.
      * @returns: TRUE if the property adding succeed; FALSE otherwise.
      *
      * Add a property to the dialog and corresponding Gtk widget will also be
@@ -167,9 +167,9 @@ class Maker:Dialog from Gtk:Dialog {
      */
     public gboolean add_property(self, PropertySpec * pSpec,
 				       const gchar * initValue,
-				       gpointer user_data) {
+				       gpointer userData) {
 	IBUS_CHEWING_LOG(INFO, "add_property(%s,%s,-)", pSpec->key, initValue);
-	PropertyContext * ctx =  self_add_property_no_gui(self, pSpec, user_data);
+	PropertyContext * ctx =  self_add_property_no_gui(self, pSpec, self, userData);
 	if (!ctx) {
 	    return FALSE;
 	}
@@ -380,27 +380,41 @@ class Maker:Dialog from Gtk:Dialog {
     }
 
     /**
-     * apply_widget_value:
+     * apply_widget:
      * @self: A MakerDialog.
-     * @key: The key of a property.
+     * @ctx: The PropertyContext
      *
      * Apply the value shown in widget to the property.
      * Note that a set callback function is needed in PropertySpec to apply the value to property.
      *
      * @see_also: set_widget_value()
      */
-    public void apply_widget_value(self, const gchar * key) {
-	IBUS_CHEWING_LOG(INFO, "apply_widget_value(%s)", key);
-	PropertyContext * ctx =
-	    self_get_propertyContext_by_key(self, key); if (!ctx) {
-		/* Not found */
-		g_warning("%s: no such PropertyContext", key); return;}
+    public void apply_widget(self, ProeprtyContext *ctx) {
+	IBUS_CHEWING_LOG(INFO, "apply_widget(%s)", ctx->spec->key);
 	GValue gValue = {
 	    0};
-	self_get_widget_value(self, key, &gValue);
+	self_get_widget_value(self, ctx->spec->key, &gValue);
 	if (ctx->spec->setFunc) {
 	    ctx->spec->setFunc(ctx, &gValue);}
 	g_value_unset(&gValue);
+    }
+
+    /**
+     * apply_config_all:
+     * @self: A MakerDialog.
+     *
+     * Apply all values and call the set function
+     * Note that a set callback function is needed in PropertySpec to apply the value to property.
+     *
+     * @see_also: set_widget_value()
+     */
+    public void apply_config_all(self){
+	int i;
+	for (i = 0; i <	self->_priv->propList->len; i++) {
+	    ctx = g_ptr_array_index(self->_priv->propList, i);
+	    ctx->userData=(gpointer) self->iConfig;
+	    self_apply_widget(self,ctx);
+	}
     }
 
 
@@ -456,8 +470,8 @@ class Maker:Dialog from Gtk:Dialog {
      *
      * Set value for widget display.
      * However, the property value is not set.
-     * Use apply_widget_value() to do it.
-     * @see_also: apply_widget_value()
+     * Use apply_widget() to do it.
+     * @see_also: apply_widget()
      */
     public void set_widget_value(self, const gchar * key, GValue * value) {
 	int index;
@@ -525,7 +539,7 @@ class Maker:Dialog from Gtk:Dialog {
 	PropertyContext * result = NULL;
 	for (i = 0; i <	self->_priv->propList->len; i++) {
 	    ctx = g_ptr_array_index(self->_priv->propList, i);
-	    if (strcmp(ctx->spec->key, key) == 0) {
+	    if (STRING_EQUALS(ctx->spec->key, key)) {
 		result = ctx;
 		break;
 	    }

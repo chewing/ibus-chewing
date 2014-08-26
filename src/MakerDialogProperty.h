@@ -64,6 +64,7 @@ typedef struct {
 
 struct _PropertyContext {
     PropertySpec *spec;
+    gpointer parent;      //<! Main object that this property.
     gpointer userData;	//<! User data to be used in callback.
 };
 
