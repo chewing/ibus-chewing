@@ -30,6 +30,9 @@ gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
 
 PropertySpec *IBusChewingConfig_find_key(const gchar * key);
 
+PropertyContextArray
+    *IBusChewingConfig_get_PropertyContextArray(IBusChewingConfig * self);
+
 gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
 					      CallbackBoolFunc callback,
 					      gpointer ctxData,

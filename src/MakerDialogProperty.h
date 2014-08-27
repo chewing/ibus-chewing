@@ -22,9 +22,10 @@
 #ifndef _MAKER_DIALOG_PROPERTY_H_
 #define _MAKER_DIALOG_PROPERTY_H_
 #include <glib.h>
+#include <glib-object.h>
 
 #define MAKER_DIALOG_VALUE_LENGTH 200
-typedef enum  {
+typedef enum {
     MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE = 0x1,
     MAKER_DIALOG_PROPERTY_FLAG_INSENSITIVE = 0x2,
     MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE = 0x4,
@@ -35,10 +36,9 @@ typedef enum  {
 typedef struct _PropertyContext PropertyContext;
 
 typedef GValue *(*CallbackGetFunc) (PropertyContext * ctx);
-typedef void (*CallbackSetFunc) (PropertyContext * ctx,
-	GValue * value);
-typedef gboolean (*CallbackBoolFunc) (PropertyContext * ctx,
-	gpointer userData);
+typedef void (*CallbackSetFunc) (PropertyContext * ctx, GValue * value);
+typedef gboolean(*CallbackBoolFunc) (PropertyContext * ctx,
+				     gpointer userData);
 
 typedef struct {
     GType valueType;
@@ -56,16 +56,35 @@ typedef struct {
     CallbackSetFunc setFunc;
 
     MakerDialogPropertyFlags propertyFlags;
-    gint width;
-    gint height;
     const gchar *tooltip;
     gpointer userData;
 } PropertySpec;
 
 struct _PropertyContext {
     PropertySpec *spec;
-    gpointer parent;      //<! Main object that this property.
-    gpointer userData;	//<! User data to be used in callback.
+    GValue value;		//<! Property Value
+    gpointer parent;		//<! Main object that this property.
+    gpointer userData;		//<! User data to be used in callback.
 };
+
+typedef GPtrArray PropertyContextArray;
+
+PropertyContext *PropertyContext_new(PropertySpec * spec, GValue * value,
+	gpointer parent, gpointer userData);
+
+
+gchar *PropertyContext_to_string(PropertyContext * ctx);
+
+gboolean PropertyContext_from_string(PropertyContext * ctx, gchar * str);
+
+gboolean PropertyContext_from_GValue(PropertyContext * ctx, GValue * value);
+
+PropertyContextArray *PropertyContextArray_from_spec_array(PropertySpec
+	specs[],
+	gpointer parent,
+	gpointer userData);
+
+PropertyContext * PropertyContextArray_index(PropertyContextArray * array, guint index);
+
 
 #endif

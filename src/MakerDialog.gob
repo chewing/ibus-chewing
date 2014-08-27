@@ -71,7 +71,7 @@ class Maker:Dialog from Gtk:Dialog {
 
     protected IBusChewingConfig * iConfig = NULL;
 
-    private GPtrArray *propList = { g_ptr_array_new() }
+    private PropertyContextArray *propList = NULL
         destroy {
 	    if (VAR) {
 		g_ptr_array_foreach(VAR, propList_free_deep_callback, NULL); 
@@ -135,99 +135,77 @@ class Maker:Dialog from Gtk:Dialog {
     }
 
     /**
-     * add_property_no_gui:
-     * @self: A MakerDialog
-     * @pSpec: A property spec to be added.
-     * @userData: userData to be passed to callback functions.
-     * @returns: A newly allocated PropertyContext.
-     *
-     * Add a property without GUI automation involved.
-     */
-    public PropertyContext * add_property_no_gui(self, PropertySpec * pSpec,
-	    gpointer parent,  gpointer userData) {
-	IBUS_CHEWING_LOG(INFO, "add_property_no_gui(%s,-)", pSpec->key);
-	PropertyContext * ctx = propertyContext_new(pSpec, userData);
-	g_ptr_array_add(self->_priv->propList, ctx);
-	g_hash_table_insert(self->_priv->notebookContentTable,
-	    pSpec->key, pSpec->pageName);
-	return ctx;
-    }
-
-    /**
      * add_property:
      * @self: A MakerDialog
-     * @pSpec: A property spec to be added.
-     * @initValue: Initial value of the property.
-     * @userData: userData to be passed to callback functions.
+     * @ctx: A PropertyContext which contain the value to be set.
      * @returns: TRUE if the property adding succeed; FALSE otherwise.
      *
      * Add a property to the dialog and corresponding Gtk widget will also be
      * set.
-     * If @initValue is not NULL, it will be the initial value of the widget.
      */
-    public gboolean add_property(self, PropertySpec * pSpec,
-				       const gchar * initValue,
-				       gpointer userData) {
-	IBUS_CHEWING_LOG(INFO, "add_property(%s,%s,-)", pSpec->key, initValue);
-	PropertyContext * ctx =  self_add_property_no_gui(self, pSpec, self, userData);
+    public gboolean add_property(self, PropertyContext * ctx){
 	if (!ctx) {
 	    return FALSE;
 	}
+	IBUS_CHEWING_LOG(INFO, "add_property(%s) %s", ctx->spec->key, 
+		PropertyContext_to_string(ctx));
 
-	GtkWidget * vbox = self_get_base_vbox(self, pSpec->pageName);
+	g_hash_table_insert(self->_priv->notebookContentTable,
+		ctx->spec->key, ctx->spec->pageName);
+	GtkWidget * vbox = self_get_base_vbox(self, ctx->spec->pageName);
 	g_assert(vbox);
 	GtkWidget * hbox = gtk_hbox_new(FALSE, self->hbox_spacing);
-	self_widget_register(self, hbox, pSpec->key, "hbox");
-	GtkWidget * label = gtk_label_new(_(pSpec->label));
-	self_widget_register(self, label, pSpec->key, "label");
-	if (pSpec->tooltip) {
-	    gtk_widget_set_tooltip_text(label, _(pSpec->tooltip));
+	self_widget_register(self, hbox, ctx->spec->key, "hbox");
+	GtkWidget * label = gtk_label_new(_(ctx->spec->label));
+	self_widget_register(self, label, ctx->spec->key, "label");
+	if (ctx->spec->tooltip) {
+	    gtk_widget_set_tooltip_text(label, _(ctx->spec->tooltip));
 	}
 	gtk_widget_show(label);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
         GtkWidget * widget = NULL;
 	GtkAdjustment * gAdjust = NULL;
 
-	switch (pSpec->valueType) {
+	switch (ctx->spec->valueType) {
 	    case G_TYPE_BOOLEAN:
 		widget = gtk_check_button_new();
-		self_widget_register(self, widget, pSpec->key, NULL);
+		self_widget_register(self, widget, ctx->spec->key, NULL);
 		gboolean bValue = FALSE; 
 		if (initValue) {
 		    bValue = atob(initValue);
-		}else if (pSpec->defaultValue) {
-		    bValue = atob(pSpec->defaultValue);
+		}else if (ctx->spec->defaultValue) {
+		    bValue = atob(ctx->spec->defaultValue);
 		}
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
 			bValue);
-		if (pSpec->setFunc) {
+		if (ctx->spec->setFunc) {
 		    g_signal_connect(widget, "toggled",
 			G_CALLBACK (on_toggleButton_toggled_wrap), ctx);
 		}
 		break; 
 	    case G_TYPE_UINT:
 	    case G_TYPE_INT:
-		gAdjust = (GtkAdjustment *) gtk_adjustment_new(atoi(pSpec->defaultValue),
-			    pSpec->min, pSpec->max, 1.0, 0.0, 0.0);
+		gAdjust = (GtkAdjustment *) gtk_adjustment_new(atoi(ctx->spec->defaultValue),
+			    ctx->spec->min, ctx->spec->max, 1.0, 0.0, 0.0);
 		widget = gtk_spin_button_new(gAdjust, 1.0, 0);
-		self_widget_register(self, widget, pSpec->key, NULL);
+		self_widget_register(self, widget, ctx->spec->key, NULL);
 		if (initValue) {
 		    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),
 			atoi(initValue));
-		} else if (pSpec->defaultValue) {
+		} else if (ctx->spec->defaultValue) {
 		    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),
-			atoi(pSpec->defaultValue));
+			atoi(ctx->spec->defaultValue));
 		}
 
-		if (pSpec->setFunc) {
+		if (ctx->spec->setFunc) {
 		    g_signal_connect(widget, "value-changed",
 			G_CALLBACK (on_spinButton_value_changed_wrap), ctx);
 		}
 		break; 
 	    case G_TYPE_STRING:
-		if (pSpec->validValues) {
+		if (ctx->spec->validValues) {
 		    GtkListStore * listStore = NULL;
-		    if (pSpec->
+		    if (ctx->spec->
 			    propertyFlags &
 			    MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
 			listStore =
@@ -236,30 +214,30 @@ class Maker:Dialog from Gtk:Dialog {
 			listStore = gtk_list_store_new(1, G_TYPE_STRING);
 		    }
 		    int i; 
-		    for (i = 0; pSpec->validValues[i] != NULL; i++) {
+		    for (i = 0; ctx->spec->validValues[i] != NULL; i++) {
 			/* Add new item */
-			listStore_append(listStore, pSpec->validValues[i],
-				pSpec->translationContext,
-				pSpec->propertyFlags);
+			listStore_append(listStore, ctx->spec->validValues[i],
+				ctx->spec->translationContext,
+				ctx->spec->propertyFlags);
 		    }
 		    int index = -1; 
 		    if (initValue) {
 			index = listStore_find_string(listStore, initValue,
-			    pSpec->translationContext,
-			    pSpec->propertyFlags);
+			    ctx->spec->translationContext,
+			    ctx->spec->propertyFlags);
 		    }
 
-		    if (index < 0 && pSpec->defaultValue) {
-			index = listStore_find_string(listStore, pSpec->defaultValue,
-			    pSpec->translationContext,
-			    pSpec->propertyFlags);
+		    if (index < 0 && ctx->spec->defaultValue) {
+			index = listStore_find_string(listStore, ctx->spec->defaultValue,
+			    ctx->spec->translationContext,
+			    ctx->spec->propertyFlags);
 		    }
 
-		    if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE) {
+		    if (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE) {
 			widget = gtk_combo_box_new_with_model(GTK_TREE_MODEL(listStore));
 			GtkCellRenderer * renderer = gtk_cell_renderer_text_new();
 			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget), renderer, FALSE);
-			if (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
+			if (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
 			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget),
 				renderer, "text", 1, NULL);
 			} else {
@@ -269,34 +247,34 @@ class Maker:Dialog from Gtk:Dialog {
 		    } else {
 			widget = gtk_combo_box_entry_new_with_model(
 			    GTK_TREE_MODEL(listStore),
-			    (pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION)
+			    (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION)
 			    ? 1 : 0);
 		    }
-		    self_widget_register(self, widget, pSpec->key, NULL);
+		    self_widget_register(self, widget, ctx->spec->key, NULL);
 		    gtk_combo_box_set_active(GTK_COMBO_BOX(widget), index);
-		    if (pSpec->setFunc) {
+		    if (ctx->spec->setFunc) {
 			g_signal_connect(widget, "changed", G_CALLBACK(on_comboBox_changed_wrap),
 			    ctx);
 		    }
 		} else {
 		    widget = gtk_entry_new();
-		    self_widget_register(self, widget, pSpec->key, NULL);
-		    if (pSpec->max >= 0) {
-			gtk_entry_set_max_length(GTK_ENTRY(widget), pSpec->max);
+		    self_widget_register(self, widget, ctx->spec->key, NULL);
+		    if (ctx->spec->max >= 0) {
+			gtk_entry_set_max_length(GTK_ENTRY(widget), ctx->spec->max);
 		    }
 
 		    const char *sValue = NULL;
 		    if (initValue) {
 			sValue = initValue;
-		    } else if (pSpec->defaultValue) {
-		        sValue = pSpec->defaultValue;
+		    } else if (ctx->spec->defaultValue) {
+		        sValue = ctx->spec->defaultValue;
 		    } else {
 			sValue = "";
 		    }
 		    gtk_entry_set_text(GTK_ENTRY(widget), sValue);
 		    gtk_editable_set_editable(GTK_EDITABLE(widget),
-			!(pSpec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
-		    if (pSpec->setFunc) {
+			!(ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
+		    if (ctx->spec->setFunc) {
 			g_signal_connect(widget, "activate",
 			    G_CALLBACK(on_entry_activate_wrap),	ctx);
 		    }
@@ -316,7 +294,7 @@ class Maker:Dialog from Gtk:Dialog {
     /** 
      * add_all_properties:
      * @self: A MakerDialog
-     * @pSpecArray: An array of PropertySpec to be added.
+     * @iConfig: An IBusChewingConfig
      * @returns: TRUE if all properties added successfully; FALSE otherwise.
      *
      * Add all properties to the dialog and corresponding Gtk widget will also be
@@ -324,10 +302,21 @@ class Maker:Dialog from Gtk:Dialog {
      *
      */
     public gboolean add_all_properties(self, IBusChewingConfig * iConfig){
-	return IBusChewingConfig_foreach_properties(FALSE,
-		maker_dialog_add_PropertySpec_callback,
-		self,
-		iConfig);
+	PropertyContextArray * array = IBusChewingConfig_get_PropertyContextArray(iConfig);
+	guint i;
+	gboolean clean=TRUE;
+	for(i=0;i<array->len;i++){
+	    PropertyContext * ctx=PropertyContextArray_index(i);
+	    if (iConfig){
+		GValue gValue= {0};
+		IBusChewingConfig_get_value(iConfig, ctx->spec->key, &gValue);
+		if (! PropertyContext_from_GValue(ctx, &gValue)){
+		    return FALSE;
+		}
+	    }
+	    self_add_property(self, ctx);
+	}
+	return clean;
     }
 
     /**

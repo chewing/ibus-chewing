@@ -91,6 +91,7 @@ INCLUDE(ManageDependency)
 INCLUDE(ManageFile)
 INCLUDE(ManageSourceVersionControl)
 INCLUDE(ManageTarget)
+INCLUDE(ManageTranslation)
 INCLUDE(ManageUninstall)
 
 ENABLE_TESTING()

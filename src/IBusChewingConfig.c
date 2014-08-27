@@ -257,14 +257,14 @@ PropertySpec propSpecs[] = {
      "default", kbType_ids, NULL, 0, 0,
      NULL, KBType_set_callback,
      MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE |
-     MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION, 0, 0,
+     MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION,
      N_("Select Zhuyin keyboard layout."),
      }
     ,
     {G_TYPE_STRING, "selKeys", "Keyboard", N_("Selection keys"),
      "1234567890", selKeys_array, NULL, 0, 0,
      NULL, selKeys_set_callback,
-     0, 0, 0,
+     0,
      N_
      ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
      }
@@ -272,7 +272,7 @@ PropertySpec propSpecs[] = {
     {G_TYPE_INT, "hsuSelKeyType", "Keyboard", N_("Hsu's selection key"),
      "1", NULL, NULL, 1, 2,
      NULL, hsuSelKeyType_set_callback,
-     0, 0, 0,
+     0,
      N_
      ("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
      }
@@ -281,7 +281,7 @@ PropertySpec propSpecs[] = {
     {G_TYPE_BOOLEAN, "autoShiftCur", "Editing", N_("Auto move cursor"),
      "1", NULL, NULL, 0, 1,
      NULL, autoShiftCur_set_callback,
-     0, 0, 0,
+     0,
      N_("Automatically move cursor to next character."),
      }
     ,
@@ -289,14 +289,14 @@ PropertySpec propSpecs[] = {
      N_("Add phrases in front"),
      "1", NULL, NULL, 0, 1,
      NULL, addPhraseDirection_set_callback,
-     0, 0, 0,
+     0,
      N_("Add phrases in the front."),
      }
     ,
     {G_TYPE_BOOLEAN, "easySymbolInput", "Editing", N_("Easy symbol input"),
      "1", NULL, NULL, 0, 1,
      NULL, easySymbolInput_set_callback,
-     0, 0, 0,
+     0,
      N_("Easy symbol input."),
      }
     ,
@@ -304,7 +304,7 @@ PropertySpec propSpecs[] = {
      N_("Esc clean all buffer"),
      "0", NULL, NULL, 0, 1,
      NULL, escCleanAllBuf_set_callback,
-     0, 0, 0,
+     0,
      N_("Escape key cleans the text in pre-edit-buffer."),
      }
     ,
@@ -312,7 +312,7 @@ PropertySpec propSpecs[] = {
      N_("Maximum Chinese characters"),
      "20", NULL, NULL, 8, 50,
      NULL, maxChiSymbolLen_set_callback,
-     0, 0, 0,
+     0,
      N_
      ("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
      }
@@ -321,7 +321,7 @@ PropertySpec propSpecs[] = {
      N_("Force lowercase in En mode"),
      "0", NULL, NULL, 0, 1,
      NULL, forceLowercaseEnglish_set_callback,
-     0, 0, 0,
+     0,
      N_("Ignore CapsLock status and input lowercase by default.\n\
 		It is handy if you wish to enter lowercase by default. Uppercase can still be inputted with Shift."),
      }
@@ -335,7 +335,6 @@ PropertySpec propSpecs[] = {
      MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE |
      MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION |
      MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT,
-     0, 0,
      N_("Occasionally, the CapsLock status does not match the IM, \
 		this option determines how these status be synchronized. Valid values:\n\
 		\"disable\": Do nothing.\n\
@@ -348,14 +347,14 @@ PropertySpec propSpecs[] = {
      N_("Number pad always input number"),
      "1", NULL, NULL, 0, 1,
      NULL, numpadAlwaysNumber_set_callback,
-     0, 0, 0,
+     0,
      N_("Always input numbers when number keys from key pad is inputted."),
      }
     ,
     {G_TYPE_BOOLEAN, "plainZhuyin", "Selecting", N_("Plain Zhuyin mode"),
      "0", NULL, NULL, 0, 1,
      NULL, plainZhuyin_set_callback,
-     0, 0, 0,
+     0,
      N_
      ("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
      }
@@ -363,7 +362,7 @@ PropertySpec propSpecs[] = {
     {G_TYPE_INT, "candPerPage", "Selecting", N_("Candidate per page"),
      "10", NULL, NULL, 8, 10,
      NULL, candPerPage_set_callback,
-     0, 0, 0,
+     0,
      N_("Number of candidate per page."),
      }
     ,
@@ -371,7 +370,7 @@ PropertySpec propSpecs[] = {
      N_("Choose phrases from backward"),
      "1", NULL, NULL, 0, 1,
      NULL, phraseChoiceRearward_set_callback,
-     0, 0, 0,
+     0,
      N_("Choose phrases from the back, without moving cursor."),
      }
     ,
@@ -379,7 +378,7 @@ PropertySpec propSpecs[] = {
      N_("Space to select"),
      "0", NULL, NULL, 0, 1,
      NULL, spaceAsSelection_set_callback,
-     0, 0, 0,
+     0,
      "Press Space to select the candidate.",
      }
     ,
@@ -387,7 +386,7 @@ PropertySpec propSpecs[] = {
     {G_TYPE_INVALID, "", "", "",
      "", NULL, NULL, 0, 0,
      NULL, NULL,
-     0, 0, 0,
+     0,
      NULL,
      }
     ,
@@ -625,6 +624,12 @@ PropertySpec *IBusChewingConfig_find_key(const gchar * key)
     return NULL;
 }
 
+PropertyContextArray
+    * IBusChewingConfig_get_PropertyContextArray(IBusChewingConfig * self)
+{
+    return PropertyContextArray_from_spec_array(propSpecs, self, NULL);
+}
+
 gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
 					      CallbackBoolFunc callback,
 					      gpointer ctxData,
@@ -647,42 +652,3 @@ gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
     }
     return result;
 }
-
-#if 0
-/**
- * IBusChewingConfig_save:
- * @self: this instances.
- * @keySuffix: key to be set.
- * @returns: TRUE if successful, FALSE otherwise.
- *
- * Save the property value to disk.
- */
-gboolean IBusChewingConfig_save(IBusChewingConfig * self,
-				const gchar * keySuffix)
-{
-    IBUS_CHEWING_LOG(DEBUG, "IBusChewingConfig_save(%s)", keySuffix);
-    GValue gValue = { 0 };
-    maker_dialog_get_widget_value(MAKER_DIALOG(self->settingDialog),
-				  keySuffix, &gValue);
-    return IBusChewingConfig_set_value(self, keySuffix, &gValue);
-}
-
-/**
- * IBusChewingConfig_save_all:
- * @self: this instances.
- * @returns: TRUE if all successful, FALSE otherwise.
- *
- * Save all property values to disk.
- */
-gboolean IBusChewingConfig_save_all(IBusChewingConfig * self)
-{
-    int i;
-    gboolean success = TRUE;
-    for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
-	if (!IBusChewingConfig_save(self, propSpecs[i].key)) {
-	    success = FALSE;
-	}
-    }
-    return success;
-}
-#endif
