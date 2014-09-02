@@ -6,32 +6,32 @@
 /*============================================
  * Supporting functions
  */
-gchar *GValue_to_string(GValue * gValue)
+gchar *GValue_to_string(GValue * value)
 {
     static gchar result[MAKER_DIALOG_VALUE_LENGTH];
     result[0] = '\0';
-    GType gType = g_value_get_gtype(gValue);
+    GType gType = G_VALUE_TYPE(value);
     guint uintValue;
-    int intValue;
+    gint intValue;
     switch (gType) {
     case G_TYPE_BOOLEAN:
-	if (g_value_get_boolean(gValue)) {
+	if (g_value_get_boolean(value)) {
 	    g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "1");
 	} else {
 	    g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "0");
 	}
 	break;
     case G_TYPE_UINT:
-	uintValue = g_value_get_uint(gValue);
+	uintValue = g_value_get_uint(value);
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%u", uintValue);
 	break;
     case G_TYPE_INT:
-	intValue = g_value_get_int(gValue);
+	intValue = g_value_get_int(value);
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d", intValue);
 	break;
     case G_TYPE_STRING:
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
-		   g_value_get_string(gValue));
+		   g_value_get_string(value));
 	break;
     default:
 	break;
@@ -39,28 +39,33 @@ gchar *GValue_to_string(GValue * gValue)
     return result;
 }
 
-gboolean GValue_from_string(GValue * gValue, gchar * str)
+gboolean GValue_from_string(GValue * value, gchar * str)
 {
-    GType gType = g_value_get_gtype(gValue);
+    mkdg_log(DEBUG, "GValue_from_string(-,%s)", str);
+    if (!G_IS_VALUE(value)) {
+	mkdg_log(ERROR, "GValue_from_string(): Failed to get GType");
+    }
+    GType gType = G_VALUE_TYPE(value);
+    mkdg_log(DEBUG, "GValue_from_string() gType=%s", g_type_name(gType));
     guint uintValue;
-    int intValue;
+    gint intValue;
     gchar *endPtr = NULL;
     switch (gType) {
     case G_TYPE_BOOLEAN:
 	if (STRING_IS_EMPTY(str)) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else if (STRING_EQUALS(str, "0")) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else if (STRING_EQUALS(str, "F")) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else if (STRING_EQUALS(str, "f")) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else if (STRING_EQUALS(str, "FALSE")) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else if (STRING_EQUALS(str, "false")) {
-	    g_value_set_boolean(gValue, FALSE);
+	    g_value_set_boolean(value, FALSE);
 	} else {
-	    g_value_set_boolean(gValue, TRUE);
+	    g_value_set_boolean(value, TRUE);
 	}
 	return TRUE;
     case G_TYPE_UINT:
@@ -68,17 +73,17 @@ gboolean GValue_from_string(GValue * gValue, gchar * str)
 	if (uintValue == 0 && endPtr == str) {
 	    return FALSE;
 	}
-	g_value_set_uint(gValue, uintValue);
+	g_value_set_uint(value, uintValue);
 	return TRUE;
     case G_TYPE_INT:
 	intValue = g_ascii_strtoll(str, &endPtr, 10);
 	if (intValue == 0 && endPtr == str) {
 	    return FALSE;
 	}
-	g_value_set_int(gValue, intValue);
+	g_value_set_int(value, intValue);
 	return TRUE;
     case G_TYPE_STRING:
-	g_value_set_string(gValue, str);
+	g_value_set_string(value, str);
 	return TRUE;
     default:
 	break;
@@ -96,15 +101,20 @@ PropertyContext *PropertyContext_new(PropertySpec * spec, GValue * value,
     if (spec == NULL) {
 	return NULL;
     }
+    mkdg_log(INFO, "PropertyContext_new(%s, - )", spec->key);
     PropertyContext *result = g_new0(PropertyContext, 1);
     if (value == NULL) {
 	g_value_init(&(result->value), spec->valueType);
+	mkdg_log(INFO, "PropertyContext_new(): value==NULL, valueType=%s",
+		 g_type_name(spec->valueType));
 	if (!STRING_IS_EMPTY(spec->defaultValue)) {
 	    if (!PropertyContext_from_string(result, spec->defaultValue)) {
 		return NULL;
 	    }
 	}
     } else if (G_IS_VALUE(value)) {
+	mkdg_log(INFO, "PropertyContext_new(): value==%s",
+		 GValue_to_string(value));
 	g_value_copy(value, &(result->value));
     } else {
 	return NULL;

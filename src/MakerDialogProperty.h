@@ -23,6 +23,7 @@
 #define _MAKER_DIALOG_PROPERTY_H_
 #include <glib.h>
 #include <glib-object.h>
+#include "MakerDialogUtil.h"
 
 #define MAKER_DIALOG_VALUE_LENGTH 200
 typedef enum {

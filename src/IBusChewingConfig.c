@@ -2,6 +2,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include "MakerDialogUtil.h"
 #include "ibus-chewing-util.h"
 #include "IBusChewingConfig.h"
 
@@ -492,7 +493,7 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
     for (i = 0; propSpecs[i].valueType != G_TYPE_INVALID; i++) {
 	GValue gValue = { 0 };
 	gchar *key = propSpecs[i].key;
-	IBUS_CHEWING_LOG(DEBUG, "IBusChewingConfig_new(), key=%s", key);
+	mkdg_log(DEBUG, "IBusChewingConfig_new(), key=%s", key);
 	if (!IBusChewingConfig_get_value(self, key, &gValue)) {
 	    gchar *defaultValue = propSpecs[i].defaultValue;
 	    gchar logString[BUFFER_SIZE_LOCAL];
@@ -523,7 +524,7 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 		    g_value_set_string(&gValue, defaultValue);
 		    break;
 		default:
-		    IBUS_CHEWING_LOG(WARN,
+		    mkdg_log(WARN,
 				     "IBusChewingConfig_new(): Unsupported value type for key %s, skip",
 				     key);
 		    break;
@@ -538,7 +539,7 @@ void IBusChewingConfig_load(IBusChewingConfig * self)
 		g_strlcat(logString, _("No default value, skipped."),
 			  BUFFER_SIZE_LOCAL);
 	    }
-	    IBUS_CHEWING_LOG(INFO, logString);
+	    mkdg_log(INFO, logString);
 	}
 	if (G_IS_VALUE(&gValue)) {
 	    g_value_unset(&gValue);
@@ -594,14 +595,14 @@ gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
 #endif
 
     if (result == FALSE) {
-	IBUS_CHEWING_LOG(WARN,
+	mkdg_log(WARN,
 			 "IBusChewingConfig_set_value(-, %s, -) %s %s",
 			 key, _("Failed to set variable"), key);
 	return FALSE;
     }
 
     if (!self->config) {
-	IBUS_CHEWING_LOG(WARN,
+	mkdg_log(WARN,
 			 "IBusChewingConfig_set_value(-, %s, -) %s",
 			 key, _("Failed to connect to IBusService"));
 	return FALSE;
