@@ -71,7 +71,7 @@ class Maker:Dialog from Gtk:Dialog {
 
     protected IBusChewingConfig * iConfig = NULL;
 
-    private PropertyContextArray *propList = NULL
+    private MkdgProperties *propList = NULL
         destroy {
 	    if (VAR) {
 		g_ptr_array_foreach(VAR, propList_free_deep_callback, NULL); 
@@ -207,7 +207,7 @@ class Maker:Dialog from Gtk:Dialog {
 		    GtkListStore * listStore = NULL;
 		    if (ctx->spec->
 			    propertyFlags &
-			    MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
+			    MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
 			listStore =
 			    gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 		    } else {
@@ -233,11 +233,11 @@ class Maker:Dialog from Gtk:Dialog {
 			    ctx->spec->propertyFlags);
 		    }
 
-		    if (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE) {
+		    if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW) {
 			widget = gtk_combo_box_new_with_model(GTK_TREE_MODEL(listStore));
 			GtkCellRenderer * renderer = gtk_cell_renderer_text_new();
 			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget), renderer, FALSE);
-			if (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
+			if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
 			    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget),
 				renderer, "text", 1, NULL);
 			} else {
@@ -247,7 +247,7 @@ class Maker:Dialog from Gtk:Dialog {
 		    } else {
 			widget = gtk_combo_box_entry_new_with_model(
 			    GTK_TREE_MODEL(listStore),
-			    (ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION)
+			    (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION)
 			    ? 1 : 0);
 		    }
 		    self_widget_register(self, widget, ctx->spec->key, NULL);
@@ -273,7 +273,7 @@ class Maker:Dialog from Gtk:Dialog {
 		    }
 		    gtk_entry_set_text(GTK_ENTRY(widget), sValue);
 		    gtk_editable_set_editable(GTK_EDITABLE(widget),
-			!(ctx->spec->propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE));
+			!(ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW));
 		    if (ctx->spec->setFunc) {
 			g_signal_connect(widget, "activate",
 			    G_CALLBACK(on_entry_activate_wrap),	ctx);
@@ -302,11 +302,11 @@ class Maker:Dialog from Gtk:Dialog {
      *
      */
     public gboolean add_all_properties(self, IBusChewingConfig * iConfig){
-	PropertyContextArray * array = IBusChewingConfig_get_PropertyContextArray(iConfig);
+	MkdgProperties * array = IBusChewingConfig_get_MkdgProperties(iConfig);
 	guint i;
 	gboolean clean=TRUE;
 	for(i=0;i<array->len;i++){
-	    PropertyContext * ctx=PropertyContextArray_index(i);
+	    PropertyContext * ctx=MkdgProperties_index(i);
 	    if (iConfig){
 		GValue gValue= {0};
 		IBusChewingConfig_get_value(iConfig, ctx->spec->key, &gValue);
@@ -378,7 +378,7 @@ class Maker:Dialog from Gtk:Dialog {
      *
      * @see_also: set_widget_value()
      */
-    public void apply_widget(self, ProeprtyContext *ctx) {
+    public void apply_widget(self, PropertyContext *ctx) {
 	IBUS_CHEWING_LOG(INFO, "apply_widget(%s)", ctx->spec->key);
 	GValue gValue = {
 	    0};

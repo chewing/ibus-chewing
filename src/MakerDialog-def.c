@@ -34,15 +34,15 @@ static void propertyContext_free(gpointer ctx_ptr)
 
 static void listStore_append(GtkListStore * listStore, const gchar * str,
 			     const gchar * translationContext,
-			     MakerDialogPropertyFlags propertyFlags)
+			     MkdgPropertyFlags propertyFlags)
 {
     GtkTreeIter iter;
     gtk_list_store_append(listStore, &iter);
 
-    if (propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION) {
+    if (propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
 	if (translationContext
 	    || propertyFlags &
-	    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT) {
+	    MKDG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT) {
 	    IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s, _(str)=%s", str,
 			     g_dpgettext2(NULL, translationContext, str));
 	    gtk_list_store_set(listStore, &iter, 0, str, 1,
@@ -62,7 +62,7 @@ static void listStore_append(GtkListStore * listStore, const gchar * str,
 static gint listStore_find_string(GtkListStore * listStore,
 				  const gchar * str,
 				  const gchar * translationContext,
-				  MakerDialogPropertyFlags propertyFlags)
+				  MkdgPropertyFlags propertyFlags)
 {
     g_assert(str);
     IBUS_CHEWING_LOG(INFO, "listStore_find_string(%s,%u)", str,
@@ -84,7 +84,7 @@ static gint listStore_find_string(GtkListStore * listStore,
 		 (GTK_TREE_MODEL(listStore), &iter));
     }
     if (index < 0
-	&& !(propertyFlags & MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE)) {
+	&& !(propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW)) {
 	/* Add new item */
 	listStore_append(listStore, str, translationContext,
 			 propertyFlags);
@@ -97,7 +97,7 @@ static gint listStore_find_string(GtkListStore * listStore,
 
 static gint combo_find_string_index(GtkComboBox * combo, const gchar * str,
 				    const gchar * translationContext,
-				    MakerDialogPropertyFlags propertyFlags)
+				    MkdgPropertyFlags propertyFlags)
 {
     GtkListStore *listStore =
 	GTK_LIST_STORE(gtk_combo_box_get_model(combo));

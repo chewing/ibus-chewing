@@ -78,20 +78,20 @@ start_component (void)
         IBusComponent *component=NULL;
         if (xml){
             component = ibus_component_new_from_file (
-                    quote_me(DATA_DIR) "/ibus/component/chewing.xml");
+                    QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
         }else{
             component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                    _("Chewing component"), quote_me(PRJ_VER), "GPLv2+",
+                    _("Chewing component"), QUOTE_ME(PRJ_VER), "GPLv2+",
                     _("Peng Huang, Ding-Yi Chen"),
                     "http://code.google.com/p/ibus",
-                    quote_me(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
-                    quote_me(PROJECT_NAME));
+                    QUOTE_ME(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
+                    QUOTE_ME(PROJECT_NAME));
         }
         ibus_component_add_engine(component,
                 ibus_engine_desc_new("chewing", _("Chewing"),
                 _("Chinese chewing input method"),
                 "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-                quote_me(PRJ_DATA_DIR) "/icons/" quote_me(PROJECT_NAME) ".png",
+                QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
                 "us")
         );
 
@@ -146,12 +146,12 @@ main (gint argc, gchar *argv[])
 
     /* Init i18n messages */
     setlocale (LC_ALL, "");
-    bindtextdomain(quote_me(PROJECT_NAME), quote_me(DATA_DIR) "/locale");
-    textdomain(quote_me(PROJECT_NAME));
+    bindtextdomain(QUOTE_ME(PROJECT_NAME), QUOTE_ME(DATA_DIR) "/locale");
+    textdomain(QUOTE_ME(PROJECT_NAME));
 
     context = g_option_context_new ("- ibus chewing engine component");
 
-    g_option_context_add_main_entries (context, entries, quote_me(PROJECT_NAME));
+    g_option_context_add_main_entries (context, entries, QUOTE_ME(PROJECT_NAME));
 
     if (!g_option_context_parse (context, &argc, &argv, &error)) {
         g_print ("Option parsing failed: %s\n", error->message);
@@ -161,9 +161,9 @@ main (gint argc, gchar *argv[])
     g_option_context_free (context);
 
     if (showFlags){
-        printf("PROJECT_NAME=" quote_me(PROJECT_NAME) "\n");
-        printf("DATA_DIR=" quote_me(DATA_DIR) "\n");
-        printf("CHEWING_DATADIR=" quote_me(CHEWING_DATADIR) "\n");
+        printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
+        printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
+        printf("CHEWING_DATADIR=" QUOTE_ME(CHEWING_DATADIR) "\n");
     }else{
         start_component ();
     }

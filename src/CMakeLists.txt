@@ -49,15 +49,22 @@ SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED_ibus-chewing-engine}
 
 SET(IBUS_CHEWING_SOURCE_COMMON_C
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogBackend.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogProperty.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogUtil.c
     CACHE INTERNAL "IBUS_CHEWING_SOURCE_COMMON_C"
     )
 
 SET(IBUS_CHEWING_SOURCE_COMMON
     ${IBUS_CHEWING_SOURCE_COMMON_C}
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-util.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogBackend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogProperty.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogUtil.h
+    ${GOB2_OUTPUT_DIR}ibus-chewing-engine.h
     )
 
 ADD_CUSTOM_TARGET(gob2
@@ -69,6 +76,7 @@ ADD_CUSTOM_TARGET(gob2
 
 ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingApplier.c
     ${IBUS_CHEWING_SOURCE_COMMON}
     ${GOB_GENERATED_ibus-chewing-engine}
     ${GOB_GENERATED_maker-dialog}
@@ -79,9 +87,11 @@ ADD_EXECUTABLE(${IBUS_SETUP_CHEWING}
     ${GOB_GENERATED_maker-dialog}
     )
 
+ADD_DEFINITIONS(-DMKDG_SPEC_ONLY)
 ADD_EXECUTABLE(generate-gconf-schemas
     ${CMAKE_CURRENT_SOURCE_DIR}/generate-gconf-schemas.c
     ${IBUS_CHEWING_SOURCE_COMMON}
+    ${GOB2_OUTPUT_DIR}ibus-chewing-engine.h
     ${GOB2_OUTPUT_DIR}maker-dialog.h
     )
 
@@ -97,6 +107,7 @@ TARGET_LINK_LIBRARIES(${IBUS_SETUP_CHEWING}
 TARGET_LINK_LIBRARIES(generate-gconf-schemas 
     ${IBUS_LIBRARIES}
     ${GLIB2_LIBRARIES}
+    ${CHEWING_LIBRARIES}
     )
 
 IF(NOT DEFINED LIB_INSTALL_DIR)
@@ -107,10 +118,11 @@ SET_COMPILE_ENV(LIB_INSTALL_DIR  "${LIB_INSTALL_DIR}"
 
 FILE(GLOB poFiles RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../po" "../po/*.po")
 STRING(REPLACE ".po" ""  TRANSLATED "${poFiles}")
-MESSAGE("#TRANSLATED=${TRANSLATED}")
+M_MSG(${M_INFO2} "TRANSLATED=${TRANSLATED}")
+
 
 ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas -v 3 -l
+    COMMAND G_MESSAGES_DEBUG=all ${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas -v 5 -l
     "C;${TRANSLATED}" ${IBUS_CHEWING_SCHEMAS}
     COMMENT "Generating gconf-schemas"
     VERBATIM

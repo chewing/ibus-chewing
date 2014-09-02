@@ -2,34 +2,39 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <glib/gprintf.h>
+#include <ibus.h>
+
+/*
+ * Callback should be skipped
+ */
+#ifndef MKDG_SPEC_ONLY
+#define MKDG_SPEC_ONLY
+#endif
+
 #include "IBusChewingEngine-def.c"
-#include "ibus-chewing-util.h"
+#include "MakerDialogUtil.h"
+#include "MakerDialogProperty.h"
+#include "IBusConfigBackend.h"
 #include "IBusChewingConfig.h"
 #define XML_BUFFER_SIZE 1000
-static gint verbose = 0;
+#define DEFAULT_LOCALES "C;zh_TW"
+
+static gint verbose = WARN;
 static gchar *schemasFilename = NULL;
-static gchar localeStr[1000] = "C;zh_TW";
+static gchar *localeStr = NULL;
+static gboolean isLocaleStrAllocated = FALSE;
+static gchar **localeArray = NULL;
 
 static const GOptionEntry entries[] = {
     {"verbose", 'v', 0, G_OPTION_ARG_INT, &verbose,
      "Verbose level. The higher the level, the more the debug messages.",
      "[integer]"},
     {"locale", 'l', 0, G_OPTION_ARG_STRING, &localeStr,
-     "Supported locale. Use ';' to separate localeStr.",
+     "Supported locales. Use ';' to separate locales.",
      "[str]"},
     {NULL},
 };
 
-void default_logger(const gchar * log_domain,
-		    GLogLevelFlags log_level,
-		    const gchar * message, gpointer userData)
-{
-    g_printerr("verbose=%d log_level=%d\n",verbose, log_level);
-    if (verbose < log_level) {
-	return;
-    }
-    g_printerr("%s\n", message);
-}
 
 /*============================================
  * GConf Schemas methods
@@ -115,7 +120,7 @@ static void xml_tags_write(FILE * outF, const gchar * tagName,
 
     GString *strBuf =
 	xml_tags_to_string(tagName, type, attribute, value, indentLevel);
-    IBUS_CHEWING_LOG(INFO, ",xml_tags_write:%s", strBuf->str);
+    mkdg_log(INFO, "xml_tags_write:%s", strBuf->str);
     fprintf(outF, "%s\n", strBuf->str);
 
     if (type == XML_TAG_TYPE_BEGIN_ONLY)
@@ -126,9 +131,10 @@ static void xml_tags_write(FILE * outF, const gchar * tagName,
 static void ctx_write_locale(PropertyContext * ctx,
 			     FILE * outF, const gchar * locale)
 {
-    gchar buf[50];
-    g_snprintf(buf, 50, "name=\"%s\"", localeStr);
-    setlocale(LC_MESSAGES, localeStr);
+    gchar buf[XML_BUFFER_SIZE];
+    mkdg_log(DEBUG, "ctx_write_locale(%s,-,%s)", ctx->spec->key, locale);
+    g_snprintf(buf, 50, "name=\"%s\"", locale);
+    setlocale(LC_MESSAGES, locale);
     xml_tags_write(outF, "locale", XML_TAG_TYPE_BEGIN_ONLY, buf, NULL);
     xml_tags_write(outF, "short", XML_TAG_TYPE_SHORT, NULL,
 		   gettext(ctx->spec->label));
@@ -138,13 +144,17 @@ static void ctx_write_locale(PropertyContext * ctx,
 }
 
 gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
-		   const gchar * owner, const gchar * localeStr,
-		   FILE * outF)
+		   const gchar * owner, FILE * outF)
 {
     xml_tags_write(outF, "schema", XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     gchar buf[XML_BUFFER_SIZE];
-    g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
-	       schemasHome, ctx->spec->key);
+    if (STRING_IS_EMPTY(ctx->spec->subSection)) {
+	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
+		   schemasHome, ctx->spec->key);
+    } else {
+	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s/%s",
+		   schemasHome, ctx->spec->subSection, ctx->spec->key);
+    }
     xml_tags_write(outF, "key", XML_TAG_TYPE_SHORT, NULL, buf);
     xml_tags_write(outF, "applyto", XML_TAG_TYPE_SHORT, NULL,
 		   buf + strlen("/schemas"));
@@ -167,11 +177,11 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
 	xml_tags_write(outF, "default", XML_TAG_TYPE_SHORT, NULL,
 		       ctx->spec->defaultValue);
     }
-    gchar **localeArray = g_strsplit_set(localeStr, ":;", -1);
     int i;
     for (i = 0; localeArray[i] != NULL; i++) {
 	ctx_write_locale(ctx, outF, localeArray[i]);
     }
+
     setlocale(LC_ALL, NULL);
     xml_tags_write(outF, "schema", XML_TAG_TYPE_END_ONLY, NULL, NULL);
     return TRUE;
@@ -192,27 +202,35 @@ gboolean write_gconf_schemas_file(const gchar * filename,
 				  const gchar * schemasHome,
 				  const gchar * localeStr)
 {
-    IBUS_CHEWING_LOG(INFO, "write_gconf_schemes_file(%s)", filename);
+    mkdg_log(INFO, "write_gconf_schemes_file(%s,%s,%s,%s)", filename,
+	     owner, schemasHome, localeStr);
     FILE *outF = fopen(filename, "w");
     if (outF == NULL) {
-	IBUS_CHEWING_LOG(DEBUG,
-			 "write_gconf_schemas_file(%s) file %s cannot be written!",
-			 filename, filename);
+	mkdg_log(DEBUG,
+		 "write_gconf_schemas_file(%s) file %s cannot be written!",
+		 filename, filename);
 	return FALSE;
     }
+    localeArray = g_strsplit_set(localeStr, ":;", -1);
+    gchar **loc;
+    for (loc = localeArray; *loc != NULL; loc++) {
+	mkdg_log(DEBUG, "write_gconf_schemas_file() locale=%s", *loc);
+    }
+
     /* Header */
     xml_tags_write(outF, "gconfschemafile",
 		   XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     xml_tags_write(outF, "schemalist",
 		   XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
-
-    PropertyContextArray *array =
-	IBusChewingConfig_get_PropertyContextArray(NULL);
-    guint i;
-    for (i = 0; i < array->len; i++) {
-	PropertyContext *ctx = PropertyContextArray_index(array, i);
-	ctx_write(ctx, schemasHome, owner, localeStr, outF);
+    /* Backend is not need */
+    IBusChewingConfig *iConfig =
+	ibus_chewing_config_new(NULL, NULL, NULL);
+    gsize i;
+    for (i = 0; i < mkdg_properties_size(iConfig->properties); i++) {
+	PropertyContext *ctx =
+	    mkdg_properties_index(iConfig->properties, i);
+	ctx_write(ctx, schemasHome, owner, outF);
     }
 
     /* Footer */
@@ -221,8 +239,7 @@ gboolean write_gconf_schemas_file(const gchar * filename,
 		   XML_TAG_TYPE_END_ONLY, NULL, NULL);
     if (fclose(outF))
 	return FALSE;
-    IBUS_CHEWING_LOG(DEBUG,
-		     "write_gconf_schemas_file(%s) ... done.", filename);
+    mkdg_log(DEBUG, "write_gconf_schemas_file(%s) ... done.", filename);
     return TRUE;
 }
 
@@ -233,8 +250,8 @@ int main(gint argc, gchar * argv[])
 
     /* Init i18n messages */
     setlocale(LC_ALL, "");
-    bindtextdomain(quote_me(PROJECT_NAME), quote_me(DATA_DIR) "/locale");
-    textdomain(quote_me(PROJECT_NAME));
+    bindtextdomain(QUOTE_ME(PROJECT_NAME), QUOTE_ME(DATA_DIR) "/locale");
+    textdomain(QUOTE_ME(PROJECT_NAME));
 
     context = g_option_context_new("schemasFile");
 
@@ -249,15 +266,20 @@ int main(gint argc, gchar * argv[])
 	fprintf(stderr, "Specify filename of outputing schemas file!\n");
 	return 1;
     }
-    g_log_set_handler("generate-schemas",
-		      G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL |
-		      G_LOG_FLAG_RECURSION, default_logger, NULL);
+    if (localeStr == NULL) {
+	localeStr = DEFAULT_LOCALES;
+    } else {
+	isLocaleStrAllocated = TRUE;
+    }
+    mkdg_log_set_level(verbose);
     schemasFilename = argv[1];
+    g_type_init();
     gboolean result =
 	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
-				 "/desktop/ibus/"
-				 IBUS_CHEWING_CONFIG_SECTION,
-				 localeStr);
+				 "/desktop/ibus/", localeStr);
+    if (isLocaleStrAllocated) {
+	g_free(localeStr);
+    }
     if (!result) {
 	return 2;
     }
