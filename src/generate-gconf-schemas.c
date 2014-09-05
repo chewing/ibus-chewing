@@ -207,11 +207,11 @@ gboolean write_gconf_schemas_file(const gchar * filename,
     xml_tags_write(outF, "schemalist",
 		   XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
-    PropertyContextArray *array =
-	IBusChewingConfig_get_PropertyContextArray(NULL);
+    MkdgProperties *array =
+	IBusChewingConfig_get_MkdgProperties(NULL);
     guint i;
     for (i = 0; i < array->len; i++) {
-	PropertyContext *ctx = PropertyContextArray_index(array, i);
+	PropertyContext *ctx = MkdgProperties_index(array, i);
 	ctx_write(ctx, schemasHome, owner, outF);
     }
 

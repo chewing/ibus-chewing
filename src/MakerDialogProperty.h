@@ -27,25 +27,25 @@
 
 #define MAKER_DIALOG_VALUE_LENGTH 200
 typedef enum {
-    MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE = 0x1,
-    MAKER_DIALOG_PROPERTY_FLAG_INSENSITIVE = 0x2,
-    MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE = 0x4,
-    MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION = 0x8,
-    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT = 0x10,
+    MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE = 1,
+    MAKER_DIALOG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
+    MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE = 1 << 2,
+    MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION = 1 << 3,
+    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT = 1 << 4,
 } MakerDialogPropertyFlags;
 
 typedef struct _PropertyContext PropertyContext;
 
-typedef GValue *(*CallbackGetFunc) (PropertyContext * ctx);
-typedef void (*CallbackSetFunc) (PropertyContext * ctx, GValue * value);
-typedef gboolean(*CallbackBoolFunc) (PropertyContext * ctx,
-				     gpointer userData);
+typedef GValue *(*MkdgGetFunc) (PropertyContext * ctx);
+typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, GValue * value);
+typedef gboolean(*MkdgBoolFunc) (PropertyContext * ctx, gpointer userData);
 
 typedef struct {
     GType valueType;
     gchar key[30];
     gchar pageName[50];
     gchar label[200];
+    gchar subSection[200];
     gchar defaultValue[100];
     const gchar **validValues;
     gchar *translationContext;
@@ -53,39 +53,68 @@ typedef struct {
     gint min;
     gint max;
 
-    CallbackGetFunc getFunc;
-    CallbackSetFunc setFunc;
+    MkdgSetFunc applyFunc;
 
     MakerDialogPropertyFlags propertyFlags;
     const gchar *tooltip;
-    gpointer userData;
+    gpointer auxData;
 } PropertySpec;
+
+typedef struct {
+    GPtrArray *contexts;
+    MkdgBackend *backend;
+    gpointer auxData;
+} MkdgProperties;
 
 struct _PropertyContext {
     PropertySpec *spec;
     GValue value;		//<! Property Value
-    gpointer parent;		//<! Main object that this property.
-    gpointer userData;		//<! User data to be used in callback.
+    MkdgBackend *backend;	//<! Backend.
+    gpointer parent;		//<! The object that this property belongs to. parent need to handle apply
+    gpointer auxData;
 };
 
-typedef GPtrArray PropertyContextArray;
 
-PropertyContext *PropertyContext_new(PropertySpec * spec, GValue * value,
-	gpointer parent, gpointer userData);
+PropertyContext *property_context_new(PropertySpec * spec,
+				      MkdgBackend * backend,
+				      gpointer parent, gpointer auxData);
 
+gchar *property_context_to_string(PropertyContext * ctx);
 
-gchar *PropertyContext_to_string(PropertyContext * ctx);
+gboolean property_context_from_string(PropertyContext * ctx,
+				      const gchar * str);
 
-gboolean PropertyContext_from_string(PropertyContext * ctx, gchar * str);
+gboolean property_context_from_gvalue(PropertyContext * ctx,
+				      GValue * value);
 
-gboolean PropertyContext_from_GValue(PropertyContext * ctx, GValue * value);
+GValue *property_context_read(PropertyContext * ctx, gpointer userData);
 
-PropertyContextArray *PropertyContextArray_from_spec_array(PropertySpec
-	specs[],
-	gpointer parent,
-	gpointer userData);
+gboolean property_context_write(PropertyContext * ctx, gpointer userData);
 
-PropertyContext * PropertyContextArray_index(PropertyContextArray * array, guint index);
+GValue *property_context_get(PropertyContext * ctx);
 
+gboolean property_context_set(PropertyContext * ctx, GValue * value);
 
+GValue *property_context_load(PropertyContext * ctx, gpointer userData);
+
+gboolean property_context_save(PropertyContext * ctx, GValue * value,
+			       gpointer userData);
+
+gboolean propety_context_apply(PropertyContext * ctx, gpointer userData);
+
+gboolean property_context_use(PropertyContext * ctx, GValue * value,
+			      gpointer userData);
+
+MkdgProperties *mkdg_properties_from_spec_array(PropertySpec specs[],
+						MkdgBackend * backend,
+						gpointer parent,
+						gpointer auxData);
+
+PropertyContext *mkdg_properties_find_by_key(MkdgProperties * properties,
+					     const gchar * key);
+
+PropertyContext *mkdg_properties_index(MkdgProperties * array,
+				       guint index);
+
+gsize mkdg_properties_size(MkdgProperties * properties);
 #endif

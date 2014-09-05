@@ -71,7 +71,7 @@ class Maker:Dialog from Gtk:Dialog {
 
     protected IBusChewingConfig * iConfig = NULL;
 
-    private PropertyContextArray *propList = NULL
+    private MkdgProperties *propList = NULL
         destroy {
 	    if (VAR) {
 		g_ptr_array_foreach(VAR, propList_free_deep_callback, NULL); 
@@ -302,11 +302,11 @@ class Maker:Dialog from Gtk:Dialog {
      *
      */
     public gboolean add_all_properties(self, IBusChewingConfig * iConfig){
-	PropertyContextArray * array = IBusChewingConfig_get_PropertyContextArray(iConfig);
+	MkdgProperties * array = IBusChewingConfig_get_MkdgProperties(iConfig);
 	guint i;
 	gboolean clean=TRUE;
 	for(i=0;i<array->len;i++){
-	    PropertyContext * ctx=PropertyContextArray_index(i);
+	    PropertyContext * ctx=MkdgProperties_index(i);
 	    if (iConfig){
 		GValue gValue= {0};
 		IBusChewingConfig_get_value(iConfig, ctx->spec->key, &gValue);
@@ -378,7 +378,7 @@ class Maker:Dialog from Gtk:Dialog {
      *
      * @see_also: set_widget_value()
      */
-    public void apply_widget(self, ProeprtyContext *ctx) {
+    public void apply_widget(self, PropertyContext *ctx) {
 	IBUS_CHEWING_LOG(INFO, "apply_widget(%s)", ctx->spec->key);
 	GValue gValue = {
 	    0};

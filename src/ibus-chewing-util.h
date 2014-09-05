@@ -31,5 +31,20 @@
       )\
     )
 
+#define IBUS_CHEWING_LOG_DOMAIN "ibus-chewing"
+
+#define IBUS_CHEWING_LOG(level, msg, args...) \
+    switch (level){\
+	case ERROR:\
+	    g_log(IBUS_CHEWING_LOG_DOMAIN, G_LOG_LEVEL_ERROR | G_LOG_FLAG_FATAL, msg, ##args);break;\
+	case WARN:\
+	    g_log(IBUS_CHEWING_LOG_DOMAIN, G_LOG_LEVEL_WARNING, msg, ##args);break;\
+	case MSG:\
+	    g_log(IBUS_CHEWING_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, msg, ##args);break;\
+	case INFO:\
+	    g_log(IBUS_CHEWING_LOG_DOMAIN, G_LOG_LEVEL_INFO, msg, ##args);break;\
+	default:\
+	    g_log(IBUS_CHEWING_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, msg, ##args);break;\
+    }
 
 #endif				/* _IBUS_CHEWING_UTIL_H_ */
