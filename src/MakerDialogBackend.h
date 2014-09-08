@@ -35,37 +35,40 @@
 
 typedef struct MkdgBackend_ MkdgBackend;
 
-typedef GValue * (*BackendLoadFunc) (MkdgBackend *backend, GValue * value, const gchar * section,
-	const gchar * key, gpointer userData);
+typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
+				    const gchar * section,
+				    const gchar * key, gpointer userData);
 
-typedef gboolean (*BackendSaveFunc) (MkdgBackend *backend, GValue * value, const gchar * section,
-	const gchar * key, gpointer userData);
+typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
+				     const gchar * section,
+				     const gchar * key, gpointer userData);
 
 
 /**
  * MkdgBackend:
  * @config: A configuration service
- * @loadFunc: Callback function for load
- * @saveFunc: Callback function for save
+ * @readFunc: Callback function for load
+ * @writeFunc: Callback function for save
  * @auxData:  Auxiliary data that might be useful.
  *
  * A MkdgBackend object.
  */
-struct MkdgBackend_{
+struct MkdgBackend_ {
     gpointer config;
-    BackendLoadFunc loadFunc;
-    BackendSaveFunc saveFunc;
+    BackendReadFunc readFunc;
+    BackendWriteFunc writeFunc;
     gpointer auxData;
 };
 
 MkdgBackend *mkdg_backend_new(gpointer config, gpointer auxData);
 
 
-GValue *mkdg_value_load(MkdgBackend * backend, GValue * value,
-	const gchar * section, const gchar * key);
+GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
+			  const gchar * section, const gchar * key,
+			  gpointer userData);
 
-gboolean mkdg_value_save(MkdgBackend * backend, GValue * value,
-	const gchar * section, const gchar * key);
+gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
+			    const gchar * section, const gchar * key,
+			    gpointer userData);
 
-#endif /* _MAKER_DIALOG_BACKEND_H_ */
-
+#endif				/* _MAKER_DIALOG_BACKEND_H_ */

@@ -6,7 +6,6 @@
 #include "MakerDialogBackend.h"
 
 typedef struct {
-    IBusConfig *iConfig;
     MkdgBackend *backend;
     MkdgProperties *properties;
 } IBusChewingConfig;
@@ -15,34 +14,10 @@ typedef struct {
 
 #define IBUS_CHEWING_CONFIG_SUBSECTION "engine/Chewing"
 
-IBusChewingConfig *ibus_chewing_config_new(IBusService * service,
-	MkdgBackend * backend,
+IBusChewingConfig *ibus_chewing_config_new(MkdgBackend * backend,
 	gpointer parent,
 	gpointer auxData);
 
-void IBusChewingConfig_load(IBusChewingConfig * self);
-
-gboolean IBusChewingConfig_get_value(IBusChewingConfig * self,
-				     const gchar * key, GValue * gValue);
-
-
-gboolean IBusChewingConfig_get_ibus_value(IBusChewingConfig * self,
-					  const gchar * section,
-					  const gchar * key,
-					  GValue * gValue);
-
-gboolean IBusChewingConfig_set_value(IBusChewingConfig * self,
-				     const gchar * key, GValue * gValue);
-
-PropertySpec *IBusChewingConfig_find_key(const gchar * key);
-
-MkdgProperties
-    * IBusChewingConfig_get_MkdgProperties(IBusChewingConfig * self);
-
-gboolean IBusChewingConfig_foreach_properties(gboolean stopOnError,
-					      CallbackBoolFunc callback,
-					      gpointer ctxData,
-					      gpointer userData);
 
 /*============================================
  * Callback functions
@@ -87,5 +62,13 @@ gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
 					 GValue * value);
 
 gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value);
+
+extern const gchar *kbType_ids[];
+
+extern const gchar *selKeys_array[];
+
+extern const gchar *syncCapsLock_strs[];
+
+extern const gchar *outputCharsets[];
 
 #endif				/* _IBUS_CHEWING_CONFIG_H_ */

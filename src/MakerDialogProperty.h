@@ -34,23 +34,33 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "MakerDialogUtil.h"
+#include "MakerDialogBackend.h"
 
-#define MAKER_DIALOG_VALUE_LENGTH 200
 /**
- * MakerDialogPropertyFlags:
- * MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE
+ * MkdgPropertyFlags:
+ * @MKDG_PROPERTY_FLAG_INVISIBLE:       The property is not visible in UI.
+ * @MKDG_PROPERTY_FLAG_INSENSITIVE:     The property is gray-out and not editable.
+ * @MKDG_PROPERTY_FLAG_NO_NEW:          The property does not accept new values.
+ * @MKDG_PROPERTY_FLAG_HAS_TRANSLATION: The property should show translated value.
+ *
+ * MakerDialog flag controls how the property displayed in UI.
  */
 typedef enum {
-    MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE = 1,
-    MAKER_DIALOG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
-    MAKER_DIALOG_PROPERTY_FLAG_INEDITABLE = 1 << 2,
-    MAKER_DIALOG_PROPERTY_FLAG_HAS_TRANSLATION = 1 << 3,
-    MAKER_DIALOG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT = 1 << 4,
-} MakerDialogPropertyFlags;
+    MKDG_PROPERTY_FLAG_INVISIBLE = 1,
+    MKDG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
+    MKDG_PROPERTY_FLAG_NO_NEW = 1 << 2,
+    MKDG_PROPERTY_FLAG_HAS_TRANSLATION = 1 << 3,
+} MkdgPropertyFlags;
 
 typedef struct _PropertyContext PropertyContext;
 
-typedef GValue *(*MkdgGetFunc) (PropertyContext * ctx);
+
+#ifndef MKDG_SPEC_ONLY
+#define MKDG_SPEC_FUNC(f) f
+#else
+#define MKDG_SPEC_FUNC(f) NULL
+#endif
+
 typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, GValue * value);
 typedef gboolean(*MkdgBoolFunc) (PropertyContext * ctx, gpointer userData);
 
@@ -86,9 +96,9 @@ typedef struct {
     gint min;
     gint max;
 
-    MkdgSetFunc applyFunc;
+    MkdgApplyFunc applyFunc;
 
-    MakerDialogPropertyFlags propertyFlags;
+    MkdgPropertyFlags propertyFlags;
     const gchar *tooltip;
     gpointer auxData;
 } PropertySpec;
@@ -133,10 +143,9 @@ GValue *property_context_load(PropertyContext * ctx, gpointer userData);
 gboolean property_context_save(PropertyContext * ctx, GValue * value,
 			       gpointer userData);
 
-gboolean propety_context_apply(PropertyContext * ctx, gpointer userData);
+gboolean property_context_apply(PropertyContext * ctx, gpointer userData);
 
-gboolean property_context_use(PropertyContext * ctx, GValue * value,
-			      gpointer userData);
+gboolean property_context_use(PropertyContext * ctx, gpointer userData);
 
 MkdgProperties *mkdg_properties_from_spec_array(PropertySpec specs[],
 						MkdgBackend * backend,
@@ -148,6 +157,12 @@ PropertyContext *mkdg_properties_find_by_key(MkdgProperties * properties,
 
 PropertyContext *mkdg_properties_index(MkdgProperties * array,
 				       guint index);
+
+GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
+				   const gchar * key);
+
+GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
+				    const gchar * key, gpointer userData);
 
 gsize mkdg_properties_size(MkdgProperties * properties);
 #endif

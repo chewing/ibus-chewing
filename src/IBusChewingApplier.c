@@ -1,52 +1,7 @@
 #include <chewing.h>
+#include "IBusChewingConfig.h"
 #include "ibus-chewing-engine.h"
 
-const gchar *kbType_ids[] = {
-    N_("default"),
-    N_("hsu"),
-    N_("ibm"),
-    N_("gin_yieh"),
-    N_("eten"),
-    N_("eten26"),
-    N_("dvorak"),
-    N_("dvorak_hsu"),
-    N_("dachen_26"),
-    N_("hanyu"),
-    NULL
-};
-
-#define SELKEYS_ARRAY_SIZE 8
-const gchar *selKeys_array[SELKEYS_ARRAY_SIZE + 1] = {
-    "1234567890",
-    "asdfghjkl;",
-    "asdfzxcv89",
-    "asdfjkl789",
-    "aoeu;qjkix",		/* Dvorak */
-    "aoeuhtnsid",		/* Dvorak */
-    "aoeuidhtns",		/* Dvorak */
-    "1234qweras",
-    NULL
-};
-
-const gchar *syncCapsLock_strs[] = {
-    NC_("Sync", "disable"),
-    NC_("Sync", "keyboard"),
-    NC_("Sync", "input method"),
-    NULL
-};
-
-const gchar *outputCharsets[] = {
-    N_("Auto"),
-    N_("Big5"),
-    N_("UTF8"),
-    NULL
-};
-
-const gchar *inputStyles[] = {
-    N_("in application window"),
-    N_("in candidate window"),
-    NULL
-};
 
 static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
 {
@@ -65,14 +20,14 @@ static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
 gboolean KBType_apply_callback(PropertyContext * ctx, GValue * value)
 {
     ChewingKbType kbType = kbType_id_get_index(g_value_get_string(value));
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_KBType(engine->context, kbType);
     return TRUE;
 }
 
 gboolean selKeys_apply_callback(PropertyContext * ctx, GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     ibus_chewing_engine_set_selKeys_string(engine,
 					   g_value_get_string(value));
     if (!engine->table) {
@@ -89,14 +44,14 @@ gboolean selKeys_apply_callback(PropertyContext * ctx, GValue * value)
 gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
 				      GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_hsuSelKeyType(engine->context, g_value_get_int(value));
     return TRUE;
 }
 
 gboolean autoShiftCur_apply_callback(PropertyContext * ctx, GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_autoShiftCur(engine->context,
 			     (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
@@ -105,7 +60,7 @@ gboolean autoShiftCur_apply_callback(PropertyContext * ctx, GValue * value)
 gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
 					   GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_addPhraseDirection(engine->context,
 				   (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
@@ -114,7 +69,7 @@ gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
 gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
 					GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_easySymbolInput(engine->context,
 				(g_value_get_boolean(value)) ? 1 : 0);
     if (g_value_get_boolean(value)) {
@@ -128,7 +83,7 @@ gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
 gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
 				       GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_escCleanAllBuf(engine->context,
 			       (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
@@ -138,7 +93,7 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
 gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
 					GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_maxChiSymbolLen(engine->context, g_value_get_int(value));
     return TRUE;
 }
@@ -146,7 +101,7 @@ gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
 gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
 					      GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
     } else {
@@ -157,7 +112,7 @@ gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
 
 gboolean syncCapsLock_apply_callback(PropertyContext * ctx, GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     const gchar *str = g_value_get_string(value);
     if (strcmp(str, "keyboard") == 0) {
 	engine->syncCapsLock_local = CHEWING_MODIFIER_SYNC_FROM_KEYBOARD;
@@ -172,7 +127,7 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx, GValue * value)
 gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
 					   GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
     } else {
@@ -183,7 +138,7 @@ gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
 
 gboolean candPerPage_apply_callback(PropertyContext * ctx, GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_candPerPage(engine->context, g_value_get_int(value));
     if (engine->table) {
 	ibus_lookup_table_clear(engine->table);
@@ -199,7 +154,7 @@ gboolean candPerPage_apply_callback(PropertyContext * ctx, GValue * value)
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
 					     GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_phraseChoiceRearward(engine->context,
 				     (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
@@ -208,7 +163,7 @@ gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
 gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
 					 GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_spaceAsSelection(engine->context,
 				 (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
@@ -216,7 +171,7 @@ gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
 
 gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value)
 {
-    IBusChewingEngine *engine = (IbusChewingEngine *) ctx->parent;
+    IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_PLAIN_ZHUYIN;
     } else {

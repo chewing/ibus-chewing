@@ -20,8 +20,10 @@
  */
 
 #include <ibus.h>
+#include "MakerDialogUtil.h"
 #include "ibus-chewing-util.h"
 #include "IBusConfigBackend.h"
+#include "IBusChewingConfig.h"
 
 /*============================================
  * Supporting functions
@@ -93,7 +95,7 @@ GVariant *g_value_to_g_variant(GValue * gValue)
 
 
 
-GValue *ibus_config_backend_load_value(MkdgBackend * backend,
+GValue *ibus_config_backend_read_value(MkdgBackend * backend,
 				       GValue * value,
 				       const gchar * section,
 				       const gchar * key,
@@ -116,43 +118,37 @@ GValue *ibus_config_backend_load_value(MkdgBackend * backend,
 }
 
 
-gboolean ibus_config_backend_save_value(MkdgBackend * backend,
+gboolean ibus_config_backend_write_value(MkdgBackend * backend,
 					GValue * value,
 					const gchar * section,
 					const gchar * key,
 					gpointer userData)
 {
     gboolean result = FALSE;
+    IBusConfig *config = (IBusConfig *) backend->config;
 #if IBUS_CHECK_VERSION(1, 4, 0)
     GVariant *gVar = g_variant_ref_sink(g_value_to_g_variant(value));
     if (gVar != NULL) {
-	result = ibus_config_set_value(self->config,
-				       IBUS_CHEWING_CONFIG_SECTION, key,
-				       gVar);
+	result = ibus_config_set_value(config, section, key,  gVar);
     }
 #else
     result =
-	ibus_config_set_value(self->config, IBUS_CHEWING_CONFIG_SECTION,
-			      value);
+	ibus_config_set_value(config, section, key, value);
 #endif
 
     if (result == FALSE) {
 	mkdg_log(WARN,
-		 "IBusChewingConfig_set_value(-, %s, -) %s %s",
-		 key, _("Failed to set variable"), key);
+		 "ibus_config_backend_write_value(-, %s, -) %s %s",
+		 key, "Failed to set variable", key);
 	return FALSE;
     }
 
-    if (!self->config) {
+    if (!config) {
 	mkdg_log(WARN,
-		 "IBusChewingConfig_set_value(-, %s, -) %s",
-		 key, _("Failed to connect to IBusService"));
+		"ibus_config_backend_write_value(-, %s, -) %s",
+		 key, "Failed to connect to IBusService");
 	return FALSE;
     }
-
-    PropertyContext ctx;
-    ctx.spec = IBusChewingConfig_find_key(key);
-    ctx.spec->setFunc(&ctx, value);
     return TRUE;
 }
 
@@ -173,11 +169,8 @@ MkdgBackend *ibus_config_backend_new(IBusService * service,
 	(IBusConnection *) connections_list->data;
     config = g_object_ref_sink(ibus_config_new(iConnection));
 #endif
-    if (config == NULL) {
-	return NULL;
-    }
     MkdgBackend *result = mkdg_backend_new((gpointer) config, auxData);
-    result->loadFunc = ibus_config_backend_load_value;
-    result->saveFunc = ibus_config_backend_save_value;
+    result->readFunc = ibus_config_backend_read_value;
+    result->writeFunc = ibus_config_backend_write_value;
     return result;
 }

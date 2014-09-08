@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <glib/gprintf.h>
+#include "MakerDialogUtil.h"
 #include "MakerDialogProperty.h"
 
 /*============================================
@@ -31,12 +32,12 @@ PropertyContext *property_context_new(PropertySpec * spec,
     }
     mkdg_log(INFO, "property_context_new(%s, - )", spec->key);
     PropertyContext *result = g_new0(PropertyContext, 1);
-    GValue *backendValue = NULL;
     result->spec = spec;
     result->backend = backend;
     result->parent = parent;
     result->auxData = auxData;
-    property_context_default(ctx);
+    g_value_init(&(result->value), result->spec->valueType);
+    property_context_default(result);
     return result;
 }
 
@@ -78,18 +79,17 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
 /* save: set then write */
 /* apply: MkdgProperties -> set callback */
 /* use: load then apply */
-/* assign: set, apply then write */
 GValue *property_context_read(PropertyContext * ctx, gpointer userData)
 {
-    if (ctx == NULL || ctx->backend) {
+    if (ctx == NULL || ctx->backend == NULL) {
 	return NULL;
     }
-    GValue *result = backend->readFunction(ctx->backend, &(ctx->value),
-					   ctx->spec->subSection,
-					   ctx->spec->key, userData);
+    GValue *result = ctx->backend->readFunc(ctx->backend, &(ctx->value),
+					    ctx->spec->subSection,
+					    ctx->spec->key, userData);
     if (result == NULL) {
 	mkdg_log(WARN, "property_context_read(%s): failed to read key",
-		 ctx->spec->key, section);
+		 ctx->spec->key);
     }
     return result;
 }
@@ -99,9 +99,9 @@ gboolean property_context_write(PropertyContext * ctx, gpointer userData)
     if (ctx == NULL || ctx->backend == NULL) {
 	return FALSE;
     }
-    return backend->writeFunction(ctx->backend, &(ctx->value),
-				  ctx->spec->subSection, ctx->spec->key,
-				  userData);
+    return ctx->backend->writeFunc(ctx->backend, &(ctx->value),
+				   ctx->spec->subSection, ctx->spec->key,
+				   userData);
 }
 
 GValue *property_context_get(PropertyContext * ctx)
@@ -109,7 +109,7 @@ GValue *property_context_get(PropertyContext * ctx)
     if (ctx == NULL) {
 	return NULL;
     }
-    return ctx->value;
+    return &(ctx->value);
 }
 
 gboolean property_context_set(PropertyContext * ctx, GValue * value)
@@ -139,7 +139,7 @@ gboolean property_context_save(PropertyContext * ctx, GValue * value,
     return property_context_write(ctx, userData);
 }
 
-gboolean propety_context_apply(PropertyContext * ctx, gpointer userData)
+gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 {
     if (ctx == NULL || ctx->parent == NULL) {
 	return FALSE;
@@ -188,7 +188,7 @@ PropertyContext *mkdg_properties_find_by_key(MkdgProperties * properties,
 					     const gchar * key)
 {
     gsize i;
-    for (i = 0; i < mkdg_properties_size(MkdgProperties * properties); i++) {
+    for (i = 0; i < mkdg_properties_size(properties); i++) {
 	PropertyContext *ctx = mkdg_properties_index(properties, i);
 	if (STRING_EQUALS(ctx->spec->key, key)) {
 	    return ctx;
@@ -204,6 +204,26 @@ PropertyContext *mkdg_properties_index(MkdgProperties *
 	g_ptr_array_index(properties->contexts, index);
 }
 
+GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
+				   const gchar * key)
+{
+    if (properties == NULL) {
+	return NULL;
+    }
+    PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
+    return property_context_get(ctx);
+}
+
+GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
+				    const gchar * key, gpointer userData)
+{
+    if (properties == NULL) {
+	return NULL;
+    }
+    PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
+    return property_context_load(ctx, userData);
+}
+
 gsize mkdg_properties_size(MkdgProperties * properties)
 {
     return properties->contexts->len;
@@ -217,7 +237,7 @@ gboolean mkdg_properties_load_all(MkdgProperties * properties,
     gboolean result = TRUE;
     for (i = 0; i < mkdg_properties_size(properties); i++) {
 	PropertyContext *ctx = mkdg_properties_index(properties, i);
-	GValue value = property_context_load(ctx, userData);
+	GValue *value = property_context_load(ctx, userData);
 	if (value == NULL) {
 	    result = FALSE;
 	}
@@ -232,8 +252,8 @@ gboolean mkdg_properties_write_all(MkdgProperties * properties,
     gboolean result = TRUE;
     for (i = 0; i < mkdg_properties_size(properties); i++) {
 	PropertyContext *ctx = mkdg_properties_index(properties, i);
-	GValue value = property_context_write(ctx, userData);
-	if (value == NULL) {
+	gboolean ret = property_context_write(ctx, userData);
+	if (!ret) {
 	    result = FALSE;
 	}
     }
@@ -241,6 +261,21 @@ gboolean mkdg_properties_write_all(MkdgProperties * properties,
 }
 
 /* For actual runtime */
+gboolean propety_context_apply_all(MkdgProperties * properties,
+				   gpointer userData)
+{
+    gsize i;
+    gboolean result = TRUE;
+    for (i = 0; i < mkdg_properties_size(properties); i++) {
+	PropertyContext *ctx = mkdg_properties_index(properties, i);
+	gboolean ret = property_context_apply(ctx, userData);
+	if (!ret) {
+	    result = FALSE;
+	}
+    }
+    return result;
+}
+
 gboolean mkdg_properties_use_all(MkdgProperties * properties,
 				 gpointer userData)
 {
@@ -248,23 +283,8 @@ gboolean mkdg_properties_use_all(MkdgProperties * properties,
     gboolean result = TRUE;
     for (i = 0; i < mkdg_properties_size(properties); i++) {
 	PropertyContext *ctx = mkdg_properties_index(properties, i);
-	GValue value = property_context_use(ctx, userData);
-	if (value == NULL) {
-	    result = FALSE;
-	}
-    }
-    return result;
-}
-
-gboolean propety_context_apply_all(PropertyContext * ctx,
-				   gpointer userData)
-{
-    gsize i;
-    gboolean result = TRUE;
-    for (i = 0; i < mkdg_properties_size(properties); i++) {
-	PropertyContext *ctx = mkdg_properties_index(properties, i);
-	GValue value = property_context_apply(ctx, userData);
-	if (value == NULL) {
+	gboolean ret = property_context_use(ctx, userData);
+	if (!ret) {
 	    result = FALSE;
 	}
     }

@@ -1,27 +1,27 @@
 #include "MakerDialogBackend.h"
 
-static MkdgBackend *mkdgBackend = NULL;
-
 MkdgBackend *mkdg_backend_new(gpointer config, gpointer auxData)
 {
     if (config == NULL) {
 	return NULL;
     }
     MkdgBackend *result = g_new0(MkdgBackend, 1);
-    result->obj = obj;
+    result->config = config;
     result->auxData = auxData;
     return result;
 }
 
-GValue *mkdg_value_load(MkdgBackend * backend, GValue * value,
-			const gchar * section, const gchar * key)
+GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
+			  const gchar * section, const gchar * key,
+			  gpointer userData)
 {
-    return backend->load_value(backend, value, section, key);
+    return backend->readFunc(backend, value, section, key, userData);
 }
 
-gboolean mkdg_value_save(MkdgBackend * backend, GValue * value,
-			 const gchar * section, const gchar * key)
+gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
+			    const gchar * section, const gchar * key,
+			    gpointer userData)
 {
-    return backend->load_value(backend, value, section, key);
+    return backend->writeFunc(backend, value, section, key, userData);
 }
 

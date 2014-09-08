@@ -22,7 +22,7 @@
 #ifndef _MAKER_DIALOG_UTIL_H_
 #define _MAKER_DIALOG_UTIL_H_
 #include <string.h>
-
+#include <glib-object.h>
 
 typedef enum {
     ERROR,
@@ -40,7 +40,7 @@ void mkdg_log(MkdgLogLevel level, const gchar *format, ...);
 
 gchar *mkdg_g_value_to_string(GValue * value);
 
-gboolean mkdg_g_value_from_string(GValue * value, gchar * str);
+gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
 
 /**************************************
  * String Utility Macros

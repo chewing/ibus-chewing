@@ -2,6 +2,8 @@
 #include <glib.h>
 #include "MakerDialogUtil.h"
 
+#define MAKER_DIALOG_VALUE_LENGTH 200
+
 static MkdgLogLevel debugLevel = WARN;
 #define MKDG_LOG_DOMAIN_LEN 20
 static gchar mkdgLogDomain[MKDG_LOG_DOMAIN_LEN] = "MKDG";
@@ -78,7 +80,7 @@ gchar *mkdg_g_value_to_string(GValue * value)
     return result;
 }
 
-gboolean mkdg_g_value_from_string(GValue * value, gchar * str)
+gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
 {
     mkdg_log(DEBUG, "mkdg_g_value_from_string(-,%s)", str);
     if (!G_IS_VALUE(value)) {
