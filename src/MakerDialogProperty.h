@@ -19,6 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * SECTION:MakerDialogProperty
+ * @short_description: A property stores a value for a configuration
+ * @title: MakerDialog Property
+ * @stability: Stable
+ * @include: MakerDailogProperty.h
+ *
+ * A MakerDialog property stores a value for a configuration options.
+ */
+
 #ifndef _MAKER_DIALOG_PROPERTY_H_
 #define _MAKER_DIALOG_PROPERTY_H_
 #include <glib.h>
@@ -26,6 +36,10 @@
 #include "MakerDialogUtil.h"
 
 #define MAKER_DIALOG_VALUE_LENGTH 200
+/**
+ * MakerDialogPropertyFlags:
+ * MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE
+ */
 typedef enum {
     MAKER_DIALOG_PROPERTY_FLAG_INVISIBLE = 1,
     MAKER_DIALOG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
@@ -39,6 +53,25 @@ typedef struct _PropertyContext PropertyContext;
 typedef GValue *(*MkdgGetFunc) (PropertyContext * ctx);
 typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, GValue * value);
 typedef gboolean(*MkdgBoolFunc) (PropertyContext * ctx, gpointer userData);
+
+/**
+ * PropertySpec:
+ * @valueType:    Type of the value.
+ * @key:          A unique Property ID.
+ * @pageName:     The name of the tab that contain this property (Translatable).
+ * @label:        Label in UI (Translatable).
+ * @subSection:   Sub-section in backend.
+ * @defaultValue: String represented string value.
+ * @validValues:  NULL terminated valid values.
+ * @min:          Minimum valid value for numeric types.
+ * @max:          Maximum valid value for numeric types.
+ * @applyFunc:    Callback function for apply the value.
+ * @propertyFlag: Property Flags.
+ * @tooltip:      Tooltip of this property (Translatable).
+ * @auxData:      Auxiliary data that might be needed somewhere. 
+ *
+ * A Property Spec describe the characteristic of a property.
+ */
 
 typedef struct {
     GType valueType;
