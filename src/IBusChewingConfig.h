@@ -18,6 +18,11 @@ IBusChewingConfig *ibus_chewing_config_new(MkdgBackend * backend,
 	gpointer parent,
 	gpointer auxData);
 
+GValue *ibus_chewing_config_load_ibus_config(IBusChewingConfig * self,
+					     GValue * value,
+					     const gchar * section,
+					     const gchar * key,
+					     gpointer userData);
 
 /*============================================
  * Callback functions

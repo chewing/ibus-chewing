@@ -14,24 +14,6 @@ GtkResponseType button_responses[] = {
     GTK_RESPONSE_OK,
 };
 
-static PropertyContext *propertyContext_new(PropertySpec * spec,
-                                            gpointer parent,
-					    gpointer userData)
-{
-    PropertyContext *ctx = g_new(PropertyContext, 1);
-    ctx->spec = spec;
-    ctx->parent = parent;
-    ctx->userData = userData;
-    return ctx;
-}
-
-
-static void propertyContext_free(gpointer ctx_ptr)
-{
-    PropertyContext *ctx = (PropertyContext *) ctx_ptr;
-    g_free(ctx);
-}
-
 static void listStore_append(GtkListStore * listStore, const gchar * str,
 			     const gchar * translationContext,
 			     MkdgPropertyFlags propertyFlags)
@@ -40,23 +22,22 @@ static void listStore_append(GtkListStore * listStore, const gchar * str,
     gtk_list_store_append(listStore, &iter);
 
     if (propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
-	if (translationContext
-	    || propertyFlags &
-	    MKDG_PROPERTY_FLAG_TRANSLATION_WITH_CONTEXT) {
-	    IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s, _(str)=%s", str,
-			     g_dpgettext2(NULL, translationContext, str));
+	if (STRING_IS_EMPTY(translationContext)) {
+	    IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s, _(str)=%s",
+			     str, _(str));
+	    gtk_list_store_set(listStore, &iter, 0, str, 1, _(str), -1);
+	} else {
+	    IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s, _(str)=%s",
+			     str, g_dpgettext2(NULL, translationContext,
+					       str));
 	    gtk_list_store_set(listStore, &iter, 0, str, 1,
 			       g_dpgettext2(NULL, translationContext, str),
 			       -1);
-	} else {
-	    IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s, _(str)=%s", str, _(str));
-	    gtk_list_store_set(listStore, &iter, 0, str, 1, _(str), -1);
 	}
     } else {
 	IBUS_CHEWING_LOG(DEBUG, "listStore_append() str=%s", str);
 	gtk_list_store_set(listStore, &iter, 0, str, -1);
     }
-
 }
 
 static gint listStore_find_string(GtkListStore * listStore,
@@ -83,8 +64,7 @@ static gint listStore_find_string(GtkListStore * listStore,
 	} while (gtk_tree_model_iter_next
 		 (GTK_TREE_MODEL(listStore), &iter));
     }
-    if (index < 0
-	&& !(propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW)) {
+    if (index < 0 && !(propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW)) {
 	/* Add new item */
 	listStore_append(listStore, str, translationContext,
 			 propertyFlags);
@@ -119,11 +99,6 @@ static const gchar *combo_get_active_text(GtkComboBox * combo,
 }
 
 
-static void propList_free_deep_callback(gpointer data, gpointer userData)
-{
-    propertyContext_free(data);
-}
-
 static gchar *widget_get_id(gchar * buffer, gint buffer_size,
 			    const gchar * widget_label,
 			    const gchar * widget_type)
@@ -140,66 +115,73 @@ static void on_comboBox_changed_wrap(GtkComboBox * comboBox,
 				     gpointer userData)
 {
     PropertyContext *ctx = (PropertyContext *) userData;
-    GValue value = { 0 };
-    combo_get_active_text(comboBox, &value);
+    GValue gValue = { 0 };
+    combo_get_active_text(comboBox, &gValue);
     IBUS_CHEWING_LOG(INFO, "on_comboBox_changed_wrap(), key=%s value=%s",
-		     ctx->spec->key, g_value_get_string(&value));
-    ctx->spec->setFunc(ctx, &value);
+		     ctx->spec->key, g_value_get_string(&gValue));
+    property_context_save(ctx, &gValue, NULL);
+    property_context_apply(ctx, NULL);
 }
 
 static void on_entry_activate_wrap(GtkEntry * entry, gpointer userData)
 {
     PropertyContext *ctx = (PropertyContext *) userData;
-    GValue value = { 0 };
-    g_value_init(&value, ctx->spec->valueType);
-    g_value_set_string(&value, gtk_entry_get_text(entry));
+    GValue gValue = { 0 };
+    g_value_init(&gValue, ctx->spec->valueType);
+    g_value_set_string(&gValue, gtk_entry_get_text(entry));
     IBUS_CHEWING_LOG(INFO, "on_entry_activate_wrap(), key=%s value=%s",
-		     ctx->spec->key, g_value_get_string(&value));
-    ctx->spec->setFunc(ctx, &value);
+		     ctx->spec->key, g_value_get_string(&gValue));
+    property_context_save(ctx, &gValue, NULL);
+    property_context_apply(ctx, NULL);
 }
 
 static void on_spinButton_value_changed_wrap(GtkSpinButton * button,
 					     gpointer userData)
 {
     PropertyContext *ctx = (PropertyContext *) userData;
-    GValue value = { 0 };
-    g_value_init(&value, ctx->spec->valueType);
+    GValue gValue = { 0 };
+    g_value_init(&gValue, ctx->spec->valueType);
     switch (ctx->spec->valueType) {
     case G_TYPE_INT:
-	g_value_set_int(&value, (gint) gtk_spin_button_get_value(button));
+	g_value_set_int(&gValue,
+			(gint) gtk_spin_button_get_value(button));
 	IBUS_CHEWING_LOG(INFO,
 			 "on_spinButton_value_changed_wrap(), key=%s value=%d",
-			 ctx->spec->key, g_value_get_int(&value));
+			 ctx->spec->key, g_value_get_int(&gValue));
 	break;
     case G_TYPE_UINT:
-	g_value_set_uint(&value,
+	g_value_set_uint(&gValue,
 			 (guint) gtk_spin_button_get_value(button));
 	IBUS_CHEWING_LOG(INFO,
 			 "on_spinButton_value_changed_wrap(), key=%s value=%u",
-			 ctx->spec->key, g_value_get_uint(&value));
+			 ctx->spec->key, g_value_get_uint(&gValue));
 	break;
     case G_TYPE_DOUBLE:
-	g_value_set_uint(&value, gtk_spin_button_get_value(button));
+	g_value_set_uint(&gValue, gtk_spin_button_get_value(button));
 	IBUS_CHEWING_LOG(INFO,
 			 "on_spinButton_value_changed_wrap(), key=%s value=%g",
-			 ctx->spec->key, g_value_get_double(&value));
+			 ctx->spec->key, g_value_get_double(&gValue));
 	break;
     default:
 	break;
     }
-    ctx->spec->setFunc(ctx, &value);
+    property_context_save(ctx, &gValue, NULL);
+    property_context_apply(ctx, NULL);
+
 }
 
 static void on_toggleButton_toggled_wrap(GtkToggleButton * button,
 					 gpointer userData)
 {
     PropertyContext *ctx = (PropertyContext *) userData;
-    GValue value = { 0 };
-    g_value_init(&value, ctx->spec->valueType);
-    g_value_set_boolean(&value, gtk_toggle_button_get_active(button));
+    GValue gValue = { 0 };
+    g_value_init(&gValue, ctx->spec->valueType);
+    g_value_set_boolean(&gValue,
+			gtk_toggle_button_get_active(button));
     IBUS_CHEWING_LOG(INFO, "on_entry_activate_wrap(), key=%s value=%s",
-		     ctx->spec->key, g_value_get_string(&value));
-    ctx->spec->setFunc(ctx, &value);
+		     ctx->spec->key, g_value_get_string(&gValue));
+    property_context_save(ctx, &gValue, NULL);
+    property_context_apply(ctx, NULL);
 }
 
 /*===== End of Widget Callback function wraps =====*/
@@ -212,13 +194,14 @@ typedef struct {
     gfloat yalign;
 } WidgetAlignment;
 
-static void calculate_max_label_width_callback(gpointer key, gpointer value,
-					      gpointer widgetAlignment)
+static void calculate_max_label_width_callback(gpointer key,
+					       gpointer value,
+					       gpointer widgetAlignment)
 {
-    gchar * wKey = (gchar *) key;
-    gchar * pageName = (gchar *) value;
+    gchar *wKey = (gchar *) key;
+    gchar *pageName = (gchar *) value;
     WidgetAlignment *wAlignment = (WidgetAlignment *) widgetAlignment;
-    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+    if (!STRING_EQUALS(wAlignment->pageName, pageName)) {
 	/* Different Page */
 	return;
     }
@@ -235,9 +218,9 @@ static void set_label_width_callback(gpointer key, gpointer value,
 				     gpointer userData)
 {
     WidgetAlignment *wAlignment = (WidgetAlignment *) userData;
-    gchar * wKey = (gchar *) key;
-    gchar * pageName = (gchar *) value;
-    if (!STRING_EQUALS(wAlignment->pageName,pageName)){
+    gchar *wKey = (gchar *) key;
+    gchar *pageName = (gchar *) value;
+    if (!STRING_EQUALS(wAlignment->pageName, pageName)) {
 	/* Different Page */
 	return;
     }
@@ -274,7 +257,7 @@ gboolean atob(const gchar * string)
     if (strlen(string) <= 0)
 	return FALSE;
     if (string[0] == 'F' || string[0] == 'f' || string[0] == 'N'
-	    || string[0] == 'n')
+	|| string[0] == 'n')
 	return FALSE;
     char *endPtr = NULL;
     long int longValue = strtol(string, &endPtr, 10);
@@ -285,4 +268,3 @@ gboolean atob(const gchar * string)
     }
     return TRUE;
 }
-

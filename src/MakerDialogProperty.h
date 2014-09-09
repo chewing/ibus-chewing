@@ -147,6 +147,8 @@ gboolean property_context_apply(PropertyContext * ctx, gpointer userData);
 
 gboolean property_context_use(PropertyContext * ctx, gpointer userData);
 
+void property_context_free(PropertyContext * ctx);
+
 MkdgProperties *mkdg_properties_from_spec_array(PropertySpec specs[],
 						MkdgBackend * backend,
 						gpointer parent,
@@ -165,4 +167,9 @@ GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
 				    const gchar * key, gpointer userData);
 
 gsize mkdg_properties_size(MkdgProperties * properties);
+
+gboolean mkdg_properties_use_all(MkdgProperties * properties,
+				 gpointer userData);
+
+void mkdg_properties_free(MkdgProperties * properties);
 #endif

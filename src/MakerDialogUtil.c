@@ -46,6 +46,18 @@ void mkdg_log(MkdgLogLevel level, const gchar * format, ...)
     va_end(arglist);
 }
 
+gboolean mkdg_g_value_reset(GValue *value, GType type){
+    if (!G_IS_VALUE(value)){
+	g_value_init(value, type);
+    }
+    if (G_VALUE_TYPE(value)!=type){
+	mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatable");
+	return FALSE;
+    }
+    g_value_reset(value);
+    return TRUE;
+}
+
 
 gchar *mkdg_g_value_to_string(GValue * value)
 {

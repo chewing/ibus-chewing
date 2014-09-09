@@ -172,6 +172,7 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 extern gint ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
+#include "IBusConfigBackend.h"
 #include "IBusChewingEngine-def.c"
 %}
 
@@ -334,13 +335,14 @@ class IBus:Chewing:Engine from IBus:Engine {
 #endif
     }
 
-    private void load_setting(self) {
-	IBUS_CHEWING_LOG(DEBUG, "load_setting()");
-	if (self->iConfig){
-	    IBusChewingConfig_load(self->iConfig);
-	}else{
-	    self->iConfig=IBusChewingConfig_new(IBUS_SERVICE(self));
+    private void use_setting(self) {
+	IBUS_CHEWING_LOG(DEBUG, "use_setting()");
+
+	if (self->iConfig == NULL){
+	    MkdgBackend * backend=ibus_config_backend_new(IBUS_SERVICE(self), NULL);
+	    self->iConfig=ibus_chewing_config_new(backend, self, NULL);
 	}
+	mkdg_properties_use_all(self->iConfig->properties,NULL);
     }
 
     protected void restore_mode(self) {
@@ -360,17 +362,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	    break;
 	}
 	self_refresh_property(self, "chewing_chieng_prop");
-    }
-
-    protected void set_lookup_table_label(self, const gchar * labels) {
-	int i, len = strlen(labels);
-	g_array_set_size(self->table->labels, 0);
-	for (i = 0; i < len; i++) {
-	    IBusText *text =
-		g_object_ref_sink(ibus_text_new_from_unichar
-				  ((gunichar) labels[i]));
-	    ibus_lookup_table_append_label(self->table, text);
-	}
     }
 
     private gchar *make_preedit_string(self,
@@ -805,14 +796,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	return FALSE;
     }
 
-    protected void set_selKeys_string(self, const gchar * selKeys_str) {
-	int j;
-	int len_min = MIN(strlen(selKeys_str), MAX_SELKEY);
-	for (j = 0; j < len_min; j++) {
-	    self->selKeys[j] = (gint) selKeys_str[j];
-	}
-	chewing_set_selKey(self->context, self->selKeys, len_min);
-    }
 
     private IBusProperty *get_iBusProperty(self, const gchar * prop_name) {
 	if (strcmp(prop_name, "chewing_chieng_prop") == 0) {
@@ -1106,7 +1089,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	IBUS_CHEWING_LOG(MSG, "enable()");
 	Self *self = SELF(engine);
 
-	self_load_setting(self);
+	self_use_setting(self);
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_ENABLED);
 	self->inputMode = CHEWING_INPUT_MODE_SELECTION_DONE;
     }
@@ -1123,7 +1106,7 @@ class IBus:Chewing:Engine from IBus:Engine {
      focus_in(IBus:Engine * engine) {
 	Self *self = SELF(engine);
 	if (!self->iConfig) {
-	    self_load_setting(self);
+	    self_use_setting(self);
 	}
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FOCUS_IN);
 	self_restore_mode(self);

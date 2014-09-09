@@ -20,22 +20,20 @@
  */
 
 /**
- * SECTION:IBusConfigBackend
+ * SECTION:GConf2Backend
  * @short_description: An IBus-Config Backend
- * @title: IBusConfig Backend
+ * @title: GConf2 Backend
  * @stability: Stable
- * @include: IBusConfigBackend.h
+ * @include: GConf2Backend.h
  *
  * A MakerDialog backend provides an interface to configuration service
  * like GConf2 or dconf
  */
 
-#ifndef _IBUS_CONFIG_BACKEND_H_
-#define _IBUS_CONFIG_BACKEND_H_
-#include "ibus.h"
+#ifndef _G_CONF2_BACKEND_H_
+#define _G_CONF2_BACKEND_H_
 #include "MakerDialogBackend.h"
 
-MkdgBackend *ibus_config_backend_new(IBusService * service,
-				     gpointer auxData);
+MkdgBackend *gconf2_backend_new(gpointer auxData);
 
-#endif				/* _IBUS_CONFIG_BACKEND_H_ */
+#endif				/* _G_CONF2_BACKEND_H_ */

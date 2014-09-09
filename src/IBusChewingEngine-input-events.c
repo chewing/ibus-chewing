@@ -1,3 +1,5 @@
+#include "IBusChewingConfig.h"
+
 /**
  * ibus_chewing_engine_keycode_to_keysym:
  *
@@ -10,9 +12,7 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine * self,
     /* Get system layout */
     GValue gValue = { 0 };
     gboolean useSysKeyLayout = TRUE;
-    if (IBusChewingConfig_get_ibus_value
-	(self->iConfig, "general", "use_system_keyboard_layout",
-	 &gValue)) {
+    if (ibus_chewing_config_load_ibus_config(self->iConfig, &gValue, "general", "use_system_keyboard_layout",NULL)) {
 	useSysKeyLayout = g_value_get_boolean(&gValue);
     }
 
@@ -290,9 +290,8 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine * self,
     IBUS_CHEWING_LOG(DEBUG,
 		     "handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
 		     keyval,
-		     (self->
-		      chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) ? "TRUE" :
-		     "FALSE", self->inputMode);
+		     (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) ?
+		     "TRUE" : "FALSE", self->inputMode);
     ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
 #ifdef EASY_SYMBOL_INPUT_WORK_AROUND
     if (self->chewingFlags & CHEWING_FLAG_EASY_SYMBOL_INPUT) {
@@ -359,7 +358,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	/* Toggle Chinese <-> English */
 	chewing_set_ChiEngMode(self->context,
 			       !chewing_get_ChiEngMode(self->context));
-	gint isChinese=chewing_get_ChiEngMode(self->context);
+	gint isChinese = chewing_get_ChiEngMode(self->context);
 	gint isCapsLockOff = (is_caps_led_on(self->_priv->pDisplay))
 	    ? 0 : 1;
 	IBUS_CHEWING_LOG(INFO,
@@ -387,15 +386,16 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	{
 	    if (!self->sDialog) {
 		MakerDialog *mDialog = maker_dialog_new_full
-		    (_("Setting"), 3, page_labels, 1, button_labels,
+		    (self->iConfig->properties, _("Setting"), 3,
+		     page_labels, 1, button_labels,
 		     button_responses);
-		mDialog->iConfig = self->iConfig;
 		self->sDialog = GTK_WIDGET(mDialog);
 	    }
 	    gtk_widget_show_all(self->sDialog);
 	    if (gtk_dialog_run(GTK_DIALOG(self->sDialog))
 		== GTK_RESPONSE_OK) {
-		maker_dialog_apply_config_all(MAKER_DIALOG(self->sDialog));
+		maker_dialog_apply_config_all(MAKER_DIALOG(self->sDialog),
+					      NULL);
 	    }
 	    gtk_widget_hide(self->sDialog);
 #if IBUS_CHECK_VERSION(1, 4, 0)

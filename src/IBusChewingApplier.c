@@ -14,6 +14,30 @@ static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
     return CHEWING_KBTYPE_INVALID;
 }
 
+void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
+					    const gchar * selKeys_str)
+{
+    int j;
+    int len_min = MIN(strlen(selKeys_str), MAX_SELKEY);
+    for (j = 0; j < len_min; j++) {
+	engine->selKeys[j] = (gint) selKeys_str[j];
+    }
+    chewing_set_selKey(engine->context, engine->selKeys, len_min);
+}
+
+void ibus_chewing_engine_set_lookup_table_label(IBusChewingEngine * engine,
+						const gchar * labels)
+{
+    int i, len = strlen(labels);
+    g_array_set_size(engine->table->labels, 0);
+    for (i = 0; i < len; i++) {
+	IBusText *text =
+	    g_object_ref_sink(ibus_text_new_from_unichar
+			      ((gunichar) labels[i]));
+	ibus_lookup_table_append_label(engine->table, text);
+    }
+}
+
 /*============================================
  * Callback functions
  */

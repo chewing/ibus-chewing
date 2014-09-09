@@ -156,6 +156,12 @@ gboolean property_context_use(PropertyContext * ctx, gpointer userData)
     return property_context_apply(ctx, userData);
 }
 
+void property_context_free(PropertyContext * ctx)
+{
+    g_value_unset(&(ctx->value));
+    g_free(ctx);
+}
+
 
 /*============================================
  * MkdgProperties Methods
@@ -261,7 +267,7 @@ gboolean mkdg_properties_write_all(MkdgProperties * properties,
 }
 
 /* For actual runtime */
-gboolean propety_context_apply_all(MkdgProperties * properties,
+gboolean mkdg_properties_apply_all(MkdgProperties * properties,
 				   gpointer userData)
 {
     gsize i;
@@ -289,4 +295,15 @@ gboolean mkdg_properties_use_all(MkdgProperties * properties,
 	}
     }
     return result;
+}
+
+void mkdg_properties_free(MkdgProperties *properties)
+{
+    gsize i;
+    for (i = 0; i < mkdg_properties_size(properties); i++) {
+	PropertyContext *ctx = mkdg_properties_index(properties, i);
+	property_context_free(ctx);
+    }
+    g_ptr_array_free(properties->contexts, TRUE);
+    g_free(properties);
 }
