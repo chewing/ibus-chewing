@@ -339,7 +339,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	IBUS_CHEWING_LOG(DEBUG, "use_setting()");
 
 	if (self->iConfig == NULL){
-	    MkdgBackend * backend=ibus_config_backend_new(IBUS_SERVICE(self), NULL);
+	    MkdgBackend * backend=ibus_config_backend_new(IBUS_SERVICE(self), "engine", NULL);
 	    self->iConfig=ibus_chewing_config_new(backend, self, NULL);
 	}
 	mkdg_properties_use_all(self->iConfig->properties,NULL);

@@ -13,7 +13,7 @@ GitHub ibus-chewing issues: https://github.com/definite/ibus-chewing/issues
 Google Code IBus: http://code.google.com/p/ibus/issues/list
 
 For debugging ibus-chewing, run
-
+export G_MESSAGES_DEBUG=all
 export IBUS_CHEWING_LOGFILE=/tmp/somefile
 ibus-daemon -Rr
 

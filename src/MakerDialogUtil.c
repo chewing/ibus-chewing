@@ -46,13 +46,16 @@ void mkdg_log(MkdgLogLevel level, const gchar * format, ...)
     va_end(arglist);
 }
 
-gboolean mkdg_g_value_reset(GValue *value, GType type){
-    if (!G_IS_VALUE(value)){
+gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite)
+{
+    if (!G_IS_VALUE(value)) {
 	g_value_init(value, type);
     }
-    if (G_VALUE_TYPE(value)!=type){
-	mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatable");
-	return FALSE;
+    if (G_VALUE_TYPE(value) != type) {
+	if (!overwrite) {
+	    mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatable");
+	    return FALSE;
+	}
     }
     g_value_reset(value);
     return TRUE;
@@ -101,6 +104,10 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
     GType gType = G_VALUE_TYPE(value);
     mkdg_log(DEBUG, "mkdg_g_value_from_string() gType=%s",
 	     g_type_name(gType));
+    if (!mkdg_g_value_reset(value, gType, FALSE)) {
+	return FALSE;
+    }
+
     guint uintValue;
     gint intValue;
     gchar *endPtr = NULL;
@@ -143,4 +150,107 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
 	break;
     }
     return FALSE;
+}
+
+gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str)
+{
+    gint i = 0;
+    for (i = 0; i < array->len; i++) {
+	if (STRING_EQUALS(str, (gchar *) g_ptr_array_index(array, i))) {
+	    return i;
+	}
+    }
+    return -1;
+}
+
+/*============================================
+ * MKDG XML functions
+ */
+
+#define INDENT_SPACES 4
+
+static void mkdg_xml_append_indent_space(GString * strBuf,
+					 gint indentLevel)
+{
+    int i, indentLen = indentLevel * INDENT_SPACES;
+    for (i = 0; i < indentLen; i++) {
+	g_string_append_c(strBuf, ' ');
+    }
+}
+
+static GString *mkdg_xml_tags_to_string(const gchar * tagName,
+					MkdgXmlTagType type,
+					const gchar * attribute,
+					const gchar * value,
+					gint indentLevel)
+{
+    GString *strBuf = g_string_new(NULL);
+    mkdg_xml_append_indent_space(strBuf, indentLevel);
+
+    if (type != MKDG_XML_TAG_TYPE_NO_TAG) {
+	g_string_append_printf(strBuf, "<%s%s%s%s%s>",
+			       (type ==
+				MKDG_XML_TAG_TYPE_END_ONLY) ? "/" : "",
+			       (!STRING_IS_EMPTY(tagName)) ? tagName : "",
+			       (!STRING_IS_EMPTY(attribute)) ? " " : "",
+			       (!STRING_IS_EMPTY(attribute)) ? attribute :
+			       "",
+			       (type ==
+				MKDG_XML_TAG_TYPE_EMPTY) ? "/" : "");
+    }
+    if (type == MKDG_XML_TAG_TYPE_EMPTY)
+	return strBuf;
+    if (type == MKDG_XML_TAG_TYPE_BEGIN_ONLY)
+	return strBuf;
+    if (type == MKDG_XML_TAG_TYPE_END_ONLY)
+	return strBuf;
+
+    if (type == MKDG_XML_TAG_TYPE_LONG) {
+	g_string_append_c(strBuf, '\n');
+    }
+
+    if (value) {
+	if (type == MKDG_XML_TAG_TYPE_LONG
+	    || type == MKDG_XML_TAG_TYPE_NO_TAG) {
+	    mkdg_xml_append_indent_space(strBuf, indentLevel + 1);
+	    int i, valueLen = strlen(value);
+	    for (i = 0; i < valueLen; i++) {
+		g_string_append_c(strBuf, value[i]);
+		if (value[i] == '\n') {
+		    mkdg_xml_append_indent_space(strBuf, indentLevel + 1);
+		}
+	    }
+	    g_string_append_c(strBuf, '\n');
+	    if (type == MKDG_XML_TAG_TYPE_LONG) {
+		mkdg_xml_append_indent_space(strBuf, indentLevel);
+	    }
+	} else {
+	    g_string_append(strBuf, value);
+	}
+    }
+
+    if (type == MKDG_XML_TAG_TYPE_LONG || type == MKDG_XML_TAG_TYPE_SHORT) {
+	g_string_append_printf(strBuf, "</%s>", tagName);
+    }
+    return strBuf;
+}
+
+gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
+			     MkdgXmlTagType type, const gchar * attribute,
+			     const gchar * value)
+{
+    static int indentLevel = 0;
+    if (type == MKDG_XML_TAG_TYPE_END_ONLY)
+	indentLevel--;
+
+    GString *strBuf =
+	mkdg_xml_tags_to_string(tagName, type, attribute, value,
+				indentLevel);
+    mkdg_log(INFO, "xml_tags_write:%s", strBuf->str);
+    fprintf(outF, "%s\n", strBuf->str);
+
+    if (type == MKDG_XML_TAG_TYPE_BEGIN_ONLY)
+	indentLevel++;
+    g_string_free(strBuf, TRUE);
+    return TRUE;
 }

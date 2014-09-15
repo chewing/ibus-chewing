@@ -21,6 +21,7 @@
 
 #ifndef _MAKER_DIALOG_UTIL_H_
 #define _MAKER_DIALOG_UTIL_H_
+#include <stdio.h>
 #include <string.h>
 #include <glib-object.h>
 
@@ -36,11 +37,15 @@ void mkdg_log_set_level(MkdgLogLevel level);
 
 void mkdg_log_set_domain(const gchar * domain);
 
-void mkdg_log(MkdgLogLevel level, const gchar *format, ...);
+void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
 
 gchar *mkdg_g_value_to_string(GValue * value);
 
+gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite);
+
 gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
+
+gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
 
 /**************************************
  * String Utility Macros
@@ -59,4 +64,20 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
      ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
     )
 
-#endif   /* _MAKER_DIALOG_UTIL_H_ */
+/**************************************
+ * XML data structure and functions
+ */
+
+typedef enum {
+    MKDG_XML_TAG_TYPE_NO_TAG,
+    MKDG_XML_TAG_TYPE_EMPTY,
+    MKDG_XML_TAG_TYPE_SHORT,
+    MKDG_XML_TAG_TYPE_LONG,
+    MKDG_XML_TAG_TYPE_BEGIN_ONLY,
+    MKDG_XML_TAG_TYPE_END_ONLY,
+} MkdgXmlTagType;
+
+gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
+			     MkdgXmlTagType type, const gchar * attribute,
+			     const gchar * value);
+#endif				/* _MAKER_DIALOG_UTIL_H_ */

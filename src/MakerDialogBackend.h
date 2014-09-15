@@ -47,6 +47,7 @@ typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
 /**
  * MkdgBackend:
  * @config: A configuration service
+ * @baseDir: All keys and sub-sections of this project should be put under this dir (without trailing '/')
  * @readFunc: Callback function for load
  * @writeFunc: Callback function for save
  * @auxData:  Auxiliary data that might be useful.
@@ -55,12 +56,13 @@ typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
  */
 struct MkdgBackend_ {
     gpointer config;
+    const gchar *baseDir;
     BackendReadFunc readFunc;
     BackendWriteFunc writeFunc;
     gpointer auxData;
 };
 
-MkdgBackend *mkdg_backend_new(gpointer config, gpointer auxData);
+MkdgBackend *mkdg_backend_new(gpointer config, const gchar *baseDir, gpointer auxData);
 
 
 GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,

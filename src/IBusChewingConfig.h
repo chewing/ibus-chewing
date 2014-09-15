@@ -2,6 +2,7 @@
 #define _IBUS_CHEWING_CONFIG_H_
 #include <glib.h>
 #include <ibus.h>
+#include <gtk/gtk.h>
 #include "MakerDialogProperty.h"
 #include "MakerDialogBackend.h"
 
@@ -10,9 +11,9 @@ typedef struct {
     MkdgProperties *properties;
 } IBusChewingConfig;
 
-/* GConf/dconf section except "/desktop/ibus" */
+/* GConf/dconf section except "/desktop/ibus/engine" */
 
-#define IBUS_CHEWING_CONFIG_SUBSECTION "engine/Chewing"
+#define IBUS_CHEWING_CONFIG_SUBSECTION "Chewing"
 
 IBusChewingConfig *ibus_chewing_config_new(MkdgBackend * backend,
 	gpointer parent,

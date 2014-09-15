@@ -40,94 +40,6 @@ static const GOptionEntry entries[] = {
  * GConf Schemas methods
  */
 
-typedef enum {
-    XML_TAG_TYPE_NO_TAG,
-    XML_TAG_TYPE_EMPTY,
-    XML_TAG_TYPE_SHORT,
-    XML_TAG_TYPE_LONG,
-    XML_TAG_TYPE_BEGIN_ONLY,
-    XML_TAG_TYPE_END_ONLY,
-} XmlTagsType;
-#define INDENT_SPACES 4
-
-static void append_indent_space(GString * strBuf, gint indentLevel)
-{
-    int i, indentLen = indentLevel * INDENT_SPACES;
-    for (i = 0; i < indentLen; i++) {
-	g_string_append_c(strBuf, ' ');
-    }
-}
-
-static GString *xml_tags_to_string(const gchar * tagName, XmlTagsType type,
-				   const gchar * attribute,
-				   const gchar * value, gint indentLevel)
-{
-    GString *strBuf = g_string_new(NULL);
-    append_indent_space(strBuf, indentLevel);
-
-    if (type != XML_TAG_TYPE_NO_TAG) {
-	g_string_append_printf(strBuf, "<%s%s%s%s%s>",
-			       (type == XML_TAG_TYPE_END_ONLY) ? "/" : "",
-			       (!STRING_IS_EMPTY(tagName)) ? tagName : "",
-			       (!STRING_IS_EMPTY(attribute)) ? " " : "",
-			       (!STRING_IS_EMPTY(attribute)) ? attribute :
-			       "",
-			       (type == XML_TAG_TYPE_EMPTY) ? "/" : "");
-    }
-    if (type == XML_TAG_TYPE_EMPTY)
-	return strBuf;
-    if (type == XML_TAG_TYPE_BEGIN_ONLY)
-	return strBuf;
-    if (type == XML_TAG_TYPE_END_ONLY)
-	return strBuf;
-
-    if (type == XML_TAG_TYPE_LONG) {
-	g_string_append_c(strBuf, '\n');
-    }
-
-    if (value) {
-	if (type == XML_TAG_TYPE_LONG || type == XML_TAG_TYPE_NO_TAG) {
-	    append_indent_space(strBuf, indentLevel + 1);
-	    int i, valueLen = strlen(value);
-	    for (i = 0; i < valueLen; i++) {
-		g_string_append_c(strBuf, value[i]);
-		if (value[i] == '\n') {
-		    append_indent_space(strBuf, indentLevel + 1);
-		}
-	    }
-	    g_string_append_c(strBuf, '\n');
-	    if (type == XML_TAG_TYPE_LONG) {
-		append_indent_space(strBuf, indentLevel);
-	    }
-	} else {
-	    g_string_append(strBuf, value);
-	}
-    }
-
-    if (type == XML_TAG_TYPE_LONG || type == XML_TAG_TYPE_SHORT) {
-	g_string_append_printf(strBuf, "</%s>", tagName);
-    }
-    return strBuf;
-}
-
-static void xml_tags_write(FILE * outF, const gchar * tagName,
-			   XmlTagsType type, const gchar * attribute,
-			   const gchar * value)
-{
-    static int indentLevel = 0;
-    if (type == XML_TAG_TYPE_END_ONLY)
-	indentLevel--;
-
-    GString *strBuf =
-	xml_tags_to_string(tagName, type, attribute, value, indentLevel);
-    mkdg_log(INFO, "xml_tags_write:%s", strBuf->str);
-    fprintf(outF, "%s\n", strBuf->str);
-
-    if (type == XML_TAG_TYPE_BEGIN_ONLY)
-	indentLevel++;
-    g_string_free(strBuf, TRUE);
-}
-
 static void ctx_write_locale(PropertyContext * ctx,
 			     FILE * outF, const gchar * locale)
 {
@@ -135,18 +47,18 @@ static void ctx_write_locale(PropertyContext * ctx,
     mkdg_log(DEBUG, "ctx_write_locale(%s,-,%s)", ctx->spec->key, locale);
     g_snprintf(buf, 50, "name=\"%s\"", locale);
     setlocale(LC_MESSAGES, locale);
-    xml_tags_write(outF, "locale", XML_TAG_TYPE_BEGIN_ONLY, buf, NULL);
-    xml_tags_write(outF, "short", XML_TAG_TYPE_SHORT, NULL,
+    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_BEGIN_ONLY, buf, NULL);
+    mkdg_xml_tags_write(outF, "short", MKDG_XML_TAG_TYPE_SHORT, NULL,
 		   gettext(ctx->spec->label));
-    xml_tags_write(outF, "long", XML_TAG_TYPE_LONG, NULL,
+    mkdg_xml_tags_write(outF, "long", MKDG_XML_TAG_TYPE_LONG, NULL,
 		   gettext(ctx->spec->tooltip));
-    xml_tags_write(outF, "locale", XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
 }
 
 gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
 		   const gchar * owner, FILE * outF)
 {
-    xml_tags_write(outF, "schema", XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     gchar buf[XML_BUFFER_SIZE];
     if (STRING_IS_EMPTY(ctx->spec->subSection)) {
 	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
@@ -155,26 +67,26 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
 	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s/%s",
 		   schemasHome, ctx->spec->subSection, ctx->spec->key);
     }
-    xml_tags_write(outF, "key", XML_TAG_TYPE_SHORT, NULL, buf);
-    xml_tags_write(outF, "applyto", XML_TAG_TYPE_SHORT, NULL,
+    mkdg_xml_tags_write(outF, "key", MKDG_XML_TAG_TYPE_SHORT, NULL, buf);
+    mkdg_xml_tags_write(outF, "applyto", MKDG_XML_TAG_TYPE_SHORT, NULL,
 		   buf + strlen("/schemas"));
-    xml_tags_write(outF, "owner", XML_TAG_TYPE_SHORT, NULL, owner);
+    mkdg_xml_tags_write(outF, "owner", MKDG_XML_TAG_TYPE_SHORT, NULL, owner);
     switch (ctx->spec->valueType) {
     case G_TYPE_BOOLEAN:
-	xml_tags_write(outF, "type", XML_TAG_TYPE_SHORT, NULL, "bool");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "bool");
 	break;
     case G_TYPE_INT:
     case G_TYPE_UINT:
-	xml_tags_write(outF, "type", XML_TAG_TYPE_SHORT, NULL, "int");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "int");
 	break;
     case G_TYPE_STRING:
-	xml_tags_write(outF, "type", XML_TAG_TYPE_SHORT, NULL, "string");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "string");
 	break;
     default:
 	break;
     }
     if (ctx->spec->defaultValue) {
-	xml_tags_write(outF, "default", XML_TAG_TYPE_SHORT, NULL,
+	mkdg_xml_tags_write(outF, "default", MKDG_XML_TAG_TYPE_SHORT, NULL,
 		       ctx->spec->defaultValue);
     }
     int i;
@@ -183,7 +95,7 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
     }
 
     setlocale(LC_ALL, NULL);
-    xml_tags_write(outF, "schema", XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
     return TRUE;
 }
 
@@ -218,12 +130,12 @@ gboolean write_gconf_schemas_file(const gchar * filename,
     }
 
     /* Header */
-    xml_tags_write(outF, "gconfschemafile",
-		   XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
-    xml_tags_write(outF, "schemalist",
-		   XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "gconfschemafile",
+		   MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schemalist",
+		   MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
-    /* Backend is not need */
+    /* Backend is not needed for schema generation*/
     IBusChewingConfig *iConfig =
 	ibus_chewing_config_new(NULL, NULL, NULL);
     gsize i;
@@ -234,9 +146,9 @@ gboolean write_gconf_schemas_file(const gchar * filename,
     }
 
     /* Footer */
-    xml_tags_write(outF, "schemalist", XML_TAG_TYPE_END_ONLY, NULL, NULL);
-    xml_tags_write(outF, "gconfschemafile",
-		   XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schemalist", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "gconfschemafile",
+		   MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
     if (fclose(outF))
 	return FALSE;
     mkdg_log(DEBUG, "write_gconf_schemas_file(%s) ... done.", filename);

@@ -12,7 +12,9 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine * self,
     /* Get system layout */
     GValue gValue = { 0 };
     gboolean useSysKeyLayout = TRUE;
-    if (ibus_chewing_config_load_ibus_config(self->iConfig, &gValue, "general", "use_system_keyboard_layout",NULL)) {
+    if (ibus_chewing_config_load_ibus_config
+	(self->iConfig, &gValue, "general", "use_system_keyboard_layout",
+	 NULL)) {
 	useSysKeyLayout = g_value_get_boolean(&gValue);
     }
 
@@ -377,23 +379,18 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	chewing_set_ShapeMode(self->context,
 			      !chewing_get_ShapeMode(self->context));
     } else if (STRING_EQUALS(prop_name, "chewing_settings_prop")) {
-#if IBUS_CHECK_VERSION(1, 4, 0)
-	if (ibus_property_get_state(self->settings_prop) ==
-	    PROP_STATE_UNCHECKED)
-#else
-	if (self->settings_prop->state == PROP_STATE_UNCHECKED)
-#endif
-	{
+	if (ibus_chewing_property_get_state(self->settings_prop) ==
+	    PROP_STATE_UNCHECKED) {
 	    if (!self->sDialog) {
 		MakerDialog *mDialog = maker_dialog_new_full
-		    (self->iConfig->properties, _("Setting"), 3,
-		     page_labels, 1, button_labels,
-		     button_responses);
+		    (self->iConfig->properties, _("Setting"), 
+		     MKDG_WIDGET_FLAG_APPLY_IMMEDIATELY, 
+		     MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
 		self->sDialog = GTK_WIDGET(mDialog);
 	    }
 	    gtk_widget_show_all(self->sDialog);
 	    if (gtk_dialog_run(GTK_DIALOG(self->sDialog))
-		== GTK_RESPONSE_OK) {
+		== MKDG_BUTTON_RESPONSE_OK) {
 		maker_dialog_apply_config_all(MAKER_DIALOG(self->sDialog),
 					      NULL);
 	    }

@@ -1,12 +1,14 @@
 #include "MakerDialogBackend.h"
 
-MkdgBackend *mkdg_backend_new(gpointer config, gpointer auxData)
+MkdgBackend *mkdg_backend_new(gpointer config, const gchar * baseDir,
+			      gpointer auxData)
 {
     if (config == NULL) {
 	return NULL;
     }
     MkdgBackend *result = g_new0(MkdgBackend, 1);
     result->config = config;
+    result->baseDir = baseDir;
     result->auxData = auxData;
     return result;
 }
@@ -24,4 +26,3 @@ gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
 {
     return backend->writeFunc(backend, value, section, key, userData);
 }
-

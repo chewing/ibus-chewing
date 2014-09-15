@@ -2,7 +2,6 @@
 #include "IBusChewingConfig.h"
 #include "ibus-chewing-engine.h"
 
-
 static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
 {
     ChewingKbType i = 0;
@@ -203,3 +202,5 @@ gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value)
     }
     return TRUE;
 }
+
+

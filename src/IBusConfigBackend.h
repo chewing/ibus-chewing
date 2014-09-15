@@ -36,6 +36,7 @@
 #include "MakerDialogBackend.h"
 
 MkdgBackend *ibus_config_backend_new(IBusService * service,
+				     const gchar * baseDir,
 				     gpointer auxData);
 
 #endif				/* _IBUS_CONFIG_BACKEND_H_ */

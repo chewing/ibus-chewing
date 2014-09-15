@@ -94,6 +94,23 @@ GVariant *g_value_to_g_variant(GValue * gValue)
  */
 
 
+#define KEY_BUFFER_SIZE 100
+static gchar *to_real_section(gchar * confSection, MkdgBackend * backend,
+			  const gchar * section)
+{
+
+    if (!STRING_IS_EMPTY(backend->baseDir)){
+	g_strlcpy(confSection, backend->baseDir, KEY_BUFFER_SIZE);
+    }else{
+	g_strlcpy(confSection, "", KEY_BUFFER_SIZE);
+    }
+
+    if (!STRING_IS_EMPTY(section)) {
+	g_strlcat(confSection, "/", KEY_BUFFER_SIZE);
+	g_strlcat(confSection, section, KEY_BUFFER_SIZE);
+    }
+    return confSection;
+}
 
 GValue *ibus_config_backend_read_value(MkdgBackend * backend,
 				       GValue * value,
@@ -102,8 +119,10 @@ GValue *ibus_config_backend_read_value(MkdgBackend * backend,
 				       gpointer userData)
 {
     IBusConfig *config = (IBusConfig *) backend->config;
+    gchar confSection[KEY_BUFFER_SIZE];
+    to_real_section(confSection, backend, section);
 #if IBUS_CHECK_VERSION(1, 4, 0)
-    GVariant *gVar = ibus_config_get_value(config, section,
+    GVariant *gVar = ibus_config_get_value(config, confSection,
 					   key);
     if (gVar == NULL) {
 	return NULL;
@@ -113,27 +132,28 @@ GValue *ibus_config_backend_read_value(MkdgBackend * backend,
     g_variant_unref(gVar);
     return value;
 #else
-    return ibus_config_get_value(config, section, key, value);
+    return ibus_config_get_value(config, confSection, key, value);
 #endif
 }
 
 
 gboolean ibus_config_backend_write_value(MkdgBackend * backend,
-					GValue * value,
-					const gchar * section,
-					const gchar * key,
-					gpointer userData)
+					 GValue * value,
+					 const gchar * section,
+					 const gchar * key,
+					 gpointer userData)
 {
     gboolean result = FALSE;
     IBusConfig *config = (IBusConfig *) backend->config;
+    gchar confSection[KEY_BUFFER_SIZE];
+    to_real_section(confSection, backend, section);
 #if IBUS_CHECK_VERSION(1, 4, 0)
     GVariant *gVar = g_variant_ref_sink(g_value_to_g_variant(value));
     if (gVar != NULL) {
-	result = ibus_config_set_value(config, section, key,  gVar);
+	result = ibus_config_set_value(config, confSection, key, gVar);
     }
 #else
-    result =
-	ibus_config_set_value(config, section, key, value);
+    result = ibus_config_set_value(config, confSection, key, value);
 #endif
 
     if (result == FALSE) {
@@ -145,14 +165,18 @@ gboolean ibus_config_backend_write_value(MkdgBackend * backend,
 
     if (!config) {
 	mkdg_log(WARN,
-		"ibus_config_backend_write_value(-, %s, -) %s",
+		 "ibus_config_backend_write_value(-, %s, -) %s",
 		 key, "Failed to connect to IBusService");
 	return FALSE;
     }
     return TRUE;
 }
 
+/*
+ * baseDir is shorter that other backend, as ibus-config should provide ibus level base
+ */
 MkdgBackend *ibus_config_backend_new(IBusService * service,
+				     const gchar * baseDir,
 				     gpointer auxData)
 {
     IBusConfig *config = NULL;
@@ -169,7 +193,8 @@ MkdgBackend *ibus_config_backend_new(IBusService * service,
 	(IBusConnection *) connections_list->data;
     config = g_object_ref_sink(ibus_config_new(iConnection));
 #endif
-    MkdgBackend *result = mkdg_backend_new((gpointer) config, auxData);
+    MkdgBackend *result =
+	mkdg_backend_new((gpointer) config, baseDir, auxData);
     result->readFunc = ibus_config_backend_read_value;
     result->writeFunc = ibus_config_backend_write_value;
     return result;

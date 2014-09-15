@@ -79,6 +79,7 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
 /* save: set then write */
 /* apply: MkdgProperties -> set callback */
 /* use: load then apply */
+/* assigne: save then apply */
 GValue *property_context_read(PropertyContext * ctx, gpointer userData)
 {
     if (ctx == NULL || ctx->backend == NULL) {

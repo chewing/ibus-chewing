@@ -1,13 +1,7 @@
 # Translated languages.
 INCLUDE(ManageZanata)
 
-SET(SOURCES_I18N ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine.gob
-    ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine-input-events.c
-    ${CMAKE_SOURCE_DIR}/src/IBusChewingEngine-def.c 
-    ${CMAKE_SOURCE_DIR}/src/main.c ${IBUS_CHEWING_SOURCE_COMMON_C}
-    )
-
-MANAGE_GETTEXT(ALL SRCS ${SOURCES_I18N})
+MANAGE_GETTEXT(ALL SRCS ${IBUS_CHEWING_SOURCE_TO_TRANSLATE})
 
 MANAGE_ZANATA("https://translate.zanata.org/zanata/" 
     YES

@@ -34,6 +34,13 @@
 #define _G_CONF2_BACKEND_H_
 #include "MakerDialogBackend.h"
 
-MkdgBackend *gconf2_backend_new(gpointer auxData);
+/**
+ * gconf2_backend_new:
+ * @baseDir: All keys and sub-sections of this project should be put under this dir (without trailing '/')
+ * @auxData: Auxiliary data.
+ *
+ * @returns: And GCon2 backend for this project.
+ */
+MkdgBackend *gconf2_backend_new(const gchar * baseDir, gpointer auxData);
 
 #endif				/* _G_CONF2_BACKEND_H_ */

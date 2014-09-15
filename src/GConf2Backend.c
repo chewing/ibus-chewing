@@ -20,118 +20,140 @@
  */
 
 #include <ibus.h>
+#include <glib.h>
+#include <gconf/gconf.h>
+#include <gconf/gconf-client.h>
 #include "MakerDialogUtil.h"
 #include "GConf2Backend.h"
-#include "gconf/gconf.h"
 
-
-static GValue * gconf_value_to_g_value(GConfValue *confValue, GValue * value){
-    GType gType=G_VALUE_TYPE(value);
-    switch (confValue->type){
-	case GCONF_VALUE_BOOL:
-	    if (gType != G_TYPE_BOOLEAN){
-		return NULL;
-	    }
-	    g_value_set_boolean(value, gconf_value_get_bool(confValue));
-	    break;
-	case GCONF_VALUE_INT:
-	    if (gType != G_TYPE_INT && gType != G_TYPE_UINT){
-		return NULL;
-	    }else if (gType == G_TYPE_INT){
-		g_value_set_int(value, gconf_value_get_int(confValue));
-	    }else{
-		g_value_set_uint(value, gconf_value_get_int(confValue));
-	    }	    
-	    break;
-	case GCONF_VALUE_STRING:
-	    if (gType != G_TYPE_STRING){
-		return NULL;
-	    }
-	    g_value_set_string(value, gconf_value_get_string(confValue));
-	    break;
-	default:
+static GValue *gconf_value_to_g_value(GConfValue * confValue,
+				      GValue * value)
+{
+    GType gType = G_VALUE_TYPE(value);
+    switch (confValue->type) {
+    case GCONF_VALUE_BOOL:
+	if (gType != G_TYPE_BOOLEAN) {
 	    return NULL;
+	}
+	g_value_set_boolean(value, gconf_value_get_bool(confValue));
+	break;
+    case GCONF_VALUE_INT:
+	if (gType != G_TYPE_INT && gType != G_TYPE_UINT) {
+	    return NULL;
+	} else if (gType == G_TYPE_INT) {
+	    g_value_set_int(value, gconf_value_get_int(confValue));
+	} else {
+	    g_value_set_uint(value, gconf_value_get_int(confValue));
+	}
+	break;
+    case GCONF_VALUE_STRING:
+	if (gType != G_TYPE_STRING) {
+	    return NULL;
+	}
+	g_value_set_string(value, gconf_value_get_string(confValue));
+	break;
+    default:
+	return NULL;
     }
     return value;
 }
 
-static GConfValue * gconf_value_new_g_value(GValue * value){
-    GConfValue * confValue;
-    GType gType=G_VALUE_TYPE(value);
-    switch (gType){
-	case G_TYPE_BOOLEAN:
-	    confValue=gconf_value_new(GCONF_VALUE_BOOL);
-	    gconf_value_set_bool(confValue, g_value_get_boolean(value));
-	    break;
-	case G_TYPE_INT:
-	    confValue=gconf_value_new(GCONF_VALUE_INT);
-	    gconf_value_set_int(confValue, g_value_get_int(value));
-	    break;
-	case G_TYPE_UINT:
-	    confValue=gconf_value_new(GCONF_VALUE_INT);
-	    gconf_value_set_int(confValue, g_value_get_uint(value));
-	    break;
-	case G_TYPE_STRING:
-	    confValue=gconf_value_new(GCONF_VALUE_STRING);
-	    gconf_value_set_string(confValue, g_value_get_string(value));
-	    break;
-	default:
-	    return NULL;
+static GConfValue *gconf_value_new_g_value(GValue * value)
+{
+    GConfValue *confValue;
+    GType gType = G_VALUE_TYPE(value);
+    switch (gType) {
+    case G_TYPE_BOOLEAN:
+	confValue = gconf_value_new(GCONF_VALUE_BOOL);
+	gconf_value_set_bool(confValue, g_value_get_boolean(value));
+	break;
+    case G_TYPE_INT:
+	confValue = gconf_value_new(GCONF_VALUE_INT);
+	gconf_value_set_int(confValue, g_value_get_int(value));
+	break;
+    case G_TYPE_UINT:
+	confValue = gconf_value_new(GCONF_VALUE_INT);
+	gconf_value_set_int(confValue, g_value_get_uint(value));
+	break;
+    case G_TYPE_STRING:
+	confValue = gconf_value_new(GCONF_VALUE_STRING);
+	gconf_value_set_string(confValue, g_value_get_string(value));
+	break;
+    default:
+	return NULL;
     }
     return confValue;
 }
+
 /*============================================
  * Class methods
  */
 
-#define G_CONF_KEY_BUFFER_SIZE 100
+#define KEY_BUFFER_SIZE 100
+static gchar * to_real_key(gchar *confKey, MkdgBackend * backend, const gchar * section, const gchar * key)
+{
+    if (!STRING_IS_EMPTY(backend->baseDir)){
+	g_strlcpy(confKey, backend->baseDir, KEY_BUFFER_SIZE);
+    }else{
+	g_strlcpy(confKey, "/", KEY_BUFFER_SIZE);
+    }
+
+    if (!STRING_IS_EMPTY(section)) {
+	g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
+	g_strlcat(confKey, section, KEY_BUFFER_SIZE);
+    }
+    g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
+    g_strlcat(confKey, key, KEY_BUFFER_SIZE);
+    return confKey;
+}
+
 GValue *gconf2_backend_read_value(MkdgBackend * backend,
-				       GValue * value,
-				       const gchar * section,
-				       const gchar * key,
-				       gpointer userData)
+				  GValue * value,
+				  const gchar * section,
+				  const gchar * key, gpointer userData)
 {
     GConfClient *config = (GConfClient *) backend->config;
-    GError *err=NULL;
-    gchar confKey[G_CONF_KEY_BUFFER_SIZE];
-    g_snprint(confKey, G_CONF_KEY_BUFFER_SIZE, "%s/%s" , section, key);
-    GConfValue * confValue = gconf_client_get(config, confKey, &err);
+    GError *err = NULL;
+    gchar confKey[KEY_BUFFER_SIZE];
+    to_real_key(confKey, backend, section, key);
+    GConfValue *confValue = gconf_client_get(config, confKey, &err);
 
-    if (err!=NULL){
-	mkdg_log(ERROR, "gconf2_backend_read_value(-,-,%s,%s,-): %s", section, key, err->message);
+    if (err != NULL) {
+	mkdg_log(ERROR, "gconf2_backend_read_value(-,-,%s,%s,-): %s",
+		 section, key, err->message);
 	return NULL;
     }
-    return gconf_value_to_g_value(confValue,value);
+    return gconf_value_to_g_value(confValue, value);
 }
 
 
 gboolean gconf2_backend_write_value(MkdgBackend * backend,
-					GValue * value,
-					const gchar * section,
-					const gchar * key,
-					gpointer userData)
+				    GValue * value,
+				    const gchar * section,
+				    const gchar * key, gpointer userData)
 {
-    gboolean result = FALSE;
     GConfClient *config = (GConfClient *) backend->config;
-    GError *err=NULL;
-    gchar confKey[G_CONF_KEY_BUFFER_SIZE];
-    g_snprint(confKey, G_CONF_KEY_BUFFER_SIZE, "%s/%s" , section, key);
-    GConfValue * confValue = gconf_value_new_g_value(value);
+    GError *err = NULL;
+    gchar confKey[KEY_BUFFER_SIZE];
+    to_real_key(confKey, backend, section, key);
+    GConfValue *confValue = gconf_value_new_g_value(value);
     gconf_client_set(config, confKey, confValue, &err);
     gconf_value_free(confValue);
-    if (err!=NULL){
-	mkdg_log(ERROR, "gconf2_backend_write_value(-,-,%s,%s,-): %s", section, key, err->message);
+    if (err != NULL) {
+	mkdg_log(ERROR, "gconf2_backend_write_value(-,-,%s,%s,-): %s",
+		 section, key, err->message);
 	return FALSE;
     }
     return TRUE;
 }
 
-MkdgBackend *gconf2_backend_new(gpointer auxData)
+MkdgBackend *gconf2_backend_new(const gchar * baseDir, gpointer auxData)
 {
-    GConfClient * client = gconf_client_get_default();
-
-    MkdgBackend *result = mkdg_backend_new((gpointer) client, auxData);
+    GConfClient *client = gconf_client_get_default();
+    MkdgBackend *result =
+	mkdg_backend_new((gpointer) client, baseDir, auxData);
     result->readFunc = gconf2_backend_read_value;
     result->writeFunc = gconf2_backend_write_value;
+    result->baseDir = baseDir;
     return result;
 }
