@@ -89,7 +89,8 @@ PropertySpec propSpecs[] = {
      N_("Add phrases in the front."),
      }
     ,
-    {G_TYPE_BOOLEAN, "easySymbolInput", PAGE_EDITING, N_("Easy symbol input"),
+    {G_TYPE_BOOLEAN, "easySymbolInput", PAGE_EDITING,
+     N_("Easy symbol input"),
      IBUS_CHEWING_CONFIG_SUBSECTION, "1", NULL, NULL, 0, 1,
      MKDG_SPEC_FUNC(easySymbolInput_apply_callback), 0,
      N_("Easy symbol input."),
@@ -141,7 +142,8 @@ PropertySpec propSpecs[] = {
      N_("Always input numbers when number keys from key pad is inputted."),
      }
     ,
-    {G_TYPE_BOOLEAN, "plainZhuyin", PAGE_SELECTING, N_("Plain Zhuyin mode"),
+    {G_TYPE_BOOLEAN, "plainZhuyin", PAGE_SELECTING,
+     N_("Plain Zhuyin mode"),
      IBUS_CHEWING_CONFIG_SUBSECTION, "0", NULL, NULL, 0, 1,
      MKDG_SPEC_FUNC(plainZhuyin_apply_callback), 0,
      N_
@@ -162,7 +164,8 @@ PropertySpec propSpecs[] = {
      }
     ,
     {G_TYPE_BOOLEAN, "spaceAsSelection", PAGE_SELECTING,
-     IBUS_CHEWING_CONFIG_SUBSECTION, N_("Space to select"),
+     N_("Space to select"),
+     IBUS_CHEWING_CONFIG_SUBSECTION,
      "0", NULL, NULL, 0, 1,
      MKDG_SPEC_FUNC(spaceAsSelection_apply_callback), 0,
      "Press Space to select the candidate.",

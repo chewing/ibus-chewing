@@ -104,6 +104,7 @@ gint start_dialog()
     if (result != GTK_RESPONSE_OK) {
 	return 3;
     }
+    maker_dialog_save_all_widgets_values(mDialog,NULL);
     return 0;
 }
 
@@ -137,6 +138,7 @@ gint main(gint argc, gchar * argv[])
 	       "\n");
 	return 0;
     }
+    mkdg_log_set_level(verbose);
     return start_dialog();
 }
 

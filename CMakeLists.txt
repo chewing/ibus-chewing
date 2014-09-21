@@ -191,6 +191,9 @@ INSTALL(FILES AUTHORS README ChangeLog COPYING USER-GUIDE
 INSTALL(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml 
     DESTINATION "${DATA_DIR}/ibus/component")
 
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/ibus-setup-chewing.desktop 
+    DESTINATION "${DATA_DIR}/applications")
+
 INSTALL(DIRECTORY icons
     DESTINATION "${PRJ_DATA_DIR}"
     )

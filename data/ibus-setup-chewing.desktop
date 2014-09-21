@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=IBus Chewing Preferences
+Name[zh_TW]=IBus 酷音偏好設定
+Comment=Set IBus Chewing Preferences
+Comment[zh_TW]=設定 IBus 酷音偏好
+Exec=/usr/libexec/ibus-setup-chewing
+Icon=ibus-setup-chewing
+NoDisplay=true
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Settings;

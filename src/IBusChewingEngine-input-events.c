@@ -383,16 +383,17 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	    PROP_STATE_UNCHECKED) {
 	    if (!self->sDialog) {
 		MakerDialog *mDialog = maker_dialog_new_full
-		    (self->iConfig->properties, _("Setting"), 
-		     MKDG_WIDGET_FLAG_APPLY_IMMEDIATELY, 
+		    (self->iConfig->properties, _("Setting"),
+		     MKDG_WIDGET_FLAG_APPLY_IMMEDIATELY,
 		     MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
 		self->sDialog = GTK_WIDGET(mDialog);
 	    }
 	    gtk_widget_show_all(self->sDialog);
 	    if (gtk_dialog_run(GTK_DIALOG(self->sDialog))
 		== MKDG_BUTTON_RESPONSE_OK) {
-		maker_dialog_apply_config_all(MAKER_DIALOG(self->sDialog),
-					      NULL);
+		maker_dialog_assign_all_widgets_values(MAKER_DIALOG
+						       (self->sDialog),
+						       NULL);
 	    }
 	    gtk_widget_hide(self->sDialog);
 #if IBUS_CHECK_VERSION(1, 4, 0)
