@@ -1,18 +1,60 @@
 cmake_minimum_required(VERSION 2.6.2)
 
-# CMP0011: New: Included scripts do automatic cmake_policy PUSH and POP.
-#          Old: cmake_policy in included script affect the caller.
-# It should be set here, otherwise policy set in modules won't affect here.
-CMAKE_POLICY(SET CMP0011 OLD)
+# Included scripts do automatic cmake_policy PUSH and POP.
+# OLD: CMake policy in included script will affect the invoker.
+# CMAKE_POLICY(SET CMP0011 OLD)
 
-# Default CMAKE_INSTALL_PREFIX should be set before PROJECT()
-SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install dir prefix")
+
+####################################################################
+# Find cmake-fedora
+#
+LIST(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/Modules")
+INCLUDE(ManageEnvironmentCommon OPTIONAL RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
+
+IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
+    # Is cmake-fedora a git submodule?    
+    IF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
+	## Create a link if Modules/ does not exists
+	IF(NOT EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora)
+	    IF(EXISTS ${CMAKE_SOURCE_DIR}/.gitmodules)
+                ## cmake-fedora may be a git submodules
+		EXECUTE_PROCESS(COMMAND git submodule init
+		    COMMAND git submodule update
+		    RESULT_VARIABLE gitSubmoduleFailed
+		    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} 
+		    )	
+	    ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/.gitmodules)
+	ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora)
+
+	IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
+            ## cmake-fedora is now available as subdirectory, try again
+	    EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
+	    INCLUDE(ManageEnvironmentCommon RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
+	ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
+    ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
+ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
+
+IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
+MESSAGE(FATAL_ERROR "ManageEnvironmentCommon.cmake is not found in CMAKE_MODULE_PATH.
+Please either:
+    1) Use cmake-fedora as a git submodule:
+       git submodule add https://git.fedorahosted.org/git/cmake-fedora.git 
+    2) Install cmake-fedora from repository:
+       yum -y install cmake-fedora
+    3) Download the source:
+       wget https://fedorahosted.org/releases/c/m/cmake-fedora/cmake-fedora-modules-only-latest.tar.gz
+       tar zxvf SOURCES/cmake-fedora-modules-only-latest.tar.gz")
+ENDIF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
+
+GET_FILENAME_COMPONENT(CMAKE_FEDORA_MODULE_DIR 
+    "${MANAGE_ENVIRONMENT_PATH}" PATH CACHE
+    )
 
 # Whether to build on fedora
 SET(CMAKE_FEDORA_ENABLE_FEDORA_BUILD "0" CACHE STRING "Enable fedora build")
 
-# Message level M_OFF (5)
-SET(MANAGE_MESSAGE_LEVEL 10 CACHE STRING "Message (Verbose) Level")
+# Default Message level M_OFF (4)
+SET(MANAGE_MESSAGE_LEVEL 7 CACHE STRING "Message (Verbose) Level")
 
 ####################################################################
 # Project specific information
@@ -127,30 +169,30 @@ MANAGE_DEPENDENCY(BUILD_REQUIRES CMAKE VER "2.6.2" REQUIRED)
 MANAGE_DEPENDENCY(BUILD_REQUIRES GOB2 VER "2.0.16" REQUIRED
     PROGRAM_NAMES "gob2"
     )
-SET(GLIB2_PKG_CONFIG "glib-2.0" CACHE STRING "pkgconfig for glib2")
+SET(GLIB2_PKG_CONFIG "glib-2.0" CACHE STRING "glib2 pkg-config name")
 MANAGE_DEPENDENCY(REQUIRES GLIB2  REQUIRED PKG_CONFIG ${GLIB2_PKG_CONFIG})
 
-SET(GTK2_PKG_CONFIG "gtk+-2.0" CACHE STRING "pkgconfig for gtk2")
+SET(GTK2_PKG_CONFIG "gtk+-2.0" CACHE STRING "gtk pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES GTK2 REQUIRED 
     PKG_CONFIG ${GTK2_PKG_CONFIG} DEVEL
     )
 
-SET(IBUS_PKG_CONFIG "ibus-1.0" CACHE STRING "pkgconfig for ibus")
+SET(IBUS_PKG_CONFIG "ibus-1.0" CACHE STRING "ibus pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES IBUS VER "${IBUS_MIN_VER}" REQUIRED
     PKG_CONFIG ${IBUS_PKG_CONFIG} DEVEL
     )
 
-SET(CHEWING_PKG_CONFIG "chewing" CACHE STRING "pkgconfig for chewing")
+SET(CHEWING_PKG_CONFIG "chewing" CACHE STRING "chewing pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES CHEWING VER "${CHEWING_MIN_VER}" REQUIRED 
     PKG_CONFIG ${CHEWING_PKG_CONFIG} PACKAGE_NAME "libchewing-devel" 
     )
 
-SET(X11_PKG_CONFIG "x11" CACHE STRING "pkgconfig for x11")
+SET(X11_PKG_CONFIG "x11" CACHE STRING "x11 pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES X11 REQUIRED
     PKG_CONFIG ${X11_PKG_CONFIG} PACKAGE_NAME "libX11-devel"
     )
 
-SET(XTST_PKG_CONFIG "xtst" CACHE STRING "pkgconfig for xtst")
+SET(XTST_PKG_CONFIG "xtst" CACHE STRING "xtst pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES XTST REQUIRED
     PKG_CONFIG "${XTST}" PACKAGE_NAME "libXtst-devel"
     )
