@@ -87,8 +87,8 @@ SET(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 SET(VENDOR "Red Hat, APAC, Inc.")
 SET(LICENSE "GPLv2+")
 SET(PRJ_GROUP "System Environment/Libraries")
-SET(RPM_SPEC_URL "http://code.google.com/p/ibus/")
-SET(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
+SET(RPM_SPEC_URL "https://github.com/definite/${PROJECT_NAME}")
+SET(RPM_SPEC_SOURCES "https://github.com/definite/${PROJECT_NAME}/releases/download/${PROJECT_NAME}/${PROJECT_NAME}-%{version}-Source.tar.gz")
 
 
 ####################################################################
@@ -227,7 +227,7 @@ ADD_SUBDIRECTORY(po)
 #
 
 INSTALL(FILES AUTHORS README ChangeLog COPYING USER-GUIDE
-    DESTINATION ${PRJ_DOC_DIR}
+    DESTINATION "${PRJ_DOC_DIR}"
     )
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml 
