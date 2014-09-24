@@ -39,7 +39,7 @@ const gchar *mkdg_button_get_text(MkdgButtonIndex index)
     if (index > MKDG_BUTTON_INDEX_INVALID) {
 	return NULL;
     }
-    return mkdgButtonTextArray[index];
+    return g_dpgettext2(NULL,"Configure",mkdgButtonTextArray[index]);
 }
 
 /*=====================================
@@ -119,17 +119,17 @@ gint mkdg_combo_find_string_index(GtkComboBox * combo,
 				       propertyFlags);
 }
 
-static const gchar *mkdg_combo_get_active_text(GtkComboBox * combo,
-					       GValue * gValue)
+static GValue * mkdg_combo_get_active_text(GtkComboBox * combo)
 {
     GtkTreeIter iter;
     if (!gtk_combo_box_get_active_iter(combo, &iter)) {
 	return NULL;
     }
+    GValue *value = g_new0(GValue, 1);
     GtkListStore *listStore =
 	GTK_LIST_STORE(gtk_combo_box_get_model(combo));
-    gtk_tree_model_get_value(GTK_TREE_MODEL(listStore), &iter, 0, gValue);
-    return g_value_get_string(gValue);
+    gtk_tree_model_get_value(GTK_TREE_MODEL(listStore), &iter, 0, value);
+    return value;
 }
 
 /*=====================================
@@ -166,11 +166,12 @@ static void on_comboBox_changed_wrap(GtkComboBox * comboBox,
 				     gpointer userData)
 {
     MkdgWidget *mWidget = (MkdgWidget *) userData;
-    GValue gValue = { 0 };
-    mkdg_combo_get_active_text(comboBox, &gValue);
+    //GValue gValue = { 0 };
+    GValue *value = mkdg_combo_get_active_text(comboBox);
     mkdg_log(INFO, "on_comboBox_changed_wrap(), key=%s value=%s",
-	     mWidget->ctx->spec->key, g_value_get_string(&gValue));
-    on_value_change(mWidget, &gValue);
+	     mWidget->ctx->spec->key, mkdg_g_value_to_string(value));
+    on_value_change(mWidget, value);
+    g_value_unset(value);
 }
 
 static void on_entry_activate_wrap(GtkEntry * entry, gpointer userData)
@@ -224,7 +225,7 @@ static void on_toggleButton_toggled_wrap(GtkToggleButton * button,
     g_value_init(&gValue, mWidget->ctx->spec->valueType);
     g_value_set_boolean(&gValue, gtk_toggle_button_get_active(button));
     mkdg_log(INFO, "on_entry_activate_wrap(), key=%s value=%s",
-	     mWidget->ctx->spec->key, g_value_get_string(&gValue));
+	     mWidget->ctx->spec->key, mkdg_g_value_to_string(&gValue));
     on_value_change(mWidget, &gValue);
 }
 
@@ -275,7 +276,7 @@ MkdgWidgetContainer *mkdg_widget_container_new(MkdgWgt * wgt)
 	return NULL;
     }
     MkdgWidgetContainer *container = g_new0(MkdgWidgetContainer, 1);
-    container->wgt=wgt;
+    container->wgt = wgt;
     container->children = g_ptr_array_new();
     container->childrenLabelWidth = 0;
     return container;
@@ -349,6 +350,7 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx,
     if (ctx == NULL) {
 	return NULL;
     }
+    mkdg_log(INFO, "mkdg_widget_new(%s,%x)", ctx->spec->key, widgetFlags);
     MkdgWidget *mWidget = g_new0(MkdgWidget, 1);
 
     MkdgWgt *wgt = NULL;
@@ -392,8 +394,8 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx,
 	strValue = g_value_get_string(property_context_get(ctx));
 	if (ctx->spec->validValues) {
 	    GtkListStore *listStore = NULL;
-	    if (ctx->
-		spec->propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
+	    if (ctx->spec->
+		propertyFlags & MKDG_PROPERTY_FLAG_HAS_TRANSLATION) {
 		listStore =
 		    gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 	    } else {
@@ -408,10 +410,10 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx,
 				       ctx->spec->propertyFlags);
 	    }
 	    int index = mkdg_list_store_find_string(listStore, strValue,
-						    ctx->
-						    spec->translationContext,
-						    ctx->
-						    spec->propertyFlags);
+						    ctx->spec->
+						    translationContext,
+						    ctx->spec->
+						    propertyFlags);
 
 	    if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_NEW) {
 		wgt =
@@ -434,9 +436,8 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx,
 		wgt =
 		    gtk_combo_box_entry_new_with_model(GTK_TREE_MODEL
 						       (listStore),
-						       (ctx->
-							spec->propertyFlags
-							&
+						       (ctx->spec->
+							propertyFlags &
 							MKDG_PROPERTY_FLAG_HAS_TRANSLATION)
 						       ? 1 : 0);
 	    }
@@ -512,11 +513,12 @@ GValue *mkdg_widget_get_widget_value(MkdgWidget * mWidget, GValue * value)
 	break;
     case G_TYPE_STRING:
 	if (mWidget->ctx->spec->validValues) {
-	    const char *str =
-		mkdg_combo_get_active_text(GTK_COMBO_BOX(mWidget->wgt),
-					   value);
+	    GValue * strValue =
+		mkdg_combo_get_active_text(GTK_COMBO_BOX(mWidget->wgt));
 	    mkdg_log(INFO, "mkdg_widget_get_widget_value(%s) %s",
-		     mWidget->ctx->spec->key, str);
+		     mWidget->ctx->spec->key, mkdg_g_value_to_string(strValue));
+	    g_value_copy(strValue,value);
+	    g_value_unset(strValue);
 	} else {
 	    g_value_set_string(value,
 			       gtk_entry_get_text(GTK_ENTRY
@@ -560,10 +562,10 @@ gboolean mkdg_widget_set_widget_value(MkdgWidget * mWidget, GValue * value)
 	    gint index =
 		mkdg_combo_find_string_index(GTK_COMBO_BOX
 					     (mWidget->wgt), str,
-					     mWidget->ctx->
-					     spec->translationContext,
-					     mWidget->ctx->
-					     spec->propertyFlags);
+					     mWidget->ctx->spec->
+					     translationContext,
+					     mWidget->ctx->spec->
+					     propertyFlags);
 	    gtk_combo_box_set_active(GTK_COMBO_BOX(mWidget->wgt), index);
 	} else {
 	    g_value_set_string(value,

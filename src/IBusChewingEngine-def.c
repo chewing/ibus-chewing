@@ -15,37 +15,7 @@ const gchar *toneKeys[] = {
 /*============================================
  * Supporting functions
  */
-#ifdef IBUS_CHEWING_MAIN
 
-static void ibus_chewing_log_handler(const gchar *log_domain, 
-	GLogLevelFlags log_level, const gchar *message, gpointer user_data){
-    GString *str=g_string_new(NULL);
-    IBusChewingEngine *engine=(IBusChewingEngine *) user_data;
-    if (log_level & G_LOG_LEVEL_ERROR){
-	g_string_printf(str, "%s [EE] %s\n", log_domain, message);
-    }else if (log_level & G_LOG_LEVEL_CRITICAL){
-	g_string_printf(str, "%s [CC] %s\n", log_domain, message);
-    }else if (log_level & G_LOG_LEVEL_WARNING){
-	g_string_printf(str, "%s [WW] %s\n", log_domain, message);
-    }else if (log_level & G_LOG_LEVEL_MESSAGE){
-	g_string_printf(str, "%s [MM] %s\n", log_domain, message);
-    }else if (log_level & G_LOG_LEVEL_INFO){
-	g_string_printf(str, "%s [II] %s\n", log_domain, message);
-    }else if (log_level & G_LOG_LEVEL_DEBUG){
-	g_string_printf(str, "%s [DD] %s\n", log_domain, message);
-    }else{
-	g_string_printf(str, "%s [%d] %s\n", log_domain, log_level,message);
-    }
-    if (str->len){
-	if (engine->logFile){
-	    fputs(str->str, engine->logFile);
-	}else{
-	    fputs(str->str, stderr);
-	}    
-    }
-    g_string_free(str,TRUE);
-    return;
-}
 
 static gboolean ibus_chewing_property_get_state(IBusProperty *prop){
 #if IBUS_CHECK_VERSION(1, 4, 0)
@@ -242,7 +212,5 @@ static void key_send_fake_event(KeySym key, Display *pDisplay)
     XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
 
 }
-#endif
-
 #endif
 

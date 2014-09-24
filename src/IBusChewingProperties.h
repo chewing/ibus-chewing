@@ -1,5 +1,5 @@
-#ifndef _IBUS_CHEWING_CONFIG_H_
-#define _IBUS_CHEWING_CONFIG_H_
+#ifndef _IBUS_CHEWING_PROPERTIES_H_
+#define _IBUS_CHEWING_PROPERTIES_H_
 #include <glib.h>
 #include <ibus.h>
 #include <gtk/gtk.h>
@@ -7,19 +7,19 @@
 #include "MakerDialogBackend.h"
 
 typedef struct {
-    MkdgBackend *backend;
     MkdgProperties *properties;
-} IBusChewingConfig;
+    GHashTable *confObjTable;
+} IBusChewingProperties;
 
-/* GConf/dconf section except "/desktop/ibus/engine" */
+/* GConf/dconf section under PROJECT_SCHEMA_PATH */
+#define IBUS_CHEWING_PROPERTIES_SUBSECTION ""
 
-#define IBUS_CHEWING_CONFIG_SUBSECTION "Chewing"
+IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
+						   gpointer parent,
+						   gpointer auxData);
 
-IBusChewingConfig *ibus_chewing_config_new(MkdgBackend * backend,
-	gpointer parent,
-	gpointer auxData);
 
-GValue *ibus_chewing_config_load_ibus_config(IBusChewingConfig * self,
+GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 					     GValue * value,
 					     const gchar * section,
 					     const gchar * key,
@@ -28,46 +28,50 @@ GValue *ibus_chewing_config_load_ibus_config(IBusChewingConfig * self,
 /*============================================
  * Callback functions
  */
-gboolean KBType_apply_callback(PropertyContext * ctx, GValue * value);
+gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData);
 
-gboolean selKeys_apply_callback(PropertyContext * ctx, GValue * value);
+gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData);
 
 gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
-				      GValue * value);
+				      gpointer userData);
 
 gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
-				     GValue * value);
+				     gpointer userData);
 
 gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
-					   GValue * value);
+					   gpointer userData);
 
 gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
-					GValue * value);
+					gpointer userData);
 
 gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
-				       GValue * value);
+				       gpointer userData);
 
 gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
-					GValue * value);
+					gpointer userData);
 
 gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
-					      GValue * value);
+					      gpointer userData);
 
 gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
-				     GValue * value);
+				     gpointer userData);
 
 gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
-					   GValue * value);
+					   gpointer userData);
 
-gboolean candPerPage_apply_callback(PropertyContext * ctx, GValue * value);
+gboolean candPerPage_apply_callback(PropertyContext * ctx,
+				    gpointer userData);
 
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
-					     GValue * value);
+					     gpointer userData);
 
 gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
-					 GValue * value);
+					 gpointer userData);
 
-gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value);
+gboolean plainZhuyin_apply_callback(PropertyContext * ctx,
+				    gpointer userData);
+
+extern MkdgPropertySpec propSpecs[];
 
 extern const gchar *kbType_ids[];
 
@@ -77,4 +81,4 @@ extern const gchar *syncCapsLock_strs[];
 
 extern const gchar *outputCharsets[];
 
-#endif				/* _IBUS_CHEWING_CONFIG_H_ */
+#endif				/* _IBUS_CHEWING_PROPERTIES_H_ */

@@ -33,7 +33,8 @@ requires 2.0.0
 #include <X11/XKBlib.h>
 #include <ctype.h>
 #include "ibus-chewing-util.h"
-#include "IBusChewingConfig.h"
+#include "GSettingsBackend.h"
+#include "IBusChewingProperties.h"
 %}
 
 enum CHEWING_KBTYPE {
@@ -136,7 +137,7 @@ enum ENGINE_STATUS {
 /* For easy symbol input work around */
 #define EASY_SYMBOL_INPUT_WORK_AROUND
 
-extern PropertySpec propSpecs[];
+extern MkdgPropertySpec propSpecs[];
 extern const gchar *page_labels[];
 extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
@@ -207,7 +208,7 @@ class IBus:Chewing:Engine from IBus:Engine {
     private ChewingInputStyle inputStyle;
 
     protected IBusLookupTable *table = NULL
-	destroywith ibus_lookup_table_clear;
+    destroywith ibus_lookup_table_clear;
 
     public IBusProperty *chieng_prop = {
 	g_object_ref_sink(ibus_property_new
@@ -243,7 +244,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	{ g_object_ref_sink(ibus_prop_list_new()) }
     destroywith g_object_unref;
 
-    public IBusChewingConfig *iConfig = NULL;
+    public IBusChewingProperties *iProperties = NULL;
 
     protected IBusKeymap *keymap_us = { ibus_keymap_get("us") };
 
@@ -290,25 +291,27 @@ class IBus:Chewing:Engine from IBus:Engine {
 	    return;
 	}
 
+	IBUS_CHEWING_LOG(INFO, "init() CHEWING_DATADIR=%s",
+		QUOTE_ME(CHEWING_DATADIR));
+	gchar buf[100];
+	g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
+	gint ret=chewing_Init(QUOTE_ME(CHEWING_DATADIR), buf);
+	if(ret){
+	    IBUS_CHEWING_LOG(ERROR, "init() chewing_Init()=%d", ret);
+	}
+
 	gchar *logFilename = getenv("IBUS_CHEWING_LOGFILE");
 	if (logFilename != NULL) {
 	    self->logFile = fopen(logFilename, "w+");
 	    if (self->logFile == NULL) {
-		g_warning("Cannot write to logfile %s, ignored\n",
+		IBUS_CHEWING_LOG(WARN, "init() Cannot write to logfile %s, ignored\n",
 			  logFilename);
+	    }else{
+		mkdg_log_set_file(self->logFile);
 	    }
 	}
-	g_log_set_handler(NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
-			  | G_LOG_FLAG_RECURSION,
-			  ibus_chewing_log_handler, self);
 
-	gchar buf[100];
-	g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
-
-	IBUS_CHEWING_LOG(INFO, "init() CHEWING_DATADIR=%s",
-			 QUOTE_ME(CHEWING_DATADIR));
-	chewing_Init(QUOTE_ME(CHEWING_DATADIR), buf);
-
+	IBUS_CHEWING_LOG(INFO, "init() chewing_new()");
 	self->context = chewing_new();
 	chewing_set_ChiEngMode(self->context, CHINESE_MODE);
 	self->inputMode = CHEWING_INPUT_MODE_SELECTION_DONE;
@@ -320,6 +323,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 
 	ibus_chewing_engine_set_status_flag(self,
 					    ENGINE_STATUS_INITIALIZED);
+	IBUS_CHEWING_LOG(INFO, "init() Done");
     }
 
     class_init(klass) {
@@ -336,13 +340,16 @@ class IBus:Chewing:Engine from IBus:Engine {
     }
 
     private void use_setting(self) {
-	IBUS_CHEWING_LOG(DEBUG, "use_setting()");
+	IBUS_CHEWING_LOG(INFO, "use_setting()");
 
-	if (self->iConfig == NULL){
-	    MkdgBackend * backend=ibus_config_backend_new(IBUS_SERVICE(self), "engine", NULL);
-	    self->iConfig=ibus_chewing_config_new(backend, self, NULL);
+	if (self->iProperties == NULL){
+	    // MkdgBackend * backend=ibus_config_backend_new(GSETTINGS_BACKEND_ID, IBUS_SERVICE(self), "/desktop/ibus/engine/Chewing", NULL);
+	    MkdgBackend *backend=mkdg_g_settings_backend_new( QUOTE_ME(PROJECT_SCHEMA_ID), QUOTE_ME(PROJECT_SCHEMA_PATH), 
+		    NULL);
+	    self->iProperties=ibus_chewing_properties_new(backend, self, NULL);
 	}
-	mkdg_properties_use_all(self->iConfig->properties,NULL);
+	mkdg_properties_use_all(self->iProperties->properties,NULL);
+	IBUS_CHEWING_LOG(INFO, "use_setting() ... done");
     }
 
     protected void restore_mode(self) {
@@ -796,7 +803,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	return FALSE;
     }
 
-
     private IBusProperty *get_iBusProperty(self, const gchar * prop_name) {
 	if (strcmp(prop_name, "chewing_chieng_prop") == 0) {
 	    return self->chieng_prop;
@@ -1104,8 +1110,9 @@ class IBus:Chewing:Engine from IBus:Engine {
 
   override(IBus:Engine) void
      focus_in(IBus:Engine * engine) {
+	IBUS_CHEWING_LOG(MSG, "focus_in()");
 	Self *self = SELF(engine);
-	if (!self->iConfig) {
+	if (!self->iProperties) {
 	    self_use_setting(self);
 	}
 	ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_FOCUS_IN);

@@ -1,14 +1,15 @@
+#include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
 
-MkdgBackend *mkdg_backend_new(gpointer config, const gchar * baseDir,
-			      gpointer auxData)
+MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
+			      const gchar * basePath, gpointer auxData)
 {
-    if (config == NULL) {
-	return NULL;
-    }
+    g_assert(config);
+    g_assert(!STRING_IS_EMPTY(id));
     MkdgBackend *result = g_new0(MkdgBackend, 1);
+    result->id = id;
     result->config = config;
-    result->baseDir = baseDir;
+    result->basePath = basePath;
     result->auxData = auxData;
     return result;
 }

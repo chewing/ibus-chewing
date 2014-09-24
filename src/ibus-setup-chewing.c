@@ -27,8 +27,14 @@
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
+#ifdef GSETTINGS_SUPPORT
+#include "GSettingsBackend.h"
+#endif
+#ifdef GCONF2_SUPPORT
 #include "GConf2Backend.h"
-#include "IBusChewingConfig.h"
+#endif
+#include "GConf2Backend.h"
+#include "IBusChewingProperties.h"
 #include "ibus-chewing-util.h"
 #include "maker-dialog.h"
 
@@ -46,55 +52,24 @@ static const GOptionEntry entries[] = {
     {NULL},
 };
 
-
-const char *locale_env_strings[] = {
-    "LC_ALL",
-    "LANG",
-    "LANGUAGE",
-    "GDM_LANG",
-    NULL
-};
-
-void determine_locale()
-{
-#ifndef STRING_BUFFER_SIZE
-#define STRING_BUFFER_SIZE 100
-#endif
-    gchar *localePtr = NULL;
-    gchar localeStr[STRING_BUFFER_SIZE];
-    int i;
-    for (i = 0; locale_env_strings[i] != NULL; i++) {
-	if (getenv(locale_env_strings[i])) {
-	    localePtr = getenv(locale_env_strings[i]);
-	    break;
-	}
-    }
-    if (!localePtr) {
-	localePtr = "en_US.utf8";
-    }
-    /* Use UTF8 as charset unconditionally */
-    for (i = 0; localePtr[i] != '\0'; i++) {
-	if (localePtr[i] == '.')
-	    break;
-	localeStr[i] = localePtr[i];
-    }
-    localeStr[i] = '\0';
-    g_strlcat(localeStr, ".utf8", STRING_BUFFER_SIZE);
-#undef STRING_BUFFER_SIZE
-    setlocale(LC_ALL, localeStr);
-    IBUS_CHEWING_LOG(INFO, "ibus-setup-chewing:determine_locale %s",
-		     localeStr);
-}
-
 gint start_dialog()
 {
+#ifdef GSETTINGS_SUPPORT
     MkdgBackend *backend =
-	gconf2_backend_new("/desktop/ibus/engine", NULL);
-    IBusChewingConfig *iConfig =
-	ibus_chewing_config_new(backend, NULL, NULL);
+        mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID), "/desktop/ibus/engine/Chewing", NULL);
+#elif GCONF2_SUPPORT
+    MkdgBackend *backend =
+        gconf2_backend_new("/desktop/ibus/engine", NULL);
+#else
+    MkdgBackend *backend = NULL;
+    g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
+    return 1;
+#endif /* GSETTINGS_SUPPORT */
+    IBusChewingProperties *iProperties =
+	ibus_chewing_properties_new(backend, NULL, NULL);
 
     MakerDialog *mDialog =
-	maker_dialog_new_full(iConfig->properties, _("Setting"),
+	maker_dialog_new_full(iProperties->properties, _("Setting"),
 			      MKDG_WIDGET_FLAG_SET_IMMEDIATELY,
                               MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
     GtkWidget *sDialog = GTK_WIDGET(mDialog);

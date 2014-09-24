@@ -1,5 +1,8 @@
-* Mon Sep 22 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+* Mon Oct 13 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+- MakerDialog dialog 
 - github is now hosting the ibus-chewing tarballs.
+- Fixed Bug 902866 - ibus-chewing uses dconf but still installs gconf schemas
+  (Also listed as GitHub ibus-chewing #36)
 - Resolves Bug 1013977 - Slow focus change with ibus-chewing
     Fixed github issue #45: Optimize properties handling.
     Thanks Ueno.
@@ -7,7 +10,6 @@
     Thanks FreedomKnight.
 - Fixed github issue #44: Update input-events (for libchewing-0.4.0)
     Thanks hiunnhue.
-- 
 
 * Sat Feb 01 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.10.1
 - Resolves Bug 1054937 - Broken %defattr in ibus-chewing

@@ -1,41 +1,54 @@
-# Schemas
-INCLUDE(ManageGConf)
-MANAGE_GCONF_SCHEMAS()
+IF(GSETTINGS_SUPPORT)
+    SET(PROJECT_GSCHEMA_XML ${PROJECT_SCHEMA_ID}.gschema.xml
+	CACHE INTERNAL "PROJECT_GSCHEMA_XML")
+    SET(GSETTINGS_SCHEMAS_DIR "${DATA_DIR}/glib-2.0/schemas")
+ENDIF()
+
+IF(GCONF2_SUPPORT)
+    # Schemas
+    INCLUDE(ManageGConf)
+    SET(PROJECT_SCHEMAS ${PROJECT_NAME}.schemas
+	CACHE INTERNAL "PROJECT_SCHEMAS")
+    SET(IBUS_CHEWING_DEPENDENCIES "GCONF2")
+    MANAGE_GCONF_SCHEMAS()
+ELSE()
+    SET(IBUS_CHEWING_DEPENDENCIES "")
+ENDIF()
+
 
 SET(IBUS_ENGINE_CHEWING ibus-engine-chewing)
 SET(IBUS_SETUP_CHEWING ibus-setup-chewing)
-SET(IBUS_CHEWING_SCHEMAS ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing.schemas
-    CACHE INTERNAL "ibus-chewing.schemas")
+
 
 # Location of library include files
-SET(DEPENDENCIES CHEWING GCONF2 GLIB2 GTK2 IBUS X11 XTST)
-FOREACH(_d ${DEPENDENCIES})
-    INCLUDE_DIRECTORIES(${${_d}_INCLUDE_DIRS}
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_BINARY_DIR}
-	)
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    )
+LIST(APPEND IBUS_CHEWING_DEPENDENCIES CHEWING GLIB2 GTK2 IBUS X11 XTST)
+FOREACH(_d ${IBUS_CHEWING_DEPENDENCIES})
+    INCLUDE_DIRECTORIES(${${_d}_INCLUDE_DIRS})
     LINK_DIRECTORIES(${${_d}_LIBRARY_DIRS})
     STRING_APPEND(CMAKE_C_FLAGS "${${_d}_CFLAGS}" " ")
     LIST(APPEND _ibus_chewing_target_link_libraries ${${_d}_LIBRARIES})
-ENDFOREACH(_d ${DEPENDENCIES})
+ENDFOREACH(_d ${IBUS_CHEWING_DEPENDENCIES})
 
 #==================================================================
 # Sources
 #
-SET(GOB2_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/")
+SET(GOB2_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 MACRO(GOB_GENERATE name gobFile)
     LIST(APPEND GOB_GENERATED_C_${name} 
-	${GOB2_OUTPUT_DIR}${name}.c)
+	${GOB2_OUTPUT_DIR}/${name}.c)
     LIST(APPEND GOB_GENERATED_${name} 
-	${GOB2_OUTPUT_DIR}${name}.c)
-    LIST(APPEND GOB_GENERATED_${name} 
-	${GOB2_OUTPUT_DIR}${name}.h)
-    LIST(APPEND GOB_GENERATED_${name} 
-	${GOB2_OUTPUT_DIR}${name}-private.h)
+	${GOB_GENERATED_C_${name}}
+	"${GOB2_OUTPUT_DIR}/${name}.h"
+	"${GOB2_OUTPUT_DIR}/${name}-private.h"
+	)
 
     ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED_${name}}
 	COMMAND ${GOB2_EXECUTABLE} "${gobFile}" 
-	-o "${GOB2_OUTPUT_DIR}"
+	-o "${GOB2_OUTPUT_DIR}/"
 	DEPENDS ${gobFile} ${ARGN}
 	)
 ENDMACRO(GOB_GENERATE name gobFile)
@@ -45,28 +58,36 @@ GOB_GENERATE(ibus-chewing-engine ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.g
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-input-events.c
     )
 GOB_GENERATE(maker-dialog ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob 
-    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog-def.c
     )
 
 SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED_ibus-chewing-engine} 
     ${GOB_GENERATED_maker-dialog} PROPERTIES GENERATED true
     )
 
+
 SET(IBUS_CHEWING_SOURCE_COMMON_C
-    ${CMAKE_CURRENT_SOURCE_DIR}/GConf2Backend.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingProperties.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingApplier.c
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogBackend.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogProperty.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogUtil.c
     )
 
+
+IF(GSETTINGS_SUPPORT)
+    LIST(APPEND IBUS_CHEWING_SOURCE_COMMON_C ${CMAKE_CURRENT_SOURCE_DIR}/GSettingsBackend.c)
+ENDIF()
+
+IF(GCONF2_SUPPORT)
+    LIST(APPEND IBUS_CHEWING_SOURCE_COMMON_C ${CMAKE_CURRENT_SOURCE_DIR}/GConf2Backend.c)
+ENDIF()
+
 SET(IBUS_CHEWING_SOURCE_TO_TRANSLATE
     ${IBUS_CHEWING_SOURCE_COMMON_C}
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob 
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob 
     ${CMAKE_CURRENT_SOURCE_DIR}/ibus-setup-chewing.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingApplier.c
     ${CMAKE_CURRENT_SOURCE_DIR}/generate-gconf-schemas.c
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.c
@@ -75,15 +96,23 @@ SET(IBUS_CHEWING_SOURCE_TO_TRANSLATE
 
 SET(IBUS_CHEWING_SOURCE_COMMON
     ${IBUS_CHEWING_SOURCE_COMMON_C}
-    ${CMAKE_CURRENT_SOURCE_DIR}/GConf2Backend.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingConfig.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingProperties.h
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-util.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogBackend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogProperty.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogPropertySpec.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogUtil.h
-    ${GOB2_OUTPUT_DIR}ibus-chewing-engine.h
+    ${GOB2_OUTPUT_DIR}/ibus-chewing-engine.h
     )
+
+IF(GSETTINGS_SUPPORT)
+    LIST(APPEND IBUS_CHEWING_SOURCE_COMMON ${CMAKE_CURRENT_SOURCE_DIR}/GSettingsBackend.h)
+ENDIF()
+
+IF(GCONF2_SUPPORT)
+    LIST(APPEND IBUS_CHEWING_SOURCE_COMMON ${CMAKE_CURRENT_SOURCE_DIR}/GConf2Backend.h)
+ENDIF()
 
 ADD_CUSTOM_TARGET(gob2
     DEPENDS ${GOB_GENERATED_ibus-chewing-engine} 
@@ -91,10 +120,8 @@ ADD_CUSTOM_TARGET(gob2
     COMMENT "Preprocess with gob2."
     )
 
-
 ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingApplier.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.h
     ${IBUS_CHEWING_SOURCE_COMMON}
@@ -102,38 +129,84 @@ ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}
     ${GOB_GENERATED_maker-dialog}
     )
 
-ADD_DEFINITIONS(-DMKDG_SPEC_ONLY)
+TARGET_LINK_LIBRARIES(${IBUS_ENGINE_CHEWING}
+    ${_ibus_chewing_target_link_libraries}
+    )
 
 ADD_EXECUTABLE(${IBUS_SETUP_CHEWING}
     ${CMAKE_CURRENT_SOURCE_DIR}/ibus-setup-chewing.c
-    ${IBUS_CHEWING_SOURCE_COMMON}
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.c
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.h
-    ${GOB_GENERATED_maker-dialog}
-    )
-
-ADD_EXECUTABLE(generate-gconf-schemas
-    ${CMAKE_CURRENT_SOURCE_DIR}/generate-gconf-schemas.c
     ${IBUS_CHEWING_SOURCE_COMMON}
-    ${GOB2_OUTPUT_DIR}ibus-chewing-engine.h
-    ${GOB2_OUTPUT_DIR}maker-dialog.h
-    )
-
-# Link the executable to the library.
-TARGET_LINK_LIBRARIES(${IBUS_ENGINE_CHEWING}
-    ${_ibus_chewing_target_link_libraries}
+    ${GOB_GENERATED_maker-dialog}
     )
 
 TARGET_LINK_LIBRARIES(${IBUS_SETUP_CHEWING}
     ${_ibus_chewing_target_link_libraries}
     )
 
-TARGET_LINK_LIBRARIES(generate-gconf-schemas 
-    ${IBUS_LIBRARIES}
-    ${GLIB2_LIBRARIES}
-    ${CHEWING_LIBRARIES}
-    ${GCONF2_LIBRARIES}
-    )
+IF(GCONF2_SUPPORT)
+    ADD_EXECUTABLE(generate-gconf-schemas
+	${CMAKE_CURRENT_SOURCE_DIR}/generate-gconf-schemas.c
+	${IBUS_CHEWING_SOURCE_COMMON}
+	)
+
+    TARGET_LINK_LIBRARIES(generate-gconf-schemas 
+	${IBUS_LIBRARIES}
+	${GLIB2_LIBRARIES}
+	${CHEWING_LIBRARIES}
+	${GCONF2_LIBRARIES}
+	)
+
+    ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
+	COMMAND G_MESSAGES_DEBUG=all ${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas -v 5 -l
+	"C;${TRANSLATED}" "${CMAKE_CURRENT_BIN_DIR}/${PROJECT_SCHEMAS}"
+	COMMENT "Generating gconf-schemas"
+	VERBATIM
+	)
+ENDIF()
+
+IF(GSETTINGS_SUPPORT)
+    ADD_EXECUTABLE(generate-gsettings-schemas
+	${CMAKE_CURRENT_SOURCE_DIR}/generate-gsettings-schemas.c
+	${CMAKE_CURRENT_BINARY_DIR}/maker-dialog.h
+	${IBUS_CHEWING_SOURCE_COMMON}
+	)
+
+    TARGET_LINK_LIBRARIES(generate-gsettings-schemas 
+	${IBUS_LIBRARIES}
+	${GLIB2_LIBRARIES}
+	${CHEWING_LIBRARIES}
+	${GCONF2_LIBRARIES}
+	)
+
+    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_GSCHEMA_XML} 
+	DESTINATION "${GSETTINGS_SCHEMAS_DIR}"
+	)
+
+    ADD_CUSTOM_TARGET(schemas_gsettings ALL
+	COMMAND G_MESSAGES_DEBUG=all "${CMAKE_CURRENT_BINARY_DIR}/generate-gsettings-schemas" -v 5 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_GSCHEMA_XML}"
+	COMMAND G_MESSAGES_DEBUG=all glib-compile-schemas "${CMAKE_CURRENT_BINARY_DIR}"
+	COMMENT "Generating gsettings schemas ${PROJECT_GSCHEMA_XML}"
+	VERBATIM
+	)
+
+    ADD_DEPENDENCIES(schemas_gsettings
+	generate-gsettings-schemas
+	)
+
+    ADD_CUSTOM_TARGET(install_schemas_gsettings
+	COMMAND glib-compile-schemas "${GSETTINGS_SCHEMAS_DIR}"
+	COMMENT "install_schemas_gsettings"
+	)
+
+    ADD_CUSTOM_TARGET(uninstall_schemas_gsettings
+	COMMAND rm -f "${GSETTINGS_SCHEMAS_DIR}/${PROJECT_GSCHEMA_XML}"
+	COMMAND glib-compile-schemas "${GSETTINGS_SCHEMAS_DIR}"
+	COMMENT "install_schemas_gsettings"
+	)
+
+ENDIF()
 
 IF(NOT DEFINED LIB_INSTALL_DIR)
     SET(LIB_INSTALL_DIR "lib${IS_64}")
@@ -145,13 +218,6 @@ FILE(GLOB poFiles RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../po" "../po/*.po")
 STRING(REPLACE ".po" ""  TRANSLATED "${poFiles}")
 M_MSG(${M_INFO2} "TRANSLATED=${TRANSLATED}")
 
-
-ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
-    COMMAND G_MESSAGES_DEBUG=all ${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas -v 5 -l
-    "C;${TRANSLATED}" ${IBUS_CHEWING_SCHEMAS}
-    COMMENT "Generating gconf-schemas"
-    VERBATIM
-    )
 
 
 MANAGE_FILE_INSTALL(TARGETS ${IBUS_ENGINE_CHEWING} ARGS

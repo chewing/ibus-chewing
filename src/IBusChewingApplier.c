@@ -1,5 +1,5 @@
 #include <chewing.h>
-#include "IBusChewingConfig.h"
+#include "IBusChewingProperties.h"
 #include "ibus-chewing-engine.h"
 
 static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
@@ -13,67 +13,88 @@ static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
     return CHEWING_KBTYPE_INVALID;
 }
 
-void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
-					    const gchar * selKeys_str)
+/*============================================
+ * IBus widgets
+ */
+
+IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *iProperties)
 {
-    int j;
-    int len_min = MIN(strlen(selKeys_str), MAX_SELKEY);
-    for (j = 0; j < len_min; j++) {
-	engine->selKeys[j] = (gint) selKeys_str[j];
+    gint size=g_value_get_int(mkdg_properties_get_by_key(iProperties->properties, "cand-per-page")); 
+    gboolean cursorShow=FALSE;
+    gboolean wrapAround=TRUE;
+    IBusLookupTable *iTable=ibus_lookup_table_new
+	(size, 0, cursorShow, wrapAround);
+
+    GValue gValue={0};
+    g_value_init(&gValue, G_TYPE_INT);
+    if (ibus_chewing_properties_read_general(iProperties, &gValue, "ibus/panel", 
+		"lookup-table-orientation", NULL)){
+	ibus_lookup_table_set_orientation(iTable,g_value_get_int(&gValue));
     }
-    chewing_set_selKey(engine->context, engine->selKeys, len_min);
+    g_value_unset(&gValue);
+    return g_object_ref_sink(iTable);
 }
 
-void ibus_chewing_engine_set_lookup_table_label(IBusChewingEngine * engine,
-						const gchar * labels)
+void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
+	const gchar * selKeys_str)
 {
-    int i, len = strlen(labels);
-    g_array_set_size(engine->table->labels, 0);
-    for (i = 0; i < len; i++) {
-	IBusText *text =
-	    g_object_ref_sink(ibus_text_new_from_unichar
-			      ((gunichar) labels[i]));
-	ibus_lookup_table_append_label(engine->table, text);
+    g_assert(engine);
+    int j;
+
+    if (engine->table == NULL){
+	g_assert(engine->iProperties);
+	engine->table = ibus_chewing_lookup_table_new(engine->iProperties);
     }
+
+    int len_min = MIN(strlen(selKeys_str), MAX_SELKEY);
+    IBusText *iText;
+    for (j = 0; j < len_min; j++) {
+	engine->selKeys[j] = (gint) selKeys_str[j];
+	iText =  g_object_ref_sink(ibus_text_new_from_unichar
+		((gunichar) selKeys_str[j]));
+	ibus_lookup_table_set_label(engine->table, j, iText);
+    }
+    chewing_set_selKey(engine->context, engine->selKeys, len_min);
 }
 
 /*============================================
  * Callback functions
  */
-gboolean KBType_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData)
 {
+    GValue *value = &(ctx->value);
+    printf("KBType_apply_callback(%s,%s)", ctx->spec->key,
+	   mkdg_g_value_to_string(value));
+    IBUS_CHEWING_LOG(DEBUG, "KBType_apply_callback(%s,%s)", ctx->spec->key,
+		     mkdg_g_value_to_string(value));
     ChewingKbType kbType = kbType_id_get_index(g_value_get_string(value));
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_KBType(engine->context, kbType);
     return TRUE;
 }
 
-gboolean selKeys_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     ibus_chewing_engine_set_selKeys_string(engine,
 					   g_value_get_string(value));
-    if (!engine->table) {
-	engine->table =
-	    g_object_ref_sink(ibus_lookup_table_new
-			      (strlen(g_value_get_string(value)), 0, FALSE,
-			       TRUE));
-    }
-    ibus_chewing_engine_set_lookup_table_label(engine,
-					       g_value_get_string(value));
     return TRUE;
 }
 
 gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
-				      GValue * value)
+				      gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_hsuSelKeyType(engine->context, g_value_get_int(value));
     return TRUE;
 }
 
-gboolean autoShiftCur_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
+				     gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_autoShiftCur(engine->context,
 			     (g_value_get_boolean(value)) ? 1 : 0);
@@ -81,8 +102,9 @@ gboolean autoShiftCur_apply_callback(PropertyContext * ctx, GValue * value)
 }
 
 gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
-					   GValue * value)
+					   gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_addPhraseDirection(engine->context,
 				   (g_value_get_boolean(value)) ? 1 : 0);
@@ -90,8 +112,9 @@ gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
 }
 
 gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
-					GValue * value)
+					gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_easySymbolInput(engine->context,
 				(g_value_get_boolean(value)) ? 1 : 0);
@@ -104,8 +127,9 @@ gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
 }
 
 gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
-				       GValue * value)
+				       gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_escCleanAllBuf(engine->context,
 			       (g_value_get_boolean(value)) ? 1 : 0);
@@ -114,16 +138,18 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
 
 /* Additional symbol buffer length */
 gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
-					GValue * value)
+					gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_maxChiSymbolLen(engine->context, g_value_get_int(value));
     return TRUE;
 }
 
 gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
-					      GValue * value)
+					      gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH;
@@ -133,8 +159,10 @@ gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean syncCapsLock_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
+				     gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     const gchar *str = g_value_get_string(value);
     if (strcmp(str, "keyboard") == 0) {
@@ -148,8 +176,9 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx, GValue * value)
 }
 
 gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
-					   GValue * value)
+					   gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER;
@@ -159,24 +188,25 @@ gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean candPerPage_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean candPerPage_apply_callback(PropertyContext * ctx,
+				    gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_candPerPage(engine->context, g_value_get_int(value));
     if (engine->table) {
 	ibus_lookup_table_clear(engine->table);
 	engine->table->page_size = g_value_get_int(value);
     } else {
-	engine->table =
-	    g_object_ref_sink(ibus_lookup_table_new
-			      (g_value_get_int(value), 0, FALSE, TRUE));
+	engine->table = ibus_chewing_lookup_table_new(engine->iProperties);
     }
     return TRUE;
 }
 
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
-					     GValue * value)
+					     gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_phraseChoiceRearward(engine->context,
 				     (g_value_get_boolean(value)) ? 1 : 0);
@@ -184,16 +214,19 @@ gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
 }
 
 gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
-					 GValue * value)
+					 gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     chewing_set_spaceAsSelection(engine->context,
 				 (g_value_get_boolean(value)) ? 1 : 0);
     return TRUE;
 }
 
-gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value)
+gboolean plainZhuyin_apply_callback(PropertyContext * ctx,
+				    gpointer userData)
 {
+    GValue *value = &(ctx->value);
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     if (g_value_get_boolean(value)) {
 	engine->chewingFlags |= CHEWING_FLAG_PLAIN_ZHUYIN;
@@ -202,5 +235,3 @@ gboolean plainZhuyin_apply_callback(PropertyContext * ctx, GValue * value)
     }
     return TRUE;
 }
-
-

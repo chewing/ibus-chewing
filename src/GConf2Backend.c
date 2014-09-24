@@ -90,19 +90,19 @@ static GConfValue *gconf_value_new_g_value(GValue * value)
  */
 
 #define KEY_BUFFER_SIZE 100
-static gchar * to_real_key(gchar *confKey, MkdgBackend * backend, const gchar * section, const gchar * key)
+static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
+			  const gchar * section, const gchar * key)
 {
-    if (!STRING_IS_EMPTY(backend->baseDir)){
-	g_strlcpy(confKey, backend->baseDir, KEY_BUFFER_SIZE);
-    }else{
+    if (!STRING_IS_EMPTY(backend->basePath)) {
+	g_strlcpy(confKey, backend->basePath, KEY_BUFFER_SIZE);
+    } else {
 	g_strlcpy(confKey, "/", KEY_BUFFER_SIZE);
     }
 
     if (!STRING_IS_EMPTY(section)) {
-	g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
 	g_strlcat(confKey, section, KEY_BUFFER_SIZE);
+	g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
     }
-    g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
     g_strlcat(confKey, key, KEY_BUFFER_SIZE);
     return confKey;
 }
@@ -147,13 +147,13 @@ gboolean gconf2_backend_write_value(MkdgBackend * backend,
     return TRUE;
 }
 
-MkdgBackend *gconf2_backend_new(const gchar * baseDir, gpointer auxData)
+MkdgBackend *gconf2_backend_new(const gchar * basePath, gpointer auxData)
 {
     GConfClient *client = gconf_client_get_default();
-    MkdgBackend *result =
-	mkdg_backend_new((gpointer) client, baseDir, auxData);
+    MkdgBackend *result = mkdg_backend_new(GCONF2_BACKEND_ID,
+					   (gpointer) client, basePath,
+					   auxData);
     result->readFunc = gconf2_backend_read_value;
     result->writeFunc = gconf2_backend_write_value;
-    result->baseDir = baseDir;
     return result;
 }

@@ -1,4 +1,4 @@
-#include "IBusChewingConfig.h"
+#include "IBusChewingProperties.h"
 
 /**
  * ibus_chewing_engine_keycode_to_keysym:
@@ -11,9 +11,10 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine * self,
 {
     /* Get system layout */
     GValue gValue = { 0 };
+    g_value_init(&gValue, G_TYPE_BOOLEAN);
     gboolean useSysKeyLayout = TRUE;
-    if (ibus_chewing_config_load_ibus_config
-	(self->iConfig, &gValue, "general", "use_system_keyboard_layout",
+    if (ibus_chewing_properties_read_general
+	(self->iProperties, &gValue, "ibus/general", "use-system-keyboard-layout",
 	 NULL)) {
 	useSysKeyLayout = g_value_get_boolean(&gValue);
     }
@@ -30,6 +31,7 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine * self,
 	    kSym = keysym;
 	}
     }
+    g_value_unset(&gValue);
     return kSym;
 }
 
@@ -383,7 +385,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	    PROP_STATE_UNCHECKED) {
 	    if (!self->sDialog) {
 		MakerDialog *mDialog = maker_dialog_new_full
-		    (self->iConfig->properties, _("Setting"),
+		    (self->iProperties->properties, _("Setting"),
 		     MKDG_WIDGET_FLAG_APPLY_IMMEDIATELY,
 		     MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
 		self->sDialog = GTK_WIDGET(mDialog);

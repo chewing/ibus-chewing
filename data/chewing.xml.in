@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- filename: chewing.xml -->
 <component>
-    <name>org.freedesktop.IBus.Chewing</name>
+    <name>@PROJECT_SCHEMA_ID@</name>
     <description>Chewing Component</description>
     <version>@PRJ_VER@</version>
     <license>@LICENSE@</license>

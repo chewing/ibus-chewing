@@ -15,7 +15,7 @@
 #include "MakerDialogUtil.h"
 #include "MakerDialogProperty.h"
 #include "IBusConfigBackend.h"
-#include "IBusChewingConfig.h"
+#include "IBusChewingProperties.h"
 #define XML_BUFFER_SIZE 1000
 #define DEFAULT_LOCALES "C;zh_TW"
 
@@ -45,20 +45,24 @@ static void ctx_write_locale(PropertyContext * ctx,
 {
     gchar buf[XML_BUFFER_SIZE];
     mkdg_log(DEBUG, "ctx_write_locale(%s,-,%s)", ctx->spec->key, locale);
+    setlocale(LC_ALL, "locale");
     g_snprintf(buf, 50, "name=\"%s\"", locale);
     setlocale(LC_MESSAGES, locale);
-    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_BEGIN_ONLY, buf, NULL);
+    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_BEGIN_ONLY, buf,
+			NULL);
     mkdg_xml_tags_write(outF, "short", MKDG_XML_TAG_TYPE_SHORT, NULL,
-		   gettext(ctx->spec->label));
+			gettext(ctx->spec->label));
     mkdg_xml_tags_write(outF, "long", MKDG_XML_TAG_TYPE_LONG, NULL,
-		   gettext(ctx->spec->tooltip));
-    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+			gettext(ctx->spec->tooltip));
+    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_END_ONLY, NULL,
+			NULL);
 }
 
 gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
 		   const gchar * owner, FILE * outF)
 {
-    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL,
+			NULL);
     gchar buf[XML_BUFFER_SIZE];
     if (STRING_IS_EMPTY(ctx->spec->subSection)) {
 	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
@@ -69,25 +73,29 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
     }
     mkdg_xml_tags_write(outF, "key", MKDG_XML_TAG_TYPE_SHORT, NULL, buf);
     mkdg_xml_tags_write(outF, "applyto", MKDG_XML_TAG_TYPE_SHORT, NULL,
-		   buf + strlen("/schemas"));
-    mkdg_xml_tags_write(outF, "owner", MKDG_XML_TAG_TYPE_SHORT, NULL, owner);
+			buf + strlen("/schemas"));
+    mkdg_xml_tags_write(outF, "owner", MKDG_XML_TAG_TYPE_SHORT, NULL,
+			owner);
     switch (ctx->spec->valueType) {
     case G_TYPE_BOOLEAN:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "bool");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
+			    "bool");
 	break;
     case G_TYPE_INT:
     case G_TYPE_UINT:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "int");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
+			    "int");
 	break;
     case G_TYPE_STRING:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "string");
+	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
+			    "string");
 	break;
     default:
 	break;
     }
     if (ctx->spec->defaultValue) {
 	mkdg_xml_tags_write(outF, "default", MKDG_XML_TAG_TYPE_SHORT, NULL,
-		       ctx->spec->defaultValue);
+			    ctx->spec->defaultValue);
     }
     int i;
     for (i = 0; localeArray[i] != NULL; i++) {
@@ -95,7 +103,8 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
     }
 
     setlocale(LC_ALL, NULL);
-    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_END_ONLY, NULL,
+			NULL);
     return TRUE;
 }
 
@@ -131,13 +140,13 @@ gboolean write_gconf_schemas_file(const gchar * filename,
 
     /* Header */
     mkdg_xml_tags_write(outF, "gconfschemafile",
-		   MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+			MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     mkdg_xml_tags_write(outF, "schemalist",
-		   MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+			MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
-    /* Backend is not needed for schema generation*/
+    /* Backend is not needed for schema generation */
     IBusChewingConfig *iConfig =
-	ibus_chewing_config_new(NULL, NULL, NULL);
+	ibus_chewing_properties_new(NULL, NULL, NULL, NULL);
     gsize i;
     for (i = 0; i < mkdg_properties_size(iConfig->properties); i++) {
 	PropertyContext *ctx =
@@ -146,9 +155,10 @@ gboolean write_gconf_schemas_file(const gchar * filename,
     }
 
     /* Footer */
-    mkdg_xml_tags_write(outF, "schemalist", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+    mkdg_xml_tags_write(outF, "schemalist", MKDG_XML_TAG_TYPE_END_ONLY,
+			NULL, NULL);
     mkdg_xml_tags_write(outF, "gconfschemafile",
-		   MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+			MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
     if (fclose(outF))
 	return FALSE;
     mkdg_log(DEBUG, "write_gconf_schemas_file(%s) ... done.", filename);
@@ -188,7 +198,7 @@ int main(gint argc, gchar * argv[])
     g_type_init();
     gboolean result =
 	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
-				 "/desktop/ibus/", localeStr);
+				 QUOTE_ME(PROJECT_SCHEMA_PATH), localeStr);
     if (isLocaleStrAllocated) {
 	g_free(localeStr);
     }

@@ -37,11 +37,17 @@ void mkdg_log_set_level(MkdgLogLevel level);
 
 void mkdg_log_set_domain(const gchar * domain);
 
+void mkdg_log_set_file(FILE * file);
+
 void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
+
+void mkdg_log_domain(const gchar * domain, MkdgLogLevel level,
+	const gchar * format, ...);
 
 gchar *mkdg_g_value_to_string(GValue * value);
 
-gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite);
+gboolean mkdg_g_value_reset(GValue * value, GType type,
+			    gboolean overwrite);
 
 gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
 
@@ -76,6 +82,9 @@ typedef enum {
     MKDG_XML_TAG_TYPE_BEGIN_ONLY,
     MKDG_XML_TAG_TYPE_END_ONLY,
 } MkdgXmlTagType;
+
+gchar *mkdg_xml_attr_append(gchar * buf, gint bufferSize,
+			    const gchar * attr, const gchar * value);
 
 gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
 			     MkdgXmlTagType type, const gchar * attribute,

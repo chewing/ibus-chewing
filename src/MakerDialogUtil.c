@@ -8,6 +8,7 @@ static MkdgLogLevel debugLevel = WARN;
 #define MKDG_LOG_DOMAIN_LEN 20
 static gchar mkdgLogDomain[MKDG_LOG_DOMAIN_LEN] = "MKDG";
 
+static FILE *logFile = NULL;
 void mkdg_log_set_level(MkdgLogLevel level)
 {
     debugLevel = level;
@@ -18,32 +19,67 @@ void mkdg_log_set_domain(const gchar * domain)
     g_strlcpy(mkdgLogDomain, domain, MKDG_LOG_DOMAIN_LEN);
 }
 
+void mkdg_log_set_file(FILE * file)
+{
+    logFile = file;
+}
+
+void mkdg_logv_domain(const gchar * domain, MkdgLogLevel level,
+		      const gchar * format, va_list argList)
+{
+    if (level > debugLevel)
+	return;
+    GLogLevelFlags flagSet;
+    gchar *levelStr = NULL;
+    switch (level) {
+    case ERROR:
+	flagSet = G_LOG_FLAG_FATAL | G_LOG_LEVEL_ERROR;
+	levelStr = "ERROR";
+	break;
+    case WARN:
+	flagSet = G_LOG_LEVEL_WARNING;
+	levelStr = "WARN";
+	break;
+    case MSG:
+	flagSet = G_LOG_LEVEL_MESSAGE;
+	levelStr = "MSG";
+	break;
+    case INFO:
+	flagSet = G_LOG_LEVEL_INFO;
+	levelStr = "INFO";
+	break;
+    default:
+	flagSet = G_LOG_LEVEL_DEBUG;
+	levelStr = "DEBUG";
+	break;
+    }
+    g_logv(domain, flagSet, format, argList);
+    if (logFile != NULL) {
+	fprintf(logFile, "%s-%s: ", domain, levelStr);
+	vfprintf(logFile, format, argList);
+	fprintf(logFile, "\n");
+    }
+}
+
 void mkdg_log(MkdgLogLevel level, const gchar * format, ...)
 {
     if (level > debugLevel)
 	return;
-    va_list arglist;
-    va_start(arglist, format);
-    GLogLevelFlags flagSet;
-    switch (level) {
-    case ERROR:
-	flagSet = G_LOG_FLAG_FATAL | G_LOG_LEVEL_ERROR;
-	break;
-    case WARN:
-	flagSet = G_LOG_LEVEL_WARNING;
-	break;
-    case MSG:
-	flagSet = G_LOG_LEVEL_MESSAGE;
-	break;
-    case INFO:
-	flagSet = G_LOG_LEVEL_INFO;
-	break;
-    default:
-	flagSet = G_LOG_LEVEL_DEBUG;
-	break;
-    }
-    g_logv(mkdgLogDomain, flagSet, format, arglist);
-    va_end(arglist);
+    va_list argList;
+    va_start(argList, format);
+    mkdg_logv_domain(mkdgLogDomain, level, format, argList);
+    va_end(argList);
+}
+
+void mkdg_log_domain(const gchar * domain, MkdgLogLevel level,
+		     const gchar * format, ...)
+{
+    if (level > debugLevel)
+	return;
+    va_list argList;
+    va_start(argList, format);
+    mkdg_logv_domain(domain, level, format, argList);
+    va_end(argList);
 }
 
 gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite)
@@ -100,10 +136,11 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
     mkdg_log(DEBUG, "mkdg_g_value_from_string(-,%s)", str);
     if (!G_IS_VALUE(value)) {
 	mkdg_log(ERROR, "mkdg_g_value_from_string(): Failed to get GType");
+	return FALSE;
     }
     GType gType = G_VALUE_TYPE(value);
     mkdg_log(DEBUG, "mkdg_g_value_from_string() gType=%s",
-	     g_type_name(gType));
+    	     g_type_name(gType));
     if (!mkdg_g_value_reset(value, gType, FALSE)) {
 	return FALSE;
     }
@@ -233,6 +270,24 @@ static GString *mkdg_xml_tags_to_string(const gchar * tagName,
 	g_string_append_printf(strBuf, "</%s>", tagName);
     }
     return strBuf;
+}
+
+gchar *mkdg_xml_attr_append(gchar * buf, gint bufferSize,
+			    const gchar * attr, const gchar * value)
+{
+    if (STRING_IS_EMPTY(attr))
+	return buf;
+    if (!STRING_IS_EMPTY(buf))
+	g_strlcat(buf, " ", bufferSize);
+
+    g_strlcat(buf, attr, bufferSize);
+    if (STRING_IS_EMPTY(value))
+	return buf;
+
+    g_strlcat(buf, "=\"", bufferSize);
+    g_strlcat(buf, value, bufferSize);
+    g_strlcat(buf, "\"", bufferSize);
+    return buf;
 }
 
 gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,

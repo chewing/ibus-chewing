@@ -28,7 +28,6 @@ requires 2.0.0
 #include <stdlib.h>
 #include <strings.h>
 #include <glib.h>
-#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <locale.h>
@@ -50,9 +49,8 @@ requires 2.0.0
 #define MKDG_CONTAINER_TABLE_LOOKUP(table,key) (MkdgWidgetContainer *) g_hash_table_lookup(table, (gconstpointer) key)
 %}
 %{
-#include "IBusConfigBackend.h"
-#include "IBusChewingConfig.h"
-#include "ibus-chewing-util.h"
+#define GETTEXT_PACKAGE "gtk20"
+#include <glib/gi18n.h>
 %}
 
 class Maker:Dialog from Gtk:Dialog {
@@ -114,11 +112,10 @@ class Maker:Dialog from Gtk:Dialog {
 	for (i = MKDG_BUTTON_INDEX_INVALID -1; i >=0; i--) {
 	    if ( bFlags & (1 << i)){
 		const gchar *buttonText=mkdg_button_get_text(i);
-		mkdg_log(DEBUG, "new_full(-,%s,%X,%X) i=%d, buttonText=%s",title, wFlags, bFlags, i, buttonText);
+		mkdg_log(DEBUG, "new_full(-,%s,%X,%X) i=%d, buttonText=%s", 
+			title, wFlags, bFlags, i, buttonText);
 		MkdgButtonResponse response = mkdg_button_get_response(i);
-	        gtk_dialog_add_button(dialog, _(buttonText),
-			    response);
-
+		gtk_dialog_add_button(dialog, buttonText, response);
 	    }
 	}
 
@@ -183,7 +180,6 @@ class Maker:Dialog from Gtk:Dialog {
     /** 
      * add_all_properties:
      * @self: A MakerDialog
-     * @iConfig: An IBusChewingConfig
      * @returns: TRUE if all properties added successfully; FALSE otherwise.
      *
      * Add all properties to the dialog and corresponding Gtk widget will also be
@@ -276,6 +272,7 @@ class Maker:Dialog from Gtk:Dialog {
 	for (i = 0; i <	mkdg_properties_size(self->_priv->properties); i++) {
 	    PropertyContext *ctx = mkdg_properties_index(self->_priv->properties,i);
 	    GValue gValue={0};
+	    printf("key=%s\n", ctx->spec->key);
 	    mkdg_g_value_reset(&gValue, ctx->spec->valueType, TRUE);
 	    self_get_widget_value(self, ctx->spec->key, &gValue);
 	    property_context_save(ctx, &gValue, userData);

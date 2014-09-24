@@ -4,11 +4,6 @@
 #include "MakerDialogProperty.h"
 
 /*============================================
- * Supporting functions
- */
-
-
-/*============================================
  * PropertyContext Methods
  */
 
@@ -16,21 +11,23 @@ void property_context_default(PropertyContext * ctx)
 {
     if (ctx->spec->defaultValue == NULL)
 	return;
-    if (!property_context_from_string(ctx, ctx->spec->defaultValue)) {
+    mkdg_log(DEBUG, "property_context_default(%s)", ctx->spec->key);
+    gboolean ret=property_context_from_string(ctx, ctx->spec->defaultValue);
+    if (!ret) {
 	mkdg_log(WARN,
-		 "property_context_load(%s): failed to convert string %s, return NULL",
+		 "property_context_default(%s): failed to convert string %s, return NULL",
 		 ctx->spec->key, ctx->spec->defaultValue);
     }
 }
 
-PropertyContext *property_context_new(PropertySpec * spec,
+PropertyContext *property_context_new(MkdgPropertySpec * spec,
 				      MkdgBackend * backend,
 				      gpointer parent, gpointer auxData)
 {
     if (spec == NULL) {
 	return NULL;
     }
-    mkdg_log(INFO, "property_context_new(%s, - )", spec->key);
+    mkdg_log(INFO, "property_context_new(%s,-,-,-)", spec->key);
     PropertyContext *result = g_new0(PropertyContext, 1);
     result->spec = spec;
     result->backend = backend;
@@ -38,6 +35,7 @@ PropertyContext *property_context_new(PropertySpec * spec,
     result->auxData = auxData;
     g_value_init(&(result->value), result->spec->valueType);
     property_context_default(result);
+    mkdg_log(DEBUG, "property_context_new(%s):Done", result->spec->key);
     return result;
 }
 
@@ -77,7 +75,7 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
 /* set: GValue -> Context */
 /* load: read then get, errors in read are ignored */
 /* save: set then write */
-/* apply: MkdgProperties -> set callback */
+/* apply: Context -> apply callback */
 /* use: load then apply */
 /* assigne: save then apply */
 GValue *property_context_read(PropertyContext * ctx, gpointer userData)
@@ -85,6 +83,7 @@ GValue *property_context_read(PropertyContext * ctx, gpointer userData)
     if (ctx == NULL || ctx->backend == NULL) {
 	return NULL;
     }
+    mkdg_log(DEBUG, "property_context_read(%s, - )", ctx->spec->key);
     GValue *result = ctx->backend->readFunc(ctx->backend, &(ctx->value),
 					    ctx->spec->subSection,
 					    ctx->spec->key, userData);
@@ -100,6 +99,7 @@ gboolean property_context_write(PropertyContext * ctx, gpointer userData)
     if (ctx == NULL || ctx->backend == NULL) {
 	return FALSE;
     }
+    mkdg_log(DEBUG, "property_context_write(%s, - )", ctx->spec->key);
     return ctx->backend->writeFunc(ctx->backend, &(ctx->value),
 				   ctx->spec->subSection, ctx->spec->key,
 				   userData);
@@ -108,25 +108,35 @@ gboolean property_context_write(PropertyContext * ctx, gpointer userData)
 GValue *property_context_get(PropertyContext * ctx)
 {
     if (ctx == NULL) {
+	mkdg_log(WARN, "property_context_get(-): ctx is NULL");
 	return NULL;
     }
+    mkdg_log(DEBUG, "property_context_get(%s): value=%s",
+	     ctx->spec->key, mkdg_g_value_to_string(&(ctx->value)));
     return &(ctx->value);
 }
 
 gboolean property_context_set(PropertyContext * ctx, GValue * value)
 {
     if (ctx == NULL) {
+	mkdg_log(WARN, "property_context_set(-): ctx is NULL");
 	return FALSE;
     }
+    mkdg_log(DEBUG, "property_context_set(%s,-)", ctx->spec->key);
     if (!G_IS_VALUE(value)) {
+	mkdg_log(WARN, "property_context_set(%s): value is not GValue",
+		 ctx->spec->key);
 	return FALSE;
     }
+    mkdg_log(DEBUG, "property_context_set(%s,%s)", ctx->spec->key,
+	     mkdg_g_value_to_string(value));
     g_value_copy(value, &(ctx->value));
     return TRUE;
 }
 
 GValue *property_context_load(PropertyContext * ctx, gpointer userData)
 {
+    mkdg_log(DEBUG, "property_context_load(%s,-)", ctx->spec->key);
     property_context_read(ctx, userData);
     return property_context_get(ctx);
 }
@@ -134,6 +144,7 @@ GValue *property_context_load(PropertyContext * ctx, gpointer userData)
 gboolean property_context_save(PropertyContext * ctx, GValue * value,
 			       gpointer userData)
 {
+    mkdg_log(DEBUG, "property_context_save(%s,-)", ctx->spec->key);
     if (!property_context_set(ctx, value)) {
 	return FALSE;
     }
@@ -142,7 +153,11 @@ gboolean property_context_save(PropertyContext * ctx, GValue * value,
 
 gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 {
+    mkdg_log(DEBUG, "property_context_apply(%s,-)", ctx->spec->key);
     if (ctx == NULL || ctx->parent == NULL) {
+	mkdg_log(WARN,
+		 "property_context_apply(%s): either ctx or ctx->parent is NULL",
+		 ctx->spec->key);
 	return FALSE;
     }
     return ctx->spec->applyFunc(ctx, userData);
@@ -150,8 +165,12 @@ gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 
 gboolean property_context_use(PropertyContext * ctx, gpointer userData)
 {
+    mkdg_log(DEBUG, "property_context_use(%s,-)", ctx->spec->key);
     GValue *ret = property_context_load(ctx, userData);
     if (ret == NULL) {
+	mkdg_log(WARN,
+		 "property_context_use(%s): property_context_load return NULL",
+		 ctx->spec->key);
 	return FALSE;
     }
     return property_context_apply(ctx, userData);
@@ -159,6 +178,7 @@ gboolean property_context_use(PropertyContext * ctx, gpointer userData)
 
 void property_context_free(PropertyContext * ctx)
 {
+    mkdg_log(INFO, "property_context_free(%s,-)", ctx->spec->key);
     g_value_unset(&(ctx->value));
     g_free(ctx);
 }
@@ -169,7 +189,7 @@ void property_context_free(PropertyContext * ctx)
  */
 
 /* This alone is sufficient to generate schemas */
-MkdgProperties *mkdg_properties_from_spec_array(PropertySpec specs[],
+MkdgProperties *mkdg_properties_from_spec_array(MkdgPropertySpec specs[],
 						MkdgBackend * backend,
 						gpointer parent,
 						gpointer auxData)
@@ -298,7 +318,7 @@ gboolean mkdg_properties_use_all(MkdgProperties * properties,
     return result;
 }
 
-void mkdg_properties_free(MkdgProperties *properties)
+void mkdg_properties_free(MkdgProperties * properties)
 {
     gsize i;
     for (i = 0; i < mkdg_properties_size(properties); i++) {

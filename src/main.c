@@ -29,143 +29,167 @@
 #include "ibus-chewing-util.h"
 #include "maker-dialog.h"
 
-MakerDialog *makerDialog=NULL;
+MakerDialog *makerDialog = NULL;
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 
 /* options */
-static gboolean showFlags=FALSE;
+static gboolean showFlags = FALSE;
 static gboolean ibus = FALSE;
 static gboolean xml = FALSE;
-int ibus_chewing_verbose= 0;
+gint ibus_chewing_verbose = DEBUG;
 
 
-static const GOptionEntry entries[] =
-{
-    { "show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags, "Show compile flag only", NULL },
-    { "ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL },
-    { "verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
-        "Verbose level. The higher the level, the more the debug messages.",
-        "[integer]" },
-    { "xml", 'x', 0, G_OPTION_ARG_NONE, &xml, "read chewing engine desc from xml file", NULL },
-    { NULL },
+static const GOptionEntry entries[] = {
+    {"show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags,
+     "Show compile flag only", NULL},
+    {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus,
+     "component is executed by ibus", NULL},
+    {"verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
+     "Verbose level. The higher the level, the more the debug messages.",
+     "[integer]"},
+    {"xml", 'x', 0, G_OPTION_ARG_NONE, &xml,
+     "read chewing engine desc from xml file", NULL},
+    {NULL},
 };
 
 
-static void
-ibus_disconnected_cb (IBusBus  *bus,
-                      gpointer  user_data)
+static void ibus_disconnected_cb(IBusBus * bus, gpointer user_data)
 {
-    g_debug ("bus disconnected");
-    ibus_quit ();
+    g_debug("bus disconnected");
+    ibus_quit();
+}
+
+static void set_engine_property(IBusEngineDesc * engineDesc,
+				const gchar * propertyName,
+				const gchar * strValue)
+{
+    GValue gValue = { 0 };
+    g_value_init(&gValue, G_TYPE_STRING);
+    g_value_set_string(&gValue, strValue);
+    g_object_set_property(G_OBJECT(engineDesc), propertyName, &gValue);
+    g_value_unset(&gValue);
 }
 
 
-static void
-start_component (void)
+static void start_component(void)
 {
+    IBUS_CHEWING_LOG(INFO, "start_component");
     ibus_init();
-    bus = ibus_bus_new ();
-    g_signal_connect (bus, "disconnected", G_CALLBACK (ibus_disconnected_cb), NULL);
+    bus = ibus_bus_new();
+    g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb),
+		     NULL);
 
-    factory = ibus_factory_new (ibus_bus_get_connection (bus));
+    factory = ibus_factory_new(ibus_bus_get_connection(bus));
 
-    ibus_factory_add_engine (factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
+    ibus_factory_add_engine(factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {
-        ibus_bus_request_name (bus, "org.freedesktop.IBus.Chewing", 0);
-    }else {
-        IBusComponent *component=NULL;
-        if (xml){
-            component = ibus_component_new_from_file (
-                    QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
-        }else{
-            component=ibus_component_new("org.freedesktop.IBus.Chewing",
-                    _("Chewing component"), QUOTE_ME(PRJ_VER), "GPLv2+",
-                    _("Peng Huang, Ding-Yi Chen"),
-                    "http://code.google.com/p/ibus",
-                    QUOTE_ME(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
-                    QUOTE_ME(PROJECT_NAME));
-        }
-        ibus_component_add_engine(component,
-                ibus_engine_desc_new("chewing", _("Chewing"),
-                _("Chinese chewing input method"),
-                "zh_TW", "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-                QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
-                "us")
-        );
-
-        ibus_bus_register_component (bus, component);
+	ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
+    } else {
+	IBusComponent *component = NULL;
+	if (xml) {
+	    component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR)
+						     "/ibus/component/chewing.xml");
+	} else {
+	    component = ibus_component_new(QUOTE_ME(PROJECT_SCHEMA_ID),
+					   _("Chewing component"),
+					   QUOTE_ME(PRJ_VER), "GPLv2+",
+					   _("Peng Huang, Ding-Yi Chen"),
+					   "http://code.google.com/p/ibus",
+					   QUOTE_ME(LIBEXEC_DIR)
+					   "/ibus-engine-chewing --ibus",
+					   QUOTE_ME(PROJECT_NAME));
+	}
+	IBusEngineDesc *engineDesc =
+	    ibus_engine_desc_new("chewing", _("Chewing"),
+				 _("Chinese chewing input method"),
+				 "zh_TW", "GPLv2+",
+				 _("Peng Huang, Ding-Yi Chen"),
+				 QUOTE_ME(PRJ_DATA_DIR) "/icons/"
+				 QUOTE_ME(PROJECT_NAME) ".png",
+				 "us");
+	//set_engine_property(engineDesc, "setup",
+	//		    QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing");
+	//set_engine_property(engineDesc, "version", QUOTE_ME(PRJ_VER));
+	//set_engine_property(engineDesc, "textdomain",
+	//		    QUOTE_ME(PROJECT_NAME));
+	ibus_component_add_engine(component, engineDesc);
+	ibus_bus_register_component(bus, component);
     }
-    ibus_main ();
+    ibus_main();
 }
 
-const char *locale_env_strings[]={
+const char *locale_env_strings[] = {
     "LC_ALL",
     "LANG",
     "LANGUAGE",
     "GDM_LANG",
     NULL
 };
-void determine_locale(){
+
+void determine_locale()
+{
 #ifndef STRING_BUFFER_SIZE
 #define STRING_BUFFER_SIZE 100
 #endif
-    gchar *localePtr=NULL;
+    gchar *localePtr = NULL;
     gchar localeStr[STRING_BUFFER_SIZE];
     int i;
-    for(i=0;locale_env_strings[i]!=NULL;i++){
-        if (getenv(locale_env_strings[i])){
-            localePtr=getenv(locale_env_strings[i]);
-            break;
-        }
+    for (i = 0; locale_env_strings[i] != NULL; i++) {
+	if (getenv(locale_env_strings[i])) {
+	    localePtr = getenv(locale_env_strings[i]);
+	    break;
+	}
     }
-    if (!localePtr){
-        localePtr="en_US.utf8";
+    if (!localePtr) {
+	localePtr = "en_US.utf8";
     }
     /* Use UTF8 as charset unconditionally */
-    for (i=0;localePtr[i]!='\0';i++){
-        if (localePtr[i]=='.')
-            break;
-        localeStr[i]=localePtr[i];
+    for (i = 0; localePtr[i] != '\0'; i++) {
+	if (localePtr[i] == '.')
+	    break;
+	localeStr[i] = localePtr[i];
     }
-    localeStr[i]='\0';
-    g_strlcat(localeStr,".utf8",STRING_BUFFER_SIZE);
+    localeStr[i] = '\0';
+    g_strlcat(localeStr, ".utf8", STRING_BUFFER_SIZE);
 #undef STRING_BUFFER_SIZE
-    setlocale (LC_ALL, localeStr);
-    IBUS_CHEWING_LOG(1,"[I1] determine_locale %s",localeStr);
+    setlocale(LC_ALL, localeStr);
+    IBUS_CHEWING_LOG(INFO, "determine_locale %s", localeStr);
 }
 
 
-int
-main (gint argc, gchar *argv[])
+int main(gint argc, gchar * argv[])
 {
     GError *error = NULL;
     GOptionContext *context;
-    gtk_init(&argc,&argv);
+    gtk_init(&argc, &argv);
 
     /* Init i18n messages */
-    setlocale (LC_ALL, "");
+    setlocale(LC_ALL, "");
     bindtextdomain(QUOTE_ME(PROJECT_NAME), QUOTE_ME(DATA_DIR) "/locale");
     textdomain(QUOTE_ME(PROJECT_NAME));
+    determine_locale();
 
-    context = g_option_context_new ("- ibus chewing engine component");
+    context = g_option_context_new("- ibus chewing engine component");
 
-    g_option_context_add_main_entries (context, entries, QUOTE_ME(PROJECT_NAME));
+    g_option_context_add_main_entries(context, entries,
+				      QUOTE_ME(PROJECT_NAME));
 
-    if (!g_option_context_parse (context, &argc, &argv, &error)) {
-        g_print ("Option parsing failed: %s\n", error->message);
-        exit (-1);
+    if (!g_option_context_parse(context, &argc, &argv, &error)) {
+	g_print("Option parsing failed: %s\n", error->message);
+	exit(-1);
     }
 
-    g_option_context_free (context);
+    g_option_context_free(context);
+    mkdg_log_set_level(ibus_chewing_verbose);
 
-    if (showFlags){
-        printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
-        printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
-        printf("CHEWING_DATADIR=" QUOTE_ME(CHEWING_DATADIR) "\n");
-    }else{
-        start_component ();
+    if (showFlags) {
+	printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
+	printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
+	printf("CHEWING_DATADIR=" QUOTE_ME(CHEWING_DATADIR) "\n");
+    } else {
+	start_component();
     }
     return 0;
 }

@@ -12,11 +12,11 @@ Red Hat Bugzilla: https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&compo
 GitHub ibus-chewing issues: https://github.com/definite/ibus-chewing/issues
 Google Code IBus: http://code.google.com/p/ibus/issues/list
 
-For debugging ibus-chewing, run
-export G_MESSAGES_DEBUG=all
-export IBUS_CHEWING_LOGFILE=/tmp/somefile
-ibus-daemon -Rr
+For debugging ibus-chewing:
+1. Quit existing ibus-daemon 
+   By right click on IBus systray icon, then quit, or kill the process.
+2. Run ibus-daemon in command line with following command
+   export G_MESSAGES_DEBUG=all
+   ibus-daemon -rvx
 
-then the debug message will be output to that file.
-However after debugging, please unset the environment and remove the file.
 

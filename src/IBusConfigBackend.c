@@ -21,73 +21,10 @@
 
 #include <ibus.h>
 #include "MakerDialogUtil.h"
+#include "GSettingsBackend.h"
 #include "ibus-chewing-util.h"
 #include "IBusConfigBackend.h"
-#include "IBusChewingConfig.h"
-
-/*============================================
- * Supporting functions
- */
-#if IBUS_CHECK_VERSION(1, 4, 0)
-void g_variant_to_g_value(GVariant * gVar, GValue * gValue)
-{
-    const GVariantType *gVType = g_variant_get_type(gVar);
-    if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_BOOLEAN)) {
-	g_value_init(gValue, G_TYPE_BOOLEAN);
-	g_value_set_boolean(gValue, g_variant_get_boolean(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT16)) {
-	g_value_init(gValue, G_TYPE_UINT);
-	g_value_set_uint(gValue, g_variant_get_uint16(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT32)) {
-	g_value_init(gValue, G_TYPE_UINT);
-	g_value_set_uint(gValue, g_variant_get_uint32(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT64)) {
-	g_value_init(gValue, G_TYPE_UINT64);
-	g_value_set_uint64(gValue, g_variant_get_uint64(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT16)) {
-	g_value_init(gValue, G_TYPE_INT);
-	g_value_set_int(gValue, g_variant_get_int16(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT32)) {
-	g_value_init(gValue, G_TYPE_INT);
-	g_value_set_int(gValue, g_variant_get_int32(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT64)) {
-	g_value_init(gValue, G_TYPE_INT);
-	g_value_set_int64(gValue, g_variant_get_int64(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_STRING)) {
-	g_value_init(gValue, G_TYPE_STRING);
-	g_value_set_string(gValue, g_variant_get_string(gVar, NULL));
-    }
-}
-
-GVariant *g_value_to_g_variant(GValue * gValue)
-{
-    GType gType = G_VALUE_TYPE(gValue);
-    GVariant *gVar = NULL;
-    switch (gType) {
-    case G_TYPE_BOOLEAN:
-	gVar = g_variant_new_boolean(g_value_get_boolean(gValue));
-	break;
-    case G_TYPE_UINT:
-	gVar = g_variant_new_uint32(g_value_get_uint(gValue));
-	break;
-    case G_TYPE_UINT64:
-	gVar = g_variant_new_uint64(g_value_get_uint(gValue));
-	break;
-    case G_TYPE_INT:
-	gVar = g_variant_new_int32(g_value_get_int(gValue));
-	break;
-    case G_TYPE_INT64:
-	gVar = g_variant_new_int64(g_value_get_int(gValue));
-	break;
-    case G_TYPE_STRING:
-	gVar = g_variant_new_string(g_value_get_string(gValue));
-	break;
-    default:
-	break;
-    }
-    return gVar;
-}
-#endif
+#include "IBusChewingProperties.h"
 
 /*============================================
  * Class methods
@@ -96,18 +33,18 @@ GVariant *g_value_to_g_variant(GValue * gValue)
 
 #define KEY_BUFFER_SIZE 100
 static gchar *to_real_section(gchar * confSection, MkdgBackend * backend,
-			  const gchar * section)
+			      const gchar * section)
 {
 
-    if (!STRING_IS_EMPTY(backend->baseDir)){
-	g_strlcpy(confSection, backend->baseDir, KEY_BUFFER_SIZE);
-    }else{
+    if (!STRING_IS_EMPTY(backend->basePath)) {
+	g_strlcpy(confSection, backend->basePath, KEY_BUFFER_SIZE);
+    } else {
 	g_strlcpy(confSection, "", KEY_BUFFER_SIZE);
     }
 
     if (!STRING_IS_EMPTY(section)) {
-	g_strlcat(confSection, "/", KEY_BUFFER_SIZE);
 	g_strlcat(confSection, section, KEY_BUFFER_SIZE);
+	g_strlcat(confSection, "/", KEY_BUFFER_SIZE);
     }
     return confSection;
 }
@@ -121,6 +58,7 @@ GValue *ibus_config_backend_read_value(MkdgBackend * backend,
     IBusConfig *config = (IBusConfig *) backend->config;
     gchar confSection[KEY_BUFFER_SIZE];
     to_real_section(confSection, backend, section);
+    printf("confSection=%s\n", confSection);
 #if IBUS_CHECK_VERSION(1, 4, 0)
     GVariant *gVar = ibus_config_get_value(config, confSection,
 					   key);
@@ -128,7 +66,7 @@ GValue *ibus_config_backend_read_value(MkdgBackend * backend,
 	return NULL;
     }
     g_variant_ref_sink(gVar);
-    g_variant_to_g_value(gVar, value);
+    mkdg_g_variant_to_g_value(gVar, value);
     g_variant_unref(gVar);
     return value;
 #else
@@ -148,7 +86,7 @@ gboolean ibus_config_backend_write_value(MkdgBackend * backend,
     gchar confSection[KEY_BUFFER_SIZE];
     to_real_section(confSection, backend, section);
 #if IBUS_CHECK_VERSION(1, 4, 0)
-    GVariant *gVar = g_variant_ref_sink(g_value_to_g_variant(value));
+    GVariant *gVar = g_variant_ref_sink(mkdg_g_value_to_g_variant(value));
     if (gVar != NULL) {
 	result = ibus_config_set_value(config, confSection, key, gVar);
     }
@@ -173,10 +111,10 @@ gboolean ibus_config_backend_write_value(MkdgBackend * backend,
 }
 
 /*
- * baseDir is shorter that other backend, as ibus-config should provide ibus level base
+ * basePath is shorter that other backend, as ibus-config should provide ibus level base
  */
 MkdgBackend *ibus_config_backend_new(IBusService * service,
-				     const gchar * baseDir,
+				     const gchar * basePath,
 				     gpointer auxData)
 {
     IBusConfig *config = NULL;
@@ -194,7 +132,8 @@ MkdgBackend *ibus_config_backend_new(IBusService * service,
     config = g_object_ref_sink(ibus_config_new(iConnection));
 #endif
     MkdgBackend *result =
-	mkdg_backend_new((gpointer) config, baseDir, auxData);
+	mkdg_backend_new(IBUS_CONFIG_BACKEND_ID, (gpointer) config,
+			 basePath, auxData);
     result->readFunc = ibus_config_backend_read_value;
     result->writeFunc = ibus_config_backend_write_value;
     return result;

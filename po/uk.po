@@ -1,8 +1,4 @@
-# Translation of Traditional Chinese of ibus-chewing
-# Copyright (C) 2008, 2009, 2010
-# Huang Peng <shawn.p.huang@gmail.com>. Ding-Yi Chen <dchen@redhat.com>
-# swyear <swyear@gmail.com>
-# This file is distributed under the same license as the ibus-chewing package.
+# yurchor <yurchor@ukr.net>, 2012. #zanata
 # dchen <dchen@fedoraproject.org>, 2014. #zanata
 msgid ""
 msgstr ""
@@ -12,178 +8,193 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2014-10-02 12:36-0400\n"
+"PO-Revision-Date: 2014-10-02 03:13-0400\n"
 "Last-Translator: dchen <dchen@fedoraproject.org>\n"
-"Language-Team: Chinese (Traditional Han, Taiwan)\n"
-"Language: zh-TW\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language: uk\n"
 "X-Generator: Zanata 3.4.2\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:10
 msgid "Editing"
-msgstr "編輯"
+msgstr "Редагування"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:11
 msgid "Selecting"
-msgstr "選字"
+msgstr "Позначення"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:12
 msgid "Keyboard"
-msgstr "鍵盤"
+msgstr "Клавіатура"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:15
 msgid "default"
-msgstr "預設"
+msgstr "типове"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:16
 msgid "hsu"
-msgstr "許氏"
+msgstr "сюй"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:17
 msgid "ibm"
-msgstr "IBM"
+msgstr "ibm"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:18
 msgid "gin_yieh"
-msgstr "精業"
+msgstr "жін_є"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:19
 msgid "eten"
-msgstr "倚天"
+msgstr "етен"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:20
 msgid "eten26"
-msgstr "倚天26鍵"
+msgstr "етен26"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:21
 msgid "dvorak"
-msgstr "Dvorak"
+msgstr "дворак"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:22
 msgid "dvorak_hsu"
-msgstr "Dvorak+許氏"
+msgstr "дворак_сюй"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:23
 msgid "dachen_26"
-msgstr "大千26鍵"
+msgstr "dachen_26"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:24
 msgid "hanyu"
-msgstr "漢語"
+msgstr "ханю"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:42
 msgctxt "Sync"
 msgid "disable"
-msgstr "停用"
+msgstr "вимкнути"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:43
 msgctxt "Sync"
 msgid "keyboard"
-msgstr "由鍵盤"
+msgstr "клавіатура"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:44
 msgctxt "Sync"
 msgid "input method"
-msgstr "由輸入法"
+msgstr "спосіб введення"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:49
 msgid "Auto"
-msgstr "自動"
+msgstr "Автоматично"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:50
 msgid "Big5"
 msgstr "Big5"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:51
 msgid "UTF8"
 msgstr "UTF8"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:56
 msgid "Keyboard Type"
-msgstr "鍵盤排列"
+msgstr "Тип клавіатури"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:60
 msgid "Select Zhuyin keyboard layout."
-msgstr "選擇注音符號的鍵盤排列。"
+msgstr "Виберіть розкладку клавіатури чжуїн."
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:63
 msgid "Selection keys"
-msgstr "選字按鍵"
+msgstr "Клавіші для позначення"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:68
 msgid ""
 "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
 "select the 1st candidate, 's' for 2nd, and so on."
-msgstr "設定選字按鍵。以 \"asdfghjkl;\" 為例，按 'a' 選第一個候選字詞，按 's' 選第二個，依此類推。"
+msgstr ""
+"Клавіші, які використовуватимуться для вибору варіантів. Наприклад, якщо це "
+"«asdfghjkl;», натискання «a» вибиратиме перший кандидат, «s» — другий тощо."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:71
 msgid "Hsu's selection key"
-msgstr "許式鍵盤選擇鍵"
+msgstr "Клавіша вибору Сюя"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:75
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
-msgstr "許氏鍵盤選擇鍵設定。1 為使用 asdfjkl789，2 為使用asdfzxcv89。"
+msgstr "Клавіші вибору клавіатури Сюя, 1 для asdfjkl789, 2 для asdfzxcv89 ."
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:79
 msgid "Auto move cursor"
-msgstr "自動移動游標"
+msgstr "Автоматичне пересування курсора"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:82
 msgid "Automatically move cursor to next character."
-msgstr "自動移游標至下一個字。"
+msgstr "Автоматично пересувати курсор до наступного символу."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:86
 msgid "Add phrases in front"
-msgstr "前方加詞"
+msgstr "Додавати фрази на початку"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:89
 msgid "Add phrases in the front."
-msgstr "前方加詞。"
+msgstr "Додавати фрази на початку."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:93
 msgid "Easy symbol input"
-msgstr "簡易符號輸入"
+msgstr "Просте введення символів"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:96
 msgid "Easy symbol input."
-msgstr "簡易符號輸入。"
+msgstr "Просте введення символів."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:100
 msgid "Esc clean all buffer"
-msgstr "Esc 鍵清預編區"
+msgstr "Esc спрожнює весь буфер"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:103
 msgid "Escape key cleans the text in pre-edit-buffer."
-msgstr "Esc 鍵清預編區。"
+msgstr "Клавіша Escape спорожнює вміст буфера попереднього редагування."
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:107
 msgid "Maximum Chinese characters"
-msgstr "容納中文字數"
+msgstr "Максимальна кількість символів китайською"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:111
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
-msgstr "預編區可容納中文字數(包含輸入中的注音符號)"
+msgstr ""
+"Максимальна кількість символів китайської у буфері попереднього редагування, "
+"зокрема під час введення символів чжуїн"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:115
 msgid "Force lowercase in En mode"
-msgstr "CapsLock時英數仍用小寫"
+msgstr "Примусовий нижній регістр у режимі англійської"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:118
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default.\n"
 "Uppercase can still be inputted with Shift."
-msgstr "即使在CapsLcok On 的狀態時，仍然輸出小寫英文字母。 \n"
-"這對習慣打小寫的用戶來說比較方便。\n"
-"大寫字母仍然可用Shift 鍵輸入。"
+msgstr ""
+"Ігнорувати стан CapsLock і типово вводити символи нижнього регістру.\n"
+"Зручно, якщо ви маєте намір типово вводити символи у нижньому регістрі. \n"
+"Символи верхнього регістру можна вводити за допомогою клавіші Shift."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:126
 msgid "Sync between CapsLock and IM"
-msgstr "CapsLock與輸入法狀態同步"
+msgstr "Синхронізація CapsLock зі способом введення"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:131
 msgid ""
@@ -193,121 +204,128 @@ msgid ""
 "\"keyboard\": IM status follows keyboard status.\n"
 "\"IM\": Keyboard status follows IM status."
 msgstr ""
-"CapsLock 狀態有時會跟輸入法不同步，這個選項決定如何同步這些狀態。可用的值：\n"
-"\"disable\":  停用本功能。\n"
-"\"keyboard\": 輸入法向 Caps Lock 狀態同步。\n"
-"\"im\": Caps Lock 向輸入法狀態同步。"
+"Якщо раптом стан CapsLock не відповідає стану способу введення, за допомогою "
+"цього пункту можна визначити спосіб синхронізації станів. Можливі значення:\n"
+"«вимкнути»: не виконувати синхронізації.\n"
+"«клавіатура»: змінювати стан способу введення за станом на клавіатурі.\n"
+"«спосіб введення»: змінювати стан на клавіатурі за станом у способі введення."
+""
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:139
 msgid "Number pad always input number"
-msgstr "數字版總是輸入數字"
+msgstr "Завжди вводити цифри з цифрової панелі"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:142
 msgid "Always input numbers when number keys from key pad is inputted."
-msgstr "用數字版輸入時總是輸入數字，並不負責選字。"
+msgstr ""
+"Завжди вводити цифри, якщо натискаються клавіші цифр на цифровій панелі."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:146
 msgid "Plain Zhuyin mode"
-msgstr "單純注音模式"
+msgstr "Звичайний режим чжуїн"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:150
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
-msgstr "在單純注音模式，自動選詞功能及選項將被關閉或忽略。"
+msgstr ""
+"У режимі звичайного введення чжуїн автоматичний вибір варіантів та пов’язані "
+"з ним параметри буде вимкнено або проігноровано."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:153
 msgid "Candidate per page"
-msgstr "每頁候選字數"
+msgstr "Варіант на сторінку"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:156
 msgid "Number of candidate per page."
-msgstr "每頁可顯示候選字詞數。"
+msgstr "Кількість варіантів на сторінку."
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:160
 msgid "Choose phrases from backward"
-msgstr "後方選詞"
+msgstr "Вибирати фрази з кінця"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:163
 msgid "Choose phrases from the back, without moving cursor."
-msgstr "直接由後方選詞，不必把游標移到候選詞前。"
+msgstr "Вибирати фрази з кінця без пересування курсора."
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingConfig.c:167
 msgid "Space to select"
-msgstr "空白鍵選字"
+msgstr "Пробіл для позначення"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:258
 msgid "Chi"
-msgstr "中"
+msgstr "Чі"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:261
 msgid "Eng"
-msgstr "英"
+msgstr "Eng"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:265
 msgid "Click to switch to English"
-msgstr "點擊以切換至英文"
+msgstr ""
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:269
 msgid "Click to switch to Chinese"
-msgstr "點擊以切換至中文"
+msgstr ""
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:272
 msgid "Full"
-msgstr "全"
+msgstr "Повні"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:275
 msgid "Half"
-msgstr "半"
+msgstr "Половинні"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:278
 msgid "Settings"
-msgstr "設定"
+msgstr "Параметри"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"
 msgid "Cancel"
-msgstr "取消"
+msgstr "Скасувати"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:8
 msgctxt "Configure"
 msgid "Save"
-msgstr "儲存"
+msgstr "Зберегти"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:9
 msgctxt "Configure"
 msgid "Apply"
-msgstr "套用"
+msgstr ""
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:10
 msgctxt "Configure"
 msgid "Close"
-msgstr "關閉"
+msgstr "Закрити"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:11
 msgctxt "Configure"
 msgid "Ok"
-msgstr "確定"
+msgstr "Гаразд"
 
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author yurchor
 #: /home/dchen/devel/ibus-chewing/src/ibus-setup-chewing.c:97
 msgid "Setting"
-msgstr "設定"
+msgstr "Параметри"
 
 #: /home/dchen/devel/ibus-chewing/src/main.c:84
 msgid "Chewing component"
-msgstr "酷音元件"
+msgstr "Компонент чжуінь"
 
 #: /home/dchen/devel/ibus-chewing/src/main.c:85
 #: /home/dchen/devel/ibus-chewing/src/main.c:93
 msgid "Peng Huang, Ding-Yi Chen"
-msgstr "黃鵬，陳定彞"
+msgstr "Пень Юань, Дінь-Ї Чен"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: /home/dchen/devel/ibus-chewing/src/main.c:91
 msgid "Chewing"
-msgstr "新酷音"
+msgstr "Чжуінь"
 
 #: /home/dchen/devel/ibus-chewing/src/main.c:92
 msgid "Chinese chewing input method"
-msgstr "中文新酷音輸入法"
+msgstr "Чжуінь спосіб введення"

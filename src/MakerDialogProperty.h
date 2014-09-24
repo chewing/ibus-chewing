@@ -34,74 +34,16 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "MakerDialogUtil.h"
+#include "MakerDialogPropertySpec.h"
 #include "MakerDialogBackend.h"
 
-/**
- * MkdgPropertyFlags:
- * @MKDG_PROPERTY_FLAG_INVISIBLE:       The property is not visible in UI.
- * @MKDG_PROPERTY_FLAG_INSENSITIVE:     The property is gray-out and not editable.
- * @MKDG_PROPERTY_FLAG_NO_NEW:          The property does not accept new values.
- * @MKDG_PROPERTY_FLAG_HAS_TRANSLATION: The property should show translated value.
- *
- * MakerDialog flag controls how the property displayed in UI.
- */
-typedef enum {
-    MKDG_PROPERTY_FLAG_INVISIBLE = 1,
-    MKDG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
-    MKDG_PROPERTY_FLAG_NO_NEW = 1 << 2,
-    MKDG_PROPERTY_FLAG_HAS_TRANSLATION = 1 << 3,
-} MkdgPropertyFlags;
-
-typedef struct _PropertyContext PropertyContext;
-
-
-#ifndef MKDG_SPEC_ONLY
-#define MKDG_SPEC_FUNC(f) f
-#else
-#define MKDG_SPEC_FUNC(f) NULL
-#endif
-
-typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, GValue * value);
-typedef gboolean(*MkdgBoolFunc) (PropertyContext * ctx, gpointer userData);
-
-/**
- * PropertySpec:
- * @valueType:    Type of the value.
- * @key:          A unique Property ID.
- * @pageName:     The name of the tab that contain this property (Translatable).
- * @label:        Label in UI (Translatable).
- * @subSection:   Sub-section in backend.
- * @defaultValue: String represented string value.
- * @validValues:  NULL terminated valid values.
- * @min:          Minimum valid value for numeric types.
- * @max:          Maximum valid value for numeric types.
- * @applyFunc:    Callback function for apply the value.
- * @propertyFlag: Property Flags.
- * @tooltip:      Tooltip of this property (Translatable).
- * @auxData:      Auxiliary data that might be needed somewhere. 
- *
- * A Property Spec describe the characteristic of a property.
- */
-
-typedef struct {
-    GType valueType;
-    gchar key[30];
-    gchar pageName[50];
-    gchar label[200];
-    gchar subSection[200];
-    gchar defaultValue[100];
-    const gchar **validValues;
-    gchar *translationContext;
-
-    gint min;
-    gint max;
-
-    MkdgApplyFunc applyFunc;
-
-    MkdgPropertyFlags propertyFlags;
-    const gchar *tooltip;
+struct _PropertyContext {
+    MkdgPropertySpec *spec;
+    GValue value;		//<! Property Value
+    MkdgBackend *backend;	//<! Backend.
+    gpointer parent;		//<! The object that this property belongs to. parent need to handle apply
     gpointer auxData;
-} PropertySpec;
+};
 
 typedef struct {
     GPtrArray *contexts;
@@ -109,16 +51,8 @@ typedef struct {
     gpointer auxData;
 } MkdgProperties;
 
-struct _PropertyContext {
-    PropertySpec *spec;
-    GValue value;		//<! Property Value
-    MkdgBackend *backend;	//<! Backend.
-    gpointer parent;		//<! The object that this property belongs to. parent need to handle apply
-    gpointer auxData;
-};
 
-
-PropertyContext *property_context_new(PropertySpec * spec,
+PropertyContext *property_context_new(MkdgPropertySpec * spec,
 				      MkdgBackend * backend,
 				      gpointer parent, gpointer auxData);
 
@@ -149,7 +83,7 @@ gboolean property_context_use(PropertyContext * ctx, gpointer userData);
 
 void property_context_free(PropertyContext * ctx);
 
-MkdgProperties *mkdg_properties_from_spec_array(PropertySpec specs[],
+MkdgProperties *mkdg_properties_from_spec_array(MkdgPropertySpec specs[],
 						MkdgBackend * backend,
 						gpointer parent,
 						gpointer auxData);
