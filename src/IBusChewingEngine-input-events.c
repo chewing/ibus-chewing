@@ -9,29 +9,24 @@ guint ibus_chewing_engine_keycode_to_keysym(IBusChewingEngine * self,
 					    guint keysym, guint keycode,
 					    guint modifiers)
 {
-    /* Get system layout */
-    GValue gValue = { 0 };
-    g_value_init(&gValue, G_TYPE_BOOLEAN);
-    gboolean useSysKeyLayout = TRUE;
-    if (ibus_chewing_properties_read_general
-	(self->iProperties, &gValue, "ibus/general", "use-system-keyboard-layout",
-	 NULL)) {
-	useSysKeyLayout = g_value_get_boolean(&gValue);
+    guint kSym = keysym;
+    if (!chewing_get_ChiEngMode(self->context)) {
+	/* English mode, pass as-is */
+	return kSym;
     }
 
-    guint kSym;
-    if (useSysKeyLayout && (!chewing_get_ChiEngMode(self->context))) {
-	// English mode.
-	kSym = keysym;
-    } else {
-	/* ibus_keymap_lookup_keysym only handles keycode under 256 */
-	if ((kSym =
-	     ibus_keymap_lookup_keysym(self->keymap_us, keycode,
-				       modifiers)) == IBUS_VoidSymbol) {
+    if (!ibus_chewing_engine_has_status_flag
+	(self, ENGINE_FLAG_SYSTEM_KEYBOARD_LAYOUT)) {
+	/* ibus_keymap_lookup_keysym treats keycode >= 256 */
+	/* as IBUS_VoidSymbol */
+	kSym = ibus_keymap_lookup_keysym(self->keymap_us, keycode,
+					 modifiers);
+	if (kSym == IBUS_VoidSymbol) {
+	    /* Restore keysym */
 	    kSym = keysym;
 	}
     }
-    g_value_unset(&gValue);
+
     return kSym;
 }
 
@@ -40,6 +35,10 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 					       guint modifiers)
 {
     gboolean result = TRUE;
+    IBUS_CHEWING_LOG(MSG,
+		     "* process_key_event(-,%x(%s),%x,%x) %s",
+		     keysym, keyName_get(keysym), keycode, modifiers,
+		     modifiers_to_string(modifiers));
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
     if (ibus_chewing_engine_is_password(self))
@@ -48,7 +47,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	ibus_chewing_engine_keycode_to_keysym(self, keysym, keycode,
 					      modifiers);
 
-    if (modifiers & IBUS_RELEASE_MASK) {
+    if (!(modifiers & IBUS_RELEASE_MASK)) {
 	if (!keysym_KP_to_normal(kSym)
 	    && (kSym == IBUS_Shift_L || kSym == IBUS_Shift_R)
 	    && self->_priv->key_last == kSym) {
@@ -66,13 +65,13 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	    self_refresh_property(self, "chewing_chieng_prop");
 	    return self_update(self);
 	}
-	/* Skip release event */
+	/* Skip press event */
 	return TRUE;
     }
 
     IBUS_CHEWING_LOG(MSG,
-		     "*** process_key_event(-, %x(%s), %x, %x) orig keysym=%x... proceed.",
-		     kSym, keyName_get(kSym), keycode, modifiers, keysym);
+		     "* process_key_event() kSym=%x(%s) keysym=%x(%s) ... continue",
+		     kSym, keyName_get(kSym), keysym, keyName_get(keysym));
     guint state =
 	modifiers & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK);
     self->_priv->key_last = kSym;
@@ -80,7 +79,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	guint kSym_tmp = keysym_KP_to_normal(kSym);
 	if (kSym_tmp) {
 	    IBUS_CHEWING_LOG(INFO,
-			     "*** process_key_event(): %x is from keypad.",
+			     "* process_key_event(): %x is from keypad.",
 			     kSym_tmp);
 	    /* Is keypad key */
 	    if ((self->chewingFlags & CHEWING_FLAG_NUMPAD_ALWAYS_NUMBER)
@@ -97,7 +96,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	    case IBUS_Return:
 	    case IBUS_KP_Enter:
 		ibus_chewing_engine_set_status_flag(self,
-						    ENGINE_STATUS_NEED_COMMIT);
+						    ENGINE_FLAG_NEED_COMMIT);
 		chewing_handle_Enter(self->context);
 		break;
 	    case IBUS_Escape:
@@ -129,13 +128,13 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 		    chewing_set_easySymbolInput(self->context, 0);	/* fixed #33 first space wouldn't be committed */
 		    chewing_handle_Space(self->context);
 		    ibus_chewing_engine_set_status_flag(self,
-							ENGINE_STATUS_NEED_COMMIT);
+							ENGINE_FLAG_NEED_COMMIT);
 		}
 		if (self->inputMode == CHEWING_INPUT_MODE_SELECTION_DONE ||
 		    self->inputMode == CHEWING_INPUT_MODE_BYPASS ||
 		    self->inputMode == CHEWING_INPUT_MODE_EDITING)
 		    ibus_chewing_engine_set_status_flag(self,
-							ENGINE_STATUS_NEED_COMMIT);
+							ENGINE_FLAG_NEED_COMMIT);
 		break;
 	    case IBUS_Page_Up:
 	    case IBUS_KP_Page_Up:
@@ -226,7 +225,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	case IBUS_KP_Enter:
 	    /* Same with Shift Enter and Shift KP_Enter */
 	    ibus_chewing_engine_set_status_flag(self,
-						ENGINE_STATUS_NEED_COMMIT);
+						ENGINE_FLAG_NEED_COMMIT);
 	    chewing_handle_Enter(self->context);
 	    break;
 	case IBUS_Left:
@@ -249,7 +248,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	case IBUS_KP_Page_Down:
 	case IBUS_Home:
 	case IBUS_End:
-	    if (self->_priv->statusFlags & ENGINE_STATUS_NEED_COMMIT)
+	    if (self->_priv->statusFlags & ENGINE_FLAG_NEED_COMMIT)
 		self_force_commit(self);
 	    return FALSE;
 	case IBUS_space:
@@ -288,31 +287,30 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 }
 
 void ibus_chewing_engine_handle_Default(IBusChewingEngine * self,
-					guint keyval,
+					guint keysym,
 					gboolean shiftPressed)
 {
     IBUS_CHEWING_LOG(DEBUG,
-		     "handle_Default(-,%u) plainZhuyin=%s inputMode=%d",
-		     keyval,
+		     "handle_Default(-,%x,%s) plainZhuyin=%s inputMode=%d",
+		     keysym,
+		     (shiftPressed)? "TRUE": "FALSE",
 		     (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) ?
 		     "TRUE" : "FALSE", self->inputMode);
-    ibus_chewing_engine_set_status_flag(self, ENGINE_STATUS_NEED_COMMIT);
-#ifdef EASY_SYMBOL_INPUT_WORK_AROUND
+    ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_NEED_COMMIT);
     if (self->chewingFlags & CHEWING_FLAG_EASY_SYMBOL_INPUT) {
 	/* If shift is pressed, turn on the  easySymbolInput, turn off
 	 * otherwise
 	 */
 	chewing_set_easySymbolInput(self->context, (shiftPressed) ? 1 : 0);
     }
-#endif
     if (self->chewingFlags & CHEWING_FLAG_FORCE_LOWERCASE_ENGLISH) {
-	if (isupper(keyval) && !shiftPressed) {
-	    keyval = tolower(keyval);
-	} else if (islower(keyval) && shiftPressed) {
-	    keyval = toupper(keyval);
+	if (isupper(keysym) && !shiftPressed) {
+	    keysym = tolower(keysym);
+	} else if (islower(keysym) && shiftPressed) {
+	    keysym = toupper(keysym);
 	}
     }
-    chewing_handle_Default(self->context, keyval);
+    chewing_handle_Default(self->context, keysym);
     if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) {
 	if (self_is_selectKey(self, self->_priv->key_last) &&
 	    self->inputMode == CHEWING_INPUT_MODE_SELECTING) {
@@ -425,11 +423,10 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
     Self *self = SELF(engine);
     if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
 	purpose == IBUS_INPUT_PURPOSE_PIN) {
-	ibus_chewing_engine_set_status_flag(self,
-					    ENGINE_STATUS_IS_PASSWORD);
+	ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_IS_PASSWORD);
     } else {
 	ibus_chewing_engine_clear_status_flag(self,
-					      ENGINE_STATUS_IS_PASSWORD);
+					      ENGINE_FLAG_IS_PASSWORD);
     }
 }
 #endif

@@ -19,6 +19,9 @@
 	    <author>Peng Huang, Ding-Yi Chen</author>
             <icon>@PRJ_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
 	    <layout>us</layout>
+	    <setup>@LIBEXEC_DIR@/ibus-setup-chewing</setup>
+	    <version>@PRJ_VER@</version>
+	    <textdomain>@PROJECT_NAME@</textdomain>
 	    <rank>80</rank>
 	    @HOTKEYS_XML@
 	    @SYMBOL_XML@

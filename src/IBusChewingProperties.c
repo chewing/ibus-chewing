@@ -3,7 +3,7 @@
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
 #include "MakerDialogProperty.h"
-#include "ibus-chewing-util.h"
+#include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusConfigBackend.h"
 #ifdef GSETTINGS_SUPPORT

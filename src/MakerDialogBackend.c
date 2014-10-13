@@ -11,6 +11,7 @@ MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
     result->config = config;
     result->basePath = basePath;
     result->auxData = auxData;
+    result->flags=0;
     return result;
 }
 

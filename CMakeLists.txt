@@ -168,7 +168,6 @@ ADD_DEFINITIONS("-DCHEWING_VERSION_MAJOR=${CHEWING_VERSION_MAJOR}"
     )
 
 ## In case CHEWING_DATADIR is incorrect
-SET(CHEWING_DATADIR_REAL "")
 FOREACH(d ${CHEWING_DATADIR} /usr/share/chewing ${CHEWING_LIBDIR}/libchewing)
     IF(EXISTS "${d}/symbols.dat")
 	SET(CHEWING_DATADIR_REAL "${d}" CACHE STRING "CHEWING_DATADIR_REAL")
@@ -180,13 +179,8 @@ IF("${CHEWING_DATADIR_REAL}" STREQUAL "")
     M_MSG(${M_ERROR} "Chewing: symbols.dat cannot be found, please reinstall chewing package")
 ENDIF()
 
-IF(NOT "${CHEWING_DATADIR_REAL}" STREQUAL "${CHEWING_DATADIR}")
-    SET(CHEWING_DATADIR "${CHEWING_DATADIR_REAL}" CACHE PATH "CHEWING_DATADIR" FORCE)
-ENDIF()
-
-M_MSG(${M_INFO1} "CHEWING_DATADIR=${CHEWING_DATADIR}")
-SET_COMPILE_ENV(CHEWING_DATADIR "${CHEWING_DATADIR}" DISPLAY PATH
-    "CHEWING_DATADIR")
+M_MSG(${M_INFO1} "CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}")
+SET_COMPILE_ENV(CHEWING_DATADIR_REAL)
 
 ### Glib, Gtk and GOB
 MANAGE_DEPENDENCY(REQUIRES GLIB2  REQUIRED)
@@ -239,6 +233,7 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/
 # Sub directories
 ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(po)
+ADD_SUBDIRECTORY(test test-bin)
 
 ####################################################################
 # Installing
@@ -301,8 +296,4 @@ IF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
     LIST(APPEND releaseTargets release_fedora)
 ENDIF(CMAKE_FEDORA_ENABLE_FEDORA_BUILD)
 MANAGE_RELEASE(${releaseTargets})
-
-####################################################################
-# Test Suites.
-#
 

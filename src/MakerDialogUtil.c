@@ -189,17 +189,6 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
     return FALSE;
 }
 
-gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str)
-{
-    gint i = 0;
-    for (i = 0; i < array->len; i++) {
-	if (STRING_EQUALS(str, (gchar *) g_ptr_array_index(array, i))) {
-	    return i;
-	}
-    }
-    return -1;
-}
-
 /*============================================
  * MKDG XML functions
  */

@@ -35,6 +35,18 @@
 
 typedef struct MkdgBackend_ MkdgBackend;
 
+
+/**
+ * MkdgBackendFlag:
+ * @MKDG_BACKEND_FLAG_DISCONNECTED: Disconnect from backend, so the backend works without connect to real service.
+ *
+ * MakerDialog backend flags.
+ * 
+ */
+ typedef enum {
+    MKDG_BACKEND_FLAG_DISCONNECTED =1
+} MkdgBackendFlag;
+
 typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
 				    const gchar * section,
 				    const gchar * key, gpointer userData);
@@ -61,6 +73,7 @@ struct MkdgBackend_ {
     const gchar *basePath;
     BackendReadFunc readFunc;
     BackendWriteFunc writeFunc;
+    MkdgBackendFlag flags;
     gpointer auxData;
 };
 

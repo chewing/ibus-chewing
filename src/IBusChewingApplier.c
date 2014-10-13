@@ -17,31 +17,36 @@ static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
  * IBus widgets
  */
 
-IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *iProperties)
+IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
+					       iProperties)
 {
-    gint size=g_value_get_int(mkdg_properties_get_by_key(iProperties->properties, "cand-per-page")); 
-    gboolean cursorShow=FALSE;
-    gboolean wrapAround=TRUE;
-    IBusLookupTable *iTable=ibus_lookup_table_new
+    gint size =
+	g_value_get_int(mkdg_properties_get_by_key
+			(iProperties->properties, "cand-per-page"));
+    gboolean cursorShow = FALSE;
+    gboolean wrapAround = TRUE;
+    IBusLookupTable *iTable = ibus_lookup_table_new
 	(size, 0, cursorShow, wrapAround);
 
-    GValue gValue={0};
+    GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_INT);
-    if (ibus_chewing_properties_read_general(iProperties, &gValue, "ibus/panel", 
-		"lookup-table-orientation", NULL)){
-	ibus_lookup_table_set_orientation(iTable,g_value_get_int(&gValue));
+    if (ibus_chewing_properties_read_general
+	(iProperties, &gValue, "ibus/panel", "lookup-table-orientation",
+	 NULL)) {
+	ibus_lookup_table_set_orientation(iTable,
+					  g_value_get_int(&gValue));
     }
     g_value_unset(&gValue);
     return g_object_ref_sink(iTable);
 }
 
 void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
-	const gchar * selKeys_str)
+					    const gchar * selKeys_str)
 {
     g_assert(engine);
     int j;
 
-    if (engine->table == NULL){
+    if (engine->table == NULL) {
 	g_assert(engine->iProperties);
 	engine->table = ibus_chewing_lookup_table_new(engine->iProperties);
     }
@@ -50,8 +55,8 @@ void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
     IBusText *iText;
     for (j = 0; j < len_min; j++) {
 	engine->selKeys[j] = (gint) selKeys_str[j];
-	iText =  g_object_ref_sink(ibus_text_new_from_unichar
-		((gunichar) selKeys_str[j]));
+	iText = g_object_ref_sink(ibus_text_new_from_unichar
+				  ((gunichar) selKeys_str[j]));
 	ibus_lookup_table_set_label(engine->table, j, iText);
     }
     chewing_set_selKey(engine->context, engine->selKeys, len_min);
@@ -63,8 +68,6 @@ void ibus_chewing_engine_set_selKeys_string(IBusChewingEngine * engine,
 gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
-    printf("KBType_apply_callback(%s,%s)", ctx->spec->key,
-	   mkdg_g_value_to_string(value));
     IBUS_CHEWING_LOG(DEBUG, "KBType_apply_callback(%s,%s)", ctx->spec->key,
 		     mkdg_g_value_to_string(value));
     ChewingKbType kbType = kbType_id_get_index(g_value_get_string(value));
@@ -76,6 +79,8 @@ gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData)
 gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
+    IBUS_CHEWING_LOG(DEBUG,"selKeys_apply_callback(%s,%s)", ctx->spec->key,
+	    mkdg_g_value_to_string(value));
     IBusChewingEngine *engine = (IBusChewingEngine *) ctx->parent;
     ibus_chewing_engine_set_selKeys_string(engine,
 					   g_value_get_string(value));

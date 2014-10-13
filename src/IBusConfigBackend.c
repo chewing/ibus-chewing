@@ -22,7 +22,7 @@
 #include <ibus.h>
 #include "MakerDialogUtil.h"
 #include "GSettingsBackend.h"
-#include "ibus-chewing-util.h"
+#include "IBusChewingUtil.h"
 #include "IBusConfigBackend.h"
 #include "IBusChewingProperties.h"
 

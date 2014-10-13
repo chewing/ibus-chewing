@@ -17,6 +17,7 @@ For debugging ibus-chewing:
    By right click on IBus systray icon, then quit, or kill the process.
 2. Run ibus-daemon in command line with following command
    export G_MESSAGES_DEBUG=all
+   export G_DEBUG=MKDG,ibus-chewing
    ibus-daemon -rvx
 
 

@@ -35,7 +35,7 @@
 #endif
 #include "GConf2Backend.h"
 #include "IBusChewingProperties.h"
-#include "ibus-chewing-util.h"
+#include "IBusChewingUtil.h"
 #include "maker-dialog.h"
 
 
@@ -109,7 +109,7 @@ gint main(gint argc, gchar * argv[])
 	printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
 	printf("DATA_DIR=" QUOTE_ME(DATA_DIR)
 	       "\n");
-	printf("CHEWING_DATADIR=" QUOTE_ME(CHEWING_DATADIR)
+	printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
 	       "\n");
 	return 0;
     }
