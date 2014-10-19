@@ -316,6 +316,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 
 	ibus_chewing_engine_set_status_flag(self,
 					    ENGINE_FLAG_INITIALIZED);
+	self_use_setting(self);
 	IBUS_CHEWING_LOG(DEBUG, "init() Done");
     }
 
