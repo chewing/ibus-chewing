@@ -91,14 +91,40 @@ MkdgProperties *mkdg_properties_from_spec_array(MkdgPropertySpec specs[],
 PropertyContext *mkdg_properties_find_by_key(MkdgProperties * properties,
 					     const gchar * key);
 
+
+PropertyContext *mkdg_properties_index(MkdgProperties * array,
+				       guint index);
+
 PropertyContext *mkdg_properties_index(MkdgProperties * array,
 				       guint index);
 
 GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
 				   const gchar * key);
 
+#define mkdg_properties_get_boolean_by_key(properties, key) g_value_get_boolean(mkdg_properties_get_by_key(properties, key))
+
+#define mkdg_properties_get_int_by_key(properties, key) g_value_get_int(mkdg_properties_get_by_key(properties, key))
+
+#define mkdg_properties_get_string_by_key(properties, key) g_value_get_string(mkdg_properties_get_by_key(properties, key))
+
+gboolean mkdg_properties_set_by_key(MkdgProperties * properties,
+				   const gchar * key, GValue *value);
+
+gboolean mkdg_properties_set_boolean_by_key(MkdgProperties * properties,
+				   const gchar * key, gboolean boolValue);
+
+gboolean mkdg_properties_set_int_by_key(MkdgProperties * properties,
+				   const gchar * key, gint intValue);
+
+gboolean mkdg_properties_set_string_by_key(MkdgProperties * properties,
+				   const gchar * key, const gchar *stringValue);
+
 GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
 				    const gchar * key, gpointer userData);
+
+gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
+				   const gchar * key, gpointer userData);
+
 
 gsize mkdg_properties_size(MkdgProperties * properties);
 

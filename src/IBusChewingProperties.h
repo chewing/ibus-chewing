@@ -18,9 +18,18 @@ IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
 						   gpointer parent,
 						   gpointer auxData);
 
-
 GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 					     GValue * value,
+					     const gchar * section,
+					     const gchar * key,
+					     gpointer userData);
+
+gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties * self,
+					     const gchar * section,
+					     const gchar * key,
+					     gpointer userData);
+
+gint ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
 					     const gchar * section,
 					     const gchar * key,
 					     gpointer userData);

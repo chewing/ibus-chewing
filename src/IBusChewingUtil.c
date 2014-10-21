@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <glib.h>
 #include <ibus.h>
 #include <IBusChewingUtil.h>
@@ -24,13 +25,13 @@ const gchar *toneKeys[] = {
     NULL
 };
 
-gint get_tone(ChewingKbType kbType, guint keysym)
+gint get_tone(ChewingKbType kbType, KSym kSym)
 {
     int i = 0;
-    if (keysym == ' ')
+    if (kSym == ' ')
 	return 1;
     for (i = 0; i < 4; i++) {
-	if (toneKeys[kbType][i] == keysym) {
+	if (toneKeys[kbType][i] == kSym) {
 	    return i + 2;
 	}
     }
@@ -61,10 +62,10 @@ void add_tone(char *str, gint tone)
  * Key
  */
 
-guint keysym_KP_to_normal(guint keysym)
+KSym key_sym_KP_to_normal(KSym k)
 {
-    if (keysym < IBUS_KP_0 || keysym > IBUS_KP_9) {
-	switch (keysym) {
+    if (k < IBUS_KP_0 || k > IBUS_KP_9) {
+	switch (k) {
 	    case IBUS_KP_Decimal:
 		return IBUS_period;
 	    case IBUS_KP_Add:
@@ -79,19 +80,24 @@ guint keysym_KP_to_normal(guint keysym)
 		return 0;
 	}
     }
-    return keysym - IBUS_KP_0 + IBUS_0;
+    return k - IBUS_KP_0 + IBUS_0;
 }
 
-const char numConst[] =
-"0\0" "1\0" "2\0" "3\0" "4\0" "5\0" "6\0" "7\0" "8\0" "9";
-const char alphaConstL[] =
-"a\0b\0c\0d\0e\0f\0g\0h\0i\0j\0k\0l\0m\0n\0o\0p\0q\0r\0s\0t\0u\0v\0w\0x\0y\0z";
-const char alphaConstU[] =
-"A\0B\0C\0D\0E\0F\0G\0H\0I\0J\0K\0L\0M\0N\0O\0P\0Q\0R\0S\0T\0U\0V\0W\0X\0Y\0Z";
+const char asciiConst[]= 
+" \0" "!\0" "\"\0" "#\0" "$\0" "%\0" "&\0" "'\0" "(\0" ")\0" 
+"*\0" "+\0" ",\0" "-\0" ".\0" "/\0" "0\0" "1\0" "2\0" "3\0" 
+"4\0" "5\0" "6\0" "7\0" "8\0" "9\0" ":\0" ";\0" "<\0" "=\0" 
+">\0" "?\0" "@\0" "A\0" "B\0" "C\0" "D\0" "E\0" "F\0" "G\0" 
+"H\0" "I\0" "J\0" "K\0" "L\0" "M\0" "N\0" "O\0" "P\0" "Q\0" 
+"R\0" "S\0" "T\0" "U\0" "V\0" "W\0" "X\0" "Y\0" "Z\0" "[\0" 
+"\\\0" "]\0" "^\0" "_\0" "`\0" "a\0" "b\0" "c\0" "d\0" "e\0" 
+"f\0" "g\0" "h\0" "i\0" "j\0" "k\0" "l\0" "m\0" "n\0" "o\0" 
+"p\0" "q\0" "r\0" "s\0" "t\0" "u\0" "v\0" "w\0" "x\0" "y\0" 
+"z\0" "{\0" "|\0" "}\0" "~\0";
 
-const char *keyName_get(guint keyval)
+const char *key_sym_get_name(KSym k)
 {
-    switch (keyval) {
+    switch (k) {
 	case IBUS_Return:
 	    return "Return";
 	case IBUS_KP_Enter:
@@ -167,13 +173,18 @@ const char *keyName_get(guint keyval)
 	case IBUS_ISO_Level3_Shift:
 	    return "ISO_Level3_Shift";
 	default:
-	    if (keyval >= '0' && keyval <= '9') {
-		return &numConst[(keyval - '0') * 2];
-	    } else if (keyval >= 'a' && keyval <= 'z') {
-		return &alphaConstL[(keyval - 'a') * 2];
-	    } else if (keyval >= 'A' && keyval <= 'Z') {
-		return &alphaConstU[(keyval - 'A') * 2];
+	    if (isprint(k)){
+		return &asciiConst[(k - ' ') * 2];
 	    }
+#if 0	
+	    if (k >= '0' && k <= '9') {
+		return &numConst[(k - '0') * 2];
+	    } else if (k >= 'a' && k <= 'z') {
+		return &alphaConstL[(k - 'a') * 2];
+	    } else if (k >= 'A' && k <= 'Z') {
+		return &alphaConstU[(k - 'A') * 2];
+	    }
+#endif
 	    break;
     }
     return "Others";

@@ -3,7 +3,7 @@ INCLUDE(ManageZanata)
 
 MANAGE_GETTEXT(ALL SRCS ${IBUS_CHEWING_SOURCE_TO_TRANSLATE})
 
-MANAGE_ZANATA("https://translate.zanata.org/zanata/" 
+MANAGE_ZANATA("https://fedora.zanata.org/" 
     YES
     VERSION "master"
     GENERATE_ZANATA_XML

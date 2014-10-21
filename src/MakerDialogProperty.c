@@ -241,6 +241,49 @@ GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
     return property_context_get(ctx);
 }
 
+gboolean mkdg_properties_set_by_key(MkdgProperties * properties,
+				   const gchar * key, GValue *value)
+{
+    if (properties == NULL) {
+	return FALSE;
+    }
+    PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
+    return property_context_set(ctx, value);
+}
+
+gboolean mkdg_properties_set_boolean_by_key(MkdgProperties * properties,
+				   const gchar * key, gboolean boolValue)
+{
+    GValue gValue={0};
+    g_value_init(&gValue, G_TYPE_BOOLEAN);
+    g_value_set_boolean(&gValue, boolValue);
+    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    g_value_unset(&gValue);
+    return result;
+}
+
+gboolean mkdg_properties_set_int_by_key(MkdgProperties * properties,
+				   const gchar * key, gint intValue)
+{
+    GValue gValue={0};
+    g_value_init(&gValue, G_TYPE_INT);
+    g_value_set_int(&gValue, intValue);
+    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    g_value_unset(&gValue);
+    return result;
+}
+
+gboolean mkdg_properties_set_string_by_key(MkdgProperties * properties,
+				   const gchar * key, const gchar *stringValue)
+{
+    GValue gValue={0};
+    g_value_init(&gValue, G_TYPE_STRING);
+    g_value_set_string(&gValue, stringValue);
+    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    g_value_unset(&gValue);
+    return result;
+}
+
 GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
 				    const gchar * key, gpointer userData)
 {
@@ -249,6 +292,16 @@ GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
     }
     PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
     return property_context_load(ctx, userData);
+}
+
+gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
+				    const gchar * key, gpointer userData)
+{
+    if (properties == NULL) {
+	return FALSE;
+    }
+    PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
+    return property_context_apply(ctx, userData);
 }
 
 gsize mkdg_properties_size(MkdgProperties * properties)

@@ -37,7 +37,7 @@ static IBusFactory *factory = NULL;
 static gboolean showFlags = FALSE;
 static gboolean ibus = FALSE;
 static gboolean xml = FALSE;
-gint ibus_chewing_verbose = DEBUG;
+gint ibus_chewing_verbose = VERBOSE_LEVEL;
 
 
 static const GOptionEntry entries[] = {

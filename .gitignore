@@ -50,4 +50,5 @@ stamp-h1
 tags
 data/*.xml
 arch/PKGBUILD
+test-bin/
 

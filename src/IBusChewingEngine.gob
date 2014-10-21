@@ -35,13 +35,9 @@ requires 2.0.0
 #include "IBusChewingUtil.h"
 #include "GSettingsBackend.h"
 #include "IBusChewingProperties.h"
+#include "IBusChewingLookupTable.h"
+#include "IBusChewingPreEdit.h"
 %}
-
-enum CHEWING_MODIFIER_SYNC {
-    DISABLE,
-    FROM_KEYBOARD,
-    FROM_IM
-} Chewing:Modifier:Sync;
 
 enum CHEWING_INPUT_STYLE {
     IN_APPLICATION,
@@ -49,63 +45,21 @@ enum CHEWING_INPUT_STYLE {
 } Chewing:Input:Style;
 
 /**
- * ChewingInputMode:
- * @BYPASS: Bypass the cursor movement keys.
- * @EDITING: Forming Chinese character (in pre-edit buffer).
- * @SELECTING: Start Selecting candidate. Immediately after character is formed.
- * @SELECTING_CONTINUE: Still selecting candidate,.
- * @SELECTION_DONE: A candidate is manually selected.
- *
- * Chewing input (key handling) mode.
- */
-enum CHEWING_INPUT_MODE {
-    BYPASS,
-    EDITING,
-    SELECTING,
-    SELECTING_CONTINUE,
-    SELECTION_DONE
-} Chewing:Input:Mode;
-
-enum CHEWING_OUTPUT_CHARSET {
-    AUTO,
-    BIG5,
-    UTF8
-} Chewing:Output:Charset;
-
-/**
- * ChewingFlag:
- * @PLAIN_ZHUYIN: Plain chewing mode (no AI).
- * @FORCE_LOWERCASE_ENGLISH: Force Lowercase even when CapsLock is on.
- * @NUMPAD_ALWAYS_NUMBER: Key from num pad should always produce number.
- * @EASY_SYMBOL_INPUT: Symbols can be inputed by pressing Shift->[key]
- *
- * Chewing flags stores configuration switches.
- * The flags are only changed when initializing or preferences are changed.
- */
-enum CHEWING_FLAG {
-    PLAIN_ZHUYIN = 0x1,
-    FORCE_LOWERCASE_ENGLISH = 0x2,
-    NUMPAD_ALWAYS_NUMBER = 0x4,
-    EASY_SYMBOL_INPUT = 0x8,
-} Chewing:Flag;
-
-/**
  * EngineFlag:
+ * @UNIT_TEST:			Engine is in unit test mode (i.e. not connect to Bus)
  * @INITIALIZED:		Engine is initialized.
  * @ENABLED:            	Engine is enabled.
  * @FOCUS_IN:			Engine gets focus.
  * @SHOW_CANDIDATE:     	Whether the candidate selection should be shown. Important for Plain Zhuyin.
- * @NEED_COMMIT:        	There's Something to commit.
- * @FORCE_COMMIT:       	The engine should commit
  * @IS_PASSWORD:        	Current input is password.
  * @PROPERTIES_REGISTERED: 	Engine registered the properties.
- * @SYSTEM_KEYBOARD_LAYOUT:     Use system keyboard layout.
+ * 
  *
  * Engine flags show the current states of engine,
  * Thus those might change quite often.
  *
  * If SYSTEM_KEYBOARD_LAYOUT is enabled, IBus-Chewing uses whatever 
- * keysyms received. Otherwise it converts according to en-US
+ * key_syms received. Otherwise it converts according to en-US
  * keyboard layout.
  * 
  * It does not make any difference for en-US keyboards (which are
@@ -119,16 +73,12 @@ enum CHEWING_FLAG {
  * Thus NEED_COMMIT is needed to prevent unnecessary commit.
  */
 enum ENGINE_FLAG {
-    INITIALIZED = 		1,
+    INITIALIZED = 		0x1,
     ENABLED =			0x2,
     FOCUS_IN = 			0x4,
     SHOW_CANDIDATE = 		0x8,
-    NEED_COMMIT = 		0x10,
-    FORCE_COMMIT = 		0x20,
-    IS_PASSWORD = 		0x40,
-    PROPERTIES_REGISTERED = 	0x80,
-    SYSTEM_KEYBOARD_LAYOUT =    0x100,
-    STANDALONE =    		0x200
+    IS_PASSWORD = 		0x10,
+    PROPERTIES_REGISTERED = 	0x20,
 } Engine:Flag;
 
 %h{
@@ -139,11 +89,15 @@ extern const gchar *page_labels[];
 extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
 
-#define ibus_chewing_engine_set_status_flag(cengine,f) cengine->_priv->statusFlags |= (f)
-#define ibus_chewing_engine_clear_status_flag(cengine,f) cengine->_priv->statusFlags &= ~(f)
+#define ibus_chewing_engine_set_status_flag(self,f) self->_priv->statusFlags |= (f)
+#define ibus_chewing_engine_clear_status_flag(self,f) self->_priv->statusFlags &= ~(f)
 
-#define ibus_chewing_engine_has_status_flag(cengine,f) (cengine->_priv->statusFlags & f)
+#define ibus_chewing_engine_has_status_flag(self,f) (self->_priv->statusFlags & f)
+#define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
+#define is_chinese(self) (chewing_get_ChiEngMode(self->icPreEdit->context)!=0)
+#define is_caps_lock(self) (is_caps_led_on(self->_priv->pDisplay))
 
+#define ibus_text_is_empty(iText) ((iText==NULL) || STRING_IS_EMPTY(iText->text))
 %}
 
 %privateheader{
@@ -162,6 +116,12 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 					  guint purpose, guint hints);
 
+void refresh_pre_edit_text(IBusChewingEngine * self);
+void update_pre_edit_text(IBusChewingEngine * self);
+void refresh_aux_text(IBusChewingEngine * self);
+void update_aux_text(IBusChewingEngine * self);
+void refresh_outgoing_text(IBusChewingEngine * self);
+void commit_text(IBusChewingEngine * self);
 %}
 
 %{
@@ -171,33 +131,60 @@ extern gint ibus_chewing_verbose;
 #include "IBusConfigBackend.h"
 %}
 
-class IBus:Chewing:Engine from IBus:Engine {
-    public ChewingContext *context = NULL destroywith chewing_delete;
+%{
+#include "IBusChewingEngine-util.c"
+%}
 
-    public Chewing:Modifier:Sync syncCapsLock_local =
-	CHEWING_MODIFIER_SYNC_DISABLE;
+class IBus:Chewing:Engine from IBus:Engine {
+    public IBusChewingPreEdit *icPreEdit= NULL 
+	destroywith ibus_chewing_pre_edit_free;
 
     public GtkWidget *sDialog=NULL;
 
-    protected gint selKeys[MAX_SELKEY];
+    /**
+     * preEditText: text in pre-edit buffer.
+     *
+     * When IN_APPLICATION: Shows pre-edit string.
+     * When IN_CANDIDATE: content of pre-edit is hidden,
+     * the content is visiable in auxiliary field.
+     *
+     * This variable is not update until next "update" event,
+     * so it can be used in integration test.
+     */
+    public IBusText *preEditText=NULL;
 
-    protected ChewingInputMode inputMode = CHEWING_INPUT_MODE_BYPASS;
+    /**
+     * auxText: text to be displayed in auxiliary candidate window.
+     * If PLAIN CHEWING
+     * When IN_APPLICATION: show chewing_aux_string
+     * When IN_CANDIDATE: show the preedit 
+     *
+     * This variable is not update until next "update" event,
+     * so it can be used in integration test.
+     */
+    public IBusText *auxText=NULL;
+
+    /**
+     * outgoingText: text to be committed to engine.
+     *
+     * This variable is not update until next "update" event,
+     * so it can be used in integration test.
+     */
+    public IBusText *outgoingText=NULL;
 
     /* Controlling flags */
-    protected ChewingFlag chewingFlags = 0;
 
     /* Log file */
     protected FILE *logFile = NULL;
 
-    /* Indicate the string is committed to avoid update() set
+    /* Indicate the string is outgoing to avoid update() set
      * NEED_COMMIT status
      * again when focus in event is trigger, 
      * because the last key is Return key
      * and libchewing is still Commit state. */
 
-    private guint statusFlags = 0;
+    private EngineFlag statusFlags = 0;
 
-    /* For easy symbol input work around */
     private ChewingInputStyle inputStyle;
 
     protected IBusLookupTable *table = NULL
@@ -237,15 +224,10 @@ class IBus:Chewing:Engine from IBus:Engine {
 	{ g_object_ref_sink(ibus_prop_list_new()) }
     destroywith g_object_unref;
 
-    public IBusChewingProperties *iProperties = NULL;
-
     protected IBusKeymap *keymap_us = { ibus_keymap_get("us") };
 
     private Display *pDisplay = { XOpenDisplay(NULL) }
     destroywith XCloseDisplay;
-
-    private guint key_last = 0;
-    private gchar zhuyin_latest[ZHUYIN_BUFFER_SIZE];
 
     classwide IBusText *chieng_prop_label_chi = {
 	g_object_ref_sink(ibus_text_new_from_static_string(_("Chi")))
@@ -286,12 +268,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 
 	IBUS_CHEWING_LOG(INFO, "init() CHEWING_DATADIR_REAL=%s",
 		QUOTE_ME(CHEWING_DATADIR_REAL));
-	gchar buf[100];
-	g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
-	gint ret=chewing_Init(QUOTE_ME(CHEWING_DATADIR_REAL), buf);
-	if(ret){
-	    IBUS_CHEWING_LOG(ERROR, "init() chewing_Init()=%d", ret);
-	}
 
 	gchar *logFilename = getenv("IBUS_CHEWING_LOGFILE");
 	if (logFilename != NULL) {
@@ -303,11 +279,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 		mkdg_log_set_file(self->logFile);
 	    }
 	}
-
-	IBUS_CHEWING_LOG(INFO, "init() chewing_new()");
-	self->context = chewing_new();
-	chewing_set_ChiEngMode(self->context, CHINESE_MODE);
-	self->inputMode = CHEWING_INPUT_MODE_SELECTION_DONE;
 
 	/* init properties */
 	ibus_prop_list_append(self->prop_list, self->chieng_prop);
@@ -336,379 +307,106 @@ class IBus:Chewing:Engine from IBus:Engine {
     protected void use_setting(self) {
 	IBUS_CHEWING_LOG(INFO, "use_setting()");
 
-	if (self->iProperties == NULL){
-	    MkdgBackend *backend=mkdg_g_settings_backend_new( QUOTE_ME(PROJECT_SCHEMA_ID), QUOTE_ME(PROJECT_SCHEMA_PATH), 
-		    NULL);
-	    self->iProperties=ibus_chewing_properties_new(backend, self, NULL);
+	if (self->icPreEdit == NULL){
+#ifdef GSETTINGS_SUPPORT
+	    MkdgBackend *backend =
+		mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
+			"/desktop/ibus/engine/Chewing", NULL);
+#elif GCONF2_SUPPORT
+	    MkdgBackend *backend =
+		gconf2_backend_new("/desktop/ibus/engine", NULL);
+#else
+	    MkdgBackend *backend = NULL;
+	    g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
+	    return 1;
+#endif				/* GSETTINGS_SUPPORT */
+	    self->icPreEdit = ibus_chewing_pre_edit_new(backend);
 	}
-	mkdg_properties_use_all(self->iProperties->properties,NULL);
+	if (self->table ==NULL){
+	    self->table= 
+		ibus_chewing_lookup_table_new(self->icPreEdit->iProperties, 
+			self->icPreEdit->context);
+	}
+	ibus_chewing_pre_edit_use_all_configure(self->icPreEdit);
 
-	/* SYSTEM_KEYBOARD_LAYOUT */
-	GValue gValue = { 0 };
-	g_value_init(&gValue, G_TYPE_BOOLEAN);
-	if (ibus_chewing_properties_read_general
-		(self->iProperties, &gValue, "ibus/general",
-		 "use-system-keyboard-layout", NULL)) {
-	    if (g_value_get_boolean(&gValue)){
-		ibus_chewing_engine_set_status_flag(self,
-			ENGINE_FLAG_SYSTEM_KEYBOARD_LAYOUT);
-	    }else{
-		ibus_chewing_engine_clear_status_flag(self,
-			ENGINE_FLAG_SYSTEM_KEYBOARD_LAYOUT);
-	    }
+	/* Input style */
+	if(ibus_chewing_properties_read_boolean_general(self->icPreEdit->iProperties, 
+		"ibus/general", "embed-preedit-text", NULL)){
+	    self->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_APPLICATION;
+	}else{
+	    self->_priv->inputStyle=CHEWING_INPUT_STYLE_IN_CANDIDATE;
 	}
-	g_value_unset(&gValue);
     }
 
     protected void restore_mode(self) {
-	gint isCapsLockOff = (is_caps_led_on(self->_priv->pDisplay))
-	    ? 0 : 1;
-	gint isChinese = chewing_get_ChiEngMode(self->context);
-	switch (self->syncCapsLock_local) {
-	case CHEWING_MODIFIER_SYNC_FROM_KEYBOARD:
-	    chewing_set_ChiEngMode(self->context, isCapsLockOff);
-	    break;
-	case CHEWING_MODIFIER_SYNC_FROM_IM:
-	    if (isChinese != isCapsLockOff) {
-		set_caps_led(!isChinese, self->_priv->pDisplay);
+	if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)){
+	    if (is_chinese(self) == is_caps_lock(self)) {
+		/* ChiEng mode does not agree each other */
+		set_caps_led(!is_chinese(self), self->_priv->pDisplay);
 	    }
-	    break;
-	case CHEWING_MODIFIER_SYNC_DISABLE:
-	    break;
+	}else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)){
+	    chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self))? 0: CHINESE_MODE );
 	}
 	self_refresh_property(self, "chewing_chieng_prop");
     }
 
-    private gchar *make_preedit_string(self,
-				       gint * zhuyin_item_written_ptr) {
-	gchar *buff_str = chewing_buffer_String(self->context);
-	IBUS_CHEWING_LOG(INFO,
-			 "make_preedit_string(): chewing_buffer_String=%s ",
-			 buff_str);
-
-	int chiSymbolCursor = chewing_cursor_Current(self->context);
-	int zhuyin_count;
-	int zhuyin_tone = -1;
-
-	gchar *zhuyin_str =
-	    chewing_zuin_String(self->context, &zhuyin_count);
-	*zhuyin_item_written_ptr = zhuyin_count;
-	IBUS_CHEWING_LOG(DEBUG,
-			 "make_preedit_string(): chewing_zuin_String=%s count=%d inputMode=%d",
-			 zhuyin_str, zhuyin_count, self->inputMode);
-
-	switch (self->inputMode) {
-	case CHEWING_INPUT_MODE_EDITING:
-	    g_strlcpy(self->_priv->zhuyin_latest, zhuyin_str,
-		      ZHUYIN_BUFFER_SIZE);
-	    zhuyin_tone = 0;
-	    break;
-	case CHEWING_INPUT_MODE_SELECTING:
-	    zhuyin_tone =
-		get_tone(chewing_get_KBType(self->context),
-			 self->_priv->key_last);
-	    add_tone(self->_priv->zhuyin_latest, zhuyin_tone);
-	    if (zhuyin_tone > 0) {
-		if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) {
-		    /* Open candidate selection window */
-		    if (chewing_get_spaceAsSelection(self->context)) {
-			chewing_handle_Space(self->context);
-		    } else {
-			chewing_handle_Down(self->context);
-		    }
-		}
-	    }
-	    break;
-	case CHEWING_INPUT_MODE_SELECTING_CONTINUE:
-	    /* Do Nothing, as the action has been taken by
-	     * either chewing_handle_Space, chewing_handle_Left,
-	     * or chewing_handle_Right
-	     */
-	    break;
-	case CHEWING_INPUT_MODE_SELECTION_DONE:
-	    self->_priv->zhuyin_latest[0] = '\0';
-	    zhuyin_tone = -1;
-	    if (zhuyin_count)
-		self->inputMode = CHEWING_INPUT_MODE_EDITING;
-	    break;
-	default:
-	    /* BYPASS */
-	    break;
-	}
-
-	gsize len = strlen(zhuyin_str) + strlen(buff_str);
-	gchar *preeditBuf = g_new(gchar, len + 1);
-	preeditBuf[0] = '\0';
-	if (chiSymbolCursor > 0) {
-	    g_utf8_strncpy(preeditBuf, buff_str, chiSymbolCursor);
-	}
-	gsize zhuyin_start = strlen(preeditBuf);
-	/* Inserting zhuyinBuf */
-	if (zhuyin_count > 0) {
-	    g_strlcat(preeditBuf, zhuyin_str, len + 1);
-	}
-	/* Append rest chiSymbolBuf */
-	g_strlcat(preeditBuf, buff_str + zhuyin_start, len + 1);
-
-	g_free(buff_str);
-	g_free(zhuyin_str);
-	IBUS_CHEWING_LOG(DEBUG, "make_preedit_string(): return preedit=%s zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
-			 preeditBuf, self->_priv->zhuyin_latest,
-			 zhuyin_tone, self->inputMode);
-
-	return preeditBuf;
-    }
-
     private void show_lookup_table(self, gboolean isShow) {
-	ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->table,
-					isShow);
+	IBUS_CHEWING_LOG(DEBUG, "show_lookup_table() %x", isShow);
 	if (isShow) {
 	    ibus_chewing_engine_set_status_flag(self,
 						ENGINE_FLAG_SHOW_CANDIDATE);
+#ifndef UNIT_TEST
+	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->table,
+		    isShow);
 	    ibus_engine_show_lookup_table(IBUS_ENGINE(self));
+#endif
 	} else {
-	    ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
 	    ibus_chewing_engine_clear_status_flag(self,
-						  ENGINE_FLAG_SHOW_CANDIDATE);
+		    ENGINE_FLAG_SHOW_CANDIDATE);
+#ifndef UNIT_TEST
+	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->table,
+		    isShow);
+	    ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
+#endif
 	}
     }
 
     private void update_lookup_table(self) {
 	ibus_lookup_table_clear(self->table);
-	int i = 0;
-	char *candidate = NULL;
-	IBusText *iText = NULL;
 
 	IBUS_CHEWING_LOG(DEBUG, "update_lookup_table() CurrentPage=%d",
-			 chewing_cand_CurrentPage(self->context));
-	if (self->inputMode == CHEWING_INPUT_MODE_SELECTING) {
-	    int choicePerPage = chewing_cand_ChoicePerPage(self->context);
-	    chewing_cand_Enumerate(self->context);
-	    for (i = 0; i < choicePerPage; i++) {
-		if (chewing_cand_hasNext(self->context)) {
-		    candidate = chewing_cand_String(self->context);
-		    iText =
-			g_object_ref_sink(ibus_text_new_from_string
-					  (candidate));
-		    ibus_lookup_table_append_candidate(self->table, iText);
-		    g_free(candidate);
-		    g_object_unref(iText);
-		} else {
-		    break;
-		}
-	    }
+			 chewing_cand_CurrentPage(self->icPreEdit->context));
+	guint count=ibus_chewing_lookup_table_update(self->table,self->icPreEdit->context);
+	IBUS_CHEWING_LOG(INFO, "update_lookup_table() %u",count);
+	if (count>0){
 	    self_show_lookup_table(self, TRUE);
 	} else {
 	    self_show_lookup_table(self, FALSE);
 	}
     }
 
-    /* Apply IBusText attributes */
-    private IBusText *decorate_preedit(self, gchar * preeditBuf,
-				       gint * chiSymbolCursor,
-				       gint zhuyin_item_written) {
-	IBusText *iText =
-	    g_object_ref_sink(ibus_text_new_from_string(preeditBuf));
-	*chiSymbolCursor = chewing_cursor_Current(self->context);
-	IBUS_CHEWING_LOG(DEBUG,
-			 "decorate_preedit() chiSymbolCursor=%d preeditBuf=%s statusFlags=%x",
-			 *chiSymbolCursor, preeditBuf,
-			 self->_priv->statusFlags);
-	g_free(preeditBuf);
-
-	gint cursorRight = 0;
-	gint charLen = (gint) g_utf8_strlen(iText->text, -1);
-
-	cursorRight = *chiSymbolCursor + zhuyin_item_written;
-
-	IBUS_CHEWING_LOG(DEBUG,
-			 "decorate_preedit() charLen=%d cursorRight=%d",
-			 charLen, cursorRight);
-
-	IntervalType it;
-	chewing_interval_Enumerate(self->context);
-
-	it.from = 0;
-	it.to = charLen;
-	int phase = 1;
-	int last = 0;
-	int i;
-	if (chewing_interval_hasNext(self->context))
-	    chewing_interval_Get(self->context, &it);
-
-	for (i = 0; i < charLen; ++i) {
-	    if ((i == it.from) ||
-		(i == it.to - 1) ||
-		(*chiSymbolCursor == cursorRight && i == *chiSymbolCursor)
-		|| (*chiSymbolCursor != cursorRight
-		    && i == cursorRight - 1)) {
-		if ((*chiSymbolCursor == cursorRight
-		     && i == *chiSymbolCursor)
-		    || (*chiSymbolCursor != cursorRight
-			&& i == cursorRight - 1)) {
-		    if (last < i + 1) {
-			ibus_text_append_attribute(iText,
-						   IBUS_ATTR_TYPE_UNDERLINE,
-						   IBUS_ATTR_UNDERLINE_DOUBLE,
-						   last, i + 1);
-			phase *= -1;
-			ibus_text_append_attribute(iText,
-						   IBUS_ATTR_TYPE_FOREGROUND,
-						   0x00ffffff, last,
-						   i + 1);
-			ibus_text_append_attribute(iText,
-						   IBUS_ATTR_TYPE_BACKGROUND,
-						   0x00000000, last,
-						   i + 1);
-		    }
-		    last = i + 1;
-		} else if (i == it.to - 1) {
-		    if (last < i + 1) {
-			ibus_text_append_attribute(iText,
-						   IBUS_ATTR_TYPE_UNDERLINE,
-						   (phase >
-						    0) ?
-						   IBUS_ATTR_UNDERLINE_SINGLE
-						   :
-						   IBUS_ATTR_UNDERLINE_LOW,
-						   last, i + 1);
-			phase *= -1;
-		    }
-		    last = i + 1;
-		    if (chewing_interval_hasNext(self->context)) {
-			chewing_interval_Get(self->context, &it);
-			if (it.from >= *chiSymbolCursor) {
-			    it.from += zhuyin_item_written;
-			    it.to += zhuyin_item_written;
-			}
-		    }
-		} else {
-		    if (last < i) {
-			ibus_text_append_attribute(iText,
-						   IBUS_ATTR_TYPE_UNDERLINE,
-						   (phase >
-						    0) ?
-						   IBUS_ATTR_UNDERLINE_SINGLE
-						   :
-						   IBUS_ATTR_UNDERLINE_LOW,
-						   last, i);
-			phase *= -1;
-		    }
-		    last = i;
-		}
-	    }
-	}
-
-	return iText;
-    }
-
-    private void update_aux_string(self, IBusText * preeditIText) {
-	IBUS_CHEWING_LOG(INFO, "update_aux_string() statusFlags=%x",
-			 self->_priv->statusFlags);
-	IBusText *iText = NULL;
-	switch (self->_priv->inputStyle) {
-	case CHEWING_INPUT_STYLE_IN_APPLICATION:
-	    if (chewing_aux_Length(self->context) > 0) {
-		gchar *aux_string = chewing_aux_String(self->context);
-		iText =
-		    g_object_ref_sink(ibus_text_new_from_string
-				      (aux_string));
-		ibus_engine_update_auxiliary_text(IBUS_ENGINE(self), iText,
-						  TRUE);
-		g_object_unref(iText);
-		ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
-		g_free(aux_string);
-	    } else {
-		ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
-	    }
-	    break;
-	case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-	    if (self->inputMode == CHEWING_INPUT_MODE_BYPASS) {
-		ibus_engine_hide_auxiliary_text(IBUS_ENGINE(self));
-	    } else {
-		ibus_engine_update_auxiliary_text(IBUS_ENGINE(self),
-						  preeditIText, TRUE);
-		ibus_engine_show_auxiliary_text(IBUS_ENGINE(self));
-	    }
-	    break;
-	}
-    }
-
-    private void update_preedit(self, IBusText * preeditIText,
-				gint chiSymbolCursor) {
-	IBUS_CHEWING_LOG(INFO, "update_preedit() text=%s statusFlags=%x",
-			 preeditIText->text, self->_priv->statusFlags);
-	int mode;
-	if (g_utf8_strlen(preeditIText->text, -1) > 0)
-	    mode = IBUS_ENGINE_PREEDIT_COMMIT;
-	else
-	    mode = IBUS_ENGINE_PREEDIT_CLEAR;
-
-	ibus_engine_update_preedit_text(IBUS_ENGINE(self),
-					SELF_GET_CLASS(self)->emptyText, 0,
-					TRUE);
-	switch (self->_priv->inputStyle) {
-	case CHEWING_INPUT_STYLE_IN_APPLICATION:
-	    ibus_engine_update_preedit_text_with_mode(IBUS_ENGINE(self),
-						      preeditIText,
-						      chiSymbolCursor,
-						      TRUE, mode);
-	    break;
-	case CHEWING_INPUT_STYLE_IN_CANDIDATE:
-	    ibus_engine_update_preedit_text_with_mode(IBUS_ENGINE(self),
-						      SELF_GET_CLASS
-						      (self)->emptyText, 0,
-						      TRUE, mode);
-	    break;
-	}
-	IBUS_CHEWING_LOG(DEBUG, "update_preedit(): return");
-    }
-
-    protected gboolean update(self) {
+    protected void update(self) {
 	IBUS_CHEWING_LOG(DEBUG, "update() statusFlags=%x",
 			 self->_priv->statusFlags);
-	self_determine_input_mode(self);
-	gint chiSymbolCursor;
-	gint zhuyin_item_written;
-	self_check_commit(self);
-	gchar *preeditBuf =
-	    self_make_preedit_string(self, &zhuyin_item_written);
-	IBusText *iText =
-	    self_decorate_preedit(self, preeditBuf, &chiSymbolCursor,
-				  zhuyin_item_written);
-	if (g_object_is_floating(iText)) {
-	    g_object_ref_sink(iText);
-	}
+	update_pre_edit_text(self);
+	update_aux_text(self);
+	commit_text(self);
 
-	self_update_aux_string(self, iText);
-	self_update_preedit(self, iText, chiSymbolCursor);
-	g_object_unref(iText);
 	IBUS_CHEWING_LOG(DEBUG,
-			 "update() inputMode=%d nPhoneSeq=%d statusFlags=%x",
-			 self->inputMode,
-			 chewing_get_phoneSeqLen(self->context),
+			 "update() nPhoneSeq=%d statusFlags=%x",
+			 chewing_get_phoneSeqLen(self->icPreEdit->context),
 			 self->_priv->statusFlags);
 	self_update_lookup_table(self);
-	gboolean ret = TRUE;
-
-	if (chewing_keystroke_CheckIgnore(self->context)) {
-	    ret = FALSE;
-	}
-	IBUS_CHEWING_LOG(DEBUG, "update() return %s",
-			 (ret) ? "TRUE" : "FALSE");
-	return ret;
     }
 
-    protected void refresh_property(self, const gchar * prop_name) {
-	if (ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_STANDALONE)){
-	    /* No need to refresh_property in standalone mode */
-	    return;    
-	}
+    protected void refresh_property(self, const gchar * prop_name)
+    {
+#ifndef UNIT_TEST
 
 	IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
 			 prop_name, self->_priv->statusFlags);
 	if (STRING_EQUALS(prop_name, "chewing_chieng_prop")) {
-	    if (chewing_get_ChiEngMode(self->context)) {
+	    if (chewing_get_ChiEngMode(self->icPreEdit->context)) {
 		/* Chinese  */
 		ibus_property_set_label(self->chieng_prop,
 					SELF_GET_CLASS(self)->
@@ -739,7 +437,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 		ibus_engine_update_property(IBUS_ENGINE(self),
 					    self->chieng_prop);
 	} else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
-	    if (chewing_get_ShapeMode(self->context)) {
+	    if (chewing_get_ShapeMode(self->icPreEdit->context)) {
 		/* Full-Sized Shape */
 		ibus_property_set_label(self->alnumSize_prop,
 					SELF_GET_CLASS(self)->
@@ -755,12 +453,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 		ibus_engine_update_property(IBUS_ENGINE(self),
 					    self->alnumSize_prop);
 	}
-    }
-
-    protected gboolean is_password(self) {
-	IBUS_CHEWING_LOG(INFO, "is_password = %d",
-			 self->chewingFlags & ENGINE_FLAG_IS_PASSWORD);
-	return ! !(self->_priv->statusFlags & ENGINE_FLAG_IS_PASSWORD);
+#endif
     }
 
     /**
@@ -770,10 +463,7 @@ class IBus:Chewing:Engine from IBus:Engine {
      * Refresh the property list (language bar).
      */
     public void refresh_property_list(self) {
-	if (ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_STANDALONE)){
-	    /* No need to refresh_property in standalone mode */
-	    return;    
-	}
+#ifndef UNIT_TEST
 
 	self_refresh_property(self, "chewing_chieng_prop");
 
@@ -794,6 +484,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	    ibus_chewing_engine_set_status_flag(self,
 						ENGINE_FLAG_PROPERTIES_REGISTERED);
 	}
+#endif	
     }
 
     /**
@@ -803,22 +494,14 @@ class IBus:Chewing:Engine from IBus:Engine {
      * Hide the property list (language bar).
      */
     public void hide_property_list(self) {
+#ifndef UNIT_TEST
 	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
 						   "chewing_chieng_prop");
 	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
 						   "chewing_alnumSize_prop");
 	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
 						   "chewing_settings_prop");
-    }
-
-    protected gboolean is_selectKey(self, guint keyval) {
-	gint j;
-	for (j = 0; j < MAX_SELKEY; j++) {
-	    if (self->selKeys[j] == keyval) {
-		return TRUE;
-	    }
-	}
-	return FALSE;
+#endif
     }
 
     private IBusProperty *get_iBusProperty(self, const gchar * prop_name) {
@@ -834,200 +517,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	return NULL;
     }
 
-    /*
-     * determine_input_mode:
-     *
-     * Determine input mode.
-     */
-    private void determine_input_mode(self) {
-	gint zhuyin_count = -1;
-	gchar *str_ptr = chewing_zuin_String(self->context, &zhuyin_count);
-	IBUS_CHEWING_LOG(DEBUG,
-			 "determine_input_mode(): chewing_zuin_String=%s count=%d inputMode=%d keyLast=%s",
-			 str_ptr, zhuyin_count, self->inputMode,
-			 keyName_get(self->_priv->key_last));
-
-	int zhuyin_tone = -1;
-	gint totalChoice = chewing_cand_TotalChoice(self->context);
-	IBUS_CHEWING_LOG(DEBUG, "[I5]  determine_input_mode(): TotalChoice=%d",
-			 totalChoice);
-	if (totalChoice > 0) {
-	    /* Candidate selection mode ensure. */
-	    self->inputMode = CHEWING_INPUT_MODE_SELECTING;
-	} else if (zhuyin_count > 0) {
-	    /* Incomplete Character */
-	    self->inputMode = CHEWING_INPUT_MODE_EDITING;
-	} else {
-	    /* Character/Phrase is completed. */
-	    switch (self->inputMode) {
-	    case CHEWING_INPUT_MODE_BYPASS:
-		if (chewing_buffer_Len(self->context) > 0) {
-		    /* Has punctuation mark in buffer */
-		    self->inputMode = CHEWING_INPUT_MODE_SELECTING;
-		}
-		break;
-	    case CHEWING_INPUT_MODE_EDITING:
-		zhuyin_tone =
-		    get_tone(chewing_get_KBType(self->context),
-			     self->_priv->key_last);
-		if (zhuyin_tone > 0) {
-		    if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN) {
-			/* For plain zhuyin, Enter SELECTING mode */
-			self->inputMode = CHEWING_INPUT_MODE_SELECTING;
-		    } else {
-			/* For normal zhuyin, Enter SELECTION_DONE mode */
-			self->inputMode =
-			    CHEWING_INPUT_MODE_SELECTION_DONE;
-		    }
-		}
-		break;
-	    case CHEWING_INPUT_MODE_SELECTING:
-		/* ESC to cancel input mode */
-		if (self->chewingFlags & CHEWING_FLAG_PLAIN_ZHUYIN &&
-		    chewing_get_escCleanAllBuf(self->context) &&
-		    self->_priv->key_last == IBUS_Escape) {
-
-		    /* Close candidate window */
-		    self->inputMode = CHEWING_INPUT_MODE_SELECTION_DONE;
-		    chewing_handle_Esc(self->context);
-		    ibus_chewing_engine_clear_status_flag(self,
-							  ENGINE_FLAG_SHOW_CANDIDATE);
-		    break;
-		}
-
-		/* Switch to another page */
-		if (self_is_selectKey(self, self->_priv->key_last)) {
-		    self->inputMode = CHEWING_INPUT_MODE_SELECTION_DONE;
-		} else {
-		    switch (self->_priv->key_last) {
-		    case ' ':
-			/* Space to next page */
-			if (!chewing_get_spaceAsSelection(self->context)) {
-			    break;
-			}
-		    case IBUS_Left:
-		    case IBUS_KP_Left:
-		    case IBUS_Right:
-		    case IBUS_KP_Right:
-			self->inputMode =
-			    CHEWING_INPUT_MODE_SELECTING_CONTINUE;
-			break;
-		    default:
-			break;
-		    }
-		}
-		break;
-	    case CHEWING_INPUT_MODE_SELECTING_CONTINUE:
-		break;
-	    case CHEWING_INPUT_MODE_SELECTION_DONE:
-		/* One of selection keys is pressed */
-		break;
-	    }
-	}
-
-	if (totalChoice + chewing_buffer_Len(self->context) +
-	    zhuyin_count == 0) {
-	    /* If preedit buffer is empty, then enter BYPASS mode. */
-	    /* So cursor keys can be used freely. */
-	    self->inputMode = CHEWING_INPUT_MODE_BYPASS;
-	    self->_priv->zhuyin_latest[0] = '\0';
-	}
-	g_free(str_ptr);
-	IBUS_CHEWING_LOG(DEBUG,
-			 "determine_input_mode() return: zhuyin_latest=%s zhuyin_tone=%d inputMode=%d",
-			 self->_priv->zhuyin_latest, zhuyin_tone,
-			 self->inputMode);
-    }
-
-    /*
-     * Clean chewing buffer
-     */
-    protected void clean_chewing_buffer(self) {
-	/* Save the orig Esc clean buffer state */
-	gint origState = chewing_get_escCleanAllBuf(self->context);
-	chewing_set_escCleanAllBuf(self->context, TRUE);
-	chewing_handle_Esc(self->context);
-	chewing_set_escCleanAllBuf(self->context, origState);
-    }
-
-    /* commit string */
-    protected gboolean commit(self) {
-	gchar *commit_string = chewing_commit_String(self->context);
-	IBUS_CHEWING_LOG(DEBUG, "commit() commit:%s", commit_string);
-	IBusText *iText =
-	    g_object_ref_sink(ibus_text_new_from_string(commit_string));
-	ibus_engine_commit_text(IBUS_ENGINE(self), iText);
-	//self->hasCommit = 1;
-	g_object_unref(iText);
-	chewing_free(commit_string);
-
-	if ((self->_priv->statusFlags & ENGINE_FLAG_FORCE_COMMIT)) {
-	    IBUS_CHEWING_LOG(DEBUG, "commit(): Force commit, implies chewing buffer need to be cleaned.");
-	    self_clean_chewing_buffer(self);
-	    ibus_chewing_engine_clear_status_flag(self,
-						  ENGINE_FLAG_FORCE_COMMIT);
-	}
-	return TRUE;
-    }
-
-    /**
-     * check_commit:
-     *
-     * Invoke commit() if NEED_COMMIT and commit flag is TRUE.
-     */
-    protected gboolean check_commit(self) {
-	gint isCommit = chewing_commit_Check(self->context);
-	gint committed = FALSE;
-	IBUS_CHEWING_LOG(INFO, "check_commit() %s statusFlags=%x",
-			 (isCommit) ? "TRUE" : "FALSE",
-			 self->_priv->statusFlags);
-	if (isCommit
-	    && (self->_priv->statusFlags & ENGINE_FLAG_NEED_COMMIT)) {
-	    self_commit(self);
-	    committed = TRUE;
-	}
-	if (!chewing_buffer_Check(self->context)) {
-	    /* Buffer is empty, safe to clear the ENGINE_FLAG_NEED_COMMIT */
-	    ibus_chewing_engine_clear_status_flag(self,
-						  ENGINE_FLAG_NEED_COMMIT);
-	}
-	return committed;
-    }
-
-    /**
-     * force_commit:
-     *
-     * Simulate key combos to commit current preedit.
-     * This is triggered by:
-     * + Press text selection key combos, such as Shift-(ArrowKeys)
-     *
-     *  Note: From IBus 1.3, focus-out event is already been handled by
-     *  ibus_engine_update_preedit_text_with_mode()
-     *
-     */
-    protected void force_commit(self) {
-	IBUS_CHEWING_LOG(INFO, "force_commit(): buffer=%d, commit=%d statusFlags=%x",
-			 chewing_buffer_Check(self->context),
-			 chewing_commit_Check(self->context),
-			 self->_priv->statusFlags);
-	/* Close candidate window */
-	if (self->_priv->statusFlags & ENGINE_FLAG_SHOW_CANDIDATE) {
-	    chewing_handle_Esc(self->context);
-	    ibus_chewing_engine_clear_status_flag(self,
-						  ENGINE_FLAG_SHOW_CANDIDATE);
-	}
-	/* Remove the incomplete zhuyin symbol */
-	if (self->inputMode == CHEWING_INPUT_MODE_EDITING)
-	    chewing_handle_Esc(self->context);
-	if (chewing_buffer_Check(self->context)) {
-	    chewing_handle_Enter(self->context);
-	    IBUS_CHEWING_LOG(DEBUG,
-			     "force_commit(): buffer is not empty.");
-	    ibus_chewing_engine_set_status_flag(self,
-						ENGINE_FLAG_FORCE_COMMIT);
-	}
-    }
-
 
     /*============================================
      * Overridden Parent (IBusEngine) methods
@@ -1038,30 +527,29 @@ class IBus:Chewing:Engine from IBus:Engine {
 	Self *self = SELF(engine);
 
 	/* Always clean buffer */
-	self_clean_chewing_buffer(self);
-	ibus_chewing_engine_clear_status_flag(self,
-					      ENGINE_FLAG_FORCE_COMMIT |
-					      ENGINE_FLAG_NEED_COMMIT);
+	ibus_chewing_pre_edit_clear(self->icPreEdit);
 
 	ibus_lookup_table_clear(self->table);
-	/* Save KBType type, becaue chewing_Reset() will reset it to default.
+	/* Save KBType type, because chewing_Reset() will reset it to default.
 	 */
-	int kbType = chewing_get_KBType(self->context);
-	chewing_Reset(self->context);
-	chewing_set_KBType(self->context, kbType);
+	int kbType = chewing_get_KBType(self->icPreEdit->context);
+	chewing_Reset(self->icPreEdit->context);
+	chewing_set_KBType(self->icPreEdit->context, kbType);
+#ifndef UNIT_TEST	
 	ibus_engine_hide_auxiliary_text(engine);
 	ibus_engine_hide_lookup_table(engine);
 	ibus_engine_update_preedit_text(engine,
 					SELF_GET_CLASS(self)->emptyText, 0,
 					FALSE);
-    }
+#endif     
+     }
 
   override(IBus:Engine) void
      page_up(IBus:Engine * engine) {
 	Self *self = SELF(engine);
-	if (self_is_password(self))
+	if (is_password(self))
 	    return;
-	chewing_handle_PageUp(self->context);
+	ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Page_Up, 0);
 	self_update(self);
     }
 
@@ -1069,27 +557,27 @@ class IBus:Chewing:Engine from IBus:Engine {
   override(IBus:Engine) void
      page_down(IBus:Engine * engine) {
 	Self *self = SELF(engine);
-	if (self_is_password(self))
+	if (is_password(self))
 	    return;
-	chewing_handle_PageDown(self->context);
+	ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Page_Down, 0);
 	self_update(self);
     }
 
   override(IBus:Engine) void
      cursor_up(IBus:Engine * engine) {
 	Self *self = SELF(engine);
-	if (self_is_password(self))
+	if (is_password(self))
 	    return;
-	chewing_handle_Up(self->context);
+	ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Up, 0);
 	self_update(self);
     }
 
   override(IBus:Engine) void
      cursor_down(IBus:Engine * engine) {
 	Self *self = SELF(engine);
-	if (self_is_password(self))
+	if (is_password(self))
 	    return;
-	chewing_handle_Down(self->context);
+	ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Down, 0);
 	self_update(self);
     }
 
@@ -1142,12 +630,12 @@ class IBus:Chewing:Engine from IBus:Engine {
 }
 
 %h{
-    void ibus_chewing_engine_enable(IBusChewingEngine *self);
-    void ibus_chewing_engine_disable(IBusChewingEngine *self);
-    void ibus_chewing_engine_focus_in(IBusChewingEngine *self);
-    void ibus_chewing_engine_focus_out(IBusChewingEngine *self);
-    gboolean ibus_chewing_engine_process_key_event(IBusEngine *self,
-	    guint keysym,
+void ibus_chewing_engine_enable(IBusChewingEngine *self);
+void ibus_chewing_engine_disable(IBusChewingEngine *self);
+void ibus_chewing_engine_focus_in(IBusChewingEngine *self);
+void ibus_chewing_engine_focus_out(IBusChewingEngine *self);
+gboolean ibus_chewing_engine_process_key_event(IBusEngine *self,
+	    guint key_sym,
 	    guint keycode,
 	    guint modifiers);
 %}

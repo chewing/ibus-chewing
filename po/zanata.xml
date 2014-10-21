@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <config xmlns="http://zanata.org/namespace/config/">
-  <url>https://translate.zanata.org/zanata/</url>
+  <url>https://fedora.zanata.org/</url>
   <project>ibus-chewing</project>
   <project-version>master</project-version>
   <project-type>gettext</project-type>
   <locales>
-    <locale>lv</locale>
-    <locale>ro</locale>
-    <locale>lt</locale>
-    <locale>ru</locale>
-    <locale>hu</locale>
-    <locale>hr</locale>
-    <locale map-from="es_MX">es-MX</locale>
-    <locale map-from="es_ES">es-ES</locale>
-    <locale>mai</locale>
-    <locale>id</locale>
-    <locale>mn</locale>
-    <locale map-from="zh_TW">zh-TW</locale>
-    <locale>ml</locale>
-    <locale>vi</locale>
-    <locale>fa</locale>
-    <locale>uk</locale>
-    <locale map-from="pt_PT">pt-PT</locale>
-    <locale>ms</locale>
-    <locale>mr</locale>
-    <locale>fi</locale>
-    <locale>is</locale>
-    <locale>it</locale>
-    <locale>nb</locale>
-    <locale>az</locale>
-    <locale>eo</locale>
     <locale>ar</locale>
     <locale>as</locale>
-    <locale>el</locale>
-    <locale>am</locale>
-    <locale map-from="de_DE">de-DE</locale>
-    <locale map-from="sr@latin">sr-Latn</locale>
-    <locale>eu</locale>
-    <locale>et</locale>
-    <locale>nl</locale>
-    <locale>af</locale>
-    <locale>nn</locale>
-    <locale>ja</locale>
-    <locale>tl</locale>
-    <locale>xh</locale>
-    <locale>pl</locale>
-    <locale>ca</locale>
-    <locale>fr</locale>
-    <locale map-from="sr">sr-Cyrl</locale>
-    <locale map-from="bn_IN">bn-IN</locale>
-    <locale>tr</locale>
-    <locale>bg</locale>
-    <locale map-from="de_CH">de-CH</locale>
-    <locale>pa</locale>
-    <locale>ka</locale>
-    <locale>th</locale>
-    <locale>kk</locale>
-    <locale>br</locale>
-    <locale>te</locale>
-    <locale>kn</locale>
-    <locale>anp</locale>
-    <locale>bs</locale>
-    <locale>ko</locale>
-    <locale>ga</locale>
-    <locale map-from="pt_BR">pt-BR</locale>
-    <locale>ta</locale>
-    <locale>sl</locale>
-    <locale>gu</locale>
-    <locale>cy</locale>
-    <locale>or</locale>
-    <locale>si</locale>
-    <locale map-from="bn_BD">bn-BD</locale>
-    <locale>sk</locale>
-    <locale>ky</locale>
-    <locale>gl</locale>
-    <locale map-from="zh_CN">zh-CN</locale>
-    <locale>da</locale>
-    <locale>sv</locale>
-    <locale map-from="ta_IN">ta-IN</locale>
-    <locale>nds</locale>
-    <locale>sq</locale>
-    <locale>brx</locale>
-    <locale>la</locale>
-    <locale>he</locale>
     <locale>ast</locale>
-    <locale>hi</locale>
+    <locale>bal</locale>
+    <locale>bg</locale>
+    <locale>bn</locale>
+    <locale map-from="bn_IN">bn-IN</locale>
+    <locale>bo</locale>
+    <locale>br</locale>
+    <locale>brx</locale>
+    <locale>bs</locale>
+    <locale>ca</locale>
     <locale>cs</locale>
+    <locale>cy</locale>
+    <locale>da</locale>
+    <locale>de</locale>
+    <locale>el</locale>
     <locale map-from="en_GB">en-GB</locale>
+    <locale>eo</locale>
+    <locale>es</locale>
+    <locale>et</locale>
+    <locale>eu</locale>
+    <locale>fa</locale>
+    <locale>fi</locale>
+    <locale>fr</locale>
+    <locale>gl</locale>
+    <locale>gu</locale>
+    <locale>he</locale>
+    <locale>hi</locale>
+    <locale>hu</locale>
+    <locale>ia</locale>
+    <locale>id</locale>
+    <locale>is</locale>
+    <locale>it</locale>
+    <locale>ja</locale>
+    <locale>ka</locale>
+    <locale>kk</locale>
+    <locale>km</locale>
+    <locale>kn</locale>
+    <locale>ko</locale>
+    <locale>kw</locale>
+    <locale map-from="kw_GB">kw-GB</locale>
+    <locale>kw@kkcor</locale>
+    <locale>kw@uccor</locale>
+    <locale>ky</locale>
+    <locale>lt</locale>
+    <locale>lv</locale>
+    <locale>mai</locale>
+    <locale>mk</locale>
+    <locale>ml</locale>
+    <locale>mn</locale>
+    <locale>mr</locale>
+    <locale>ms</locale>
+    <locale>nb</locale>
+    <locale>nds</locale>
+    <locale>ne</locale>
+    <locale>nl</locale>
+    <locale>nn</locale>
+    <locale>or</locale>
+    <locale>pa</locale>
+    <locale>pl</locale>
+    <locale>pt</locale>
+    <locale map-from="pt_BR">pt-BR</locale>
+    <locale>ro</locale>
+    <locale>ru</locale>
+    <locale>si</locale>
+    <locale>sk</locale>
+    <locale>sl</locale>
+    <locale>sq</locale>
+    <locale>sr</locale>
+    <locale>sr@latin</locale>
+    <locale>sv</locale>
+    <locale>ta</locale>
+    <locale>te</locale>
+    <locale>tg</locale>
+    <locale>tr</locale>
+    <locale>uk</locale>
+    <locale>ur</locale>
+    <locale>wba</locale>
+    <locale map-from="zh_CN">zh-CN</locale>
+    <locale map-from="zh_HK">zh-HK</locale>
+    <locale map-from="zh_TW">zh-TW</locale>
   </locales>
 </config>

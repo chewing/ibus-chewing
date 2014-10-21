@@ -79,19 +79,19 @@ void QUOTE_ME_test()
 void STRING_IS_EMPTY_test()
 {
     gchar *nulStr=NULL;
-    g_assert_true( STRING_IS_EMPTY(nulStr));
-    g_assert_true( STRING_IS_EMPTY(""));
-    g_assert_false(STRING_IS_EMPTY("NULL"));
+    g_assert( STRING_IS_EMPTY(nulStr));
+    g_assert( STRING_IS_EMPTY(""));
+    g_assert(!STRING_IS_EMPTY("NULL"));
 }
 
 void STRING_EQUALS_test()
 {
     gchar *nulStr=NULL;
-    g_assert_true(STRING_EQUALS("", ""));
-    g_assert_true(!STRING_EQUALS("", nulStr));
-    g_assert_true(STRING_EQUALS(nulStr, nulStr));
-    g_assert_true(!STRING_EQUALS("HI","Hi"));
-    g_assert_true(STRING_EQUALS("YO\"","YO\""));
+    g_assert(STRING_EQUALS("", ""));
+    g_assert(!STRING_EQUALS("", nulStr));
+    g_assert(STRING_EQUALS(nulStr, nulStr));
+    g_assert(!STRING_EQUALS("HI","Hi"));
+    g_assert(STRING_EQUALS("YO\"","YO\""));
 }
 
 void mkdg_xml_attr_append_test()

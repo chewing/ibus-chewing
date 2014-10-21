@@ -28,13 +28,14 @@
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
+
 #define ZHUYIN_BUFFER_SIZE 12
 
 #define CHEWING_CHECK_VERSION(major,minor,patch)	\
-    (CHEWING_MAJOR_VERSION > (major) || \
-     (CHEWING_MAJOR_VERSION == (major) && CHEWING_MINOR_VERSION > (minor)) || \
-     (CHEWING_MAJOR_VERSION == (major) && CHEWING_MINOR_VERSION == (minor) && \
-      CHEWING_MICRO_VERSION >= (patch) \
+    (CHEWING_VERSION_MAJOR > (major) || \
+     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR > (minor)) || \
+     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR == (minor) && \
+      CHEWING_VERSION_PATCH >= (patch) \
       )\
     )
 
@@ -42,6 +43,10 @@
 
 #define IBUS_CHEWING_LOG(level, msg, args...) \
     mkdg_log_domain(IBUS_CHEWING_LOG_DOMAIN, level, msg, ##args)
+
+typedef guint KSym;
+
+typedef guint KeyModifiers;
 
 typedef enum  {
     CHEWING_KBTYPE_INVALID = -1,
@@ -58,13 +63,13 @@ typedef enum  {
 } ChewingKbType;
 
 
-gint get_tone(ChewingKbType kbType, guint keysym);
+gint get_tone(ChewingKbType kbType, KSym k);
 
 void add_tone(char *str, gint tone);
 
-guint keysym_KP_to_normal(guint keysym);
+KSym key_sym_KP_to_normal(KSym k);
 
-const char *keyName_get(guint keyval);
+const char *key_sym_get_name(KSym k);
 
 gboolean is_caps_led_on(Display * pDisplay);
 
