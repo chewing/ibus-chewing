@@ -98,6 +98,8 @@ extern GtkResponseType button_responses[];
 #define is_caps_lock(self) (is_caps_led_on(self->_priv->pDisplay))
 
 #define ibus_text_is_empty(iText) ((iText==NULL) || STRING_IS_EMPTY(iText->text))
+
+#define is_plain_chewing ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "plain-zhuyin")
 %}
 
 %privateheader{
@@ -378,11 +380,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 			 chewing_cand_CurrentPage(self->icPreEdit->context));
 	guint count=ibus_chewing_lookup_table_update(self->table,self->icPreEdit->context);
 	IBUS_CHEWING_LOG(INFO, "update_lookup_table() %u",count);
-	if (count>0){
-	    self_show_lookup_table(self, TRUE);
-	} else {
-	    self_show_lookup_table(self, FALSE);
-	}
+	self_show_lookup_table(self, (count>0));
     }
 
     protected void update(self) {

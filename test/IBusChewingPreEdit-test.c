@@ -97,10 +97,26 @@ void process_key_buffer_full_handling_test()
     check_pre_edit("", "");
 }
 
-#if 0
-void ibus_chewing_set_ibus_engine(IBusChewingPreEdit * self,
-				  IBusEngine * iEngine);
+void plain_zhuyin_test()
+{
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", TRUE);
+    printf("###2 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
 
+    printf("plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+    key_press_from_string("y ");
+    /* The default is the most frequently used character, not
+     * necessary "資"
+     */
+    /* check_pre_edit("","資"); */
+    key_press_from_string("4");
+    check_pre_edit("吱","");
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+}
+
+#if 0
 guint ibus_chewing_pre_edit_length(self);
 guint ibus_chewing_pre_edit_word_limit(IBusChewingPreEdit * self);
 guint ibus_chewing_pre_edit_word_length(IBusChewingPreEdit * self);
@@ -128,13 +144,14 @@ gint main(gint argc, gchar ** argv)
     mkdg_log_set_level(DEBUG);
     self = ibus_chewing_pre_edit_new(backend);
 
-    ibus_chewing_pre_edit_set_property_int(self,
+    ibus_chewing_pre_edit_set_apply_property_int(self,
 	    "max-chi-symbol-len", 8);
-    ibus_chewing_pre_edit_apply_property(self,"max-chi-symbol-len");
 
-    ibus_chewing_pre_edit_set_property_boolean(self,
+    ibus_chewing_pre_edit_set_apply_property_string(self,
+	    "sel-keys", "1234567890");
+
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
 	    "plain-zhuyin", FALSE);
-    ibus_chewing_pre_edit_apply_property(self,"plain-zhuyin");
 
     g_assert(self != NULL);
 
@@ -153,6 +170,17 @@ gint main(gint argc, gchar ** argv)
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/process_key_buffer_full_handling_test",
 	 process_key_buffer_full_handling_test);
+    printf("###1 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", TRUE);
+    printf("###2 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+
+    g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",
+	 plain_zhuyin_test);
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", FALSE);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/free_test", free_test);
