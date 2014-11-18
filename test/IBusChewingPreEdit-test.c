@@ -18,9 +18,30 @@ void free_test()
 
 void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers)
 {
-    ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
-    ibus_chewing_pre_edit_process_key(self, keySym,
-				      modifiers | IBUS_RELEASE_MASK);
+    if (modifiers & IBUS_SHIFT_MASK) {
+	ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L, 0);
+    }
+    switch (keySym) {
+    case IBUS_KEY_Shift_L:
+    case IBUS_KEY_Shift_R:
+	ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
+	ibus_chewing_pre_edit_process_key(self, keySym,
+					  modifiers | IBUS_RELEASE_MASK |
+					  IBUS_SHIFT_MASK);
+	break;
+    default:
+	ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
+	ibus_chewing_pre_edit_process_key(self, keySym,
+					  modifiers | IBUS_RELEASE_MASK);
+	break;
+
+    }
+    if (modifiers & IBUS_SHIFT_MASK) {
+	ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
+					  IBUS_SHIFT_MASK |
+					  IBUS_RELEASE_MASK);
+    }
+
     printf
 	("key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n",
 	 keySym, key_sym_get_name(keySym), modifiers,
@@ -54,6 +75,31 @@ void process_key_normal_test()
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     check_pre_edit("中文", "");
     g_assert_cmpint(0, ==, self->wordLen);
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+
+}
+
+/* 他不重，他是我兄弟。 */
+void process_key_text_with_symbol_test()
+{
+    key_press_from_string("w8 ");
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("2");
+
+    key_press_from_string("1j65j/4");
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("3");
+
+    key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);
+
+    key_press_from_string("w8 g4ji3vm/ 2u4");
+
+    key_press_from_key_sym(IBUS_KEY_greater, IBUS_SHIFT_MASK);
+    key_press_from_key_sym(IBUS_KEY_Return, 0);
+
+    check_pre_edit("他不重，他是我兄弟。", "");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -91,7 +137,7 @@ void process_key_buffer_full_handling_test()
     key_press_from_key_sym(',', IBUS_SHIFT_MASK);
     key_press_from_string("c.4au04u.3g0 qi ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
-    check_pre_edit("我家門前有小河，後面有山坡","");
+    check_pre_edit("我家門前有小河，後面有山坡", "");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -100,17 +146,24 @@ void process_key_buffer_full_handling_test()
 void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", TRUE);
-    printf("###2 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+						     "plain-zhuyin", TRUE);
 
-    printf("plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+    printf("plain-zhuyin=%x\n",
+	   ibus_chewing_pre_edit_get_property_boolean(self,
+						      "plain-zhuyin"));
+
     key_press_from_string("y ");
+
+    /* Candidate window should be shown */
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
     /* The default is the most frequently used character, not
      * necessary "資"
      */
     /* check_pre_edit("","資"); */
     key_press_from_string("4");
-    check_pre_edit("吱","");
+    check_pre_edit("吱", "");
+    /* Candidate window should be hidden */
+    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -145,19 +198,25 @@ gint main(gint argc, gchar ** argv)
     self = ibus_chewing_pre_edit_new(backend);
 
     ibus_chewing_pre_edit_set_apply_property_int(self,
-	    "max-chi-symbol-len", 8);
+						 "max-chi-symbol-len", 8);
 
     ibus_chewing_pre_edit_set_apply_property_string(self,
-	    "sel-keys", "1234567890");
+						    "sel-keys",
+						    "1234567890");
 
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", FALSE);
+						     "plain-zhuyin",
+						     FALSE);
 
     g_assert(self != NULL);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/process_key_normal_test",
 	 process_key_normal_test);
+
+    g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/process_key_text_with_symbol_test",
+	 process_key_text_with_symbol_test);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/process_key_mix_test",
@@ -170,17 +229,19 @@ gint main(gint argc, gchar ** argv)
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/process_key_buffer_full_handling_test",
 	 process_key_buffer_full_handling_test);
-    printf("###1 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
+
+    printf("###2 plain-zhuyin=%x\n",
+	   ibus_chewing_pre_edit_get_property_boolean(self,
+						      "plain-zhuyin"));
 
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", TRUE);
-    printf("###2 plain-zhuyin=%x\n",ibus_chewing_pre_edit_get_property_boolean(self,"plain-zhuyin"));
-
+						     "plain-zhuyin", TRUE);
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",
 	 plain_zhuyin_test);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", FALSE);
+						     "plain-zhuyin",
+						     FALSE);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/free_test", free_test);

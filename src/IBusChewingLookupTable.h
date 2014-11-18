@@ -45,5 +45,7 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
 				      ChewingContext * context);
 
 guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
-				      ChewingContext * context);
+	IBusChewingProperties * iProperties,
+	ChewingContext * context);
+
 #endif				/* _IBUS_CHEWING_LOOKUP_TABLE_H_ */

@@ -35,7 +35,6 @@ requires 2.0.0
 #include "IBusChewingUtil.h"
 #include "GSettingsBackend.h"
 #include "IBusChewingProperties.h"
-#include "IBusChewingLookupTable.h"
 #include "IBusChewingPreEdit.h"
 %}
 
@@ -76,9 +75,14 @@ enum ENGINE_FLAG {
     INITIALIZED = 		0x1,
     ENABLED =			0x2,
     FOCUS_IN = 			0x4,
-    SHOW_CANDIDATE = 		0x8,
-    IS_PASSWORD = 		0x10,
-    PROPERTIES_REGISTERED = 	0x20,
+    IS_PASSWORD = 		0x8,
+    PROPERTIES_REGISTERED = 	0x10,
+    CAP_PREEDIT_TEXT      =     0x20,
+    CAP_AUXILIARY_TEXT    =     0x40,
+    CAP_LOOKUP_TABLE      =     0x80,
+    CAP_FOCUS		  =     0x100,
+    CAP_PROPERTY          =     0x200,
+    CAP_SORROUNDING_TEXT  =     0x400
 } Engine:Flag;
 
 %h{
@@ -188,9 +192,6 @@ class IBus:Chewing:Engine from IBus:Engine {
     private EngineFlag statusFlags = 0;
 
     private ChewingInputStyle inputStyle;
-
-    protected IBusLookupTable *table = NULL
-    destroywith ibus_lookup_table_clear;
 
     public IBusProperty *chieng_prop = {
 	g_object_ref_sink(ibus_property_new
@@ -324,11 +325,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 #endif				/* GSETTINGS_SUPPORT */
 	    self->icPreEdit = ibus_chewing_pre_edit_new(backend);
 	}
-	if (self->table ==NULL){
-	    self->table= 
-		ibus_chewing_lookup_table_new(self->icPreEdit->iProperties, 
-			self->icPreEdit->context);
-	}
 	ibus_chewing_pre_edit_use_all_configure(self->icPreEdit);
 
 	/* Input style */
@@ -352,35 +348,25 @@ class IBus:Chewing:Engine from IBus:Engine {
 	self_refresh_property(self, "chewing_chieng_prop");
     }
 
-    private void show_lookup_table(self, gboolean isShow) {
-	IBUS_CHEWING_LOG(DEBUG, "show_lookup_table() %x", isShow);
+    private void update_lookup_table(self) {
+	IBUS_CHEWING_LOG(DEBUG, "update_lookup_table() CurrentPage=%d",
+			 chewing_cand_CurrentPage(self->icPreEdit->context));
+
+	gboolean isShow=ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_TABLE_SHOW);
+
 	if (isShow) {
-	    ibus_chewing_engine_set_status_flag(self,
-						ENGINE_FLAG_SHOW_CANDIDATE);
 #ifndef UNIT_TEST
-	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->table,
+	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->icPreEdit->iTable,
 		    isShow);
 	    ibus_engine_show_lookup_table(IBUS_ENGINE(self));
 #endif
 	} else {
-	    ibus_chewing_engine_clear_status_flag(self,
-		    ENGINE_FLAG_SHOW_CANDIDATE);
 #ifndef UNIT_TEST
-	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->table,
+	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->icPreEdit->iTable,
 		    isShow);
 	    ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
 #endif
 	}
-    }
-
-    private void update_lookup_table(self) {
-	ibus_lookup_table_clear(self->table);
-
-	IBUS_CHEWING_LOG(DEBUG, "update_lookup_table() CurrentPage=%d",
-			 chewing_cand_CurrentPage(self->icPreEdit->context));
-	guint count=ibus_chewing_lookup_table_update(self->table,self->icPreEdit->context);
-	IBUS_CHEWING_LOG(INFO, "update_lookup_table() %u",count);
-	self_show_lookup_table(self, (count>0));
     }
 
     protected void update(self) {
@@ -527,7 +513,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	/* Always clean buffer */
 	ibus_chewing_pre_edit_clear(self->icPreEdit);
 
-	ibus_lookup_table_clear(self->table);
 	/* Save KBType type, because chewing_Reset() will reset it to default.
 	 */
 	int kbType = chewing_get_KBType(self->icPreEdit->context);
@@ -606,6 +591,8 @@ class IBus:Chewing:Engine from IBus:Engine {
   override(IBus:Engine) void
      set_capabilities(IBus:Engine * engine, guint caps) {
 	Self *self = SELF(engine);
+	self->_priv->statusFlags %= ENGINE_FLAG_CAP_PREEDIT_TEXT;
+	self->_priv->statusFlags |= caps * ENGINE_FLAG_CAP_PREEDIT_TEXT;
 	IBUS_CHEWING_LOG(INFO, "set_capabilities(%x): statusFlags=%x",
 			 caps, self->_priv->statusFlags);
     }

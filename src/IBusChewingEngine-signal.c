@@ -35,7 +35,7 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
 #else
     commit_text(self);
 #endif
-    IBUS_CHEWING_LOG(INFO, "focus_in(): return");
+    IBUS_CHEWING_LOG(INFO, "focus_in() statusFlags=%x: return", self->_priv->statusFlags);
 }
 
 void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
@@ -50,6 +50,28 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
     IBUS_CHEWING_LOG(DEBUG, "focus_out(): return");
 }
 
+#if IBUS_CHECK_VERSION(1, 5, 4)
+void ibus_chewing_engine_set_content_type(IBusEngine * engine,
+	guint purpose, guint hints)
+{
+    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)",
+	    purpose, hints);
+
+    Self *self = SELF(engine);
+    if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
+	    purpose == IBUS_INPUT_PURPOSE_PIN) {
+	ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_IS_PASSWORD);
+    } else {
+	ibus_chewing_engine_clear_status_flag(self,
+		ENGINE_FLAG_IS_PASSWORD);
+    }
+}
+#endif
+
+/**
+ * Display text update subroutines
+ *
+ */
 
 void parent_commit_text(IBusEngine * iEngine)
 {

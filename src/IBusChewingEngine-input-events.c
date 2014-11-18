@@ -4,8 +4,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 					       KSym keySym, guint keycode,
 					       KeyModifiers unmaskedMod)
 {
-    IBUS_CHEWING_LOG(MSG,
-		     "* process_key_event(-,%x(%s),%x,%x) %s",
+    IBUS_CHEWING_LOG(INFO, "******** process_key_event(-,%x(%s),%x,%x) %s",
 		     keySym, key_sym_get_name(keySym), keycode,
 		     unmaskedMod, modifiers_to_string(unmaskedMod));
 
@@ -21,6 +20,10 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
     gboolean result =
 	ibus_chewing_pre_edit_process_key(self->icPreEdit, kSym,
 					  unmaskedMod);
+
+    IBUS_CHEWING_LOG(MSG,
+	    "process_key_event() result=%d",
+	    result);
     self_update(self);
     
     return result;
@@ -44,8 +47,8 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
 	IBUS_CHEWING_LOG(DEBUG, "candidate_clicked() index out of ranged");
 	return;
     }
-    if (ibus_chewing_engine_has_status_flag
-	(self, ENGINE_FLAG_SHOW_CANDIDATE)) {
+    if (ibus_chewing_pre_edit_has_flag
+	(self->icPreEdit, FLAG_TABLE_SHOW)) {
 	gint *selKeys = chewing_get_selKey(self->icPreEdit->context);
 	KSym k = (KSym) selKeys[index];
 	ibus_chewing_pre_edit_process_key(self->icPreEdit, k, 0);
@@ -122,20 +125,4 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	self_refresh_property(self, prop_name);
 }
 
-#if IBUS_CHECK_VERSION(1, 5, 4)
-void ibus_chewing_engine_set_content_type(IBusEngine * engine,
-					  guint purpose, guint hints)
-{
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)",
-		     purpose, hints);
 
-    Self *self = SELF(engine);
-    if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
-	purpose == IBUS_INPUT_PURPOSE_PIN) {
-	ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_IS_PASSWORD);
-    } else {
-	ibus_chewing_engine_clear_status_flag(self,
-					      ENGINE_FLAG_IS_PASSWORD);
-    }
-}
-#endif

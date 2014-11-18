@@ -6,7 +6,7 @@ IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
 					       ChewingContext * context)
 {
     gint size = mkdg_properties_get_int_by_key
-			(iProperties->properties, "cand-per-page");
+	(iProperties->properties, "cand-per-page");
     gboolean cursorShow = FALSE;
     gboolean wrapAround = TRUE;
     IBusLookupTable *iTable = ibus_lookup_table_new
@@ -35,10 +35,10 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
     gint selKSym[MAX_SELKEY];
     const gchar *selKeyStr =
 	mkdg_properties_get_string_by_key(iProperties->properties,
-					       "sel-keys");
+					  "sel-keys");
     gint candPerPage =
 	mkdg_properties_get_int_by_key(iProperties->properties,
-					    "cand-per-page");
+				       "cand-per-page");
 
     int len = MIN(strlen(selKeyStr), MAX_SELKEY);
     len = MIN(len, candPerPage);
@@ -46,7 +46,7 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
     int i;
     ibus_lookup_table_clear(iTable);
     for (i = 0; i < len; i++) {
-	selKSym[i]=(gint)selKeyStr[i];
+	selKSym[i] = (gint) selKeyStr[i];
 	iText = g_object_ref_sink(ibus_text_new_from_unichar
 				  ((gunichar) selKeyStr[i]));
 	ibus_lookup_table_set_label(iTable, i, iText);
@@ -56,18 +56,24 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
 }
 
 guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
-				      ChewingContext * context)
+				       IBusChewingProperties * iProperties,
+				       ChewingContext * context)
 {
-    IBusText *iText=NULL;
+    ibus_chewing_lookup_table_resize(iTable, iProperties, context);
+    IBusText *iText = NULL;
     guint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);
+    gint totalChoice = chewing_cand_TotalChoice(context);
+    gint currentPage = chewing_cand_CurrentPage(context);
+    IBUS_CHEWING_LOG(INFO,
+		     "***** ibus_chewing_lookup_table_update(): choicePerPage=%d, totalChoice=%d, currentPage=%d",
+		     choicePerPage,totalChoice, currentPage);
     chewing_cand_Enumerate(context);
     for (i = 0; i < choicePerPage; i++) {
 	if (chewing_cand_hasNext(context)) {
 	    gchar *candidate = chewing_cand_String(context);
 	    iText =
-		g_object_ref_sink(ibus_text_new_from_string
-				  (candidate));
+		g_object_ref_sink(ibus_text_new_from_string(candidate));
 	    ibus_lookup_table_append_candidate(iTable, iText);
 	    g_free(candidate);
 	    g_object_unref(iText);
@@ -77,4 +83,3 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
     }
     return i;
 }
-

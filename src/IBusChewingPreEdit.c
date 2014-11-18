@@ -265,7 +265,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
 	break;
     }
     IBUS_CHEWING_LOG(DEBUG,
-		     "self_handle_key_sym_default() ret=%d response=%d\n",
+		     "self_handle_key_sym_default() ret=%d response=%d",
 		     ret, response);
     /* Restore easySymbolInput */
     chewing_set_easySymbolInput(self->context, easySymbolInput);
@@ -347,7 +347,7 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
 EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
 				KeyModifiers unmaskedMod)
 {
-    filter_modifiers(0);
+    filter_modifiers(IBUS_SHIFT_MASK);
 
     gboolean shiftIsToggleChinese =
 	ibus_chewing_pre_edit_get_property_boolean(self,
@@ -360,6 +360,14 @@ EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
     if (!event_is_released(unmaskedMod)) {
 	return EVENT_RESPONSE_ABSORB;
     }
+
+    /* keyLast != Shift means Shift is just part of combination,
+     * thus should not be recognized as single Shift key
+     */
+    if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R){
+	return EVENT_RESPONSE_ABSORB;
+    }
+
 #if !CHEWING_CHECK_VERSION(0,4,0)
     /* When Chi->Eng with incomplete character */
     if (is_chinese && !is_zh_char_completed) {
@@ -458,6 +466,10 @@ EventResponse self_handle_escape(IBusChewingPreEdit * self, KSym kSym,
 				 KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    IBUS_CHEWING_LOG(INFO,
+	    "* self_handle_escape(-,%x(%s),%x(%s))",
+	    kSym, key_sym_get_name(kSym), unmaskedMod,
+	    modifiers_to_string(unmaskedMod));
 
     if (buffer_is_empty) {
 	return EVENT_RESPONSE_IGNORE;
@@ -518,6 +530,10 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
 			       KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    IBUS_CHEWING_LOG(INFO,
+	    "* self_handle_down(-,%x(%s),%x(%s))",
+	    kSym, key_sym_get_name(kSym), unmaskedMod,
+	    modifiers_to_string(unmaskedMod));
 
     if (buffer_is_empty) {
 	return EVENT_RESPONSE_IGNORE;
@@ -689,7 +705,7 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym)
 gboolean ibus_chewing_pre_edit_process_key
     (IBusChewingPreEdit * self, KSym kSym, KeyModifiers unmaskedMod) {
     IBUS_CHEWING_LOG(MSG,
-		     "* ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))",
+		     "***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))",
 		     kSym, key_sym_get_name(kSym),
 		     unmaskedMod, modifiers_to_string(unmaskedMod));
     gboolean bufferEmpty =
@@ -720,27 +736,43 @@ gboolean ibus_chewing_pre_edit_process_key
     }
     /* EVENT_RESPONSE_PROCESS */
     IBUS_CHEWING_LOG(INFO,
-		     "ibus_chewing_pre_edit_process_key() Buffer_Check=%d bpmf_check=%d commit_check=%d total_choice=%d is_plain_zhuyin=%x",
+		     "ibus_chewing_pre_edit_process_key() flags=%x Buffer_Check=%d bpmf_check=%d commit_check=%d total_choice=%d is_plain_zhuyin=%x",
+		     self->flags,
 		     chewing_buffer_Check(self->context),
 		     bpmf_check,
 		     chewing_commit_Check(self->context),
 		     total_choice, is_plain_zhuyin);
 
     if (is_plain_zhuyin && !bpmf_check) {
-	if (!ibus_chewing_pre_edit_has_flag(self,FLAG_TABLE_SHOW)){
+	if (kSym == IBUS_KEY_Escape){
+	    ibus_chewing_pre_edit_clear_pre_edit(self);
+	}else if (!ibus_chewing_pre_edit_has_flag(self,FLAG_TABLE_SHOW)){
 	    /* Character completed, and lookup table is not show */
 	    /* Then open lookup table */
 	    handle_key(IBUS_KEY_Down,0);
-	    ibus_chewing_pre_edit_set_flag(self,FLAG_TABLE_SHOW);
 	}else if (total_choice==0) {
 	    /* lookup table is shown */
 	    /* but selection done */
 	    handle_key(IBUS_KEY_Return,0);
-	    ibus_chewing_pre_edit_clear_flag(self,FLAG_TABLE_SHOW);
 	}
     }
     ibus_chewing_pre_edit_update(self);
-    ibus_chewing_lookup_table_update(self->iTable, self->context);
+
+    guint candidateCount=ibus_chewing_lookup_table_update(self->iTable, self->iProperties, self->context);
+    IBUS_CHEWING_LOG(INFO,
+	    "ibus_chewing_pre_edit_process_key() candidateCount=%d", candidateCount);
+
+    if (candidateCount){
+	if (is_plain_zhuyin && (total_choice==1)){
+	    /* Just one candidate, no need to choose */
+	    handle_key(IBUS_KEY_Return,0);
+	    ibus_chewing_pre_edit_clear_flag(self,FLAG_TABLE_SHOW);
+	}else{
+	    ibus_chewing_pre_edit_set_flag(self,FLAG_TABLE_SHOW);
+	}
+    }else{
+	ibus_chewing_pre_edit_clear_flag(self,FLAG_TABLE_SHOW);
+    }
     return TRUE;
 }
 
