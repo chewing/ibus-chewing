@@ -104,7 +104,7 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self);
 
 #define ibus_chewing_pre_edit_apply_property(self,propertyKey) mkdg_properties_apply_by_key(self->iProperties->properties, propertyKey, NULL)
 
-#define ibus_chewing_pre_edit_set_apply_property_boolean(self, propertyKey,boolValue) ibus_chewing_pre_edit_set_property_boolean(self,propertyKey,boolValue); ibus_chewing_pre_edit_apply_property(self,propertyKey) 
+#define ibus_chewing_pre_edit_set_apply_property_boolean(self, propertyKey,boolValue) ibus_chewing_pre_edit_set_property_boolean(self,propertyKey,boolValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)
 
 #define ibus_chewing_pre_edit_set_apply_property_int(self, propertyKey,intValue) ibus_chewing_pre_edit_set_property_int(self,propertyKey,intValue); ibus_chewing_pre_edit_apply_property(self,propertyKey) 
 
@@ -167,10 +167,15 @@ KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit * self,
 					       KSym keySym, guint keyCode,
 					       KeyModifiers unmaskedMod);
 
+/**
+ * ibus_chewing_bopomofo_check(ChewingContext *context)
+ * @returns: 1 if bopomofo buffer is non-empty; 0 if bopomofo buffer is empty.
+ *
+ */
 #if CHEWING_CHECK_VERSION(0,4,0)
 #define ibus_chewing_bopomofo_check chewing_bopomofo_Check
 #else
-#define ibus_chewing_bopomofo_check chewing_zuin_Check
+#define ibus_chewing_bopomofo_check !chewing_zuin_Check
 #endif
 #define ibus_chewing_bopomofo_string chewing_zuin_String
 

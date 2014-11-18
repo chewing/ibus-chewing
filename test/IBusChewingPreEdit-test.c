@@ -1,4 +1,5 @@
 #include <string.h>
+#include <glib.h>
 #include "IBusChewingPreEdit.h"
 #include "IBusChewingUtil.h"
 #ifdef GSETTINGS_SUPPORT
@@ -147,10 +148,7 @@ void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "plain-zhuyin", TRUE);
-
-    printf("plain-zhuyin=%x\n",
-	   ibus_chewing_pre_edit_get_property_boolean(self,
-						      "plain-zhuyin"));
+    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
 
     key_press_from_string("y ");
 
@@ -164,6 +162,30 @@ void plain_zhuyin_test()
     check_pre_edit("吱", "");
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+}
+
+/*  很好，*/
+void plain_zhuyin_shift_symbol_test()
+{
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", TRUE);
+    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
+
+    key_press_from_string("cp31cl31");
+
+    /* ，*/
+    key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);
+    /* Candidate window should be shown */
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_string("1");
+
+    /* Candidate window should be hidden */
+    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+
+    check_pre_edit("很好，", "");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -242,6 +264,9 @@ gint main(gint argc, gchar ** argv)
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "plain-zhuyin",
 						     FALSE);
+    g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_shift_symbol_test",
+	 plain_zhuyin_shift_symbol_test);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/free_test", free_test);

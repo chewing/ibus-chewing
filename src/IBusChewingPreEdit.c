@@ -4,11 +4,9 @@
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
 
-/* ibus_chewing_bopomofo_check==1 means word is completed */
-#define is_zh_char_completed ibus_chewing_bopomofo_check(self->context)
 #define is_plain_zhuyin ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin")
-
 #define bpmf_check ibus_chewing_bopomofo_check(self->context)
+
 #define total_choice chewing_cand_TotalChoice(self->context)
 
 /**************************************
@@ -336,7 +334,7 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
     }
 #if !CHEWING_CHECK_VERSION(0,4,0)
     /* When Chi->Eng with incomplete character */
-    if (is_chinese && !is_zh_char_completed) {
+    if (is_chinese && bpmf_check) {
 	ibus_chewing_pre_edit_force_commit(self);
     }
 #endif
@@ -370,7 +368,7 @@ EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
 
 #if !CHEWING_CHECK_VERSION(0,4,0)
     /* When Chi->Eng with incomplete character */
-    if (is_chinese && !is_zh_char_completed) {
+    if (is_chinese && bpmf_check) {
 	ibus_chewing_pre_edit_force_commit(self);
     }
 #endif
@@ -756,6 +754,15 @@ gboolean ibus_chewing_pre_edit_process_key
 	    handle_key(IBUS_KEY_Return,0);
 	}
     }
+    /* EVENT_RESPONSE_PROCESS */
+    IBUS_CHEWING_LOG(INFO,
+	    "ibus_chewing_pre_edit_process_key() flags=%x Buffer_Check=%d bpmf_check=%d commit_check=%d total_choice=%d",
+	    self->flags,
+	    chewing_buffer_Check(self->context),
+	    bpmf_check,
+	    chewing_commit_Check(self->context),
+	    total_choice);
+
     ibus_chewing_pre_edit_update(self);
 
     guint candidateCount=ibus_chewing_lookup_table_update(self->iTable, self->iProperties, self->context);
