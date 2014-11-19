@@ -35,7 +35,8 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
 #else
     commit_text(self);
 #endif
-    IBUS_CHEWING_LOG(INFO, "focus_in() statusFlags=%x: return", self->_priv->statusFlags);
+    IBUS_CHEWING_LOG(INFO, "focus_in() statusFlags=%x: return",
+		     self->_priv->statusFlags);
 }
 
 void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
@@ -52,18 +53,18 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
 
 #if IBUS_CHECK_VERSION(1, 5, 4)
 void ibus_chewing_engine_set_content_type(IBusEngine * engine,
-	guint purpose, guint hints)
+					  guint purpose, guint hints)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)",
-	    purpose, hints);
+		     purpose, hints);
 
     Self *self = SELF(engine);
     if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
-	    purpose == IBUS_INPUT_PURPOSE_PIN) {
+	purpose == IBUS_INPUT_PURPOSE_PIN) {
 	ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_IS_PASSWORD);
     } else {
 	ibus_chewing_engine_clear_status_flag(self,
-		ENGINE_FLAG_IS_PASSWORD);
+					      ENGINE_FLAG_IS_PASSWORD);
     }
 }
 #endif
@@ -86,9 +87,10 @@ void parent_commit_text(IBusEngine * iEngine)
 #endif
 }
 
-void parent_update_preedit_text
-    (IBusEngine * iEngine,
-     IBusText * iText, guint cursor_pos, gboolean visible) {
+void parent_update_preedit_text(IBusEngine * iEngine,
+				IBusText * iText, guint cursor_pos,
+				gboolean visible)
+{
 #ifdef UNIT_TEST
     printf("* parent_update_preedit_text(-, %s, %u, %x)\n",
 	   iText->text, cursor_pos, visible);
@@ -97,10 +99,12 @@ void parent_update_preedit_text
 #endif
 }
 
-void parent_update_preedit_text_with_mode
-    (IBusEngine * iEngine,
-     IBusText * iText,
-     guint cursor_pos, gboolean visible, IBusPreeditFocusMode mode) {
+void parent_update_preedit_text_with_mode(IBusEngine * iEngine,
+					  IBusText * iText,
+					  guint cursor_pos,
+					  gboolean visible,
+					  IBusPreeditFocusMode mode)
+{
 #ifdef UNIT_TEST
     printf
 	("* parent_update_preedit_text_with_mode(-, %s, %u, %x, %x)\n",
@@ -111,8 +115,9 @@ void parent_update_preedit_text_with_mode
 #endif
 }
 
-void parent_update_auxiliary_text
-    (IBusEngine * iEngine, IBusText * iText, gboolean visible) {
+void parent_update_auxiliary_text(IBusEngine * iEngine, IBusText * iText,
+				  gboolean visible)
+{
 #ifdef UNIT_TEST
     printf
 	("* parent_update_auxiliary_text(-, %s, %x)\n",
@@ -133,8 +138,8 @@ void parent_update_auxiliary_text
 
 void refresh_pre_edit_text(IBusChewingEngine * self)
 {
-    IBusText *iText=decorate_preedit(self->icPreEdit);
-    if (self->preEditText){
+    IBusText *iText = decorate_preedit(self->icPreEdit);
+    if (self->preEditText) {
 	g_object_unref(self->preEditText);
     }
     self->preEditText = g_object_ref_sink(iText);
@@ -153,14 +158,16 @@ void update_pre_edit_text(IBusChewingEngine * self)
 	mode = IBUS_ENGINE_PREEDIT_COMMIT;
     }
 
-    gint chiSymbolCursor = chewing_cursor_Current(self->icPreEdit->context);
     parent_update_preedit_text_with_mode(IBUS_ENGINE(self),
-	    self->preEditText,
-	    chiSymbolCursor, visible, mode);
+					 self->preEditText,
+					 cursor_current, visible, mode);
 }
 
 void refresh_aux_text(IBusChewingEngine * self)
 {
+    if (!ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_CAP_AUXILIARY_TEXT)) {
+	return;
+    }
     IBUS_CHEWING_LOG(INFO, "refresh_aux_text()");
     gint bpmfLen;
     gchar *auxStr;
@@ -169,13 +176,18 @@ void refresh_aux_text(IBusChewingEngine * self)
     }
 
     if (chewing_aux_Length(self->icPreEdit->context) > 0) {
-	auxStr=chewing_aux_String(self->icPreEdit->context);
+	auxStr = chewing_aux_String(self->icPreEdit->context);
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
-    }else{
-	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmf_check=%x", ibus_chewing_bopomofo_check(self->icPreEdit->context));
-	gchar *bpmfStr=ibus_chewing_bopomofo_string(self->icPreEdit->context, &bpmfLen);
+    } else {
+	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmf_check=%x",
+			 ibus_chewing_bopomofo_check(self->icPreEdit->
+						     context));
+	gchar *bpmfStr =
+	    ibus_chewing_bopomofo_string(self->icPreEdit->context,
+					 &bpmfLen);
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmfStr=%s", bpmfStr);
-	self->auxText = g_object_ref_sink(ibus_text_new_from_string(bpmfStr));
+	self->auxText =
+	    g_object_ref_sink(ibus_text_new_from_string(bpmfStr));
 	g_free(bpmfStr);
     }
 }
@@ -183,25 +195,30 @@ void refresh_aux_text(IBusChewingEngine * self)
 void update_aux_text(IBusChewingEngine * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "update_aux_text()");
+    if (!ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_CAP_AUXILIARY_TEXT)) {
+	return;
+    }
     refresh_aux_text(self);
     parent_update_auxiliary_text(IBUS_ENGINE(self), self->auxText, TRUE);
 }
 
 void refresh_outgoing_text(IBusChewingEngine * self)
 {
-    gchar *outgoingStr=ibus_chewing_pre_edit_get_outgoing(self->icPreEdit);
-    IBUS_CHEWING_LOG(INFO, "update_outgoing_text() outgoingStr=|%s|", outgoingStr);
+    gchar *outgoingStr =
+	ibus_chewing_pre_edit_get_outgoing(self->icPreEdit);
+    IBUS_CHEWING_LOG(INFO, "update_outgoing_text() outgoingStr=|%s|",
+		     outgoingStr);
 
-    if (self->outgoingText){
+    if (self->outgoingText) {
 	g_object_unref(self->outgoingText);
     }
-    self->outgoingText = g_object_ref_sink(ibus_text_new_from_string(outgoingStr));
+    self->outgoingText =
+	g_object_ref_sink(ibus_text_new_from_string(outgoingStr));
 }
 
 void commit_text(IBusChewingEngine * self)
 {
     refresh_outgoing_text(self);
     parent_commit_text(IBUS_ENGINE(self));
-    ibus_chewing_pre_edit_clear_outgoing(self->icPreEdit);    
+    ibus_chewing_pre_edit_clear_outgoing(self->icPreEdit);
 }
-

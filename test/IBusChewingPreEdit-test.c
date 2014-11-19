@@ -19,9 +19,6 @@ void free_test()
 
 void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers)
 {
-    if (modifiers & IBUS_SHIFT_MASK) {
-	ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L, 0);
-    }
     switch (keySym) {
     case IBUS_KEY_Shift_L:
     case IBUS_KEY_Shift_R:
@@ -31,16 +28,19 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers)
 					  IBUS_SHIFT_MASK);
 	break;
     default:
+	if (modifiers & IBUS_SHIFT_MASK) {
+	    ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L, 0);
+	}
 	ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
 	ibus_chewing_pre_edit_process_key(self, keySym,
 					  modifiers | IBUS_RELEASE_MASK);
+	if (modifiers & IBUS_SHIFT_MASK) {
+	    ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
+		    IBUS_SHIFT_MASK |
+		    IBUS_RELEASE_MASK);
+	}
 	break;
 
-    }
-    if (modifiers & IBUS_SHIFT_MASK) {
-	ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
-					  IBUS_SHIFT_MASK |
-					  IBUS_RELEASE_MASK);
     }
 
     printf
@@ -148,7 +148,8 @@ void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "plain-zhuyin", TRUE);
-    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
+    g_assert(ibus_chewing_pre_edit_get_property_boolean
+	     (self, "plain-zhuyin"));
 
     key_press_from_string("y ");
 
@@ -167,16 +168,20 @@ void plain_zhuyin_test()
     check_pre_edit("", "");
 }
 
-/*  很好，*/
+/*  你好，*/
 void plain_zhuyin_shift_symbol_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", TRUE);
-    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
+						     "plain-zhuyin", TRUE);
+    g_assert(ibus_chewing_pre_edit_get_property_boolean
+	     (self, "plain-zhuyin"));
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "shift-toggle-chinese",
+	    TRUE);
 
-    key_press_from_string("cp31cl31");
+    key_press_from_string("su31cl31");
 
-    /* ，*/
+    /* ， */
     key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);
     /* Candidate window should be shown */
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
@@ -185,7 +190,29 @@ void plain_zhuyin_shift_symbol_test()
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
-    check_pre_edit("很好，", "");
+    check_pre_edit("你好，", "");
+
+    /* 打電話  */
+    key_press_from_string("28312u041cj841");
+    check_pre_edit("你好，打電話", "");
+
+    /* ； */
+    key_press_from_key_sym(IBUS_KEY_quotedbl, IBUS_SHIFT_MASK);
+    key_press_from_string("1");
+    check_pre_edit("你好，打電話；", "");
+
+    /* Mix with shift */
+
+    key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
+
+    /* String is bypass in English mode*/
+    key_press_from_string("882-5252");
+
+    check_pre_edit("你好，打電話；", "");
+    key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
+    /* " 來訂餐" */
+    key_press_from_string(" x9612u/42h0 2");
+    check_pre_edit("你好，打電話；來訂餐", "");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -252,18 +279,10 @@ gint main(gint argc, gchar ** argv)
 	("/ibus-chewing/IBusChewingPreEdit/process_key_buffer_full_handling_test",
 	 process_key_buffer_full_handling_test);
 
-    printf("###2 plain-zhuyin=%x\n",
-	   ibus_chewing_pre_edit_get_property_boolean(self,
-						      "plain-zhuyin"));
-
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin", TRUE);
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",
 	 plain_zhuyin_test);
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin",
-						     FALSE);
+
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_shift_symbol_test",
 	 plain_zhuyin_shift_symbol_test);

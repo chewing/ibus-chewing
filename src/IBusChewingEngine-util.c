@@ -7,7 +7,7 @@ static IBusText *decorate_preedit(IBusChewingPreEdit * icPreEdit)
 	g_object_ref_sink(ibus_text_new_from_string(preEdit));
     gint chiSymbolCursor = chewing_cursor_Current(icPreEdit->context);
     IBUS_CHEWING_LOG(DEBUG,
-		     "decorate_preedit() chiSymbolCursor=%d preEdit=%s",
+		     "decorate_preedit() cursor=%d preEdit=%s",
 		     chiSymbolCursor, preEdit);
 
 

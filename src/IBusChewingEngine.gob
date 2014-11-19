@@ -104,6 +104,9 @@ extern GtkResponseType button_responses[];
 #define ibus_text_is_empty(iText) ((iText==NULL) || STRING_IS_EMPTY(iText->text))
 
 #define is_plain_chewing ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "plain-zhuyin")
+
+#define cursor_current chewing_cursor_Current(self->icPreEdit->context)
+
 %}
 
 %privateheader{
@@ -128,6 +131,7 @@ void refresh_aux_text(IBusChewingEngine * self);
 void update_aux_text(IBusChewingEngine * self);
 void refresh_outgoing_text(IBusChewingEngine * self);
 void commit_text(IBusChewingEngine * self);
+
 %}
 
 %{

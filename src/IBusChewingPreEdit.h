@@ -50,8 +50,8 @@
 
 typedef enum {
     FLAG_SYNC_FROM_IM = 1,
-    FLAG_SYNC_FROM_KEYBOARD = 1<<1,
-    FLAG_TABLE_SHOW = 1<<2
+    FLAG_SYNC_FROM_KEYBOARD = 1 << 1,
+    FLAG_TABLE_SHOW = 1 << 2
 } IBusChewingPreEditFlag;
 
 /**
@@ -73,7 +73,7 @@ typedef struct {
     GString *preEdit;
     GString *outgoing;
     IBusKeymap *keymap;
-    IBusLookupTable *iTable; 
+    IBusLookupTable *iTable;
     IBusChewingPreEditFlag flags;
     KSym keyLast;
     gint bpmfLen;
@@ -106,9 +106,9 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self);
 
 #define ibus_chewing_pre_edit_set_apply_property_boolean(self, propertyKey,boolValue) ibus_chewing_pre_edit_set_property_boolean(self,propertyKey,boolValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)
 
-#define ibus_chewing_pre_edit_set_apply_property_int(self, propertyKey,intValue) ibus_chewing_pre_edit_set_property_int(self,propertyKey,intValue); ibus_chewing_pre_edit_apply_property(self,propertyKey) 
+#define ibus_chewing_pre_edit_set_apply_property_int(self, propertyKey,intValue) ibus_chewing_pre_edit_set_property_int(self,propertyKey,intValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)
 
-#define ibus_chewing_pre_edit_set_apply_property_string(self, propertyKey,stringValue) ibus_chewing_pre_edit_set_property_string(self,propertyKey,stringValue); ibus_chewing_pre_edit_apply_property(self,propertyKey) 
+#define ibus_chewing_pre_edit_set_apply_property_string(self, propertyKey,stringValue) ibus_chewing_pre_edit_set_property_string(self,propertyKey,stringValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)
 
 void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit * self);
 
@@ -178,5 +178,23 @@ KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit * self,
 #define ibus_chewing_bopomofo_check !chewing_zuin_Check
 #endif
 #define ibus_chewing_bopomofo_string chewing_zuin_String
+
+typedef enum {
+    EVENT_RESPONSE_PROCESS = 0,	/* Event process by IM */
+    EVENT_RESPONSE_ABSORB,	/* Event throw away by IM (e.g. Release event) */
+    EVENT_RESPONSE_IGNORE,	/* Event that should be passed to application, but not process by IM */
+    EVENT_RESPONSE_UNDECIDED,
+} EventResponse;
+
+typedef EventResponse(*KeyHandlingFunc) (IBusChewingPreEdit * self,
+					 KSym kSym,
+					 KeyModifiers unmaskedMod);
+
+typedef struct {
+    KSym kSymLower;
+    KSym kSymUpper;
+    KeyHandlingFunc keyFunc;
+} KeyHandlingRule;
+
 
 #endif				/* _IBUS_CHEWING_PRE_EDIT_H_ */
