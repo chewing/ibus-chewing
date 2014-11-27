@@ -144,9 +144,9 @@ gchar *ibus_chewing_pre_edit_get_pre_edit(IBusChewingPreEdit * self);
  */
 gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit * self);
 
-#define ibus_chewing_pre_edit_set_flag(self,f) self->flags |= (f)
-#define ibus_chewing_pre_edit_clear_flag(self,f) self->flags &= ~(f)
-#define ibus_chewing_pre_edit_has_flag(self,f) (self->flags & f)
+#define ibus_chewing_pre_edit_has_flag(self,f) mkdg_has_flag(self->flags,f)
+#define ibus_chewing_pre_edit_set_flag(self,f) mkdg_set_flag(self->flags,f)
+#define ibus_chewing_pre_edit_clear_flag(self,f) mkdg_clear_flag(self->flags,f)
 
 void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self);

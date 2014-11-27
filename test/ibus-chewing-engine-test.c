@@ -21,8 +21,9 @@ void check_output(const gchar * outgoing, const gchar * preEdit, const gchar * a
     g_assert_cmpstr(aux, ==, engine->auxText->text);
 }
 
-void focus_out_then_focus_in_test()
+void focus_out_then_focus_in_with_aux_text_test()
 {
+    ibus_chewing_engine_set_status_flag(engine, ENGINE_FLAG_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
     ibus_chewing_engine_enable(engine);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24,
@@ -60,7 +61,7 @@ gint main(gint argc, gchar ** argv)
     ibus_chewing_pre_edit_apply_property(engine->icPreEdit,"plain-zhuyin");
 
     g_test_add_func
-	("/ibus-chewing/ibus-chewing-engine/focus_out_then_focus_in_test",
-	 focus_out_then_focus_in_test);
+	("/ibus-chewing/ibus-chewing-engine/focus_out_then_focus_in_with_aux_text_test",
+	 focus_out_then_focus_in_with_aux_text_test);
     return g_test_run();
 }

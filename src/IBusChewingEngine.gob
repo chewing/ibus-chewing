@@ -82,7 +82,7 @@ enum ENGINE_FLAG {
     CAP_LOOKUP_TABLE      =     0x80,
     CAP_FOCUS		  =     0x100,
     CAP_PROPERTY          =     0x200,
-    CAP_SORROUNDING_TEXT  =     0x400
+    CAP_SURROUNDING_TEXT  =     0x400
 } Engine:Flag;
 
 %h{
@@ -93,10 +93,10 @@ extern const gchar *page_labels[];
 extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
 
-#define ibus_chewing_engine_set_status_flag(self,f) self->_priv->statusFlags |= (f)
-#define ibus_chewing_engine_clear_status_flag(self,f) self->_priv->statusFlags &= ~(f)
+#define ibus_chewing_engine_has_status_flag(self,f) mkdg_has_flag(self->_priv->statusFlags,f)
+#define ibus_chewing_engine_set_status_flag(self,f) mkdg_set_flag(self->_priv->statusFlags,f)
+#define ibus_chewing_engine_clear_status_flag(self,f) mkdg_clear_flag(self->_priv->statusFlags,f)
 
-#define ibus_chewing_engine_has_status_flag(self,f) (self->_priv->statusFlags & f)
 #define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
 #define is_chinese(self) (chewing_get_ChiEngMode(self->icPreEdit->context)!=0)
 #define is_caps_lock(self) (is_caps_led_on(self->_priv->pDisplay))
@@ -129,6 +129,7 @@ void refresh_pre_edit_text(IBusChewingEngine * self);
 void update_pre_edit_text(IBusChewingEngine * self);
 void refresh_aux_text(IBusChewingEngine * self);
 void update_aux_text(IBusChewingEngine * self);
+void update_lookup_table(IBusChewingEngine * self);
 void refresh_outgoing_text(IBusChewingEngine * self);
 void commit_text(IBusChewingEngine * self);
 
@@ -352,27 +353,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	self_refresh_property(self, "chewing_chieng_prop");
     }
 
-    private void update_lookup_table(self) {
-	IBUS_CHEWING_LOG(DEBUG, "update_lookup_table() CurrentPage=%d",
-			 chewing_cand_CurrentPage(self->icPreEdit->context));
-
-	gboolean isShow=ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_TABLE_SHOW);
-
-	if (isShow) {
-#ifndef UNIT_TEST
-	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->icPreEdit->iTable,
-		    isShow);
-	    ibus_engine_show_lookup_table(IBUS_ENGINE(self));
-#endif
-	} else {
-#ifndef UNIT_TEST
-	    ibus_engine_update_lookup_table(IBUS_ENGINE(self), self->icPreEdit->iTable,
-		    isShow);
-	    ibus_engine_hide_lookup_table(IBUS_ENGINE(self));
-#endif
-	}
-    }
-
     protected void update(self) {
 	IBUS_CHEWING_LOG(DEBUG, "update() statusFlags=%x",
 			 self->_priv->statusFlags);
@@ -384,7 +364,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 			 "update() nPhoneSeq=%d statusFlags=%x",
 			 chewing_get_phoneSeqLen(self->icPreEdit->context),
 			 self->_priv->statusFlags);
-	self_update_lookup_table(self);
+	update_lookup_table(self);
     }
 
     protected void refresh_property(self, const gchar * prop_name)
@@ -597,7 +577,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	Self *self = SELF(engine);
 	self->_priv->statusFlags %= ENGINE_FLAG_CAP_PREEDIT_TEXT;
 	self->_priv->statusFlags |= caps * ENGINE_FLAG_CAP_PREEDIT_TEXT;
-	IBUS_CHEWING_LOG(INFO, "set_capabilities(%x): statusFlags=%x",
+	IBUS_CHEWING_LOG(MSG, "***** set_capabilities(%x): statusFlags=%x",
 			 caps, self->_priv->statusFlags);
     }
 

@@ -71,6 +71,14 @@ gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
     )
 
 /**************************************
+ * Flag Utility Macros
+ */
+
+#define mkdg_has_flag(flagSet, flag) (flagSet & flag)
+#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
+#define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
+
+/**************************************
  * XML data structure and functions
  */
 
