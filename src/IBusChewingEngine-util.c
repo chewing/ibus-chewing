@@ -39,6 +39,13 @@ static IBusText *decorate_preedit(IBusChewingPreEdit * icPreEdit, EngineFlag sta
 	}
 
     }
+   
+   if(!mkdg_has_flag(statusFlags, ENGINE_FLAG_CAP_SURROUNDING_TEXT)){
+       /* Cannot change color when if the client is not capable
+	* of showing surrounding text
+	*/
+       return iText;
+   } 
 
     /* Show current cursor in red */
     ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_BACKGROUND,
@@ -48,13 +55,3 @@ static IBusText *decorate_preedit(IBusChewingPreEdit * icPreEdit, EngineFlag sta
     return iText;
 }
 
-/*
- * From send_fake_key_eve() eve.c gcin
- */
-static void key_send_fake_event(KeySym key, Display *pDisplay)
-{
-    KeyCode keyCode = XKeysymToKeycode(pDisplay, key);
-    IBUS_CHEWING_LOG(INFO,"key_sent_fake_event(%lx,-), keyCode=%x",key,keyCode);
-    XTestFakeKeyEvent(pDisplay, keyCode, True, CurrentTime);
-    XTestFakeKeyEvent(pDisplay, keyCode, False, CurrentTime);
-}

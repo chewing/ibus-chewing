@@ -209,11 +209,6 @@ MANAGE_DEPENDENCY(BUILD_REQUIRES X11 REQUIRED
     PKG_CONFIG ${X11_PKG_CONFIG} PACKAGE_NAME "libX11-devel"
     )
 
-SET(XTST_PKG_CONFIG "xtst" CACHE STRING "xtst pkg-config name")
-MANAGE_DEPENDENCY(BUILD_REQUIRES XTST REQUIRED
-    PKG_CONFIG "${XTST_PKG_CONFIG}" PACKAGE_NAME "libXtst-devel"
-    )
-
 ####################################################################
 # Building
 #
