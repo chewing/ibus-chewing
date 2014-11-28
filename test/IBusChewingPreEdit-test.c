@@ -36,8 +36,8 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers)
 					  modifiers | IBUS_RELEASE_MASK);
 	if (modifiers & IBUS_SHIFT_MASK) {
 	    ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
-		    IBUS_SHIFT_MASK |
-		    IBUS_RELEASE_MASK);
+					      IBUS_SHIFT_MASK |
+					      IBUS_RELEASE_MASK);
 	}
 	break;
 
@@ -144,6 +144,26 @@ void process_key_buffer_full_handling_test()
     check_pre_edit("", "");
 }
 
+/* 這個程式 */
+void process_key_down_arrow_test()
+{
+    key_press_from_string("5k4ek7t/6g4");
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("1");
+    check_pre_edit("", "這個城市");
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("2");
+    check_pre_edit("", "這個程式");
+
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("4");
+    check_pre_edit("", "這個成世");
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+}
+
 void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
@@ -176,8 +196,8 @@ void plain_zhuyin_shift_symbol_test()
     g_assert(ibus_chewing_pre_edit_get_property_boolean
 	     (self, "plain-zhuyin"));
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "shift-toggle-chinese",
-	    TRUE);
+						     "shift-toggle-chinese",
+						     TRUE);
 
     key_press_from_string("su31cl31");
 
@@ -205,7 +225,7 @@ void plain_zhuyin_shift_symbol_test()
 
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
 
-    /* String is bypass in English mode*/
+    /* String is bypass in English mode */
     key_press_from_string("882-5252");
 
     check_pre_edit("你好，打電話；", "");
@@ -278,6 +298,10 @@ gint main(gint argc, gchar ** argv)
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/process_key_buffer_full_handling_test",
 	 process_key_buffer_full_handling_test);
+
+    g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/process_key_down_arrow_test",
+	 process_key_down_arrow_test);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",

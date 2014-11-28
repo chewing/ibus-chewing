@@ -40,11 +40,6 @@ static IBusText *decorate_preedit(IBusChewingPreEdit * icPreEdit, EngineFlag sta
 
     }
 
-    if (!mkdg_has_flag(statusFlags, ENGINE_FLAG_CAP_SURROUNDING_TEXT)){
-	/* No need to further decorate if client does not support it */
-	return iText;
-    }
-
     /* Show current cursor in red */
     ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_BACKGROUND,
 			       0x00ff0000, chiSymbolCursor,

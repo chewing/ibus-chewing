@@ -77,7 +77,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     gchar *cP = bufferStr;
     gunichar uniCh;
     IBUS_CHEWING_LOG(INFO,
-		     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| count=%d cursor=%d\n",
+		     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| count=%d cursor=%d",
 		     bufferStr, bpmfStr, count, cursor_current);
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
 	if (i == cursor_current) {
@@ -104,7 +104,6 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     if (chewing_commit_Check(self->context)) {
 	/* commit_Check=1 means new commit available */
 	gchar *commitStr = chewing_commit_String(self->context);
-	printf("commitStr=|%s|\n", commitStr);
 	g_string_append(self->outgoing, commitStr);
 	g_free(commitStr);
     }
@@ -202,6 +201,10 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
 #define filter_modifiers(mask) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
     if (maskedMod & (~mask)){ return EVENT_RESPONSE_IGNORE; } \
     if (maskedMod == (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK)){ return EVENT_RESPONSE_IGNORE; }
+#define absorb_when_release if (event_is_released(unmaskedMod)){ return EVENT_RESPONSE_ABSORB; }
+#define ignore_when_buffer_is_empty if (buffer_is_empty) { return EVENT_RESPONSE_IGNORE;}
+
+
 
 #define event_process_or_ignore(cond) (cond) ? EVENT_RESPONSE_PROCESS: EVENT_RESPONSE_IGNORE
 
@@ -265,11 +268,8 @@ EventResponse self_handle_num(IBusChewingPreEdit * self, KSym kSym,
 			      KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
+    absorb_when_release;
     handle_log("num");
-
-    if (event_is_released(unmaskedMod)) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     if (is_ctrl_only) {
 	return
@@ -284,15 +284,13 @@ EventResponse self_handle_num_keypad(IBusChewingPreEdit * self,
 				     KSym kSym, KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
+    absorb_when_release;
     handle_log("num_keypad");
 
     if ((maskedMod != 0) && (!is_shift_only) && (!is_ctrl_only)) {
 	return EVENT_RESPONSE_IGNORE;
     }
 
-    if (event_is_released(unmaskedMod)) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     KSym kSymFinal = kSym;
     KSym kSymEquiv = key_sym_KP_to_normal(kSym);
@@ -316,17 +314,14 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
     handle_log("caps_lock");
 
-    if (event_is_released(unmaskedMod)) {
-	return EVENT_RESPONSE_ABSORB;
-    }
-//#if !CHEWING_CHECK_VERSION(0,4,0)
     /* When Chi->Eng with incomplete character */
     if (is_chinese && bpmf_check) {
 	ibus_chewing_pre_edit_force_commit(self);
     }
-//#endif
+
     return
 	event_process_or_ignore(!chewing_handle_Capslock(self->context));
 }
@@ -370,11 +365,8 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
 				KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
+    absorb_when_release;
     handle_log("space");
-
-    if (event_is_released(unmaskedMod)) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     if (is_shift_only) {
 	return
@@ -402,15 +394,9 @@ EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
 				 KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("return");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
-
-    if (unmaskedMod & IBUS_RELEASE_MASK) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     return event_process_or_ignore(!chewing_handle_Enter(self->context));
 }
@@ -419,15 +405,9 @@ EventResponse self_handle_backspace(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("backspace");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
-
-    if (unmaskedMod & IBUS_RELEASE_MASK) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     return
 	event_process_or_ignore(!chewing_handle_Backspace(self->context));
@@ -437,15 +417,9 @@ EventResponse self_handle_delete(IBusChewingPreEdit * self, KSym kSym,
 				 KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("delete");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
-
-    if (unmaskedMod & IBUS_RELEASE_MASK) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     return event_process_or_ignore(!chewing_handle_Del(self->context));
 }
@@ -454,11 +428,9 @@ EventResponse self_handle_escape(IBusChewingPreEdit * self, KSym kSym,
 				 KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("escape");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_Esc(self->context));
 }
@@ -467,11 +439,9 @@ EventResponse self_handle_left(IBusChewingPreEdit * self, KSym kSym,
 			       KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("left");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     if (is_shift_only) {
 	return
@@ -486,11 +456,9 @@ EventResponse self_handle_up(IBusChewingPreEdit * self, KSym kSym,
 			     KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("up");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_Up(self->context));
 }
@@ -499,11 +467,9 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
 				KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("right");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     if (is_shift_only) {
 	return
@@ -518,11 +484,9 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
 			       KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("down");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_Down(self->context));
 }
@@ -531,11 +495,9 @@ EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
 				  KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("page_up");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_PageUp(self->context));
 }
@@ -544,11 +506,9 @@ EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("page_down");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return
 	event_process_or_ignore(!chewing_handle_PageDown(self->context));
@@ -558,11 +518,9 @@ EventResponse self_handle_tab(IBusChewingPreEdit * self, KSym kSym,
 			      KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("tab");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_Tab(self->context));
 }
@@ -571,11 +529,9 @@ EventResponse self_handle_home(IBusChewingPreEdit * self, KSym kSym,
 			       KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("home");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_Home(self->context));
 }
@@ -584,11 +540,9 @@ EventResponse self_handle_end(IBusChewingPreEdit * self, KSym kSym,
 			      KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    absorb_when_release;
+    ignore_when_buffer_is_empty;
     handle_log("end");
-
-    if (buffer_is_empty) {
-	return EVENT_RESPONSE_IGNORE;
-    }
 
     return event_process_or_ignore(!chewing_handle_End(self->context));
 }
@@ -604,11 +558,8 @@ EventResponse self_handle_default(IBusChewingPreEdit * self, KSym kSym,
 				  KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
+    absorb_when_release;
     handle_log("default");
-
-    if (unmaskedMod & IBUS_RELEASE_MASK) {
-	return EVENT_RESPONSE_ABSORB;
-    }
 
     return self_handle_key_sym_default(self, kSym, unmaskedMod);
 }
