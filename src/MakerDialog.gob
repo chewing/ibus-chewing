@@ -236,6 +236,7 @@ class Maker:Dialog from Gtk:Dialog {
     public void assign_widget_value(self, PropertyContext *ctx, gpointer userData) {
 	mkdg_log(INFO, "assign_widget_value(%s)", ctx->spec->key);
 	GValue gValue = {0};
+	mkdg_g_value_reset(&gValue, ctx->spec->valueType, TRUE);
 	self_get_widget_value(self, ctx->spec->key, &gValue);
 	property_context_save(ctx, &gValue, userData);
 	property_context_apply(ctx, userData);
@@ -272,7 +273,6 @@ class Maker:Dialog from Gtk:Dialog {
 	for (i = 0; i <	mkdg_properties_size(self->_priv->properties); i++) {
 	    PropertyContext *ctx = mkdg_properties_index(self->_priv->properties,i);
 	    GValue gValue={0};
-	    printf("key=%s\n", ctx->spec->key);
 	    mkdg_g_value_reset(&gValue, ctx->spec->valueType, TRUE);
 	    self_get_widget_value(self, ctx->spec->key, &gValue);
 	    property_context_save(ctx, &gValue, userData);

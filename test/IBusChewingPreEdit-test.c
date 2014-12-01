@@ -116,7 +116,7 @@ void process_key_mix_test()
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     key_press_from_string("gj bj4z83");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
-    check_pre_edit(" 這是ibus-chewing 輸入法", "");
+    check_pre_edit("這是ibus-chewing 輸入法", "");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");
@@ -144,21 +144,23 @@ void process_key_buffer_full_handling_test()
     check_pre_edit("", "");
 }
 
-/* 這個程式 */
+/* 程式 */
 void process_key_down_arrow_test()
 {
-    key_press_from_string("5k4ek7t/6g4");
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", FALSE);
+    key_press_from_string("t/6g4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("1");
-    check_pre_edit("", "這個城市");
+    check_pre_edit("", "城市");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("2");
-    check_pre_edit("", "這個程式");
+    check_pre_edit("", "程式");
 
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("4");
-    check_pre_edit("", "這個成世");
+    check_pre_edit("", "程世");
 
     ibus_chewing_pre_edit_clear(self);
     check_pre_edit("", "");

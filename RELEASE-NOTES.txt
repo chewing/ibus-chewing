@@ -2,7 +2,11 @@ PRJ_VER=1.4.11
 SUMMARY=Use GSettings instead of GConf2; MakerDialog no longer invoke GUI on startup.
 REDHAT_BUGZILLA=902866,1119963
 [Changes]
-- MakerDialog dialog 
+- MakerDialog GUI is only loaded when setting dialog is invoked.
+- Setting is removed from ibus-properties. Setting GUI can be invoked 
+  from either:
+  + Executable ibus-setup-chewing: Usually under /usr/libexec
+  + Input method preference in IBus preference.
 - github is now hosting the ibus-chewing tarballs.
 - Fixed Bug 902866 - ibus-chewing uses dconf but still installs gconf schemas
   (Also listed as GitHub ibus-chewing #36)

@@ -218,16 +218,6 @@ class IBus:Chewing:Engine from IBus:Engine {
     }
     destroywith g_object_unref;
 
-    public IBusProperty *settings_prop = {
-	g_object_ref_sink(ibus_property_new
-			  ("chewing_settings_prop", PROP_TYPE_TOGGLE,
-			   SELF_GET_CLASS(self)->settings_prop_label,
-			   QUOTE_ME(PRJ_DATA_DIR) "/icons/settings.png",
-			   NULL, TRUE, TRUE,
-			   PROP_STATE_UNCHECKED, NULL))
-    }
-    destroywith g_object_unref;
-
     public IBusPropList *prop_list =
 	{ g_object_ref_sink(ibus_prop_list_new()) }
     destroywith g_object_unref;
@@ -256,9 +246,6 @@ class IBus:Chewing:Engine from IBus:Engine {
     };
     classwide IBusText *alnumSize_prop_label_half = {
 	g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))
-    };
-    classwide IBusText *settings_prop_label = {
-	g_object_ref_sink(ibus_text_new_from_static_string(_("Settings")))
     };
     classwide IBusText *emptyText = {
 	g_object_ref_sink(ibus_text_new_from_static_string(""))
@@ -291,7 +278,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 	/* init properties */
 	ibus_prop_list_append(self->prop_list, self->chieng_prop);
 	ibus_prop_list_append(self->prop_list, self->alnumSize_prop);
-	ibus_prop_list_append(self->prop_list, self->settings_prop);
 
 	ibus_chewing_engine_set_status_flag(self,
 					    ENGINE_FLAG_INITIALIZED);
@@ -437,7 +423,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 
 	self_refresh_property(self, "chewing_alnumSize_prop");
 
-	self_refresh_property(self, "chewing_settings_prop");
 	if (!
 	    (self->_priv->
 	     statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)) {
@@ -445,8 +430,6 @@ class IBus:Chewing:Engine from IBus:Engine {
 						       "chewing_chieng_prop");
 	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
 						       "chewing_alnumSize_prop");
-	    IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
-						       "chewing_settings_prop");
 	    ibus_engine_register_properties(IBUS_ENGINE(self),
 					    self->prop_list);
 	    ibus_chewing_engine_set_status_flag(self,
@@ -467,18 +450,14 @@ class IBus:Chewing:Engine from IBus:Engine {
 						   "chewing_chieng_prop");
 	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
 						   "chewing_alnumSize_prop");
-	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
-						   "chewing_settings_prop");
 #endif
     }
 
     private IBusProperty *get_iBusProperty(self, const gchar * prop_name) {
-	if (strcmp(prop_name, "chewing_chieng_prop") == 0) {
+	if (STRING_EQUALS(prop_name, "chewing_chieng_prop")) {
 	    return self->chieng_prop;
-	} else if (strcmp(prop_name, "chewing_alnumSize_prop") == 0) {
+	} else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
 	    return self->alnumSize_prop;
-	} else if (strcmp(prop_name, "chewing_settings_prop") == 0) {
-	    return self->settings_prop;
 	}
 	IBUS_CHEWING_LOG(MSG, "get_iBusProperty(%s): NULL is returned",
 			 prop_name);

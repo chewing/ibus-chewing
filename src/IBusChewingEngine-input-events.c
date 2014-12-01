@@ -89,32 +89,6 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	chewing_set_ShapeMode(self->icPreEdit->context,
 			      !chewing_get_ShapeMode(self->
 						     icPreEdit->context));
-    } else if (STRING_EQUALS(prop_name, "chewing_settings_prop")) {
-	if (ibus_chewing_property_get_state(self->settings_prop) ==
-	    PROP_STATE_UNCHECKED) {
-	    if (!self->sDialog) {
-		MakerDialog *mDialog = maker_dialog_new_full
-		    (self->icPreEdit->iProperties->properties,
-		     _("Setting"),
-		     MKDG_WIDGET_FLAG_APPLY_IMMEDIATELY,
-		     MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
-		self->sDialog = GTK_WIDGET(mDialog);
-	    }
-	    gtk_widget_show_all(self->sDialog);
-	    if (gtk_dialog_run(GTK_DIALOG(self->sDialog))
-		== MKDG_BUTTON_RESPONSE_OK) {
-		maker_dialog_assign_all_widgets_values(MAKER_DIALOG
-						       (self->sDialog),
-						       NULL);
-	    }
-	    gtk_widget_hide(self->sDialog);
-#if IBUS_CHECK_VERSION(1, 4, 0)
-	    ibus_property_set_state(self->settings_prop,
-				    PROP_STATE_UNCHECKED);
-#else
-	    self->settings_prop->state = PROP_STATE_UNCHECKED;
-#endif
-	}
     } else {
 	IBUS_CHEWING_LOG(DEBUG,
 			 "property_activate(-, %s, %u) not recognized",
