@@ -185,6 +185,32 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
     g_string_assign(self->outgoing, "");
 }
 
+#define is_chinese (chewing_get_ChiEngMode(self->context)!=0)
+#define is_full_shape (chewing_get_ShapeMode(self->context)!=0)
+gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self)
+{
+    return is_chinese;
+}
+
+void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit *self)
+{
+    /* When Chi->Eng with incomplete character */
+    if (is_chinese && bpmf_check) {
+	ibus_chewing_pre_edit_force_commit(self);
+    }
+    chewing_set_ChiEngMode(self->context, !is_chinese);
+}
+
+
+void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit *self)
+{
+    /* When Chi->Eng with incomplete character */
+    if (is_chinese && bpmf_check) {
+	ibus_chewing_pre_edit_force_commit(self);
+    }
+    chewing_set_ShapeMode(self->context, !is_full_shape);
+}
+
 /**************************************
  * ibus_chewing_pre_edit key processing
  */
@@ -196,7 +222,6 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
 #define is_shift_only (maskedMod == IBUS_SHIFT_MASK)
 #define is_shift (unmaskedMod & IBUS_SHIFT_MASK)
 #define is_ctrl_only (maskedMod == IBUS_CONTROL_MASK)
-#define is_chinese (chewing_get_ChiEngMode(self->context)!=0)
 #define buffer_is_empty (ibus_chewing_pre_edit_is_empty(self))
 #define filter_modifiers(mask) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
     if (maskedMod & (~mask)){ return EVENT_RESPONSE_IGNORE; } \
@@ -351,13 +376,8 @@ EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
 	&& self->keyLast != IBUS_KEY_Shift_R) {
 	return EVENT_RESPONSE_ABSORB;
     }
-//#if !CHEWING_CHECK_VERSION(0,4,0)
-    /* When Chi->Eng with incomplete character */
-    if (is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
-    }
-//#endif
-    chewing_set_ChiEngMode(self->context, !is_chinese);
+
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     return EVENT_RESPONSE_ABSORB;
 }
 
@@ -369,9 +389,8 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
     handle_log("space");
 
     if (is_shift_only) {
-	return
-	    event_process_or_ignore(!chewing_handle_ShiftSpace
-				    (self->context));
+	ibus_chewing_pre_edit_toggle_full_half(self);
+	return EVENT_RESPONSE_PROCESS;
     }
 
 
@@ -639,9 +658,9 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym)
 
 #define handle_key(kSym, unmaskedMod) (self_key_sym_find_key_handling_rule(kSym))->keyFunc(self, kSym, unmaskedMod)
 
-#define process_key_debug(prompt) IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_process_key(): %s flags=%x buff_check=%d bpmf_check=%d cursor=%d total_choice=%d is_chinese=%d is_plain_zhuyin=%d",\
+#define process_key_debug(prompt) IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_process_key(): %s flags=%x buff_check=%d bpmf_check=%d cursor=%d total_choice=%d is_chinese=%d is_full_shape=%d is_plain_zhuyin=%d" ,\
 	prompt,	self->flags, chewing_buffer_Check(self->context),\
-	bpmf_check, cursor_current, total_choice, is_chinese, is_plain_zhuyin)
+	bpmf_check, cursor_current, total_choice, is_chinese, is_full_shape, is_plain_zhuyin)
 
 
 /* keyCode should be converted to kSym already */

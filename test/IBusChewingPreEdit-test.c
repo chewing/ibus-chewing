@@ -166,10 +166,33 @@ void process_key_down_arrow_test()
     check_pre_edit("", "");
 }
 
+void full_half_shape_test()
+{
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", FALSE);
+    g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
+
+    key_press_from_key_sym(IBUS_KEY_space, IBUS_SHIFT_MASK);
+    g_assert(chewing_get_ShapeMode(self->context));
+
+    key_press_from_string("ab ");
+    check_pre_edit("ａｂ　", "");
+
+    key_press_from_key_sym(IBUS_KEY_space, IBUS_SHIFT_MASK);
+    g_assert(!chewing_get_ShapeMode(self->context));
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+}
+
 void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "plain-zhuyin", TRUE);
+
     g_assert(ibus_chewing_pre_edit_get_property_boolean
 	     (self, "plain-zhuyin"));
 
@@ -240,15 +263,26 @@ void plain_zhuyin_shift_symbol_test()
     check_pre_edit("", "");
 }
 
-#if 0
-guint ibus_chewing_pre_edit_length(self);
-guint ibus_chewing_pre_edit_word_limit(IBusChewingPreEdit * self);
-guint ibus_chewing_pre_edit_word_length(IBusChewingPreEdit * self);
-#define ibus_chewing_pre_edit_is_empty(self) (ibus_chewing_pre_edit_length(self) ==0)
-#define ibus_chewing_pre_edit_is_full(self) (self->wordLen >= ibus_chewing_pre_edit_word_limit(self))
-gchar *ibus_chewing_pre_edit_get_pre_edit(IBusChewingPreEdit * self);
-void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self);
-#endif
+void plain_zhuyin_full_half_shape_test()
+{
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin", TRUE);
+    g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
+
+    key_press_from_key_sym(IBUS_KEY_space, IBUS_SHIFT_MASK);
+    g_assert(chewing_get_ShapeMode(self->context));
+
+    key_press_from_string("ab ");
+    check_pre_edit("ａｂ　", "");
+
+    key_press_from_key_sym(IBUS_KEY_space, IBUS_SHIFT_MASK);
+    g_assert(!chewing_get_ShapeMode(self->context));
+
+    ibus_chewing_pre_edit_clear(self);
+    check_pre_edit("", "");
+}
 
 gint main(gint argc, gchar ** argv)
 {
@@ -306,12 +340,20 @@ gint main(gint argc, gchar ** argv)
 	 process_key_down_arrow_test);
 
     g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/full_half_shape_test",
+	 full_half_shape_test);
+
+    g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",
 	 plain_zhuyin_test);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_shift_symbol_test",
 	 plain_zhuyin_shift_symbol_test);
+
+    g_test_add_func
+	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_full_half_shape_test",
+	 plain_zhuyin_full_half_shape_test);
 
     g_test_add_func
 	("/ibus-chewing/IBusChewingPreEdit/free_test", free_test);

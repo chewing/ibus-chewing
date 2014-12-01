@@ -70,8 +70,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
     gboolean needRefresh = TRUE;
     if (STRING_EQUALS(prop_name, "chewing_chieng_prop")) {
 	/* Toggle Chinese <-> English */
-	chewing_set_ChiEngMode(self->icPreEdit->context,
-			       (is_chinese(self)) ? 0 : CHINESE_MODE);
+	ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
 	IBUS_CHEWING_LOG(INFO,
 			 "property_activate chinese=%d caps_lock=%d",
 			 is_chinese(self), is_caps_lock(self));

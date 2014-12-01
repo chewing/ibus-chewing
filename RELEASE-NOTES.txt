@@ -3,7 +3,7 @@ SUMMARY=Use GSettings instead of GConf2; MakerDialog no longer invoke GUI on sta
 REDHAT_BUGZILLA=902866,1119963
 [Changes]
 - MakerDialog GUI is only loaded when setting dialog is invoked.
-- Setting is removed from ibus-properties. Setting GUI can be invoked 
+- Setting is removed from ibus-properties because it can be launched
   from either:
   + Executable ibus-setup-chewing: Usually under /usr/libexec
   + Input method preference in IBus preference.

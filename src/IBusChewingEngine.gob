@@ -360,7 +360,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 	IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
 			 prop_name, self->_priv->statusFlags);
 	if (STRING_EQUALS(prop_name, "chewing_chieng_prop")) {
-	    if (chewing_get_ChiEngMode(self->icPreEdit->context)) {
+	    if (ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)) {
 		/* Chinese  */
 		ibus_property_set_label(self->chieng_prop,
 					SELF_GET_CLASS(self)->
