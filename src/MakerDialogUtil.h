@@ -97,4 +97,6 @@ gchar *mkdg_xml_attr_append(gchar * buf, gint bufferSize,
 gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
 			     MkdgXmlTagType type, const gchar * attribute,
 			     const gchar * value);
+
+#define MAKER_DIALOG_VALUE_LENGTH 200
 #endif				/* _MAKER_DIALOG_UTIL_H_ */

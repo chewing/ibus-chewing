@@ -35,6 +35,28 @@ ADD_TEST("${MAKER_DIALOG_UTIL}"
     )
 
 #===========================================
+#  MakerDialogBackend
+#
+
+SET(MAKER_DIALOG_BACKEND MakerDialogBackend)
+ADD_EXECUTABLE(${MAKER_DIALOG_BACKEND}-test
+    ${CMAKE_CURRENT_SOURCE_DIR}/${MAKER_DIALOG_BACKEND}-test.c
+    ${CMAKE_SOURCE_DIR}/src/GSettingsBackend.c
+    ${CMAKE_SOURCE_DIR}/src/MakerDialogBackend.c
+    ${CMAKE_SOURCE_DIR}/src/MakerDialogProperty.c
+    ${CMAKE_SOURCE_DIR}/src/MakerDialogUtil.c
+    )
+
+MESSAGE("test GLIB2_LIBRARIES=${GLIB2_LIBRARIES}")
+TARGET_LINK_LIBRARIES(${MAKER_DIALOG_BACKEND}-test
+    ${GLIB2_LIBRARIES}
+    )
+
+ADD_TEST("${MAKER_DIALOG_BACKEND}"
+    gtester ${CMAKE_CURRENT_BINARY_DIR}/${MAKER_DIALOG_BACKEND}-test
+    )
+
+#===========================================
 #  IBusChewingPreEdit
 #
 

@@ -2,8 +2,6 @@
 #include <glib.h>
 #include "MakerDialogUtil.h"
 
-#define MAKER_DIALOG_VALUE_LENGTH 200
-
 static MkdgLogLevel debugLevel = WARN;
 #define MKDG_LOG_DOMAIN_LEN 20
 static gchar mkdgLogDomain[MKDG_LOG_DOMAIN_LEN] = "MKDG";

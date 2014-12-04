@@ -33,6 +33,7 @@
 #define _MKDG_GSETTINGS_BACKEND_H_
 #include <stdio.h>
 #include <glib.h>
+#include <gio/gio.h>
 #include "MakerDialogPropertySpec.h"
 #include "MakerDialogBackend.h"
 #define GSETTINGS_BACKEND_ID "gsettings"

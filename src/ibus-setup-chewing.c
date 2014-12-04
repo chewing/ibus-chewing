@@ -56,7 +56,7 @@ gint start_dialog()
 {
 #ifdef GSETTINGS_SUPPORT
     MkdgBackend *backend =
-        mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID), "/desktop/ibus/engine/Chewing", NULL);
+        mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID), QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
 #elif GCONF2_SUPPORT
     MkdgBackend *backend =
         gconf2_backend_new("/desktop/ibus/engine", NULL);

@@ -8,9 +8,6 @@
 #include "GConf2Backend.h"
 #endif
 static IBusChewingPreEdit *self = NULL;
-#define RESULT_STRING_LEN 1000
-
-gchar resultString[RESULT_STRING_LEN] = "";
 
 void free_test()
 {
@@ -290,7 +287,7 @@ gint main(gint argc, gchar ** argv)
 #ifdef GSETTINGS_SUPPORT
     MkdgBackend *backend =
 	mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-				    "/desktop/ibus/engine/Chewing", NULL);
+				    QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
 #elif GCONF2_SUPPORT
     MkdgBackend *backend =
 	gconf2_backend_new("/desktop/ibus/engine", NULL);

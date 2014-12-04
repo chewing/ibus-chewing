@@ -107,6 +107,38 @@ gchar *mkdg_g_settings_attr_append(gchar * buf, gint bufferSize,
     return buf;
 }
 
+gchar *mkdg_g_variant_to_string(GVariant * gVar)
+{
+    static gchar result[MAKER_DIALOG_VALUE_LENGTH];
+    result[0] = '\0';
+    const GVariantType *gVType = g_variant_get_type(gVar);
+    if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_BOOLEAN)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
+		   g_variant_get_boolean(gVar) ? "1" : "0");
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT16)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%u",
+		   g_variant_get_uint16(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT32)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%u",
+		   g_variant_get_uint32(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT64)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%lu",
+		   g_variant_get_uint64(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT16)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d",
+		   g_variant_get_int16(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT32)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d",
+		   g_variant_get_int32(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT64)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%ld",
+		   g_variant_get_int64(gVar));
+    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_STRING)) {
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
+		   g_variant_get_string(gVar, NULL));
+    }
+    return result;
+}
 
 /*============================================
  * Class methods
@@ -172,7 +204,7 @@ gboolean mkdg_g_settings_write_schema_from_spec_array(const gchar *
 						      const gchar *
 						      gettextDomain)
 {
-    mkdg_log(INFO,
+    mkdg_log(DEBUG,
 	     "mkdg_g_settings_write_schema_from_spec_array(%s,%s,-,-,-,%s)",
 	     schemaId, basePath, gettextDomain);
     gchar attrBuf[KEY_BUFFER_SIZE];
@@ -209,6 +241,7 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
 				   GValue * value, const gchar * key)
 {
     GVariant *confValue = g_settings_get_value(settings, key);
+    mkdg_log(DEBUG, "mkdg_g_settings_read_value(-,-,%s)", key);
     if (confValue == NULL) {
 	mkdg_log(ERROR, "mkdg_g_settings_read_value(-,-,%s)", key);
 	return NULL;
@@ -238,9 +271,13 @@ gboolean mkdg_g_settings_backend_write_value(MkdgBackend *
 					     key, gpointer userData)
 {
     GSettings *config = (GSettings *) backend->config;
-    GVariant *confValue = mkdg_g_value_to_g_variant(value);
-    g_variant_ref_sink(confValue);
+    GVariant *confValue =
+	g_variant_ref_sink(mkdg_g_value_to_g_variant(value));
+    mkdg_log(DEBUG, "mkdg_g_settings_write_value(-,%s,%s) %s",
+	     mkdg_g_value_to_string(value), key,
+	     mkdg_g_variant_to_string(confValue));
     gboolean result = g_settings_set_value(config, key, confValue);
+    g_settings_sync();
     if (!result) {
 	mkdg_log(ERROR,
 		 "mkdg_g_settings_backend_write_value(-,%s,%s,%s,-): Fail g_settings_set_value",
@@ -259,6 +296,7 @@ MkdgBackend *mkdg_g_settings_backend_new(const gchar *
     MkdgBackend *result =
 	mkdg_backend_new(GSETTINGS_BACKEND_ID, (gpointer) client, basePath,
 			 auxData);
+
     result->readFunc = mkdg_g_settings_backend_read_value;
     result->writeFunc = mkdg_g_settings_backend_write_value;
     return result;
