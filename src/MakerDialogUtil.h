@@ -53,6 +53,14 @@ gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
 
 gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
 
+#define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value)==G_TYPE_BOOLEAN)
+
+#define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value)==G_TYPE_INT)
+
+#define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value)==G_TYPE_UINT)
+
+#define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value)==G_TYPE_STRING)
+
 /**************************************
  * String Utility Macros
  */
