@@ -1,4 +1,4 @@
-# 
+# Domingo Becker <domingobecker@gmail.com>, 2014. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.4.11\n"
@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2012-11-28 08:19-0500\n"
-"Last-Translator: gguerrer <gguerrer@fedoraproject.org>\n"
+"PO-Revision-Date: 2014-12-06 06:11-0500\n"
+"Last-Translator: Domingo Becker <domingobecker@gmail.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es\n"
 "X-Generator: Zanata 3.5.1\n"
@@ -32,11 +32,11 @@ msgstr "Eng (Inglés)"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:258
 msgid "Click to switch to English"
-msgstr ""
+msgstr "Clic para cambiar a inglés"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:262
 msgid "Click to switch to Chinese"
-msgstr ""
+msgstr "Clic para cambiar a Chino"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine.gob:265
@@ -121,17 +121,17 @@ msgstr "hanyu"
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:45
 msgctxt "Sync"
 msgid "disable"
-msgstr ""
+msgstr "deshabilitar"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:46
 msgctxt "Sync"
 msgid "keyboard"
-msgstr ""
+msgstr "teclado"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:47
 msgctxt "Sync"
 msgid "input method"
-msgstr ""
+msgstr "método de entrada"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:52
@@ -250,6 +250,9 @@ msgid ""
 "It is handy if you wish to enter lowercase by default.\n"
 "Uppercase can still be inputted with Shift."
 msgstr ""
+"Ignorar el estado de MAYÚS e ingrese en minúsculas por defecto.\n"
+"Es útil si desea ingresar en minúsculas por defecto.\n"
+"Las mayúsculas se pueden ingresar con Shift."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:128
@@ -284,11 +287,11 @@ msgstr ""
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:148
 msgid "Shift toggle Chinese Mode"
-msgstr ""
+msgstr "Shift intercambia el modo de Chino"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:151
 msgid "Shift key to toggle Chinese Mode"
-msgstr ""
+msgstr "Tecla Shift para cambiar modo de Chino"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingProperties.c:155
@@ -332,27 +335,27 @@ msgstr "Espacio para seleccionar"
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:8
 msgctxt "Configure"
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:9
 msgctxt "Configure"
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:10
 msgctxt "Configure"
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: /home/dchen/devel/ibus-chewing/src/MakerDialogWidget.c:11
 msgctxt "Configure"
 msgid "Ok"
-msgstr ""
+msgstr "Aceptar"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: /home/dchen/devel/ibus-chewing/src/main.c:84
@@ -372,4 +375,4 @@ msgstr "Chewing"
 
 #: /home/dchen/devel/ibus-chewing/src/main.c:96
 msgid "Chinese chewing input method"
-msgstr ""
+msgstr "Método de entrada de Chino"

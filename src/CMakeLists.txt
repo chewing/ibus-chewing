@@ -223,6 +223,7 @@ IF(GSETTINGS_SUPPORT)
 	)
 
     ADD_CUSTOM_TARGET(install_schemas_gsettings
+	COMMAND install "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_GSCHEMA_XML}"  "${GSETTINGS_SCHEMAS_DIR}/${PROJECT_GSCHEMA_XML}"
 	COMMAND glib-compile-schemas "${GSETTINGS_SCHEMAS_DIR}"
 	COMMENT "install_schemas_gsettings"
 	)

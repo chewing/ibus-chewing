@@ -10,6 +10,7 @@
 #elif GCONF2_SUPPORT
 #include "GConf2Backend.h"
 #endif
+#define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)
 
 MkdgBackend *backend = NULL;
 #define COMMAND_BUFFER_SIZE 200
@@ -40,6 +41,10 @@ GValue *gsettings_command_get_key_value(const gchar * key, GValue * value)
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gsettings get %s %s",
 	       QUOTE_ME(PROJECT_SCHEMA_ID), key);
     gchar *ret=command_run_obtain_output(cmdBuf);
+    if (G_VALUE_TYPE(value)==G_TYPE_UINT){
+	gint offset=strlen("uint32 ");
+	ret+=offset;
+    }
     mkdg_g_value_from_string(value, ret);
     return value;
 }
@@ -95,7 +100,7 @@ void change_new_value_from_orig_value(GValue *newValue, GValue *origValue)
 	    g_value_set_int(newValue, (g_value_get_int(origValue)>0) ? g_value_get_int(origValue)-1 :  g_value_get_int(origValue)+1);
 	    break;
 	case G_TYPE_UINT:
-	    g_value_set_uint(newValue, (g_value_get_int(origValue)>0) ? g_value_get_int(origValue)-1 :  g_value_get_int(origValue)+1);
+	    g_value_set_uint(newValue, (g_value_get_uint(origValue)>0) ? g_value_get_uint(origValue)-1 :  g_value_get_uint(origValue)+1);
 	    break;
 	case G_TYPE_STRING:
 	    tempStr=g_strdup_printf("%sx", g_value_get_string(origValue));
@@ -146,12 +151,12 @@ void write_boolean_test()
 
 void write_int_test()
 {
-    write_test("cand-per-page", G_TYPE_INT);
+    write_test("max-chi-symbol-len", G_TYPE_INT);
 }
 
 void write_uint_test()
 {
-    write_test("max-chi-symbol-len", G_TYPE_UINT);
+    write_test("cand-per-page", G_TYPE_UINT);
 }
 
 void write_string_test()
@@ -198,9 +203,9 @@ gint main(gint argc, gchar ** argv)
 #endif				/* GSETTINGS_SUPPORT */
     mkdg_log_set_level(DEBUG);
 
-    add_test_case("MakerDialogBackend", write_boolean_test);
-    add_test_case("MakerDialogBackend", write_int_test);
-    add_test_case("MakerDialogBackend", write_uint_test);
-    add_test_case("MakerDialogBackend", write_string_test);
+    TEST_RUN_THIS(write_boolean_test);
+    TEST_RUN_THIS(write_int_test);
+    TEST_RUN_THIS(write_uint_test);
+    TEST_RUN_THIS(write_string_test);
     return g_test_run();
 }

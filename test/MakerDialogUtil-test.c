@@ -1,6 +1,8 @@
 #include <glib.h>
+#include "test-util.h"
 #include "MakerDialogUtil.h"
-#define ADD_TEST_FUNC(f) g_test_add_func("/ibus-chewing/MakerDialogUtil/" #f, f)
+#define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)    
+#define TEST_RUN_THIS(f) add_test_case("/ibus-chewing/MakerDialogUtil/" #f, f)
 
 void mkdg_g_value_to_string_test()
 {
@@ -116,14 +118,14 @@ void mkdg_xml_attr_append_test()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-    ADD_TEST_FUNC(mkdg_g_value_to_string_test);
-    ADD_TEST_FUNC(mkdg_g_value_from_string_test);
-    ADD_TEST_FUNC(QUOTE_ME_test);
-    ADD_TEST_FUNC(STRING_IS_EMPTY_test);
+    TEST_RUN_THIS(mkdg_g_value_to_string_test);
+    TEST_RUN_THIS(mkdg_g_value_from_string_test);
+    TEST_RUN_THIS(QUOTE_ME_test);
+    TEST_RUN_THIS(STRING_IS_EMPTY_test);
 #if 0
-    ADD_TEST_FUNC(STRING_EQUALS_test);
+    TEST_RUN_THIS(STRING_EQUALS_test);
 #endif
-    ADD_TEST_FUNC(mkdg_xml_attr_append_test);
+    TEST_RUN_THIS(mkdg_xml_attr_append_test);
     return g_test_run();
 }
 

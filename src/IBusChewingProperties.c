@@ -158,7 +158,7 @@ Uppercase can still be inputted with Shift."),
 	N_("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
     }
     ,
-    {G_TYPE_INT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
+    {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
         IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
         candPerPage_apply_callback, 0,
         N_("Number of candidate per page."),
