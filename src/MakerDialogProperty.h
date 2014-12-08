@@ -105,6 +105,8 @@ GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
 
 #define mkdg_properties_get_int_by_key(properties, key) g_value_get_int(mkdg_properties_get_by_key(properties, key))
 
+#define mkdg_properties_get_uint_by_key(properties, key) g_value_get_uint(mkdg_properties_get_by_key(properties, key))
+
 #define mkdg_properties_get_string_by_key(properties, key) g_value_get_string(mkdg_properties_get_by_key(properties, key))
 
 gboolean mkdg_properties_set_by_key(MkdgProperties * properties,

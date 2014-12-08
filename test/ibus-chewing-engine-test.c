@@ -1,6 +1,10 @@
 #include <glib.h>
 #include "ibus-chewing-engine.h"
 #include "ibus-chewing-engine-private.h"
+#include "MakerDialogUtil.h"
+#include "test-util.h"
+#define TEST_RUN_THIS(f) add_test_case("ibus-chewing-engine", f)    
+
 static IBusChewingEngine *engine = NULL;
 
 IBusChewingEngine *ibus_chewing_engine_new()
@@ -60,8 +64,6 @@ gint main(gint argc, gchar ** argv)
 	    "plain-zhuyin", FALSE);
     ibus_chewing_pre_edit_apply_property(engine->icPreEdit,"plain-zhuyin");
 
-    g_test_add_func
-	("/ibus-chewing/ibus-chewing-engine/focus_out_then_focus_in_with_aux_text_test",
-	 focus_out_then_focus_in_with_aux_text_test);
+    TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_test);
     return g_test_run();
 }

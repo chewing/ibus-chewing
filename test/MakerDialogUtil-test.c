@@ -1,8 +1,7 @@
 #include <glib.h>
 #include "test-util.h"
 #include "MakerDialogUtil.h"
-#define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)    
-#define TEST_RUN_THIS(f) add_test_case("/ibus-chewing/MakerDialogUtil/" #f, f)
+#define TEST_RUN_THIS(f) add_test_case("MakerDialogUtil", f)    
 
 void mkdg_g_value_to_string_test()
 {

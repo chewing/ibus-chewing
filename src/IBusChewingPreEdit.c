@@ -252,7 +252,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
     }
     EventResponse response = EVENT_RESPONSE_UNDECIDED;
 
-    if (!is_chinese
+    if (!is_chinese && !is_full_shape
 	&& ibus_chewing_pre_edit_get_property_boolean(self,
 						      "force-lowercase-english"))
     {
@@ -703,8 +703,8 @@ gboolean ibus_chewing_pre_edit_process_key
      * that handle_key functions perform.
      */
     if (is_plain_zhuyin && !bpmf_check) {
-	if (!is_chinese){
-	    /* Don't hold key in English mode */
+	if (!is_chinese && ! is_full_shape){
+	    /* Don't hold key in English mode and  half shape mode */
 	    return FALSE;
 	}
 	if (kSym == IBUS_KEY_Escape) {

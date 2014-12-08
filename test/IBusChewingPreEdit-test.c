@@ -7,6 +7,10 @@
 #elif GCONF2_SUPPORT
 #include "GConf2Backend.h"
 #endif
+#include "MakerDialogUtil.h"
+#include "test-util.h"
+#define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)    
+
 static IBusChewingPreEdit *self = NULL;
 
 void free_test()
@@ -312,47 +316,16 @@ gint main(gint argc, gchar ** argv)
 
     g_assert(self != NULL);
 
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_normal_test",
-	 process_key_normal_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_text_with_symbol_test",
-	 process_key_text_with_symbol_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_mix_test",
-	 process_key_mix_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_incomplete_char_test",
-	 process_key_incomplete_char_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_buffer_full_handling_test",
-	 process_key_buffer_full_handling_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/process_key_down_arrow_test",
-	 process_key_down_arrow_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/full_half_shape_test",
-	 full_half_shape_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_test",
-	 plain_zhuyin_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_shift_symbol_test",
-	 plain_zhuyin_shift_symbol_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/plain_zhuyin_full_half_shape_test",
-	 plain_zhuyin_full_half_shape_test);
-
-    g_test_add_func
-	("/ibus-chewing/IBusChewingPreEdit/free_test", free_test);
+    TEST_RUN_THIS(process_key_normal_test);
+    TEST_RUN_THIS(process_key_text_with_symbol_test);
+    TEST_RUN_THIS(process_key_mix_test);
+    TEST_RUN_THIS(process_key_incomplete_char_test);
+    TEST_RUN_THIS(process_key_buffer_full_handling_test);
+    TEST_RUN_THIS(process_key_down_arrow_test);
+    TEST_RUN_THIS(full_half_shape_test);
+    TEST_RUN_THIS(plain_zhuyin_test);
+    TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
+    TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
+    TEST_RUN_THIS(free_test);
     return g_test_run();
 }
