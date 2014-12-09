@@ -1,7 +1,0 @@
-/**
- * 
- *
- *
- */
-/* Apply IBusText attributes */
-

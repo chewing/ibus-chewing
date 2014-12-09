@@ -71,10 +71,12 @@ void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
     if (chewing_commit_Check(self->context)) {
 	/* commit_Check=1 means new commit available */
 	gchar *commitStr = chewing_commit_String(self->context);
+	printf("### commitStr=|%s|\n", commitStr);
 	g_string_append(self->outgoing, commitStr);
 	g_free(commitStr);
 	ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
     }
+    printf("### outgoing=|%s|\n", self->outgoing->str);
     IBUS_CHEWING_LOG(DEBUG,
 		     "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
 		     self->outgoing->str);
@@ -190,7 +192,6 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_outgoing(-)");
     g_string_assign(self->outgoing, "");
 
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
 }
 
 #define is_chinese (chewing_get_ChiEngMode(self->context)!=0)
@@ -274,6 +275,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
 
     gint ret = chewing_handle_Default(self->context, kSym);
     /* Handle quick commit */
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     switch (ret) {
@@ -417,6 +419,7 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
 	event_process_or_ignore(!chewing_handle_Space(self->context));
 
     /* Handle quick commit */
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     chewing_set_easySymbolInput(self->context, easySymbolInput);
@@ -431,7 +434,13 @@ EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
     ignore_when_buffer_is_empty;
     handle_log("return");
 
-    return event_process_or_ignore(!chewing_handle_Enter(self->context));
+    EventResponse response = event_process_or_ignore(!chewing_handle_Enter(self->context));
+
+    /* Handle quick commit */
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
+    ibus_chewing_pre_edit_update_outgoing(self);
+
+    return response;
 }
 
 EventResponse self_handle_backspace(IBusChewingPreEdit * self, KSym kSym,
@@ -744,10 +753,7 @@ gboolean ibus_chewing_pre_edit_process_key
     }
     process_key_debug("After plain-zhuyin handling");
 
-
     ibus_chewing_pre_edit_update(self);
-    /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
 
     guint candidateCount =
 	ibus_chewing_lookup_table_update(self->iTable, self->iProperties,

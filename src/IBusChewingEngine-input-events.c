@@ -64,8 +64,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
     IBUS_CHEWING_LOG(INFO, "property_activate(-, %s, %u)", prop_name,
 		     prop_state);
     Self *self = SELF(engine);
-    gboolean needRefresh = TRUE;
-    if (STRING_EQUALS(prop_name, "chewing_chieng_prop")) {
+    if (STRING_EQUALS(prop_name, "InputMode")) {
 	/* Toggle Chinese <-> English */
 	ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
 	IBUS_CHEWING_LOG(INFO,
@@ -80,17 +79,17 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 		set_caps_led(!is_chinese(self), self->_priv->pDisplay);
 	    }
 	}
+	self_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
 	/* Toggle Full <-> Half */
 	chewing_set_ShapeMode(self->icPreEdit->context,
 			      !chewing_get_ShapeMode(self->
 						     icPreEdit->context));
+	self_refresh_property(self, prop_name);
     } else {
 	IBUS_CHEWING_LOG(DEBUG,
 			 "property_activate(-, %s, %u) not recognized",
 			 prop_name, prop_state);
-	needRefresh = FALSE;
     }
-    if (needRefresh)
-	self_refresh_property(self, prop_name);
+
 }

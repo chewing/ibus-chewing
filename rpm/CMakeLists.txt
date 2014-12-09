@@ -13,7 +13,7 @@ fi
 "
 	)
 
-    RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT posttrans ""
+    RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT post ""
 	"    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :"
 	)
 ENDIF()
