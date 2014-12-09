@@ -11,7 +11,6 @@
 #define cursor_current chewing_cursor_Current(self->context)
 #define total_choice chewing_cand_TotalChoice(self->context)
 
-
 /**************************************
  * Methods
  */
@@ -63,6 +62,24 @@ void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit * self)
     mkdg_properties_use_all(self->iProperties->properties, NULL);
 }
 
+void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
+{
+    if (ibus_chewing_pre_edit_has_flag(self, FLAG_UPDATED_OUTGOING)){
+	/* Commit already sent to outgoing, no need to update again */
+	return;
+    }
+    if (chewing_commit_Check(self->context)) {
+	/* commit_Check=1 means new commit available */
+	gchar *commitStr = chewing_commit_String(self->context);
+	g_string_append(self->outgoing, commitStr);
+	g_free(commitStr);
+	ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
+    }
+    IBUS_CHEWING_LOG(DEBUG,
+	    "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
+	    self->outgoing->str);
+}
+
 void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(MSG, "* ibus_chewing_pre_edit_update(-)");
@@ -95,21 +112,8 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     g_free(bufferStr);
     g_free(bpmfStr);
 
-    /* Make outgoing */
-    IBUS_CHEWING_LOG(DEBUG,
-		     "ibus_chewing_pre_edit_update(-): preEdit=|%s| commit_check=%d outgoing=|%s|",
-		     self->preEdit->str,
-		     chewing_commit_Check(self->context),
-		     self->outgoing->str);
-    if (chewing_commit_Check(self->context)) {
-	/* commit_Check=1 means new commit available */
-	gchar *commitStr = chewing_commit_String(self->context);
-	g_string_append(self->outgoing, commitStr);
-	g_free(commitStr);
-    }
-    IBUS_CHEWING_LOG(DEBUG,
-		     "ibus_chewing_pre_edit_update(-): preEdit=|%s| outgoing=|%s|",
-		     self->preEdit->str, self->outgoing->str);
+    ibus_chewing_pre_edit_update_outgoing(self);
+
 }
 
 guint ibus_chewing_pre_edit_length(IBusChewingPreEdit * self)
@@ -177,12 +181,16 @@ void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self)
     chewing_set_escCleanAllBuf(self->context, TRUE);
     chewing_handle_Esc(self->context);
     chewing_set_escCleanAllBuf(self->context, origState);
+
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
 }
 
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_outgoing(-)");
     g_string_assign(self->outgoing, "");
+
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
 }
 
 #define is_chinese (chewing_get_ChiEngMode(self->context)!=0)
@@ -265,6 +273,8 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
     }
 
     gint ret = chewing_handle_Default(self->context, kSym);
+    /* Handle quick commit */
+    ibus_chewing_pre_edit_update_outgoing(self);
 
     switch (ret) {
     case 0:
@@ -280,6 +290,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
     default:
 	break;
     }
+
     IBUS_CHEWING_LOG(DEBUG,
 		     "self_handle_key_sym_default() ret=%d response=%d",
 		     ret, response);
@@ -404,6 +415,9 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
     }
     EventResponse response =
 	event_process_or_ignore(!chewing_handle_Space(self->context));
+
+    /* Handle quick commit */
+    ibus_chewing_pre_edit_update_outgoing(self);
 
     chewing_set_easySymbolInput(self->context, easySymbolInput);
     return response;
@@ -666,7 +680,7 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym)
 /* keyCode should be converted to kSym already */
 gboolean ibus_chewing_pre_edit_process_key
     (IBusChewingPreEdit * self, KSym kSym, KeyModifiers unmaskedMod) {
-    IBUS_CHEWING_LOG(MSG,
+    IBUS_CHEWING_LOG(INFO,
 		     "***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))",
 		     kSym, key_sym_get_name(kSym),
 		     unmaskedMod, modifiers_to_string(unmaskedMod));
@@ -676,7 +690,7 @@ gboolean ibus_chewing_pre_edit_process_key
     EventResponse response;
     response = handle_key(kSym, unmaskedMod);
 
-    IBUS_CHEWING_LOG(INFO,
+    IBUS_CHEWING_LOG(DEBUG,
 		     "ibus_chewing_pre_edit_process_key() response=%x",
 		     response);
     self->keyLast = kSym;
@@ -703,19 +717,16 @@ gboolean ibus_chewing_pre_edit_process_key
      * that handle_key functions perform.
      */
     if (is_plain_zhuyin && !bpmf_check) {
-	if (!is_chinese && ! is_full_shape){
-	    /* Don't hold key in English mode and  half shape mode */
-	    return FALSE;
-	}
 	if (kSym == IBUS_KEY_Escape) {
 	    ibus_chewing_pre_edit_clear_pre_edit(self);
 	} else if (kSym == IBUS_KEY_Return && table_is_showing) {
 	    /* Use Enter to select the last chosen */
 	    chewing_handle_Up(self->context);
 	    chewing_handle_Enter(self->context);
-	} else if (!table_is_showing) {
+	} else if (is_chinese  && !table_is_showing) {
 	    /* Character completed, and lookup table is not show */
 	    /* Then open lookup table */
+
 	    if (is_shift) {
 		/* For Chinese symbols */
 		chewing_handle_Left(self->context);
@@ -731,6 +742,8 @@ gboolean ibus_chewing_pre_edit_process_key
 
 
     ibus_chewing_pre_edit_update(self);
+    /* Handle quick commit */
+    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
 
     guint candidateCount =
 	ibus_chewing_lookup_table_update(self->iTable, self->iProperties,

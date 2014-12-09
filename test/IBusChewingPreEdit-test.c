@@ -120,13 +120,13 @@ void process_key_text_with_symbol_test()
 /* " 這是ibus-chewing 輸入法"*/
 void process_key_mix_test()
 {
-    key_press_from_string(" 5k4g4");
+    key_press_from_string("5k4g4");
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     key_press_from_string("ibus-chewing ");
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     key_press_from_string("gj bj4z83");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit(" 這是ibus-chewing 輸入法", "");
+    assert_outgoing_pre_edit("這是ibus-chewing 輸入法", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -261,13 +261,13 @@ void plain_zhuyin_shift_symbol_test()
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
 
     /* String is bypass in English mode */
-    key_press_from_string("882-5252");
+    key_press_from_string("4321-9876 ");
 
-    assert_outgoing_pre_edit("你好，打電話；", "");
+    assert_outgoing_pre_edit("你好，打電話；4321-9876 ", "");
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
-    /* " 來訂餐" */
-    key_press_from_string(" x9612u/42h0 2");
-    assert_outgoing_pre_edit("你好，打電話；來訂餐", "");
+    /* "來訂餐" */
+    key_press_from_string("x9612u/42h0 2");
+    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
