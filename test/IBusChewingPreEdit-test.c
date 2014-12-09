@@ -9,7 +9,7 @@
 #endif
 #include "MakerDialogUtil.h"
 #include "test-util.h"
-#define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)    
+#define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)
 
 static IBusChewingPreEdit *self = NULL;
 
@@ -59,16 +59,18 @@ void key_press_from_string(const gchar * keySeq)
     }
 }
 
-void assert_substring(const gchar *haystack, const gchar *needle, gint begin, gint length)
+void assert_substring(const gchar * haystack, const gchar * needle,
+		      gint begin, gint length)
 {
-    gchar *subStr=g_utf8_substring(haystack,begin, begin+length);
+    gchar *subStr = g_utf8_substring(haystack, begin, begin + length);
     g_assert_cmpstr(subStr, ==, needle);
     g_free(subStr);
 }
 
 #define assert_pre_edit_substring(needle, begin, length) assert_substring(ibus_chewing_pre_edit_get_pre_edit(self), needle, begin, length)
 
-void assert_outgoing_pre_edit(const gchar * outgoing, const gchar * pre_edit)
+void assert_outgoing_pre_edit(const gchar * outgoing,
+			      const gchar * pre_edit)
 {
     g_assert_cmpstr(outgoing, ==,
 		    ibus_chewing_pre_edit_get_outgoing(self));
@@ -148,7 +150,8 @@ void process_key_buffer_full_handling_test()
     key_press_from_key_sym(',', IBUS_SHIFT_MASK);
     key_press_from_string("c.4au04u.3g0 qi ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我家門前有小河，後面有山坡", "");
+    assert_outgoing_pre_edit("我家門前有小河，後面有山坡",
+			     "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -158,7 +161,8 @@ void process_key_buffer_full_handling_test()
 void process_key_down_arrow_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", FALSE);
+						     "plain-zhuyin",
+						     FALSE);
     key_press_from_string("t/6g4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("1");
@@ -170,7 +174,7 @@ void process_key_down_arrow_test()
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("4");
-    assert_pre_edit_substring("世",1,1);
+    assert_pre_edit_substring("世", 1, 1);
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -179,7 +183,8 @@ void process_key_down_arrow_test()
 void full_half_shape_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", FALSE);
+						     "plain-zhuyin",
+						     FALSE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
@@ -267,7 +272,8 @@ void plain_zhuyin_shift_symbol_test()
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
     /* "來訂餐" */
     key_press_from_string("x9612u/42h0 2");
-    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐", "");
+    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐",
+			     "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -276,7 +282,7 @@ void plain_zhuyin_shift_symbol_test()
 void plain_zhuyin_full_half_shape_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-	    "plain-zhuyin", TRUE);
+						     "plain-zhuyin", TRUE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));

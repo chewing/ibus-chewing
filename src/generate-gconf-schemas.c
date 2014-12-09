@@ -37,7 +37,7 @@ static const GOptionEntry entries[] = {
 
 
 /*============================================
- * GConf Schemas methods
+ * GConf Schemas routines
  */
 
 static void ctx_write_locale(PropertyContext * ctx,
@@ -181,12 +181,12 @@ int main(gint argc, gchar * argv[])
 
     if (!g_option_context_parse(context, &argc, &argv, &error)) {
 	g_print("Option parsing failed: %s\n", error->message);
-	return 1;
+	return 2;
     }
     g_option_context_free(context);
     if (argc < 2) {
-	fprintf(stderr, "Specify filename of outputing schemas file!\n");
-	return 1;
+	fprintf(stderr, "Specify output schemas file!\n");
+	return 2;
     }
     if (localeStr == NULL) {
 	localeStr = DEFAULT_LOCALES;
@@ -203,7 +203,7 @@ int main(gint argc, gchar * argv[])
 	g_free(localeStr);
     }
     if (!result) {
-	return 2;
+	return 1;
     }
     return 0;
 }

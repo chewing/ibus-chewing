@@ -57,7 +57,6 @@ MACRO(GOB_GENERATE name gobFile)
 ENDMACRO(GOB_GENERATE name gobFile)
 
 SET(IBUS_CHEWING_ENGINE_SOURCE_INCLUDED_C_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-util.c
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-signal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-input-events.c
 )

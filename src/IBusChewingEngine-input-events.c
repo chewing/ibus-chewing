@@ -21,11 +21,9 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 	ibus_chewing_pre_edit_process_key(self->icPreEdit, kSym,
 					  unmaskedMod);
 
-    IBUS_CHEWING_LOG(MSG,
-	    "process_key_event() result=%d",
-	    result);
+    IBUS_CHEWING_LOG(MSG, "process_key_event() result=%d", result);
     self_update(self);
-    
+
     return result;
 }
 
@@ -47,8 +45,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
 	IBUS_CHEWING_LOG(DEBUG, "candidate_clicked() index out of ranged");
 	return;
     }
-    if (ibus_chewing_pre_edit_has_flag
-	(self->icPreEdit, FLAG_TABLE_SHOW)) {
+    if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_TABLE_SHOW)) {
 	gint *selKeys = chewing_get_selKey(self->icPreEdit->context);
 	KSym k = (KSym) selKeys[index];
 	ibus_chewing_pre_edit_process_key(self->icPreEdit, k, 0);
@@ -97,5 +94,3 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
     if (needRefresh)
 	self_refresh_property(self, prop_name);
 }
-
-

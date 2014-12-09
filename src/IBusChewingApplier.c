@@ -16,7 +16,7 @@ static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
 
 
 /*============================================
- * Callback functions
+ * Callback routines
  */
 gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData)
 {
@@ -35,7 +35,9 @@ gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData)
     IBUS_CHEWING_LOG(DEBUG, "selKeys_apply_callback(%s,%s)",
 		     ctx->spec->key, mkdg_g_value_to_string(value));
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-    ibus_chewing_lookup_table_resize(icPreEdit->iTable, icPreEdit->iProperties, icPreEdit->context);
+    ibus_chewing_lookup_table_resize(icPreEdit->iTable,
+				     icPreEdit->iProperties,
+				     icPreEdit->context);
     return TRUE;
 }
 
@@ -95,7 +97,8 @@ gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-    chewing_set_maxChiSymbolLen(icPreEdit->context, g_value_get_int(value));
+    chewing_set_maxChiSymbolLen(icPreEdit->context,
+				g_value_get_int(value));
     return TRUE;
 }
 
@@ -118,11 +121,12 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
 
     } else if (strcmp(str, "input method") == 0) {
 	ibus_chewing_pre_edit_set_flag(icPreEdit, FLAG_SYNC_FROM_IM);
-	ibus_chewing_pre_edit_clear_flag(icPreEdit, FLAG_SYNC_FROM_KEYBOARD);
+	ibus_chewing_pre_edit_clear_flag(icPreEdit,
+					 FLAG_SYNC_FROM_KEYBOARD);
     } else {
 	ibus_chewing_pre_edit_clear_flag(icPreEdit,
-				       FLAG_SYNC_FROM_IM |
-				       FLAG_SYNC_FROM_KEYBOARD);
+					 FLAG_SYNC_FROM_IM |
+					 FLAG_SYNC_FROM_KEYBOARD);
     }
     return TRUE;
 }
@@ -138,7 +142,9 @@ gboolean candPerPage_apply_callback(PropertyContext * ctx,
 				    gpointer userData)
 {
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-    ibus_chewing_lookup_table_resize(icPreEdit->iTable, icPreEdit->iProperties, icPreEdit->context);
+    ibus_chewing_lookup_table_resize(icPreEdit->iTable,
+				     icPreEdit->iProperties,
+				     icPreEdit->context);
     return TRUE;
 }
 

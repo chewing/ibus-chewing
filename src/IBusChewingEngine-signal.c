@@ -1,7 +1,30 @@
-/**
- * Signal process subroutines
+/*=================================================
+ * Signal process routines
  *
  */
+
+/**
+ * ibus_chewing_engine_reset:
+ * @self: IBusChewingEngine instance.
+ *
+ * Reset the outgoing and pre_edit buffer and cursor
+ * chewing_reset will NOT called here, as it will chnage the KBType and input mode.
+ */
+void ibus_chewing_engine_reset(IBusChewingEngine * self)
+{
+    IBUS_CHEWING_LOG(MSG, "* reset");
+
+    /* Always clean buffer */
+    ibus_chewing_pre_edit_clear(self->icPreEdit);
+#ifndef UNIT_TEST
+    IBusEngine *engine=IBUS_ENGINE(self);
+    ibus_engine_hide_auxiliary_text(engine);
+    ibus_engine_hide_lookup_table(engine);
+    ibus_engine_update_preedit_text(engine,
+				    SELF_GET_CLASS(self)->emptyText, 0,
+				    FALSE);
+#endif
+}
 
 void ibus_chewing_engine_enable(IBusChewingEngine * self)
 {
@@ -51,6 +74,8 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
     IBUS_CHEWING_LOG(DEBUG, "focus_out(): return");
 }
 
+
+
 #if IBUS_CHECK_VERSION(1, 5, 4)
 void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 					  guint purpose, guint hints)
@@ -69,8 +94,8 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
 }
 #endif
 
-/**
- * Display text update subroutines
+/*=================================================
+ * Display text update routines
  *
  */
 
@@ -87,19 +112,19 @@ void parent_commit_text(IBusEngine * iEngine)
 #endif
 }
 
-void parent_update_preedit_text(IBusEngine * iEngine,
+void parent_update_pre_edit_text(IBusEngine * iEngine,
 				IBusText * iText, guint cursor_pos,
 				gboolean visible)
 {
 #ifdef UNIT_TEST
-    printf("* parent_update_preedit_text(-, %s, %u, %x)\n",
+    printf("* parent_update_pre_edit_text(-, %s, %u, %x)\n",
 	   iText->text, cursor_pos, visible);
 #else
     ibus_engine_update_preedit_text(iEngine, iText, cursor_pos, visible);
 #endif
 }
 
-void parent_update_preedit_text_with_mode(IBusEngine * iEngine,
+void parent_update_pre_edit_text_with_mode(IBusEngine * iEngine,
 					  IBusText * iText,
 					  guint cursor_pos,
 					  gboolean visible,
@@ -107,7 +132,7 @@ void parent_update_preedit_text_with_mode(IBusEngine * iEngine,
 {
 #ifdef UNIT_TEST
     printf
-	("* parent_update_preedit_text_with_mode(-, %s, %u, %x, %x)\n",
+	("* parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n",
 	 iText->text, cursor_pos, visible, mode);
 #else
     ibus_engine_update_preedit_text_with_mode
@@ -136,9 +161,65 @@ void parent_update_auxiliary_text(IBusEngine * iEngine, IBusText * iText,
 #endif
 }
 
+IBusText *decorate_pre_edit(IBusChewingPreEdit * icPreEdit,
+	EngineFlag statusFlags)
+{
+    gchar *preEdit = ibus_chewing_pre_edit_get_pre_edit(icPreEdit);
+    IBusText *iText =
+	g_object_ref_sink(ibus_text_new_from_string(preEdit));
+
+    gint chiSymbolCursor = chewing_cursor_Current(icPreEdit->context);
+    IBUS_CHEWING_LOG(DEBUG,
+	    "decorate_pre_edit() cursor=%d preEdit=%s",
+	    chiSymbolCursor, preEdit);
+
+
+    gint charLen = (gint) g_utf8_strlen(preEdit, -1);
+    gint cursorRight = chiSymbolCursor + icPreEdit->bpmfLen;
+
+    IBUS_CHEWING_LOG(DEBUG, "decorate_pre_edit() charLen=%d cursorRight=%d",
+	    charLen, cursorRight);
+
+    IntervalType it;
+    chewing_interval_Enumerate(icPreEdit->context);
+    /* Add double lines on chewing interval that contains cursor */
+    /* Add single line on other chewing interval */
+    while (chewing_interval_hasNext(icPreEdit->context)) {
+	chewing_interval_Get(icPreEdit->context, &it);
+	if (it.from <= chiSymbolCursor && chiSymbolCursor <= it.to) {
+	    ibus_text_append_attribute(iText,
+		    IBUS_ATTR_TYPE_UNDERLINE,
+		    IBUS_ATTR_UNDERLINE_DOUBLE,
+		    it.from, it.to + 1);
+
+	} else {
+	    ibus_text_append_attribute(iText,
+		    IBUS_ATTR_TYPE_UNDERLINE,
+		    IBUS_ATTR_UNDERLINE_SINGLE,
+		    it.from, it.to + 1);
+	}
+
+    }
+
+    if (!mkdg_has_flag(statusFlags, ENGINE_FLAG_CAP_SURROUNDING_TEXT)) {
+	/* Cannot change color when if the client is not capable
+	 * of showing surrounding text
+	 */
+	return iText;
+    }
+
+    /* Show current cursor in red */
+    ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_BACKGROUND,
+	    0x00ff0000, chiSymbolCursor,
+	    chiSymbolCursor + 1);
+
+    return iText;
+}
+
 void refresh_pre_edit_text(IBusChewingEngine * self)
 {
-    IBusText *iText = decorate_preedit(self->icPreEdit, self->_priv->statusFlags);
+    IBusText *iText =
+	decorate_pre_edit(self->icPreEdit, self->_priv->statusFlags);
     if (self->preEditText) {
 	g_object_unref(self->preEditText);
     }
@@ -158,7 +239,7 @@ void update_pre_edit_text(IBusChewingEngine * self)
 	mode = IBUS_ENGINE_PREEDIT_COMMIT;
     }
 
-    parent_update_preedit_text_with_mode(IBUS_ENGINE(self),
+    parent_update_pre_edit_text_with_mode(IBUS_ENGINE(self),
 					 self->preEditText,
 					 cursor_current, visible, mode);
 }
@@ -231,16 +312,16 @@ void refresh_outgoing_text(IBusChewingEngine * self)
 {
     gchar *outgoingStr =
 	ibus_chewing_pre_edit_get_outgoing(self->icPreEdit);
-    IBUS_CHEWING_LOG(INFO, "refresh_going_text() outgoingStr=|%s|",
-	    outgoingStr);
+    IBUS_CHEWING_LOG(INFO, "refresh_outgoing_text() outgoingStr=|%s|",
+		     outgoingStr);
 
     if (self->outgoingText) {
 	g_object_unref(self->outgoingText);
     }
     self->outgoingText =
 	g_object_ref_sink(ibus_text_new_from_string(outgoingStr));
-    IBUS_CHEWING_LOG(DEBUG, "refresh_going_text() outgoingText=|%s|",
-	    self->outgoingText->text);
+    IBUS_CHEWING_LOG(DEBUG, "refresh_outgoing_text() outgoingText=|%s|",
+		     self->outgoingText->text);
 }
 
 void commit_text(IBusChewingEngine * self)

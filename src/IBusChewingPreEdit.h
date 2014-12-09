@@ -164,7 +164,7 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self);
 
 gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self);
 
-void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit *self);
+void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self);
 
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit * self,
 					   KSym kSym,

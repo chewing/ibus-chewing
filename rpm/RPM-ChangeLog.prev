@@ -5,7 +5,7 @@
 - Fix Build for RHEL7
 
 * Wed Jan 15 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.5-1
-- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in %post and %postun
+- Resolves Bug 1013977 - ibus-chewing needs to have ibus write-cache --system in post and postun
 - Resolves Bug 1027031 - CVE-2013-4509 ibus-chewing: ibus: visible password entry flaw [rhel-7.0]
 - Resolves Bug 1028911 - [zh_TW]'Chinese<->English' switch does not work when clicking on the Chewing menu list.
 - Resolves Bug 1045868 - ibus-chewing *again* not built with $RPM_OPT_FLAGS

@@ -86,8 +86,6 @@ enum ENGINE_FLAG {
 } Engine:Flag;
 
 %h{
-
-
 extern MkdgPropertySpec propSpecs[];
 extern const gchar *page_labels[];
 extern const gchar *button_labels[];
@@ -106,7 +104,6 @@ extern GtkResponseType button_responses[];
 #define is_plain_chewing ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "plain-zhuyin")
 
 #define cursor_current chewing_cursor_Current(self->icPreEdit->context)
-
 %}
 
 %privateheader{
@@ -140,10 +137,6 @@ extern gint ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
 #include "IBusConfigBackend.h"
-%}
-
-%{
-#include "IBusChewingEngine-util.c"
 %}
 
 class IBus:Chewing:Engine from IBus:Engine {
@@ -470,24 +463,8 @@ class IBus:Chewing:Engine from IBus:Engine {
      */
   override(IBus:Engine) void
      reset(IBus:Engine * engine) {
-	IBUS_CHEWING_LOG(MSG, "reset");
 	Self *self = SELF(engine);
-
-	/* Always clean buffer */
-	ibus_chewing_pre_edit_clear(self->icPreEdit);
-
-	/* Save KBType type, because chewing_Reset() will reset it to default.
-	 */
-	int kbType = chewing_get_KBType(self->icPreEdit->context);
-	chewing_Reset(self->icPreEdit->context);
-	chewing_set_KBType(self->icPreEdit->context, kbType);
-#ifndef UNIT_TEST	
-	ibus_engine_hide_auxiliary_text(engine);
-	ibus_engine_hide_lookup_table(engine);
-	ibus_engine_update_preedit_text(engine,
-					SELF_GET_CLASS(self)->emptyText, 0,
-					FALSE);
-#endif     
+	ibus_chewing_engine_reset(self);
      }
 
   override(IBus:Engine) void
@@ -578,6 +555,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 }
 
 %h{
+void ibus_chewing_engine_reset(IBusChewingEngine *self);
 void ibus_chewing_engine_enable(IBusChewingEngine *self);
 void ibus_chewing_engine_disable(IBusChewingEngine *self);
 void ibus_chewing_engine_focus_in(IBusChewingEngine *self);

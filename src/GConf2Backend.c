@@ -85,13 +85,9 @@ static GConfValue *gconf_value_new_g_value(GValue * value)
     return confValue;
 }
 
-/*============================================
- * Class methods
- */
-
 #define KEY_BUFFER_SIZE 100
 static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
-			  const gchar * section, const gchar * key)
+	const gchar * section, const gchar * key)
 {
     if (!STRING_IS_EMPTY(backend->basePath)) {
 	g_strlcpy(confKey, backend->basePath, KEY_BUFFER_SIZE);
@@ -107,6 +103,9 @@ static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
     return confKey;
 }
 
+/*============================================
+ * Interface routines
+ */
 GValue *gconf2_backend_read_value(MkdgBackend * backend,
 				  GValue * value,
 				  const gchar * section,

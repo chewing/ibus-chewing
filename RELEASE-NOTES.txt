@@ -2,19 +2,20 @@ PRJ_VER=1.4.11
 SUMMARY=Use GSettings instead of GConf2; MakerDialog no longer invoke GUI on startup.
 REDHAT_BUGZILLA=902866,1119963
 [Changes]
+- Resolves Bug 1013977 - Slow focus change with ibus-chewing
+- Resolves Bug 1062133 - ibus-chewing may not handle key event after focus change
+- Resolves Bug 1073797 - Cannot identify input mode for Chinese IME (ibus-chewing)
+- Fixed Bug 902866 - ibus-chewing uses dconf but still installs gconf schemas
+  (Also listed as GitHub ibus-chewing #36)
 - MakerDialog GUI is only loaded when setting dialog is invoked.
 - Setting is removed from ibus-properties because it can be launched
   from either:
   + Executable ibus-setup-chewing: Usually under /usr/libexec
   + Input method preference in IBus preference.
-- github is now hosting the ibus-chewing tarballs.
-- Fixed Bug 902866 - ibus-chewing uses dconf but still installs gconf schemas
-  (Also listed as GitHub ibus-chewing #36)
-- Resolves Bug 1013977 - Slow focus change with ibus-chewing
-    Fixed github issue #45: Optimize properties handling.
-    Thanks Ueno.
 - Fixed github issue #43: First space not able to input
     Thanks FreedomKnight.
 - Fixed github issue #44: Update input-events (for libchewing-0.4.0)
     Thanks hiunnhue.
-
+- Fixed github issue #45: Optimize properties handling.
+    Thanks Ueno.
+- github is now hosting the ibus-chewing tarballs.

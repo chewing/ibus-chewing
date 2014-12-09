@@ -141,7 +141,7 @@ gchar *mkdg_g_variant_to_string(GVariant * gVar)
 }
 
 /*============================================
- * Class methods
+ * Class routines
  */
 
 #define KEY_BUFFER_SIZE 300

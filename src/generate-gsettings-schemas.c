@@ -46,10 +46,13 @@ gboolean write_schemas_file(const gchar * filename)
     }
 
     gboolean result =
-	mkdg_g_settings_write_schema_from_spec_array(
-		QUOTE_ME(PROJECT_SCHEMA_ID),
-		QUOTE_ME(PROJECT_SCHEMA_PATH),
-		outF, propSpecs, QUOTE_ME(PROJECT_NAME));
+	mkdg_g_settings_write_schema_from_spec_array(QUOTE_ME
+						     (PROJECT_SCHEMA_ID),
+						     QUOTE_ME
+						     (PROJECT_SCHEMA_PATH),
+						     outF, propSpecs,
+						     QUOTE_ME
+						     (PROJECT_NAME));
 
     if (fclose(outF))
 	return FALSE;

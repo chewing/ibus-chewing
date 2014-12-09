@@ -90,19 +90,25 @@ static void start_component(void)
 					   QUOTE_ME(PROJECT_NAME));
 	}
 	IBusEngineDesc *engineDesc =
-            ibus_engine_desc_new_varargs(
-                    "name", "chewing",
-                    "longname", _("Chewing"),
-                    "description", 				 _("Chinese chewing input method"),
-                    "language", "zh_TW", 
-                    "license", "GPLv2+",
-                    "author",  _("Peng Huang, Ding-Yi Chen"),
-                    "icon", QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
-                    "layout", "us",
-                    "setup", QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing",
-                    "version", QUOTE_ME(PRJ_VER),
-                    "textdomain", QUOTE_ME(PROJECT_NAME),
-                    NULL);
+	    ibus_engine_desc_new_varargs("name", "chewing",
+					 "longname", _("Chewing"),
+					 "description",
+					 _("Chinese chewing input method"),
+					 "language", "zh_TW",
+					 "license", "GPLv2+",
+					 "author",
+					 _("Peng Huang, Ding-Yi Chen"),
+					 "icon",
+					 QUOTE_ME(PRJ_DATA_DIR) "/icons/"
+					 QUOTE_ME(PROJECT_NAME) ".png",
+					 "layout", "us",
+					 "setup",
+					 QUOTE_ME(LIBEXEC_DIR)
+					 "/ibus-setup-chewing",
+					 "version", QUOTE_ME(PRJ_VER),
+					 "textdomain",
+					 QUOTE_ME(PROJECT_NAME),
+					 NULL);
 	ibus_component_add_engine(component, engineDesc);
 	ibus_bus_register_component(bus, component);
     }
@@ -176,7 +182,8 @@ int main(gint argc, gchar * argv[])
     if (showFlags) {
 	printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
 	printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
-	printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL) "\n");
+	printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
+	       "\n");
     } else {
 	start_component();
     }

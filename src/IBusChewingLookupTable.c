@@ -27,18 +27,18 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
 					  "sel-keys");
     guint candPerPage =
 	mkdg_properties_get_uint_by_key(iProperties->properties,
-				       "cand-per-page");
+					"cand-per-page");
 
     int len = MIN(strlen(selKeyStr), MAX_SELKEY);
     len = MIN(len, candPerPage);
     IBusText *iText;
     int i;
-    if (iTable!=NULL){
+    if (iTable != NULL) {
 	ibus_lookup_table_clear(iTable);
 	for (i = 0; i < len; i++) {
 	    selKSym[i] = (gint) selKeyStr[i];
 	    iText = g_object_ref_sink(ibus_text_new_from_unichar
-		    ((gunichar) selKeyStr[i]));
+				      ((gunichar) selKeyStr[i]));
 	    ibus_lookup_table_set_label(iTable, i, iText);
 	}
     }
@@ -58,7 +58,7 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
     gint currentPage = chewing_cand_CurrentPage(context);
     IBUS_CHEWING_LOG(INFO,
 		     "***** ibus_chewing_lookup_table_update(): choicePerPage=%d, totalChoice=%d, currentPage=%d",
-		     choicePerPage,totalChoice, currentPage);
+		     choicePerPage, totalChoice, currentPage);
     chewing_cand_Enumerate(context);
     for (i = 0; i < choicePerPage; i++) {
 	if (chewing_cand_hasNext(context)) {

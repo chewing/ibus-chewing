@@ -64,7 +64,7 @@ void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit * self)
 
 void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
 {
-    if (ibus_chewing_pre_edit_has_flag(self, FLAG_UPDATED_OUTGOING)){
+    if (ibus_chewing_pre_edit_has_flag(self, FLAG_UPDATED_OUTGOING)) {
 	/* Commit already sent to outgoing, no need to update again */
 	return;
     }
@@ -76,8 +76,8 @@ void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
 	ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
     }
     IBUS_CHEWING_LOG(DEBUG,
-	    "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
-	    self->outgoing->str);
+		     "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
+		     self->outgoing->str);
 }
 
 void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
@@ -200,7 +200,7 @@ gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self)
     return is_chinese;
 }
 
-void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit *self)
+void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self)
 {
     /* When Chi->Eng with incomplete character */
     if (is_chinese && bpmf_check) {
@@ -210,7 +210,7 @@ void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit *self)
 }
 
 
-void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit *self)
+void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit * self)
 {
     /* When Chi->Eng with incomplete character */
     if (is_chinese && bpmf_check) {
@@ -684,6 +684,8 @@ gboolean ibus_chewing_pre_edit_process_key
 		     "***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))",
 		     kSym, key_sym_get_name(kSym),
 		     unmaskedMod, modifiers_to_string(unmaskedMod));
+    process_key_debug("Before response");
+
     gboolean bufferEmpty =
 	(ibus_chewing_pre_edit_length(self) == 0) ? TRUE : FALSE;
     /* Find corresponding rule */
@@ -693,6 +695,7 @@ gboolean ibus_chewing_pre_edit_process_key
     IBUS_CHEWING_LOG(DEBUG,
 		     "ibus_chewing_pre_edit_process_key() response=%x",
 		     response);
+    process_key_debug("After response");
     self->keyLast = kSym;
     switch (response) {
     case EVENT_RESPONSE_ABSORB:
@@ -710,20 +713,21 @@ gboolean ibus_chewing_pre_edit_process_key
 	break;
     }
 
-    /* EVENT_RESPONSE_PROCESS */
-    process_key_debug("After response");
 
-    /* libchewing functions are used here to skip the check 
-     * that handle_key functions perform.
+    /** 
+     *Plain zhuyin mode
      */
     if (is_plain_zhuyin && !bpmf_check) {
+	/* libchewing functions are used here to skip the check 
+	 * that handle_key functions perform.
+	 */
 	if (kSym == IBUS_KEY_Escape) {
 	    ibus_chewing_pre_edit_clear_pre_edit(self);
 	} else if (kSym == IBUS_KEY_Return && table_is_showing) {
 	    /* Use Enter to select the last chosen */
 	    chewing_handle_Up(self->context);
 	    chewing_handle_Enter(self->context);
-	} else if (is_chinese  && !table_is_showing) {
+	} else if (is_chinese && !table_is_showing) {
 	    /* Character completed, and lookup table is not show */
 	    /* Then open lookup table */
 

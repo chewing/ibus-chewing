@@ -42,7 +42,7 @@ void mkdg_log_set_file(FILE * file);
 void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
 
 void mkdg_log_domain(const gchar * domain, MkdgLogLevel level,
-	const gchar * format, ...);
+		     const gchar * format, ...);
 
 gchar *mkdg_g_value_to_string(GValue * value);
 
