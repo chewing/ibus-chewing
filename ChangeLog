@@ -1,4 +1,4 @@
-* Tue Dec 09 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
+* Wed Dec 10 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11
 - Resolves Bug 1013977 - Slow focus change with ibus-chewing
 - Resolves Bug 1062133 - ibus-chewing may not handle key event after focus change
 - Resolves Bug 1073797 - Cannot identify input mode for Chinese IME (ibus-chewing)

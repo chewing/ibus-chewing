@@ -25,7 +25,6 @@
 #include <glib.h>
 #include <ibus.h>
 #include <chewing.h>
-#include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 
