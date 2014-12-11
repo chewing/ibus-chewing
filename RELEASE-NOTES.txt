@@ -1,4 +1,4 @@
-PRJ_VER=1.4.11
+PRJ_VER=1.4.11.1
 SUMMARY=Use GSettings instead of GConf2; MakerDialog no longer invoke GUI on startup.
 REDHAT_BUGZILLA=902866,1119963
 [Changes]
