@@ -1,3 +1,6 @@
+* Thu Dec 11 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.12
+- Fix the GitHub download link
+
 * Thu Dec 11 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.11.1
 - Resolves Bug 1013977 - Slow focus change with ibus-chewing
 - Resolves Bug 1062133 - ibus-chewing may not handle key event after focus change

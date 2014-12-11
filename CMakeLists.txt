@@ -88,8 +88,7 @@ SET(VENDOR "Red Hat, APAC, Inc.")
 SET(LICENSE "GPLv2+")
 SET(PRJ_GROUP "System Environment/Libraries")
 SET(RPM_SPEC_URL "https://github.com/definite/${PROJECT_NAME}")
-SET(RPM_SPEC_SOURCES "https://github.com/definite/${PROJECT_NAME}/releases/download/${PROJECT_NAME}/${PROJECT_NAME}-%{version}-Source.tar.gz")
-
+SET(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
 
 ####################################################################
 # Includes
