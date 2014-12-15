@@ -26,8 +26,8 @@ fi
 	)
 
     RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT postun ""
-	"    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-	${RPM_SPEC_POSTUN_COMMON}
+	"/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+        ${RPM_SPEC_POSTUN_COMMON}
 "
 	)
 ENDIF()
