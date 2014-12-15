@@ -94,6 +94,7 @@
     <locale>ur</locale>
     <locale>vi</locale>
     <locale>wba</locale>
+    <locale>yo</locale>
     <locale map-from="zh_CN">zh-CN</locale>
     <locale map-from="zh_HK">zh-HK</locale>
     <locale map-from="zh_TW">zh-TW</locale>
