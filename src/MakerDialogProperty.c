@@ -128,8 +128,6 @@ gboolean property_context_set(PropertyContext * ctx, GValue * value)
 		 ctx->spec->key);
 	return FALSE;
     }
-    mkdg_log(DEBUG, "property_context_set(%s,%s)", ctx->spec->key,
-	     mkdg_g_value_to_string(value));
     g_value_copy(value, &(ctx->value));
     return TRUE;
 }
@@ -153,13 +151,13 @@ gboolean property_context_save(PropertyContext * ctx, GValue * value,
 
 gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 {
-    mkdg_log(DEBUG, "property_context_apply(%s,-)", ctx->spec->key);
     if (ctx == NULL || ctx->parent == NULL) {
 	mkdg_log(WARN,
 		 "property_context_apply(%s): either ctx or ctx->parent is NULL",
 		 ctx->spec->key);
 	return FALSE;
     }
+    mkdg_log(DEBUG, "property_context_apply(%s,-)", ctx->spec->key);
     return ctx->spec->applyFunc(ctx, userData);
 }
 

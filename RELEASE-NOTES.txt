@@ -1,6 +1,6 @@
-PRJ_VER=1.4.12
-SUMMARY=Fix the GitHub download link
+PRJ_VER=1.4.13
+SUMMARY=Fixed the issues found in static checks
 REDHAT_BUGZILLA=
 [Changes]
-- Fix the GitHub download link
+- Fixed the issues found in static checks
 

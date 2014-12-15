@@ -328,7 +328,7 @@ void mkdg_widget_container_align_all_children(MkdgWidgetContainer *
 
 gint mkdg_widget_container_count_children(MkdgWidgetContainer * container)
 {
-    if ((container == NULL) || (container->children)) {
+    if ((container == NULL) || (container->children == NULL)) {
 	return -1;
     }
     return container->children->len;
