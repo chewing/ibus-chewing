@@ -234,10 +234,10 @@ class IBus:Chewing:Engine from IBus:Engine {
 			  (_("Click to switch to Chinese")))
     };
     classwide IBusText *chieng_prop_symbol_chi = {
-	g_object_ref_sink(ibus_text_new_from_static_string(_("中")))
+	g_object_ref_sink(ibus_text_new_from_static_string("中"))
     };
     classwide IBusText *chieng_prop_symbol_eng = {
-	g_object_ref_sink(ibus_text_new_from_static_string(_("英")))
+	g_object_ref_sink(ibus_text_new_from_static_string("英"))
     };
     classwide IBusText *alnumSize_prop_label_full = {
 	g_object_ref_sink(ibus_text_new_from_static_string(_("Full")))
