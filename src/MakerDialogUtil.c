@@ -87,7 +87,7 @@ gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite)
     }
     if (G_VALUE_TYPE(value) != type) {
 	if (!overwrite) {
-	    mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatable");
+	    mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatible");
 	    return FALSE;
 	}
     }
