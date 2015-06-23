@@ -120,7 +120,7 @@ gchar *mkdg_g_value_to_string(GValue * value)
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d", intValue);
 	break;
     case G_TYPE_STRING:
-	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%s",
 		   g_value_get_string(value));
 	break;
     default:
