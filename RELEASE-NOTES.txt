@@ -1,6 +1,7 @@
-PRJ_VER=1.4.14
+PRJ_VER=1.4.15
 SUMMARY=Fixed the issues found in static checks
 REDHAT_BUGZILLA=
 [Changes]
 - Fixed the issues found in static checks
+- Fixed GitHub issue #61
 

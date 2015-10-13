@@ -1,13 +1,13 @@
 Installation Instructions
 *************************
 0. Required: 
-    libchewing>=0.3.2-16 (with chewing_zuin path, or upstream r1048),
-    cmake >=2.4
-    gob  >=2
-    gettext
-    gtk2
-    GConf2
-    libXtst
+    cmake      >=2.6.2
+    ibus       >=1.3
+    glib >=2
+    gob  >=2.0.16
+    gtk  >=2
+    libchewing >=0.3.3
+    libX11
    
 1. Remove the old build cache:
   If you have previous ibus-chewing, or change between ibus 1.1 and ibus 1.2,
