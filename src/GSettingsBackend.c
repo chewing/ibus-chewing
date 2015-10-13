@@ -134,7 +134,7 @@ gchar *mkdg_g_variant_to_string(GVariant * gVar)
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%ld",
 		   g_variant_get_int64(gVar));
     } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_STRING)) {
-	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%s",
 		   g_variant_get_string(gVar, NULL));
     }
     return result;

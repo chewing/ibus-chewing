@@ -229,6 +229,7 @@ IF(NOT GNOME_SHELL)
 ENDIF(NOT GNOME_SHELL)
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/chewing.xml)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/ibus-setup-chewing.desktop.in ${CMAKE_BINARY_DIR}/data/ibus-setup-chewing.desktop)
 # Sub directories
 ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(po)
@@ -245,7 +246,7 @@ INSTALL(FILES AUTHORS README ChangeLog COPYING USER-GUIDE
 INSTALL(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml 
     DESTINATION "${DATA_DIR}/ibus/component")
 
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/ibus-setup-chewing.desktop 
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/ibus-setup-chewing.desktop
     DESTINATION "${DATA_DIR}/applications")
 
 INSTALL(DIRECTORY icons

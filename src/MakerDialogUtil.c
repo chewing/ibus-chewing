@@ -87,7 +87,7 @@ gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite)
     }
     if (G_VALUE_TYPE(value) != type) {
 	if (!overwrite) {
-	    mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatable");
+	    mkdg_log(ERROR, "mkdg_g_value_reset(): type incompatible");
 	    return FALSE;
 	}
     }
@@ -120,7 +120,7 @@ gchar *mkdg_g_value_to_string(GValue * value)
 	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%d", intValue);
 	break;
     case G_TYPE_STRING:
-	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH,
+	g_snprintf(result, MAKER_DIALOG_VALUE_LENGTH, "%s",
 		   g_value_get_string(value));
 	break;
     default:
