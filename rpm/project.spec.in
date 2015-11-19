@@ -1,3 +1,22 @@
+%if 0%{?rhel}
+%bcond_with gsettings
+%bcond_without gconf2
+%else
+%bcond_without gsettings
+%bcond_with gconf2
+%endif
+
+%if %{with gsettings}
+%global gsettings_support 1
+%else
+%global gsettings_support 0
+%endif
+
+%if %{with gconf2}
+%global gconf2_support 1
+%else
+%global gconf2_support 0
+%endif
 Name:           @PROJECT_NAME@
 Version:        @PRJ_VER@
 Release:        @RPM_RELEASE_NO@%{?dist}

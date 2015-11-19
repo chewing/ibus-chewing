@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: A S Alam <aalam@fedoraproject.org>\n"
 "Language-Team: Punjabi\n"
 "Language: pa\n"
-"X-Generator: Zanata 3.5.1\n"
+"X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-input-events.c:386

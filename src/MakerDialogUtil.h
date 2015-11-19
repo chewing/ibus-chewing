@@ -61,6 +61,11 @@ gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
 
 #define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value)==G_TYPE_STRING)
 
+void mkdg_g_variant_to_g_value(GVariant * gVar, GValue * value);
+
+GVariant *mkdg_g_value_to_g_variant(GValue * value);
+
+
 /**************************************
  * String Utility Macros
  */

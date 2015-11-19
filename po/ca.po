@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
-"X-Generator: Zanata 3.7.2\n"
+"X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-input-events.c:386

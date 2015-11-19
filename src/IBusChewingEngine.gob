@@ -32,9 +32,13 @@ requires 2.0.0
 #include <X11/XKBlib.h>
 #include <ctype.h>
 #include "IBusChewingUtil.h"
-#include "GSettingsBackend.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
+#if GSETTINGS_SUPPPORT == 1	    
+#include "GSettingsBackend.h"
+#elif GCONF2_SUPPORT == 1
+#include "GConf2Backend.h"
+#endif
 %}
 
 enum CHEWING_INPUT_STYLE {
@@ -300,17 +304,17 @@ class IBus:Chewing:Engine from IBus:Engine {
 	IBUS_CHEWING_LOG(INFO, "use_setting()");
 
 	if (self->icPreEdit == NULL){
-#ifdef GSETTINGS_SUPPORT
+#if GSETTINGS_SUPPPORT == 1	    
 	    MkdgBackend *backend =
 		mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
 			QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif GCONF2_SUPPORT
+#elif GCONF2_SUPPORT == 1
 	    MkdgBackend *backend =
 		gconf2_backend_new("/desktop/ibus/engine", NULL);
 #else
 	    MkdgBackend *backend = NULL;
 	    g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
-	    return 1;
+	    return;
 #endif				/* GSETTINGS_SUPPORT */
 	    self->icPreEdit = ibus_chewing_pre_edit_new(backend);
 	}

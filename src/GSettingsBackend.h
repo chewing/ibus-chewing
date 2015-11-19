@@ -41,10 +41,6 @@
 GValue *mkdg_g_settings_read_value(GSettings * settings,
 				   GValue * value, const gchar * key);
 
-void mkdg_g_variant_to_g_value(GVariant * gVar, GValue * value);
-
-GVariant *mkdg_g_value_to_g_variant(GValue * value);
-
 
 /**
  * mkdg_g_settings_backend_new:

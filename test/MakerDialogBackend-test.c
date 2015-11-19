@@ -5,9 +5,9 @@
 #include "test-util.h"
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
-#ifdef GSETTINGS_SUPPORT
+#if GSETTINGS_SUPPORT == 1
 #include "GSettingsBackend.h"
-#elif GCONF2_SUPPORT
+#elif GCONF2_SUPPORT == 1
 #include "GConf2Backend.h"
 #endif
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)
@@ -191,11 +191,11 @@ void int_w_test()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-#ifdef GSETTINGS_SUPPORT
+#if GSETTINGS_SUPPORT == 1
     backend = mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
 					  QUOTE_ME(PROJECT_SCHEMA_DIR),
 					  NULL);
-#elif GCONF2_SUPPORT
+#elif GCONF2_SUPPORT == 1
     backend = gconf2_backend_new("/desktop/ibus/engine", NULL);
 #else
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");

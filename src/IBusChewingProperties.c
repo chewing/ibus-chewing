@@ -57,134 +57,140 @@ const gchar *outputCharsets[] = {
 
 MkdgPropertySpec propSpecs[] = {
     {G_TYPE_STRING, "kb-type", PAGE_KEYBOARD, N_("Keyboard Type"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "default", kbType_ids, NULL, 0, 0,
-	KBType_apply_callback,
-	MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-	N_("Select Zhuyin keyboard layout."),
-    }
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "default", kbType_ids, NULL, 0, 0,
+     KBType_apply_callback,
+     MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
+     N_("Select Zhuyin keyboard layout."),
+     }
     ,
     {G_TYPE_STRING, "sel-keys", PAGE_KEYBOARD, N_("Selection keys"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1234567890", selKeys_array, NULL,
-	0,
-	0,
-	selKeys_apply_callback, 0,
-	N_("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
-    }
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1234567890", selKeys_array, NULL,
+     0,
+     0,
+     selKeys_apply_callback, 0,
+     N_
+     ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
+     }
     ,
     {G_TYPE_INT, "hsu-sel-key-type", PAGE_KEYBOARD,
-	N_("Hsu's selection key"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 1, 2,
-	hsuSelKeyType_apply_callback, 0,
-	N_("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
-    }
+     N_("Hsu's selection key"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 1, 2,
+     hsuSelKeyType_apply_callback, 0,
+     N_
+     ("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
+     }
     ,
     {G_TYPE_BOOLEAN, "auto-shift-cur", PAGE_EDITING,
-	N_("Auto move cursor"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-	autoShiftCur_apply_callback, 0,
-	N_("Automatically move cursor to next character."),
-    }
+     N_("Auto move cursor"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     autoShiftCur_apply_callback, 0,
+     N_("Automatically move cursor to next character."),
+     }
     ,
     {G_TYPE_BOOLEAN, "add-phrase-direction", PAGE_EDITING,
-	N_("Add phrases in front"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-	addPhraseDirection_apply_callback, 0,
-	N_("Add phrases in the front."),
-    }
+     N_("Add phrases in front"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     addPhraseDirection_apply_callback, 0,
+     N_("Add phrases in the front."),
+     }
     ,
     {G_TYPE_BOOLEAN, "easy-symbol-input", PAGE_EDITING,
-	N_("Easy symbol input"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-	easySymbolInput_apply_callback, 0,
-	N_("Easy symbol input."),
-    }
+     N_("Easy symbol input"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     easySymbolInput_apply_callback, 0,
+     N_("Easy symbol input."),
+     }
     ,
     {G_TYPE_BOOLEAN, "esc-clean-all-buf", PAGE_EDITING,
-	N_("Esc clean all buffer"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-	escCleanAllBuf_apply_callback, 0,
-	N_("Escape key cleans the text in pre-edit-buffer."),
-    }
+     N_("Esc clean all buffer"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
+     escCleanAllBuf_apply_callback, 0,
+     N_("Escape key cleans the text in pre-edit-buffer."),
+     }
     ,
     {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
-	N_("Maximum Chinese characters"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 8, 39,
-	maxChiSymbolLen_apply_callback, 0,
-	N_("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
-    }
+     N_("Maximum Chinese characters"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 8, 39,
+     maxChiSymbolLen_apply_callback, 0,
+     N_
+     ("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
+     }
     ,
     {G_TYPE_BOOLEAN, "force-lowercase-english", PAGE_EDITING,
-	N_("Force lowercase in En mode"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-	forceLowercaseEnglish_apply_callback, 0,
-	N_("Ignore CapsLock status and input lowercase by default.\n\
+     N_("Force lowercase in En mode"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
+     forceLowercaseEnglish_apply_callback, 0,
+     N_("Ignore CapsLock status and input lowercase by default.\n\
 It is handy if you wish to enter lowercase by default.\n\
 Uppercase can still be inputted with Shift."),
-    }
+     }
     ,
 
-	/* Sync between CapsLock and IM */
+    /* Sync between CapsLock and IM */
     {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
-	N_("Sync between CapsLock and IM"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "disable", syncCapsLock_strs,
-	"Sync",
-	0, 1,
-	syncCapsLock_apply_callback,
-	MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-	N_("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n\
+     N_("Sync between CapsLock and IM"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "disable", syncCapsLock_strs,
+     "Sync",
+     0, 1,
+     syncCapsLock_apply_callback,
+     MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
+     N_
+     ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n\
 \"disable\": Do nothing.\n\
 \"keyboard\": IM status follows keyboard status.\n\
 \"IM\": Keyboard status follows IM status."),
-    }
+     }
     ,
     {G_TYPE_BOOLEAN, "numpad-always-number", PAGE_EDITING,
-	N_("Number pad always input number"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-	numpadAlwaysNumber_apply_callback, 0,
-	N_("Always input numbers when number keys from key pad is inputted."),
-    }
+     N_("Number pad always input number"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     numpadAlwaysNumber_apply_callback, 0,
+     N_("Always input numbers when number keys from key pad is inputted."),
+     }
     ,
     {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
-        N_("Shift toggle Chinese Mode"),
-        IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-        easySymbolInput_apply_callback, 0,
-        N_("Shift key to toggle Chinese Mode"),
-    }
+     N_("Shift toggle Chinese Mode"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     easySymbolInput_apply_callback, 0,
+     N_("Shift key to toggle Chinese Mode"),
+     }
     ,
     {G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING,
-	N_("Plain Zhuyin mode"),
-	IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-	plainZhuyin_apply_callback, 0,
-	N_("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
-    }
+     N_("Plain Zhuyin mode"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
+     plainZhuyin_apply_callback, 0,
+     N_
+     ("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
+     }
     ,
-    {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
-        IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
-        candPerPage_apply_callback, 0,
-        N_("Number of candidate per page."),
-    }
+    {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING,
+     N_("Candidate per page"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
+     candPerPage_apply_callback, 0,
+     N_("Number of candidate per page."),
+     }
     ,
     {G_TYPE_BOOLEAN, "phrase-choice-from-last", PAGE_SELECTING,
-        N_("Choose phrases from backward"),
-        IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-        phraseChoiceRearward_apply_callback, 0,
-        N_("Choose phrases from the back, without moving cursor."),
-    }
+     N_("Choose phrases from backward"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     phraseChoiceRearward_apply_callback, 0,
+     N_("Choose phrases from the back, without moving cursor."),
+     }
     ,
     {G_TYPE_BOOLEAN, "space-as-selection", PAGE_SELECTING,
-        N_("Space to select"),
-        IBUS_CHEWING_PROPERTIES_SUBSECTION,
-        "0", NULL, NULL, 0, 1,
-        spaceAsSelection_apply_callback, 0,
-        "Press Space to select the candidate.",
-    }
+     N_("Space to select"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION,
+     "0", NULL, NULL, 0, 1,
+     spaceAsSelection_apply_callback, 0,
+     "Press Space to select the candidate.",
+     }
     ,
     {G_TYPE_INVALID, "", "", "",
-        IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL, NULL, 0, 0,
-        NULL,
-        0,
-        NULL,
-    }
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL, NULL, 0, 0,
+     NULL,
+     0,
+     NULL,
+     }
     ,
 };
 
@@ -200,14 +206,17 @@ IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
     self->properties =
 	mkdg_properties_from_spec_array(propSpecs, backend, parent,
 					auxData);
-    if (STRING_EQUALS(backend->id, GSETTINGS_BACKEND_ID)) {
-	self->confObjTable = g_hash_table_new(g_str_hash, g_str_equal);
-    } else {
-	self->confObjTable = NULL;
-    }
+
+    /* In schema generation, backend is NULL */
+#if GSETTINGS_SUPPORT == 1
+    self->confObjTable = g_hash_table_new(g_str_hash, g_str_equal);
+#else
+    self->confObjTable = NULL;
+#endif
     return self;
 }
 
+#if GSETTINGS_SUPPORT == 1
 static GString *ibus_section_to_schema(const gchar * section)
 {
     GString *result = g_string_new("org.freedesktop");
@@ -219,6 +228,7 @@ static GString *ibus_section_to_schema(const gchar * section)
     g_strfreev(strArr);
     return result;
 }
+#endif				/*GSETTINGS_SUPPORT */
 
 GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 					     GValue * value,
@@ -228,6 +238,7 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 {
     g_assert(self);
     g_assert(value);
+#if GSETTINGS_SUPPORT == 1
     if (STRING_EQUALS(self->properties->backend->id, GSETTINGS_BACKEND_ID)) {
 	GSettings *confObj;
 	if (!g_hash_table_contains(self->confObjTable, (gpointer) section)) {
@@ -244,32 +255,37 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 	g_assert(confObj);
 	return mkdg_g_settings_read_value(confObj, value, key);
     }
+#endif				/*GSETTINGS_SUPPORT */
     return mkdg_backend_read(self->properties->backend, value, section,
 			     key, userData);
 }
 
-gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties * self,
-					     const gchar * section,
-					     const gchar * key,
-					     gpointer userData)
+gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
+						      * self,
+						      const gchar *
+						      section,
+						      const gchar * key,
+						      gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_BOOLEAN);
-    ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
-    gboolean result=g_value_get_boolean(&gValue);
+    ibus_chewing_properties_read_general(self, &gValue, section, key,
+					 userData);
+    gboolean result = g_value_get_boolean(&gValue);
     g_value_unset(&gValue);
     return result;
 }
 
 gint ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-					     const gchar * section,
-					     const gchar * key,
-					     gpointer userData)
+					      const gchar * section,
+					      const gchar * key,
+					      gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_INT);
-    ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
-    gint result=g_value_get_int(&gValue);
+    ibus_chewing_properties_read_general(self, &gValue, section, key,
+					 userData);
+    gint result = g_value_get_int(&gValue);
     g_value_unset(&gValue);
     return result;
 }

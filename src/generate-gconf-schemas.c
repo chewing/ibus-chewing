@@ -11,7 +11,6 @@
 #define MKDG_SPEC_ONLY
 #endif
 
-#include "IBusChewingEngine-def.c"
 #include "MakerDialogUtil.h"
 #include "MakerDialogProperty.h"
 #include "IBusConfigBackend.h"
@@ -22,14 +21,14 @@
 static gint verbose = WARN;
 static gchar *schemasFilename = NULL;
 static gchar *localeStr = NULL;
-static gboolean isLocaleStrAllocated = FALSE;
+static gchar *localeOptStr = NULL;
 static gchar **localeArray = NULL;
 
 static const GOptionEntry entries[] = {
     {"verbose", 'v', 0, G_OPTION_ARG_INT, &verbose,
      "Verbose level. The higher the level, the more the debug messages.",
      "[integer]"},
-    {"locale", 'l', 0, G_OPTION_ARG_STRING, &localeStr,
+    {"locale", 'l', 0, G_OPTION_ARG_STRING, &localeOptStr,
      "Supported locales. Use ';' to separate locales.",
      "[str]"},
     {NULL},
@@ -145,12 +144,12 @@ gboolean write_gconf_schemas_file(const gchar * filename,
 			MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
     /* Backend is not needed for schema generation */
-    IBusChewingConfig *iConfig =
-	ibus_chewing_properties_new(NULL, NULL, NULL, NULL);
+    IBusChewingProperties *iProperties =
+	ibus_chewing_properties_new(NULL, NULL, NULL);
     gsize i;
-    for (i = 0; i < mkdg_properties_size(iConfig->properties); i++) {
+    for (i = 0; i < mkdg_properties_size(iProperties->properties); i++) {
 	PropertyContext *ctx =
-	    mkdg_properties_index(iConfig->properties, i);
+	    mkdg_properties_index(iProperties->properties, i);
 	ctx_write(ctx, schemasHome, owner, outF);
     }
 
@@ -188,20 +187,17 @@ int main(gint argc, gchar * argv[])
 	fprintf(stderr, "Specify output schemas file!\n");
 	return 2;
     }
-    if (localeStr == NULL) {
-	localeStr = DEFAULT_LOCALES;
-    } else {
-	isLocaleStrAllocated = TRUE;
-    }
     mkdg_log_set_level(verbose);
     schemasFilename = argv[1];
+
+    localeStr=(localeOptStr)? localeOptStr : DEFAULT_LOCALES;
     g_type_init();
     gboolean result =
 	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
-				 QUOTE_ME(PROJECT_SCHEMA_PATH), localeStr);
-    if (isLocaleStrAllocated) {
-	g_free(localeStr);
-    }
+				 QUOTE_ME(PROJECT_SCHEMA_DIR), localeStr);
+
+    if (localeOptStr)
+	g_free(localeOptStr);
     if (!result) {
 	return 1;
     }

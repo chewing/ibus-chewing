@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6.2)
 
 # Included scripts do automatic cmake_policy PUSH and POP.
 # OLD: CMake policy in included script will affect the invoker.
-# CMAKE_POLICY(SET CMP0011 OLD)
+CMAKE_POLICY(SET CMP0011 OLD)
 
 
 ####################################################################

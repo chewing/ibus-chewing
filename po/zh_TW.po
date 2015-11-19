@@ -16,7 +16,7 @@ msgstr ""
 "Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "Language-Team: Chinese (Traditional Han, Taiwan)\n"
 "Language: zh-TW\n"
-"X-Generator: Zanata 3.5.1\n"
+"X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #: /home/dchen/devel/ibus-chewing/src/IBusChewingEngine-input-events.c:386

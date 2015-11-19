@@ -24,57 +24,6 @@
 #include "MakerDialogUtil.h"
 #include "GSettingsBackend.h"
 
-void mkdg_g_variant_to_g_value(GVariant * gVar, GValue * value)
-{
-    const GVariantType *gVType = g_variant_get_type(gVar);
-    if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_BOOLEAN)) {
-	g_value_set_boolean(value, g_variant_get_boolean(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT16)) {
-	g_value_set_uint(value, g_variant_get_uint16(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT32)) {
-	g_value_set_uint(value, g_variant_get_uint32(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_UINT64)) {
-	g_value_set_uint64(value, g_variant_get_uint64(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT16)) {
-	g_value_set_int(value, g_variant_get_int16(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT32)) {
-	g_value_set_int(value, g_variant_get_int32(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_INT64)) {
-	g_value_set_int64(value, g_variant_get_int64(gVar));
-    } else if (g_variant_type_is_subtype_of(gVType, G_VARIANT_TYPE_STRING)) {
-	g_value_set_string(value, g_variant_get_string(gVar, NULL));
-    }
-}
-
-GVariant *mkdg_g_value_to_g_variant(GValue * value)
-{
-    GType gType = G_VALUE_TYPE(value);
-    GVariant *gVar = NULL;
-    switch (gType) {
-    case G_TYPE_BOOLEAN:
-	gVar = g_variant_new_boolean(g_value_get_boolean(value));
-	break;
-    case G_TYPE_UINT:
-	gVar = g_variant_new_uint32(g_value_get_uint(value));
-	break;
-    case G_TYPE_UINT64:
-	gVar = g_variant_new_uint64(g_value_get_uint(value));
-	break;
-    case G_TYPE_INT:
-	gVar = g_variant_new_int32(g_value_get_int(value));
-	break;
-    case G_TYPE_INT64:
-	gVar = g_variant_new_int64(g_value_get_int(value));
-	break;
-    case G_TYPE_STRING:
-	gVar = g_variant_new_string(g_value_get_string(value));
-	break;
-    default:
-	break;
-    }
-    return gVar;
-}
-
 const gchar *mkdg_g_variant_type_string(GType gType)
 {
     switch (gType) {
