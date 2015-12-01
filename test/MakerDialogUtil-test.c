@@ -15,6 +15,16 @@ void mkdg_g_value_to_string_test()
     g_assert_cmpstr("-1", ==, mkdg_g_value_to_string(&intValue));
     g_value_unset(&intValue);
 
+    /* Test uint */
+    GValue uintValue={0};
+    g_value_init(&uintValue, G_TYPE_UINT);
+    g_value_set_uint(&uintValue, 0);
+    g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&uintValue));
+
+    g_value_set_uint(&uintValue, 1);
+    g_assert_cmpstr("1", ==, mkdg_g_value_to_string(&uintValue));
+    g_value_unset(&uintValue);
+
     /* Test boolean */
     GValue booleanValue={0};
     g_value_init(&booleanValue, G_TYPE_BOOLEAN);
@@ -39,6 +49,18 @@ void mkdg_g_value_from_string_test()
     g_assert_cmpint(-1, ==, g_value_get_int(&intValue));
 
     g_value_unset(&intValue);
+
+    /* Test uint */
+    GValue uintValue={0};
+    g_value_init(&uintValue, G_TYPE_UINT);
+
+    mkdg_g_value_from_string(&uintValue, "0");
+    g_assert_cmpuint(0, ==, g_value_get_uint(&uintValue));
+
+    mkdg_g_value_from_string(&uintValue, "1");
+    g_assert_cmpuint(1, ==, g_value_get_uint(&uintValue));
+
+    g_value_unset(&uintValue);
 
     /* Test boolean */
     GValue booleanValue={0};

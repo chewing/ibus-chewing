@@ -11,9 +11,17 @@ MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
     result->config = config;
     result->basePath = basePath;
     result->auxData = auxData;
-    result->flags=0;
+    result->flags = 0;
     return result;
 }
+
+gchar *mkdg_backend_get_key(MkdgBackend * backend,
+			    const gchar * section, const gchar * key,
+			    gpointer userData)
+{
+    return backend->getKeyFunc(backend, section, key, userData);
+}
+
 
 GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
 			  const gchar * section, const gchar * key,

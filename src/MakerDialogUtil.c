@@ -132,13 +132,14 @@ gchar *mkdg_g_value_to_string(GValue * value)
 gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
 {
     mkdg_log(DEBUG, "mkdg_g_value_from_string(-,%s)", str);
+    g_printf("*** mkdg_g_value_from_string: str=%s", str);
     if (!G_IS_VALUE(value)) {
 	mkdg_log(ERROR, "mkdg_g_value_from_string(): Failed to get GType");
 	return FALSE;
     }
     GType gType = G_VALUE_TYPE(value);
     mkdg_log(DEBUG, "mkdg_g_value_from_string() gType=%s",
-    	     g_type_name(gType));
+	     g_type_name(gType));
     if (!mkdg_g_value_reset(value, gType, FALSE)) {
 	return FALSE;
     }
@@ -236,6 +237,35 @@ GVariant *mkdg_g_value_to_g_variant(GValue * value)
 	break;
     }
     return gVar;
+}
+
+/*============================================
+ * MKDG Str functions
+ */
+
+gchar *mkdg_str_dash_to_camel(const gchar * argStr)
+{
+    GString *string = g_string_new(NULL);
+    gboolean upper = FALSE;
+    int i;
+    for (i = 0; i < strlen(argStr); i++) {
+	if (upper) {
+	    g_string_append_c(string, toupper(argStr[i]));
+	    upper = FALSE;
+	} else {
+	    switch (argStr[i]) {
+	    case '-':
+	    case '_':
+		upper = TRUE;
+		break;
+	    default:
+		g_string_append_c(string, argStr[i]);
+		break;
+	    }
+
+	}
+    }
+    return g_string_free(string, FALSE);
 }
 
 /*============================================

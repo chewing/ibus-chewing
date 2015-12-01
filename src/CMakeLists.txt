@@ -217,6 +217,7 @@ ENDIF()
 IF(GCONF2_SUPPORT)
     SET(PROJECT_SCHEMAS ${PROJECT_NAME}.schemas
 	CACHE INTERNAL "PROJECT_SCHEMAS")
+    SET(GCONF2_SCHEMAS_DIR "${SYSCONF_DIR}/gconf/schemas")
 
     SET(BACKEND_LIBRARIES ${GCONF_LIBRARIES})
 
@@ -233,12 +234,19 @@ IF(GCONF2_SUPPORT)
 	${COMMON_LIBRARIES} ${BACKEND_LIBRARIES}
 	)
 
-    ADD_CUSTOM_COMMAND(TARGET generate-gconf-schemas POST_BUILD
-	COMMAND G_MESSAGES_DEBUG=all ${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas -v 5 -l
+    ## ManageGConf is already handle install
+
+    ADD_CUSTOM_TARGET(schemas_gconf2 ALL
+	COMMAND G_MESSAGES_DEBUG=all "${CMAKE_CURRENT_BINARY_DIR}/generate-gconf-schemas" -v 5 -l
 	"C;${TRANSLATED}" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_SCHEMAS}"
-	COMMENT "Generating gconf-schemas"
+	COMMENT "Generating gconf-schemas ${PROJECT_SCHEMAS}"
 	VERBATIM
 	)
+
+    ADD_DEPENDENCIES(schemas_gconf2
+	generate-gconf-schemas
+	)
+
 ENDIF()
 
 SET(BACKEND_LIBRARIES "${BACKEND_LIBRARIES}" CACHE INTERNAL "Backend Libraries")

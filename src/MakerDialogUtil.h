@@ -21,6 +21,7 @@
 
 #ifndef _MAKER_DIALOG_UTIL_H_
 #define _MAKER_DIALOG_UTIL_H_
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <glib-object.h>
@@ -67,7 +68,7 @@ GVariant *mkdg_g_value_to_g_variant(GValue * value);
 
 
 /**************************************
- * String Utility Macros
+ * String Utility Macros and Functions
  */
 
 #define QUOTE_ME_INNER(s) #s
@@ -82,6 +83,8 @@ GVariant *mkdg_g_value_to_g_variant(GValue * value);
     ((str1==NULL && str2==NULL) ||\
      ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
     )
+
+gchar *mkdg_str_dash_to_camel(const gchar * argStr);
 
 /**************************************
  * Flag Utility Macros

@@ -199,6 +199,17 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
     return value;
 }
 
+
+/*============================================
+ * Interface routines
+ */
+gchar *gsettings_backend_get_key(MkdgBackend * backend,
+				 const gchar * section, const gchar * key,
+				 gpointer userData)
+{
+    return key;
+}
+
 GValue *mkdg_g_settings_backend_read_value(MkdgBackend * backend,
 					   GValue * value,
 					   const gchar * section,

@@ -26,6 +26,12 @@
 #include "MakerDialogUtil.h"
 #include "GConf2Backend.h"
 
+static GHashTable *camalCasedKeyTable = NULL;
+
+gchar *gconf2_backend_get_key(MkdgBackend * backend,
+			      const gchar * section, const gchar * key,
+			      gpointer userData);
+
 static GValue *gconf_value_to_g_value(GConfValue * confValue,
 				      GValue * value)
 {
@@ -87,10 +93,13 @@ static GConfValue *gconf_value_new_g_value(GValue * value)
 
 #define KEY_BUFFER_SIZE 100
 static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
-	const gchar * section, const gchar * key)
+			  const gchar * section, const gchar * key)
 {
+    gchar *camalCasedKey = gconf2_backend_get_key(backend, section, key, NULL);
+
     if (!STRING_IS_EMPTY(backend->basePath)) {
 	g_strlcpy(confKey, backend->basePath, KEY_BUFFER_SIZE);
+	g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
     } else {
 	g_strlcpy(confKey, "/", KEY_BUFFER_SIZE);
     }
@@ -99,13 +108,27 @@ static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
 	g_strlcat(confKey, section, KEY_BUFFER_SIZE);
 	g_strlcat(confKey, "/", KEY_BUFFER_SIZE);
     }
-    g_strlcat(confKey, key, KEY_BUFFER_SIZE);
+    g_strlcat(confKey, camalCasedKey, KEY_BUFFER_SIZE);
     return confKey;
 }
 
 /*============================================
  * Interface routines
  */
+gchar *gconf2_backend_get_key(MkdgBackend * backend,
+			      const gchar * section, const gchar * key,
+			      gpointer userData)
+{
+    gchar *camalCasedKey =
+	(gchar *) g_hash_table_lookup(camalCasedKeyTable, key);
+    if (camalCasedKey == NULL) {
+	camalCasedKey = mkdg_str_dash_to_camel(key);
+	g_hash_table_insert(camalCasedKeyTable, (gpointer) key,
+			    camalCasedKey);
+    }
+    return camalCasedKey;
+}
+
 GValue *gconf2_backend_read_value(MkdgBackend * backend,
 				  GValue * value,
 				  const gchar * section,
@@ -124,7 +147,6 @@ GValue *gconf2_backend_read_value(MkdgBackend * backend,
     }
     return gconf_value_to_g_value(confValue, value);
 }
-
 
 gboolean gconf2_backend_write_value(MkdgBackend * backend,
 				    GValue * value,
@@ -152,6 +174,8 @@ MkdgBackend *gconf2_backend_new(const gchar * basePath, gpointer auxData)
     MkdgBackend *result = mkdg_backend_new(GCONF2_BACKEND_ID,
 					   (gpointer) client, basePath,
 					   auxData);
+    camalCasedKeyTable = g_hash_table_new(g_str_hash, g_str_equal);
+    result->getKeyFunc = gconf2_backend_get_key;
     result->readFunc = gconf2_backend_read_value;
     result->writeFunc = gconf2_backend_write_value;
     return result;

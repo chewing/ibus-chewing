@@ -6,7 +6,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusConfigBackend.h"
-#ifdef GSETTINGS_SUPPORT
+#if GSETTINGS_SUPPORT == 1
 #include "GSettingsBackend.h"
 #endif
 

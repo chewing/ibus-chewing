@@ -63,13 +63,21 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
     mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL,
 			NULL);
     gchar buf[XML_BUFFER_SIZE];
-    if (STRING_IS_EMPTY(ctx->spec->subSection)) {
-	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s",
-		   schemasHome, ctx->spec->key);
-    } else {
-	g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s/%s/%s",
-		   schemasHome, ctx->spec->subSection, ctx->spec->key);
+    gchar *camalCasedKey=mkdg_str_dash_to_camel(ctx->spec->key);
+    g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s",schemasHome);
+
+    if (! STRING_IS_EMPTY(QUOTE_ME(PROJECT_SCHEMA_SECTION))){
+	g_strlcat(buf, "/", XML_BUFFER_SIZE);
+	g_strlcat(buf, QUOTE_ME(PROJECT_SCHEMA_SECTION), XML_BUFFER_SIZE);
     }
+
+    if (! STRING_IS_EMPTY(ctx->spec->subSection)) {
+	g_strlcat(buf, "/", XML_BUFFER_SIZE);
+	g_strlcat(buf, ctx->spec->subSection, XML_BUFFER_SIZE);
+    } 
+    g_strlcat(buf, "/", XML_BUFFER_SIZE);
+    g_strlcat(buf, camalCasedKey, XML_BUFFER_SIZE);
+
     mkdg_xml_tags_write(outF, "key", MKDG_XML_TAG_TYPE_SHORT, NULL, buf);
     mkdg_xml_tags_write(outF, "applyto", MKDG_XML_TAG_TYPE_SHORT, NULL,
 			buf + strlen("/schemas"));
@@ -194,7 +202,7 @@ int main(gint argc, gchar * argv[])
     g_type_init();
     gboolean result =
 	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
-				 QUOTE_ME(PROJECT_SCHEMA_DIR), localeStr);
+				 QUOTE_ME(PROJECT_SCHEMA_BASE), localeStr);
 
     if (localeOptStr)
 	g_free(localeOptStr);

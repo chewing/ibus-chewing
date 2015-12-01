@@ -43,9 +43,13 @@ typedef struct MkdgBackend_ MkdgBackend;
  * MakerDialog backend flags.
  * 
  */
- typedef enum {
-    MKDG_BACKEND_FLAG_DISCONNECTED =1
+typedef enum {
+    MKDG_BACKEND_FLAG_DISCONNECTED = 1
 } MkdgBackendFlag;
+
+typedef gchar *(*BackendGetKeyFunc) (MkdgBackend * backend,
+				     const gchar * section,
+				     const gchar * key, gpointer userData);
 
 typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
 				    const gchar * section,
@@ -54,7 +58,6 @@ typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
 typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
 				     const gchar * section,
 				     const gchar * key, gpointer userData);
-
 
 /**
  * MkdgBackend:
@@ -71,6 +74,7 @@ struct MkdgBackend_ {
     const gchar *id;
     gpointer config;
     const gchar *basePath;
+    BackendGetKeyFunc getKeyFunc;
     BackendReadFunc readFunc;
     BackendWriteFunc writeFunc;
     MkdgBackendFlag flags;
@@ -79,6 +83,10 @@ struct MkdgBackend_ {
 
 MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
 			      const gchar * basePath, gpointer auxData);
+
+gchar *mkdg_backend_get_key(MkdgBackend * backend,
+			    const gchar * section, const gchar * key,
+			    gpointer userData);
 
 GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
 			  const gchar * section, const gchar * key,
