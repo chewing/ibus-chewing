@@ -203,11 +203,12 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
 /*============================================
  * Interface routines
  */
-gchar *gsettings_backend_get_key(MkdgBackend * backend,
-				 const gchar * section, const gchar * key,
-				 gpointer userData)
+gchar *mkdg_g_settings_backend_get_key(MkdgBackend * backend,
+				       const gchar * section,
+				       const gchar * key,
+				       gpointer userData)
 {
-    return key;
+    return (gchar *) key;
 }
 
 GValue *mkdg_g_settings_backend_read_value(MkdgBackend * backend,
@@ -257,6 +258,7 @@ MkdgBackend *mkdg_g_settings_backend_new(const gchar *
 	mkdg_backend_new(GSETTINGS_BACKEND_ID, (gpointer) client, basePath,
 			 auxData);
 
+    result->getKeyFunc = mkdg_g_settings_backend_get_key;
     result->readFunc = mkdg_g_settings_backend_read_value;
     result->writeFunc = mkdg_g_settings_backend_write_value;
     return result;

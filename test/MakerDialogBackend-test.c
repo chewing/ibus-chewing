@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib/gprintf.h>
 #include "test-util.h"
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
@@ -18,6 +19,7 @@ MkdgBackend *backend = NULL;
 
 gchar *command_run_obtain_output(const gchar * cmd)
 {
+    mkdg_log(DEBUG, "### command_run_obtain_output(%s)\n",cmd);
     static gchar readBuffer[FILE_BUFFER_SIZE];
     FILE *stream = popen(cmd, "r");
     if (stream == NULL) {

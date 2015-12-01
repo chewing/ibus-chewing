@@ -132,7 +132,6 @@ gchar *mkdg_g_value_to_string(GValue * value)
 gboolean mkdg_g_value_from_string(GValue * value, const gchar * str)
 {
     mkdg_log(DEBUG, "mkdg_g_value_from_string(-,%s)", str);
-    g_printf("*** mkdg_g_value_from_string: str=%s", str);
     if (!G_IS_VALUE(value)) {
 	mkdg_log(ERROR, "mkdg_g_value_from_string(): Failed to get GType");
 	return FALSE;
