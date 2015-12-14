@@ -6,7 +6,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusConfigBackend.h"
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif
 
@@ -208,7 +208,7 @@ IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
 					auxData);
 
     /* In schema generation, backend is NULL */
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     self->confObjTable = g_hash_table_new(g_str_hash, g_str_equal);
 #else
     self->confObjTable = NULL;
@@ -216,7 +216,7 @@ IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
     return self;
 }
 
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
 static GString *ibus_section_to_schema(const gchar * section)
 {
     GString *result = g_string_new("org.freedesktop");
@@ -228,7 +228,7 @@ static GString *ibus_section_to_schema(const gchar * section)
     g_strfreev(strArr);
     return result;
 }
-#endif				/*GSETTINGS_SUPPORT */
+#endif				/* USE_GSETTINGS */
 
 GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 					     GValue * value,
@@ -238,7 +238,7 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 {
     g_assert(self);
     g_assert(value);
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     if (STRING_EQUALS(self->properties->backend->id, GSETTINGS_BACKEND_ID)) {
 	GSettings *confObj;
 	if (!g_hash_table_contains(self->confObjTable, (gpointer) section)) {
@@ -255,7 +255,7 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 	g_assert(confObj);
 	return mkdg_g_settings_read_value(confObj, value, key);
     }
-#endif				/*GSETTINGS_SUPPORT */
+#endif				/* USE_GSETTINGS */
     return mkdg_backend_read(self->properties->backend, value, section,
 			     key, userData);
 }

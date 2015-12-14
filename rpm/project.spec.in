@@ -7,15 +7,15 @@
 %endif
 
 %if %{with gsettings}
-%global gsettings_support 1
+%global gsettings_support ON
 %else
-%global gsettings_support 0
+%global gsettings_support OFF
 %endif
 
 %if %{with gconf2}
-%global gconf2_support 1
+%global gconf2_support ON
 %else
-%global gconf2_support 0
+%global gconf2_support OFF
 %endif
 Name:           @PROJECT_NAME@
 Version:        @PRJ_VER@

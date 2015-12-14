@@ -12,7 +12,8 @@ void property_context_default(PropertyContext * ctx)
     if (ctx->spec->defaultValue == NULL)
 	return;
     mkdg_log(DEBUG, "property_context_default(%s)", ctx->spec->key);
-    gboolean ret=property_context_from_string(ctx, ctx->spec->defaultValue);
+    gboolean ret =
+	property_context_from_string(ctx, ctx->spec->defaultValue);
     if (!ret) {
 	mkdg_log(WARN,
 		 "property_context_default(%s): failed to convert string %s, return NULL",
@@ -83,10 +84,10 @@ GValue *property_context_read(PropertyContext * ctx, gpointer userData)
     if (ctx == NULL || ctx->backend == NULL) {
 	return NULL;
     }
-    mkdg_log(DEBUG, "property_context_read(%s, - )", ctx->spec->key);
-    GValue *result = ctx->backend->readFunc(ctx->backend, &(ctx->value),
-					    ctx->spec->subSection,
-					    ctx->spec->key, userData);
+    mkdg_log(DEBUG, "property_context_read(%s,-)", ctx->spec->key);
+    GValue *result = mkdg_backend_read(ctx->backend, &(ctx->value),
+				       ctx->spec->subSection,
+				       ctx->spec->key, userData);
     if (result == NULL) {
 	mkdg_log(WARN, "property_context_read(%s): failed to read key",
 		 ctx->spec->key);
@@ -240,7 +241,7 @@ GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
 }
 
 gboolean mkdg_properties_set_by_key(MkdgProperties * properties,
-				   const gchar * key, GValue *value)
+				    const gchar * key, GValue * value)
 {
     if (properties == NULL) {
 	return FALSE;
@@ -250,34 +251,36 @@ gboolean mkdg_properties_set_by_key(MkdgProperties * properties,
 }
 
 gboolean mkdg_properties_set_boolean_by_key(MkdgProperties * properties,
-				   const gchar * key, gboolean boolValue)
+					    const gchar * key,
+					    gboolean boolValue)
 {
-    GValue gValue={0};
+    GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_BOOLEAN);
     g_value_set_boolean(&gValue, boolValue);
-    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    gboolean result = mkdg_properties_set_by_key(properties, key, &gValue);
     g_value_unset(&gValue);
     return result;
 }
 
 gboolean mkdg_properties_set_int_by_key(MkdgProperties * properties,
-				   const gchar * key, gint intValue)
+					const gchar * key, gint intValue)
 {
-    GValue gValue={0};
+    GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_INT);
     g_value_set_int(&gValue, intValue);
-    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    gboolean result = mkdg_properties_set_by_key(properties, key, &gValue);
     g_value_unset(&gValue);
     return result;
 }
 
 gboolean mkdg_properties_set_string_by_key(MkdgProperties * properties,
-				   const gchar * key, const gchar *stringValue)
+					   const gchar * key,
+					   const gchar * stringValue)
 {
-    GValue gValue={0};
+    GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_STRING);
     g_value_set_string(&gValue, stringValue);
-    gboolean result=mkdg_properties_set_by_key(properties,key,&gValue);
+    gboolean result = mkdg_properties_set_by_key(properties, key, &gValue);
     g_value_unset(&gValue);
     return result;
 }
@@ -293,7 +296,7 @@ GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
 }
 
 gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
-				    const gchar * key, gpointer userData)
+				      const gchar * key, gpointer userData)
 {
     if (properties == NULL) {
 	return FALSE;

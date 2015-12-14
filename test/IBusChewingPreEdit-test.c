@@ -2,9 +2,9 @@
 #include <glib.h>
 #include "IBusChewingPreEdit.h"
 #include "IBusChewingUtil.h"
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#elif GCONF2_SUPPORT ==1 
+#elif defined USE_GCONF2
 #include "GConf2Backend.h"
 #endif
 #include "MakerDialogUtil.h"
@@ -303,24 +303,26 @@ void plain_zhuyin_full_half_shape_test()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     MkdgBackend *backend =
 	mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
 				    QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif GCONF2_SUPPORT == 1
+#elif defined USE_GCONF2
     MkdgBackend *backend =
-	gconf2_backend_new("/desktop/ibus/engine", NULL);
+	gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
 #else
     MkdgBackend *backend = NULL;
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
     return 1;
-#endif				/* GSETTINGS_SUPPORT */
+#endif				/* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
     self = ibus_chewing_pre_edit_new(backend);
 
+    mkdg_log(DEBUG, "main: apply_property: max-chi-symbol-len");
     ibus_chewing_pre_edit_set_apply_property_int(self,
 						 "max-chi-symbol-len", 8);
 
+    mkdg_log(DEBUG, "main: apply_property: sel-keys");
     ibus_chewing_pre_edit_set_apply_property_string(self,
 						    "sel-keys",
 						    "1234567890");

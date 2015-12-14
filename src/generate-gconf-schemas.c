@@ -66,11 +66,6 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
     gchar *camalCasedKey=mkdg_str_dash_to_camel(ctx->spec->key);
     g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s",schemasHome);
 
-    if (! STRING_IS_EMPTY(QUOTE_ME(PROJECT_SCHEMA_SECTION))){
-	g_strlcat(buf, "/", XML_BUFFER_SIZE);
-	g_strlcat(buf, QUOTE_ME(PROJECT_SCHEMA_SECTION), XML_BUFFER_SIZE);
-    }
-
     if (! STRING_IS_EMPTY(ctx->spec->subSection)) {
 	g_strlcat(buf, "/", XML_BUFFER_SIZE);
 	g_strlcat(buf, ctx->spec->subSection, XML_BUFFER_SIZE);

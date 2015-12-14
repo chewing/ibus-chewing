@@ -247,6 +247,10 @@ IF(GCONF2_SUPPORT)
 	generate-gconf-schemas
 	)
 
+    ADD_DEPENDENCIES(generate-gconf-schemas
+	translations
+	)
+
 ENDIF()
 
 SET(BACKEND_LIBRARIES "${BACKEND_LIBRARIES}" CACHE INTERNAL "Backend Libraries")

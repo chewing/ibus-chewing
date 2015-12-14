@@ -6,9 +6,9 @@
 #include "test-util.h"
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#elif GCONF2_SUPPORT == 1
+#elif defined USE_GCONF2
 #include "GConf2Backend.h"
 #endif
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)
@@ -41,16 +41,16 @@ GValue *backend_command_get_key_value(const gchar * key, GValue * value)
 {
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey=mkdg_backend_get_key(backend, NULL, key, NULL);
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gsettings get %s %s",
 	       QUOTE_ME(PROJECT_SCHEMA_ID), cKey);
 #else
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gconftool-2 --get  %s/%s",
-	       QUOTE_ME(PROJECT_SCHEMA_DIR), cKey);
+	       QUOTE_ME(PROJECT_GCONF2_SCHEMA_DIR), cKey);
 #endif
     gchar *retStr = command_run_obtain_output(cmdBuf);
 
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     /* gsettings prepend 'uint32 ' before actual value */
     if (G_VALUE_TYPE(value) == G_TYPE_UINT) {
 	gint offset = strlen("uint32 ");
@@ -69,7 +69,7 @@ void backend_command_set_key_value(const gchar * key, GValue * value)
     }
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey=mkdg_backend_get_key(backend, NULL, key, NULL);
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE,
 	       "gsettings set %s %s %s",
 	       QUOTE_ME(PROJECT_SCHEMA_ID), cKey, valueStr);
@@ -242,16 +242,16 @@ void int_w_test()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     backend = mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
 					  QUOTE_ME(PROJECT_SCHEMA_DIR),
 					  NULL);
-#elif GCONF2_SUPPORT == 1
+#elif defined USE_GCONF2
     backend = gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
 #else
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
     return 2;
-#endif				/* GSETTINGS_SUPPORT */
+#endif				/* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
 
     TEST_RUN_THIS(write_boolean_test);

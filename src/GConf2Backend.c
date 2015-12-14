@@ -95,7 +95,8 @@ static GConfValue *gconf_value_new_g_value(GValue * value)
 static gchar *to_real_key(gchar * confKey, MkdgBackend * backend,
 			  const gchar * section, const gchar * key)
 {
-    gchar *camalCasedKey = gconf2_backend_get_key(backend, section, key, NULL);
+    gchar *camalCasedKey =
+	gconf2_backend_get_key(backend, section, key, NULL);
 
     if (!STRING_IS_EMPTY(backend->basePath)) {
 	g_strlcpy(confKey, backend->basePath, KEY_BUFFER_SIZE);
@@ -134,12 +135,20 @@ GValue *gconf2_backend_read_value(MkdgBackend * backend,
 				  const gchar * section,
 				  const gchar * key, gpointer userData)
 {
+    mkdg_log(DEBUG, "gconf2_backend_read_value(-,-,%s,%s,-):", section,
+	     key);
     GConfClient *config = (GConfClient *) backend->config;
     GError *err = NULL;
     gchar confKey[KEY_BUFFER_SIZE];
     to_real_key(confKey, backend, section, key);
     GConfValue *confValue = gconf_client_get(config, confKey, &err);
 
+    if (confValue == NULL) {
+	mkdg_log(ERROR,
+		 "gconf2_backend_read_value(-,-,%s,%s,-): Failed to retrieve confValue",
+		 section, key);
+	return NULL;
+    }
     if (err != NULL) {
 	mkdg_log(ERROR, "gconf2_backend_read_value(-,-,%s,%s,-): %s",
 		 section, key, err->message);

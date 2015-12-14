@@ -33,15 +33,20 @@ OptArray=()
 if which lsb_release &>/dev/null ;then
     Distributor=$(lsb_release -i | sed -e 's/^.*:\s*//')
     Release=$(lsb_release -r | sed -e 's/^.*:\s*//')
+    MajorRelease=$(sed -e 's/\..*//' <<< $Release)
     case $Distributor in
 	RedHat* )
-	    OptArray+=(-DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=1 -DGSETTINGS_SUPPORT=0 -DGCONF2_SUPPORT=1)
+	    if [ $MajorRelease -ge 7 ];then
+		OptArray+=(-DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=ON -DGSETTINGS_SUPPORT=ON -DGCONF2_SUPPORT=OFF)
+	    else
+		OptArray+=(-DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=ON -DGSETTINGS_SUPPORT=OFF -DGCONF2_SUPPORT=ON)
+	    fi
 	    ;;
 	Fedora )
-	    OptArray+=(-DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=1 -DGSETTINGS_SUPPORT=1 -DGCONF2_SUPPORT=0)
+	    OptArray+=(-DCMAKE_FEDORA_ENABLE_FEDORA_BUILD=ON -DGSETTINGS_SUPPORT=ON -DGCONF2_SUPPORT=OFF)
 	    ;;
 	* )
-	    OptArray+=(-DGSETTINGS_SUPPORT=1)
+	    OptArray+=(-DGSETTINGS_SUPPORT=ON)
 	    ;;
     esac
 else

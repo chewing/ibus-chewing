@@ -11,8 +11,8 @@ typedef struct {
     GHashTable *confObjTable;
 } IBusChewingProperties;
 
-/* GConf/dconf section under PROJECT_SCHEMA_PATH */
-#define IBUS_CHEWING_PROPERTIES_SUBSECTION ""
+/* GConf/dconf section under PROJECT_SCHEMA_BASE */
+#define IBUS_CHEWING_PROPERTIES_SUBSECTION QUOTE_ME(PROJECT_SCHEMA_SECTION)
 
 IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
 						   gpointer parent,

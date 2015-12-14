@@ -27,10 +27,10 @@
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif
-#if GCONF2_SUPPORT == 1
+#ifdef USE_GCONF2_SUPPORT
 #include "GConf2Backend.h"
 #endif
 #include "GConf2Backend.h"
@@ -54,12 +54,12 @@ static const GOptionEntry entries[] = {
 
 gint start_dialog()
 {
-#if GSETTINGS_SUPPORT == 1
+#ifdef USE_GSETTINGS
     MkdgBackend *backend =
         mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID), QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif GCONF2_SUPPORT == 1
+#elif defined USE_GCONF2
     MkdgBackend *backend =
-        gconf2_backend_new("/desktop/ibus/engine", NULL);
+        gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
 #else
     MkdgBackend *backend = NULL;
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
