@@ -47,9 +47,7 @@ fi
 
 RPM_SPEC_STRING_ADD_DIRECTIVE(RPM_SPEC_SCRIPT_OUTPUT post ""
     "%if \"%{gsettings_support}\" == \"ON\"
-if [ $1 -eq 0 ] ; then
-    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-fi
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %endif
 
 %if \"%{gconf2_support}\" == \"ON\"

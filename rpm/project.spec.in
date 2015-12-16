@@ -1,4 +1,4 @@
-%if 0%{?rhel}
+%if 0%{?el6}
 %bcond_with gsettings
 %bcond_without gconf2
 %else
