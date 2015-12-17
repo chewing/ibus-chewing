@@ -28,8 +28,7 @@ void check_output(const gchar * outgoing, const gchar * preEdit,
 
 void focus_out_then_focus_in_with_aux_text_test()
 {
-    ibus_chewing_engine_set_status_flag(engine,
-					ENGINE_FLAG_CAP_AUXILIARY_TEXT);
+    ibus_chewing_engine_set_capabilite(engine, IBUS_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
     ibus_chewing_engine_enable(engine);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24,

@@ -81,12 +81,6 @@ enum ENGINE_FLAG {
     FOCUS_IN = 			0x4,
     IS_PASSWORD = 		0x8,
     PROPERTIES_REGISTERED = 	0x10,
-    CAP_PREEDIT_TEXT      =     0x20,
-    CAP_AUXILIARY_TEXT    =     0x40,
-    CAP_LOOKUP_TABLE      =     0x80,
-    CAP_FOCUS		  =     0x100,
-    CAP_PROPERTY          =     0x200,
-    CAP_SURROUNDING_TEXT  =     0x400
 } Engine:Flag;
 
 %h{
@@ -98,6 +92,11 @@ extern GtkResponseType button_responses[];
 #define ibus_chewing_engine_has_status_flag(self,f) mkdg_has_flag(self->_priv->statusFlags,f)
 #define ibus_chewing_engine_set_status_flag(self,f) mkdg_set_flag(self->_priv->statusFlags,f)
 #define ibus_chewing_engine_clear_status_flag(self,f) mkdg_clear_flag(self->_priv->statusFlags,f)
+
+#define ibus_chewing_engine_has_capabilite(self,f) mkdg_has_flag(self->_priv->capabilite,f)
+#define ibus_chewing_engine_set_capabilite(self,f) mkdg_set_flag(self->_priv->capabilite,f)
+#define ibus_chewing_engine_clear_capabilite(self,f) mkdg_clear_flag(self->_priv->capabilite,f)
+
 
 #define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
 #define is_chinese(self) (chewing_get_ChiEngMode(self->icPreEdit->context)!=0)
@@ -192,6 +191,8 @@ class IBus:Chewing:Engine from IBus:Engine {
      * and libchewing is still Commit state. */
 
     private EngineFlag statusFlags = 0;
+
+    private IBusCapabilite capabilite =0 ;
 
     private ChewingInputStyle inputStyle;
 
@@ -541,8 +542,7 @@ class IBus:Chewing:Engine from IBus:Engine {
   override(IBus:Engine) void
      set_capabilities(IBus:Engine * engine, guint caps) {
 	Self *self = SELF(engine);
-	self->_priv->statusFlags %= ENGINE_FLAG_CAP_PREEDIT_TEXT;
-	self->_priv->statusFlags |= caps * ENGINE_FLAG_CAP_PREEDIT_TEXT;
+	self->_priv->capabilite = caps;
 	IBUS_CHEWING_LOG(MSG, "***** set_capabilities(%x): statusFlags=%x",
 			 caps, self->_priv->statusFlags);
     }

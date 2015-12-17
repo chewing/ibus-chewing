@@ -24,6 +24,7 @@ rm -fv CPackSourceConfig.cmake
 rm -fv CTestTestfile.cmake
 rm -frv NO_PACK
 rm -frv Testing
+rm -f rpm/SPECS/ibus-chewing.spec
 
 
 ##== Rebuild
