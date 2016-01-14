@@ -24,15 +24,17 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 					     const gchar * key,
 					     gpointer userData);
 
-gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties * self,
-					     const gchar * section,
-					     const gchar * key,
-					     gpointer userData);
+gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
+						      * self,
+						      const gchar *
+						      section,
+						      const gchar * key,
+						      gpointer userData);
 
 gint ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-					     const gchar * section,
-					     const gchar * key,
-					     gpointer userData);
+					      const gchar * section,
+					      const gchar * key,
+					      gpointer userData);
 
 /*============================================
  * Callback functions
@@ -49,6 +51,9 @@ gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
 
 gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
 					   gpointer userData);
+
+gboolean cleanBufferFocusOut_apply_callback(PropertyContext * ctx,
+					    gpointer userData);
 
 gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
 					gpointer userData);

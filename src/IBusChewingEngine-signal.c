@@ -70,6 +70,13 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
 					  ENGINE_FLAG_FOCUS_IN |
 					  ENGINE_FLAG_PROPERTIES_REGISTERED);
     ibus_chewing_engine_hide_property_list(self);
+    
+    if(ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "clean-buffer-focus-out")){
+	/* Clean the buffer when focus out */
+	ibus_chewing_pre_edit_clear(self->icPreEdit);
+	refresh_pre_edit_text(self);
+	refresh_aux_text(self);
+    }
 
     IBUS_CHEWING_LOG(DEBUG, "focus_out(): return");
 }

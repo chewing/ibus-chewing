@@ -1,7 +1,11 @@
-PRJ_VER=1.4.15
+PRJ_VER=1.5.0
 SUMMARY=Fixed the issues found in static checks
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=1182813
 [Changes]
-- Fixed the issues found in static checks
-- Fixed GitHub issue #61
-
+- Enhancement:
+  * New option: "Clean pre-edit buffer when focus out"
+- Fix:
+  * Fixed the issues found in static checks
+  * Fixed GitHub issue #61
+  * Fixed GitHub issue #28 ibus-chewing crashes gedit in search box while window out of focus
+    A.K.A. RHBZ 1182813

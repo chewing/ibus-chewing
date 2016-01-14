@@ -70,6 +70,14 @@ gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
+
+gboolean cleanBufferFocusOut_apply_callback(PropertyContext * ctx,
+					    gpointer userData)
+{
+    return TRUE;
+}
+
+
 gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
 					gpointer userData)
 {
