@@ -302,7 +302,7 @@ gboolean mkdg_properties_save_by_key(MkdgProperties * properties,
 				     gpointer userData)
 {
     if (properties == NULL) {
-	return NULL;
+	return FALSE;
     }
     PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
     return property_context_save(ctx, value, userData);
