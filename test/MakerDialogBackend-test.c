@@ -174,7 +174,7 @@ void assert_new_value_is_written(const gchar * key, GValue * newValue)
     g_value_unset(&storedGValue);
 }
 
-void write_test(const gchar * key, GType gType)
+void mkdg_g_value_from_string_test(const gchar * key, GType gType)
 {
     GValue origGValue = { 0 };
     backup_key_to_g_value(key, gType, &origGValue);
@@ -194,24 +194,24 @@ void write_test(const gchar * key, GType gType)
     g_value_unset(&newGValue);
 }
 
-void write_boolean_test()
+void mkdg_g_value_from_string_boolean_test()
 {
-    write_test("plain-zhuyin", G_TYPE_BOOLEAN);
+    mkdg_g_value_from_string_test("plain-zhuyin", G_TYPE_BOOLEAN);
 }
 
-void write_int_test()
+void mkdg_g_value_from_string_int_test()
 {
-    write_test("max-chi-symbol-len", G_TYPE_INT);
+    mkdg_g_value_from_string_test("max-chi-symbol-len", G_TYPE_INT);
 }
 
-void write_uint_test()
+void mkdg_g_value_from_string_uint_test()
 {
-    write_test("cand-per-page", G_TYPE_UINT);
+    mkdg_g_value_from_string_test("cand-per-page", G_TYPE_UINT);
 }
 
-void write_string_test()
+void mkdg_g_value_from_string_string_test()
 {
-    write_test("max-chi-symbol-len", G_TYPE_INT);
+    mkdg_g_value_from_string_test("max-chi-symbol-len", G_TYPE_INT);
 }
 
 void int_w_test()
@@ -254,9 +254,9 @@ gint main(gint argc, gchar ** argv)
 #endif				/* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
 
-    TEST_RUN_THIS(write_boolean_test);
-    TEST_RUN_THIS(write_int_test);
-    TEST_RUN_THIS(write_uint_test);
-    TEST_RUN_THIS(write_string_test);
+    TEST_RUN_THIS(mkdg_g_value_from_string_boolean_test);
+    TEST_RUN_THIS(mkdg_g_value_from_string_int_test);
+    TEST_RUN_THIS(mkdg_g_value_from_string_uint_test);
+    TEST_RUN_THIS(mkdg_g_value_from_string_string_test);
     return g_test_run();
 }

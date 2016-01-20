@@ -126,6 +126,24 @@ gboolean mkdg_properties_set_string_by_key(MkdgProperties * properties,
 GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
 				    const gchar * key, gpointer userData);
 
+gboolean mkdg_properties_save_by_key(MkdgProperties * properties,
+				     const gchar * key, GValue * value,
+				     gpointer userData);
+
+gboolean mkdg_properties_save_boolean_by_key(MkdgProperties * properties,
+					     const gchar * key,
+					     gboolean boolValue,
+					     gpointer userData);
+
+gboolean mkdg_properties_save_int_by_key(MkdgProperties * properties,
+					 const gchar * key, gint intValue,
+					 gpointer userData);
+
+gboolean mkdg_properties_save_string_by_key(MkdgProperties * properties,
+					    const gchar * key,
+					    const gchar * stringValue,
+					    gpointer userData);
+
 gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
 				      const gchar * key,
 				      gpointer userData);

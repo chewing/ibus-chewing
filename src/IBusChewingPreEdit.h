@@ -113,6 +113,12 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self);
 
 #define ibus_chewing_pre_edit_apply_property(self,propertyKey) mkdg_properties_apply_by_key(self->iProperties->properties, propertyKey, NULL)
 
+#define ibus_chewing_pre_edit_save_property_boolean(self,propertyKey,boolValue) mkdg_properties_save_boolean_by_key(self->iProperties->properties, propertyKey, boolValue, NULL)
+
+#define ibus_chewing_pre_edit_save_property_int(self,propertyKey,intValue) mkdg_properties_save_int_by_key(self->iProperties->properties, propertyKey, intValue, NULL)
+
+#define ibus_chewing_pre_edit_save_property_string(self,propertyKey,strValue) mkdg_properties_save_string_by_key(self->iProperties->properties,propertyKey,strValue, NULL)
+
 #define ibus_chewing_pre_edit_set_apply_property_boolean(self, propertyKey,boolValue) ibus_chewing_pre_edit_set_property_boolean(self,propertyKey,boolValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)
 
 #define ibus_chewing_pre_edit_set_apply_property_int(self, propertyKey,intValue) ibus_chewing_pre_edit_set_property_int(self,propertyKey,intValue); ibus_chewing_pre_edit_apply_property(self,propertyKey)

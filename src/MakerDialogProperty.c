@@ -78,7 +78,7 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
 /* save: set then write */
 /* apply: Context -> apply callback */
 /* use: load then apply */
-/* assigne: save then apply */
+/* assign: save then apply */
 GValue *property_context_read(PropertyContext * ctx, gpointer userData)
 {
     if (ctx == NULL || ctx->backend == NULL) {
@@ -123,12 +123,13 @@ gboolean property_context_set(PropertyContext * ctx, GValue * value)
 	mkdg_log(WARN, "property_context_set(-): ctx is NULL");
 	return FALSE;
     }
-    mkdg_log(DEBUG, "property_context_set(%s,-)", ctx->spec->key);
     if (!G_IS_VALUE(value)) {
 	mkdg_log(WARN, "property_context_set(%s): value is not GValue",
 		 ctx->spec->key);
 	return FALSE;
     }
+    mkdg_log(DEBUG, "property_context_set(%s,%s)", ctx->spec->key,
+	     mkdg_g_value_to_string(value));
     g_value_copy(value, &(ctx->value));
     return TRUE;
 }
@@ -158,7 +159,8 @@ gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 		 ctx->spec->key);
 	return FALSE;
     }
-    mkdg_log(DEBUG, "property_context_apply(%s,-)", ctx->spec->key);
+    mkdg_log(DEBUG, "property_context_apply(%s,-): value %s",
+	     ctx->spec->key, mkdg_g_value_to_string(&(ctx->value)));
     return ctx->spec->applyFunc(ctx, userData);
 }
 
@@ -293,6 +295,58 @@ GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
     }
     PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
     return property_context_load(ctx, userData);
+}
+
+gboolean mkdg_properties_save_by_key(MkdgProperties * properties,
+				     const gchar * key, GValue * value,
+				     gpointer userData)
+{
+    if (properties == NULL) {
+	return NULL;
+    }
+    PropertyContext *ctx = mkdg_properties_find_by_key(properties, key);
+    return property_context_save(ctx, value, userData);
+}
+
+gboolean mkdg_properties_save_boolean_by_key(MkdgProperties * properties,
+					     const gchar * key,
+					     gboolean boolValue,
+					     gpointer userData)
+{
+    GValue gValue = { 0 };
+    g_value_init(&gValue, G_TYPE_BOOLEAN);
+    g_value_set_boolean(&gValue, boolValue);
+    gboolean result =
+	mkdg_properties_save_by_key(properties, key, &gValue, userData);
+    g_value_unset(&gValue);
+    return result;
+}
+
+gboolean mkdg_properties_save_int_by_key(MkdgProperties * properties,
+					 const gchar * key, gint intValue,
+					 gpointer userData)
+{
+    GValue gValue = { 0 };
+    g_value_init(&gValue, G_TYPE_INT);
+    g_value_set_int(&gValue, intValue);
+    gboolean result =
+	mkdg_properties_save_by_key(properties, key, &gValue, userData);
+    g_value_unset(&gValue);
+    return result;
+}
+
+gboolean mkdg_properties_save_string_by_key(MkdgProperties * properties,
+					    const gchar * key,
+					    const gchar * stringValue,
+					    gpointer userData)
+{
+    GValue gValue = { 0 };
+    g_value_init(&gValue, G_TYPE_STRING);
+    g_value_set_string(&gValue, stringValue);
+    gboolean result =
+	mkdg_properties_save_by_key(properties, key, &gValue, userData);
+    g_value_unset(&gValue);
+    return result;
 }
 
 gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
