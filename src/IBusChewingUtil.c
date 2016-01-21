@@ -199,6 +199,7 @@ gboolean is_caps_led_on(Display * pDisplay)
 {
     XKeyboardState retState;
     XGetKeyboardControl(pDisplay, &retState);
+    XFlush(pDisplay);
     return (retState.led_mask & 1) ? TRUE : FALSE;
 }
 

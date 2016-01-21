@@ -286,6 +286,11 @@ class IBus:Chewing:Engine from IBus:Engine {
 	ibus_chewing_engine_set_status_flag(self,
 					    ENGINE_FLAG_INITIALIZED);
 	self_use_setting(self);
+
+	/* In case we cannot open X display */
+	if (self->_priv->pDisplay==NULL){
+	    IBUS_CHEWING_LOG(WARN, "init() XOpenDisplay return NULL");
+	}
 	IBUS_CHEWING_LOG(DEBUG, "init() Done");
     }
 
@@ -332,15 +337,18 @@ class IBus:Chewing:Engine from IBus:Engine {
     }
 
     protected void restore_mode(self) {
-	if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)){
-	    if (is_chinese(self) == is_caps_lock(self)) {
-		/* ChiEng mode does not agree each other */
-		set_caps_led(!is_chinese(self), self->_priv->pDisplay);
+	if (self->_priv->pDisplay!=NULL){
+	    /* Restore Led Mode only make sense if pDisplay is available */
+	    if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)){
+		if (is_chinese(self) == is_caps_lock(self)) {
+		    /* ChiEng mode does not agree each other */
+		    set_caps_led(!is_chinese(self), self->_priv->pDisplay);
+		}
+	    }else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)){
+		chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self))? 0: CHINESE_MODE );
 	    }
-	}else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)){
-	    chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self))? 0: CHINESE_MODE );
+	    self_refresh_property(self, "InputMode");
 	}
-	self_refresh_property(self, "InputMode");
     }
 
     protected void update(self) {
