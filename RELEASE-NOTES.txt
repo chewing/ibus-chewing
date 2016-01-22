@@ -8,5 +8,6 @@ REDHAT_BUGZILLA=1177198, 1182813
   * Fixed the issues found in static checks
   * Fixed GitHub issue #28 ibus-chewing crashes gedit in search box while window out of focus
     A.K.A. RHBZ 1182813
+  * Fixed GitHub issue #47 CHEWING_DATADIR CMake variable name mismatch
   * Fixed GitHub issue #61 GConf2 should be removed from INSTALL document
   * Fixed Bug 1177198 - [abrt] ibus-chewing: XGetKeyboardControl(): ibus-engine-chewing killed by SIGSEGV

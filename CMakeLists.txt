@@ -169,8 +169,8 @@ ADD_DEFINITIONS("-DCHEWING_VERSION_MAJOR=${CHEWING_VERSION_MAJOR}"
     "-DCHEWING_VERSION_PATCH=${CHEWING_VERSION_PATCH}"
     )
 
-## In case CHEWING_DATADIR is incorrect
-FOREACH(d ${CHEWING_DATADIR} /usr/share/chewing ${CHEWING_LIBDIR}/libchewing)
+## Find the correct chewin datadir
+FOREACH(d ${CHEWING_CHEWING_DATADIR} ${CHEWING_LIBDIR}/libchewing  ${DATA_DIR}/chewing ${DATA_DIR}/libchewing)
     IF(EXISTS "${d}/symbols.dat")
 	SET(CHEWING_DATADIR_REAL "${d}" CACHE STRING "CHEWING_DATADIR_REAL")
 	BREAK()
