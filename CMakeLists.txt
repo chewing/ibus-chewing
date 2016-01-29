@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 2.6.2)
+cmake_minimum_required(VERSION 2.8.0)
 
 # Included scripts do automatic cmake_policy PUSH and POP.
 # OLD: CMake policy in included script will affect the invoker.
 CMAKE_POLICY(SET CMP0011 OLD)
-
+IF(POLICY CMP0065)
+    CMAKE_POLICY(SET CMP0065 OLD)
+ENDIF()
 
 ####################################################################
 # Find cmake-fedora
@@ -28,7 +30,7 @@ IF(MANAGE_ENVIRONMENT_PATH STREQUAL "NOTFOUND")
 
 	IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
             ## cmake-fedora is now available as subdirectory, try again
-	    EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules .)
+	    EXECUTE_PROCESS(COMMAND ln -s ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules ${CMAKE_SOURCE_DIR}/Modules)
 	    INCLUDE(ManageEnvironmentCommon RESULT_VARIABLE MANAGE_ENVIRONMENT_PATH)
 	ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake-fedora/Modules)
     ENDIF(NOT EXISTS ${CMAKE_SOURCE_DIR}/Modules)
