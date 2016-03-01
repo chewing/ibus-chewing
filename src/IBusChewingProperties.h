@@ -2,7 +2,6 @@
 #define _IBUS_CHEWING_PROPERTIES_H_
 #include <glib.h>
 #include <ibus.h>
-#include <gtk/gtk.h>
 #include "MakerDialogProperty.h"
 #include "MakerDialogBackend.h"
 
@@ -45,6 +44,9 @@ gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData);
 
 gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
 				      gpointer userData);
+
+gboolean showSystray_apply_callback(PropertyContext * ctx,
+				    gpointer userData);
 
 gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
 				     gpointer userData);

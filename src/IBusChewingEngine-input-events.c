@@ -69,14 +69,14 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 	ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
 	IBUS_CHEWING_LOG(INFO,
 			 "property_activate chinese=%d caps_lock=%d",
-			 is_chinese(self), is_caps_lock(self));
+			 ibus_chewing_engine_is_chinese_mode(self), is_caps_lock(self));
 
 	if (ibus_chewing_pre_edit_has_flag
 	    (self->icPreEdit, FLAG_SYNC_FROM_IM)
 	    || ibus_chewing_pre_edit_has_flag(self->icPreEdit,
 					      FLAG_SYNC_FROM_KEYBOARD)) {
-	    if (is_chinese(self) == is_caps_lock(self)) {
-		set_caps_led(!is_chinese(self), self->_priv->pDisplay);
+	    if (ibus_chewing_engine_is_chinese_mode(self) == is_caps_lock(self)) {
+		set_caps_led(!ibus_chewing_engine_is_chinese_mode(self), self->_priv->pDisplay);
 	    }
 	}
 	self_refresh_property(self, prop_name);

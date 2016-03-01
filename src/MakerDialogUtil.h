@@ -90,9 +90,9 @@ gchar *mkdg_str_dash_to_camel(const gchar * argStr);
  * Flag Utility Macros
  */
 
-#define mkdg_has_flag(flagSet, flag) (flagSet & flag)
-#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
 #define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
+#define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
+#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
 
 /**************************************
  * XML data structure and functions

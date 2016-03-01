@@ -34,6 +34,7 @@ requires 2.0.0
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
+#include "IBusChewingSystray.h"
 #ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif
@@ -99,7 +100,7 @@ extern GtkResponseType button_responses[];
 
 
 #define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
-#define is_chinese(self) (chewing_get_ChiEngMode(self->icPreEdit->context)!=0)
+#define ibus_chewing_engine_is_chinese_mode(self) ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
 #define is_caps_lock(self) (is_caps_led_on(self->_priv->pDisplay))
 
 #define ibus_text_is_empty(iText) ((iText==NULL) || STRING_IS_EMPTY(iText->text))
@@ -107,6 +108,7 @@ extern GtkResponseType button_responses[];
 #define is_plain_chewing ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "plain-zhuyin")
 
 #define cursor_current chewing_cursor_Current(self->icPreEdit->context)
+
 %}
 
 %privateheader{
@@ -133,6 +135,10 @@ void update_lookup_table(IBusChewingEngine * self);
 void refresh_outgoing_text(IBusChewingEngine * self);
 void commit_text(IBusChewingEngine * self);
 
+/* IBusChewingEngine-gui */
+void ibus_chewing_engine_systray_icon_create(IBusChewingEngine * self);
+void ibus_chewing_engine_apply_show_systray_icon(IBusChewingEngine * self);
+void ibus_chewing_engine_refresh_systray_icon(IBusChewingEngine * self);
 %}
 
 %{
@@ -179,7 +185,8 @@ class IBus:Chewing:Engine from IBus:Engine {
      */
     public IBusText *outgoingText=NULL;
 
-    /* Controlling flags */
+    protected IBusChewingSystrayIcon *iChiEngSystrayIcon=NULL
+	destroywith ibus_chewing_systray_icon_free;
 
     /* Log file */
     protected FILE *logFile = NULL;
@@ -286,6 +293,10 @@ class IBus:Chewing:Engine from IBus:Engine {
 	ibus_chewing_engine_set_status_flag(self,
 					    ENGINE_FLAG_INITIALIZED);
 	self_use_setting(self);
+	self->icPreEdit->engine=IBUS_ENGINE(self);
+
+	/* Systray Icon */
+	ibus_chewing_engine_systray_icon_create(self);
 
 	/* In case we cannot open X display */
 	if (self->_priv->pDisplay==NULL){
@@ -340,9 +351,9 @@ class IBus:Chewing:Engine from IBus:Engine {
 	if (self->_priv->pDisplay!=NULL){
 	    /* Restore Led Mode only make sense if pDisplay is available */
 	    if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)){
-		if (is_chinese(self) == is_caps_lock(self)) {
+		if (ibus_chewing_engine_is_chinese_mode(self) == is_caps_lock(self)) {
 		    /* ChiEng mode does not agree each other */
-		    set_caps_led(!is_chinese(self), self->_priv->pDisplay);
+		    set_caps_led(!ibus_chewing_engine_is_chinese_mode(self), self->_priv->pDisplay);
 		}
 	    }else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)){
 		chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self))? 0: CHINESE_MODE );
@@ -369,9 +380,10 @@ class IBus:Chewing:Engine from IBus:Engine {
     protected void refresh_property(self, const gchar * prop_name)
     {
 #ifndef UNIT_TEST
-
 	IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
 			 prop_name, self->_priv->statusFlags);
+	
+	ibus_chewing_engine_refresh_systray_icon(self);
 	if (STRING_EQUALS(prop_name, "InputMode")) {
 	    if (ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)) {
 		/* Chinese  */
@@ -387,6 +399,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 					 chieng_prop_symbol_chi);
 #endif
 	    } else {
+		/* English  */
 		ibus_property_set_label(self->chieng_prop,
 					SELF_GET_CLASS(self)->
 					chieng_prop_label_eng);
@@ -458,8 +471,6 @@ class IBus:Chewing:Engine from IBus:Engine {
      */
     public void hide_property_list(self) {
 #ifndef UNIT_TEST
-//	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
-//						   "InputMode");
 	IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
 						   "chewing_alnumSize_prop");
 #endif
@@ -474,6 +485,17 @@ class IBus:Chewing:Engine from IBus:Engine {
 	IBUS_CHEWING_LOG(MSG, "get_ibus_property_by_name(%s): NULL is returned",
 			 prop_name);
 	return NULL;
+    }
+
+    signal first NONE (STRING)
+    void config_changed(self, gchar *key){
+#ifndef UNIT_TEST
+	IBUS_CHEWING_LOG(DEBUG, "config_changed(%s) status=%x",
+		key, self->_priv->statusFlags);
+	if (STRING_EQUALS(key, "show-systray")) {
+	    ibus_chewing_engine_apply_show_systray_icon(self);
+	}
+#endif
     }
 
 
@@ -587,4 +609,5 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine *self,
 %{
 #include "IBusChewingEngine-signal.c"
 #include "IBusChewingEngine-input-events.c"
+#include "IBusChewingEngine-gui.c"
 %}

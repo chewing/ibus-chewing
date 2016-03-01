@@ -50,6 +50,17 @@ gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
+gboolean showSystray_apply_callback(PropertyContext * ctx,
+				    gpointer userData)
+{
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
+    IBusService *service = IBUS_SERVICE(icPreEdit->engine);
+    ibus_service_emit_signal(service, NULL, IBUS_INTERFACE_ENGINE,
+			     "config_changed",
+			     g_variant_new_string("show-systray"), NULL);
+    return TRUE;
+}
+
 gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
 				     gpointer userData)
 {

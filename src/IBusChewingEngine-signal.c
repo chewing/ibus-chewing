@@ -259,7 +259,6 @@ void refresh_aux_text(IBusChewingEngine * self)
 	return;
     }
     IBUS_CHEWING_LOG(INFO, "refresh_aux_text()");
-    gint bpmfLen;
     gchar *auxStr;
     if (self->auxText != NULL) {
 	g_object_unref(self->auxText);
@@ -273,8 +272,7 @@ void refresh_aux_text(IBusChewingEngine * self)
 			 ibus_chewing_bopomofo_check(self->
 						     icPreEdit->context));
 	gchar *bpmfStr =
-	    ibus_chewing_bopomofo_string(self->icPreEdit->context,
-					 &bpmfLen);
+	    ibus_chewing_pre_edit_get_bopomofo_string(self->icPreEdit);
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmfStr=%s", bpmfStr);
 	self->auxText =
 	    g_object_ref_sink(ibus_text_new_from_string(bpmfStr));

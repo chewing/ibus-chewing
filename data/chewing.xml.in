@@ -25,6 +25,7 @@
 	    <rank>80</rank>
 	    @HOTKEYS_XML@
 	    @SYMBOL_XML@
+	    @SETUP_PROGRAM_XML@
         </engine>
     </engines>
 </component>

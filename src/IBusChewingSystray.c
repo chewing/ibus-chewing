@@ -172,6 +172,6 @@ IBusChewingSystrayIcon
 				      NULL);
     gtk_status_icon_set_tooltip_text(iChiEngSystrayIcon->icon,
 				     _
-				     ("Left click to toggle Chi / Eng; Right click to toggle half / full shape"));
+				     ("Left click to toggle Chi/Eng; Right click to toggle full/half shape"));
     return iChiEngSystrayIcon;
 }

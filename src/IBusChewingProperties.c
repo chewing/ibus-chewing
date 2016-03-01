@@ -80,6 +80,15 @@ MkdgPropertySpec propSpecs[] = {
      ("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
      }
     ,
+    {G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD,
+     N_("Show systray icons"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     showSystray_apply_callback, 0,
+     N_
+     ("On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+      "Off: Do not show the status icon"),
+     }
+    ,
     {G_TYPE_BOOLEAN, "auto-shift-cur", PAGE_EDITING,
      N_("Auto move cursor"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,

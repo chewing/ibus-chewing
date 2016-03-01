@@ -87,6 +87,7 @@ typedef struct {
     KSym keyLast;
     gint bpmfLen;
     gint wordLen;
+    IBusEngine *engine;
 } IBusChewingPreEdit;
 
 IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend * backend);
@@ -169,8 +170,10 @@ void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self);
 
 gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self);
+gboolean ibus_chewing_pre_edit_get_full_half(IBusChewingPreEdit * self);
 
 void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self);
+void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit * self);
 
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit * self,
 					   KSym kSym,
@@ -196,7 +199,7 @@ KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit * self,
 #else
 #define ibus_chewing_bopomofo_check !chewing_zuin_Check
 #endif
-#define ibus_chewing_bopomofo_string chewing_zuin_String
+gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit *self);
 
 typedef enum {
     EVENT_RESPONSE_PROCESS = 0,	/* Event process by IM */

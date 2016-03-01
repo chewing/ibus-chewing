@@ -180,6 +180,47 @@ void process_key_down_arrow_test()
     assert_outgoing_pre_edit("", "");
 }
 
+/* Test shift then caps then caps then shift */
+/* String: 我要去 Brisbane 玩。Daddy 好嗎 */ 
+/* Bug before 1.5.0 */
+void process_key_shift_and_caps_test()
+{
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+	    "plain-zhuyin",
+	    FALSE);
+    g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    key_press_from_string("ji3ul4fm4 ");
+    assert_outgoing_pre_edit("", "我要去 ");
+    /* Shift */
+    key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
+    /* B */
+    key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK);
+    key_press_from_string("risbane ");
+    key_press_from_key_sym(IBUS_KEY_Return, 0);
+    assert_outgoing_pre_edit("我要去 Brisbane ", "");
+
+    /* Caps Lock */
+    key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
+    key_press_from_string("j06");
+    key_press_from_key_sym(IBUS_KEY_period, IBUS_SHIFT_MASK);
+    key_press_from_key_sym(IBUS_KEY_Return, 0);
+    assert_outgoing_pre_edit("我要去 Brisbane 玩。", "");
+
+    /* Caps Lock */
+    key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
+    /* D */
+    key_press_from_key_sym(IBUS_KEY_D, 0);
+    key_press_from_string("addy ");
+
+    /* Shift */
+    key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
+    key_press_from_string("cl3a8 ");
+    key_press_from_key_sym(IBUS_KEY_Return, 0);
+    assert_outgoing_pre_edit("我要去 Brisbane 玩。Daddy 好嗎", "");
+    ibus_chewing_pre_edit_clear(self);
+    assert_outgoing_pre_edit("", "");
+}
+
 void full_half_shape_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
@@ -339,6 +380,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(process_key_incomplete_char_test);
     TEST_RUN_THIS(process_key_buffer_full_handling_test);
     TEST_RUN_THIS(process_key_down_arrow_test);
+    TEST_RUN_THIS(process_key_shift_and_caps_test);
     TEST_RUN_THIS(full_half_shape_test);
     TEST_RUN_THIS(plain_zhuyin_test);
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);

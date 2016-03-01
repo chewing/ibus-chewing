@@ -108,6 +108,8 @@ ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}-test
     ${CMAKE_SOURCE_DIR}/src/IBusChewingLookupTable.h
     ${CMAKE_SOURCE_DIR}/src/IBusChewingPreEdit.c
     ${CMAKE_SOURCE_DIR}/src/IBusChewingPreEdit.h
+    ${CMAKE_SOURCE_DIR}/src/IBusChewingSystray.c
+    ${CMAKE_SOURCE_DIR}/src/IBusChewingSystray.h
     ${CMAKE_SOURCE_DIR}/src/IBusChewingUtil.c
     ${CMAKE_SOURCE_DIR}/src/IBusChewingUtil.h
     ${CMAKE_CURRENT_SOURCE_DIR}/${IBUS_ENGINE_CHEWING}-test.c

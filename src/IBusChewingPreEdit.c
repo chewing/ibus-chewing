@@ -24,6 +24,7 @@ IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend * backend)
     self->keyLast = 0;
     self->bpmfLen = 0;
     self->wordLen = 0;
+    self->engine = NULL;
 
     /* Create chewing context */
     gchar buf[100];
@@ -57,6 +58,17 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self)
     g_free(self);
 }
 
+gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit * self)
+{
+#if CHEWING_CHECK_VERSION(0,4,0)
+    const gchar *buf = chewing_bopomofo_String_static(self->context);
+    self->bpmfLen = (gint) g_utf8_strlen(buf, 0);
+    return g_strdup(buf);
+#else
+    return chewing_zuin_String(self->context, &(self->bpmfLen));
+#endif
+}
+
 void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit * self)
 {
     mkdg_properties_use_all(self->iProperties->properties, NULL);
@@ -88,16 +100,14 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
 
     /* Make preEdit */
     gchar *bufferStr = chewing_buffer_String(self->context);
-    gint count;
-    gchar *bpmfStr = ibus_chewing_bopomofo_string(self->context, &count);
-    self->bpmfLen = count;
+    gchar *bpmfStr = ibus_chewing_pre_edit_get_bopomofo_string(self);
     g_string_assign(self->preEdit, "");
     gint i;
     gchar *cP = bufferStr;
     gunichar uniCh;
     IBUS_CHEWING_LOG(INFO,
-		     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| count=%d cursor=%d",
-		     bufferStr, bpmfStr, count, cursor_current);
+	    "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
+		     bufferStr, bpmfStr, self->bpmfLen, cursor_current);
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
 	if (i == cursor_current) {
 	    /* Insert bopomofo string */
@@ -110,7 +120,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     if (chewing_buffer_Len(self->context) <= cursor_current) {
 	g_string_append(self->preEdit, bpmfStr);
     }
-    self->wordLen = i + count;
+    self->wordLen = i + self->bpmfLen;
     g_free(bufferStr);
     g_free(bpmfStr);
 
@@ -201,6 +211,11 @@ gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self)
     return is_chinese;
 }
 
+gboolean ibus_chewing_pre_edit_get_full_half(IBusChewingPreEdit * self)
+{
+    return is_full_shape;
+}
+
 void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self)
 {
     /* When Chi->Eng with incomplete character */
@@ -209,7 +224,6 @@ void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self)
     }
     chewing_set_ChiEngMode(self->context, !is_chinese);
 }
-
 
 void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit * self)
 {
@@ -434,7 +448,8 @@ EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
     ignore_when_buffer_is_empty;
     handle_log("return");
 
-    EventResponse response = event_process_or_ignore(!chewing_handle_Enter(self->context));
+    EventResponse response =
+	event_process_or_ignore(!chewing_handle_Enter(self->context));
 
     /* Handle quick commit */
     ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);

@@ -1,6 +1,6 @@
 PRJ_VER=1.5.0
-SUMMARY=Fixed the issues found in static checks
-REDHAT_BUGZILLA=1177198, 1182813
+SUMMARY=Fixed the issues found in static checks, systray support, option to clean pre-edit buffer
+REDHAT_BUGZILLA=1177198, 1182813, 1309524
 [Changes]
 - Enhancement:
   * New option: "Clean pre-edit buffer when focus out"
@@ -11,4 +11,5 @@ REDHAT_BUGZILLA=1177198, 1182813
   * Fixed GitHub issue #37 Cannot use cmake out of source build Cannot use cmake out of source build
   * Fixed GitHub issue #47 CHEWING_DATADIR CMake variable name mismatch
   * Fixed GitHub issue #61 GConf2 should be removed from INSTALL document
+  * Fixed GitHub issue #64 systray should be able to show the Chinese/English mode
   * Fixed Bug 1177198 - [abrt] ibus-chewing: XGetKeyboardControl(): ibus-engine-chewing killed by SIGSEGV								    
