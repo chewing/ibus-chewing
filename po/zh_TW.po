@@ -7,40 +7,40 @@
 # Ding-Yi Chen <dchen@redhat.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: ibus-chewing 1.4.15\n"
+"Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-01-13 18:21+1000\n"
+"POT-Creation-Date: 2016-03-01 16:47+1000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-01-14 03:06-0500\n"
+"PO-Revision-Date: 2016-03-01 02:13-0500\n"
 "Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "Language-Team: Chinese (Traditional Han, Taiwan)\n"
 "Language: zh-TW\n"
-"X-Generator: Zanata 3.7.3\n"
+"X-Generator: Zanata 3.8.2\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:229
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
 msgid "Chi"
 msgstr "中"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:232
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:239
 msgid "Eng"
 msgstr "英"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
 msgid "Click to switch to English"
 msgstr "點擊以切換至英文"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:240
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:247
 msgid "Click to switch to Chinese"
 msgstr "點擊以切換至中文"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:249
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:256
 msgid "Full"
 msgstr "全"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:252
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:259
 msgid "Half"
 msgstr "半"
 
@@ -151,64 +151,75 @@ msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr "許氏鍵盤選擇鍵設定。1 為使用 asdfjkl789，2 為使用asdfzxcv89。"
 
 #: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:84
+msgid "Show systray icons"
+msgstr "在系統匣顯示圖示"
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:88
+msgid ""
+"On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+"Off: Do not show the status icon"
+msgstr "開：在系統匣顯示中/英文與全/半形狀態\n"
+"關：不在系統匣顯示任何圖示"
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:93
 msgid "Auto move cursor"
 msgstr "自動移動游標"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:87
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:96
 msgid "Automatically move cursor to next character."
 msgstr "自動移游標至下一個字。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:91
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:100
 msgid "Add phrases in front"
 msgstr "前方加詞"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:94
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:103
 msgid "Add phrases in the front."
 msgstr "前方加詞。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:98
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
 msgid "Clean pre-edit buffer when focus out"
 msgstr "當輸入焦點移開後清空預編區"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:102
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:111
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr "開：當輸入焦點移開後清空預編區，以預防程式崩潰\n"
 "關：不清空預編區，回來可以接者輸入"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:116
 msgid "Easy symbol input"
 msgstr "簡易符號輸入"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:110
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:119
 msgid "Easy symbol input."
 msgstr "簡易符號輸入。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:114
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:123
 msgid "Esc clean all buffer"
 msgstr "Esc 鍵清預編區"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:117
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:126
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr "Esc 鍵清預編區。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:121
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:130
 msgid "Maximum Chinese characters"
 msgstr "容納中文字數"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:125
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:134
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
 msgstr "預編區可容納中文字數(包含輸入中的注音符號)"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:129
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:138
 msgid "Force lowercase in En mode"
 msgstr "CapsLock時英數仍用小寫"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:132
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:141
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default.\n"
@@ -217,11 +228,11 @@ msgstr "即使在CapsLcok On 的狀態時，仍然輸出小寫英文字母。 \n
 "這對習慣打小寫的用戶來說比較方便。\n"
 "大寫字母仍然可用Shift 鍵輸入。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:140
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:149
 msgid "Sync between CapsLock and IM"
 msgstr "CapsLock與輸入法狀態同步"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:147
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:156
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -234,52 +245,56 @@ msgstr ""
 "\"keyboard\": 輸入法向 Caps Lock 狀態同步。\n"
 "\"im\": Caps Lock 向輸入法狀態同步。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:154
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:163
 msgid "Number pad always input number"
 msgstr "數字版總是輸入數字"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:157
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:166
 msgid "Always input numbers when number keys from key pad is inputted."
 msgstr "用數字版輸入時總是輸入數字，並不負責選字。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:161
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:170
 msgid "Shift toggle Chinese Mode"
 msgstr "Shift 切換中文"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:164
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:173
 msgid "Shift key to toggle Chinese Mode"
 msgstr "Shift 鍵切換中文模式"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:168
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:177
 msgid "Plain Zhuyin mode"
 msgstr "單純注音模式"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:172
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:181
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
 msgstr "在單純注音模式，自動選詞功能及選項將被關閉或忽略。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:176
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:185
 msgid "Candidate per page"
 msgstr "每頁候選字數"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:179
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:188
 msgid "Number of candidate per page."
 msgstr "每頁可顯示候選字詞數。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:183
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:192
 msgid "Choose phrases from backward"
 msgstr "後方選詞"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:186
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:195
 msgid "Choose phrases from the back, without moving cursor."
 msgstr "直接由後方選詞，不必把游標移到候選詞前。"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:190
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:199
 msgid "Space to select"
 msgstr "空白鍵選字"
+
+#: /home/dchen/ibus-chewing/src/IBusChewingSystray.c:175
+msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+msgstr "滑鼠左鍵切換中/英文；右鍵切換全/半形"
 
 #: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"

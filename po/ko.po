@@ -1,9 +1,9 @@
 # Michelle Kim <mkim33@gmail.com>, 2014. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: ibus-chewing 1.4.15\n"
+"Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-01-13 18:21+1000\n"
+"POT-Creation-Date: 2016-03-01 16:47+1000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,34 +11,34 @@ msgstr ""
 "Last-Translator: Michelle Kim <mkim33@gmail.com>\n"
 "Language-Team: Korean\n"
 "Language: ko\n"
-"X-Generator: Zanata 3.7.3\n"
+"X-Generator: Zanata 3.8.2\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:229
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
 msgid "Chi"
 msgstr "Chi"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:232
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:239
 msgid "Eng"
 msgstr "Eng"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
 msgid "Click to switch to English"
 msgstr "영어로 변환"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:240
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:247
 msgid "Click to switch to Chinese"
 msgstr "중국어로 변환"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:249
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:256
 msgid "Full"
 msgstr "전체 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:252
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:259
 msgid "Half"
 msgstr "반 "
 
@@ -171,74 +171,84 @@ msgstr "Hsu 선택 키 "
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr "Hsu 키보드 선택 키입니다. 1은 asdfjkl789이고 2는 asdfzxcv89입니다. "
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:84
+msgid "Show systray icons"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:88
+msgid ""
+"On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+"Off: Do not show the status icon"
+msgstr ""
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:93
 msgid "Auto move cursor"
 msgstr "자동 커서 이동 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:87
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:96
 msgid "Automatically move cursor to next character."
 msgstr "자동으로 커서를 다음 문자로 이동시킵니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:91
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:100
 msgid "Add phrases in front"
 msgstr "처음에 단어 추가 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:94
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:103
 msgid "Add phrases in the front."
 msgstr "처음에 단어 추가 "
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:98
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
 msgid "Clean pre-edit buffer when focus out"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:102
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:111
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:116
 msgid "Easy symbol input"
 msgstr "쉬운 기호 입력 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:110
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:119
 msgid "Easy symbol input."
 msgstr "쉬운 기호를 입력합니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:114
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:123
 msgid "Esc clean all buffer"
 msgstr "Esc 키는 모든 버퍼를 지웁니다 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:117
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:126
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr "Esc 키는 사전 편집 버퍼의 텍스트를 지웁니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:121
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:130
 msgid "Maximum Chinese characters"
 msgstr "최대 중국어 문자 수 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:125
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:134
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
 msgstr "Zhuyin 기호 입력을 포함하여 사전 편집 버퍼에서 최대 중국어 문자 수 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:129
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:138
 msgid "Force lowercase in En mode"
 msgstr "En 모드에서 소문자를 강제 "
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:132
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:141
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default.\n"
@@ -249,12 +259,12 @@ msgstr ""
 "Shift를 사용하여 대문자 입력도 가능합니다."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:140
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:149
 msgid "Sync between CapsLock and IM"
 msgstr "CapsLock과 입력 방식 간의 동기화 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:147
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:156
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -269,59 +279,63 @@ msgstr ""
 "\"IM\": 키보드 상태는 입력 방식 상태를 따릅니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:154
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:163
 msgid "Number pad always input number"
 msgstr "번호 패드는 항상 번호 입력 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:157
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:166
 msgid "Always input numbers when number keys from key pad is inputted."
 msgstr "키 패드에서 숫자 키를 입력하면 항상 번호가 입력됩니다. "
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:161
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:170
 msgid "Shift toggle Chinese Mode"
 msgstr "중국어 모드 토클 Shift"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:164
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:173
 msgid "Shift key to toggle Chinese Mode"
 msgstr "중국어 모드 토클을 위한 Shift 키"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:168
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:177
 msgid "Plain Zhuyin mode"
 msgstr "Plain Zhuyin 모드 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:172
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:181
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
 msgstr "Plain Zhuyin 모드에서 자동 후보 선택 및 관련 옵션이 비활성화되어 있거나 무시됩니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:176
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:185
 msgid "Candidate per page"
 msgstr "페이지 당 후보 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:179
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:188
 msgid "Number of candidate per page."
 msgstr "페이지 당 후보 수 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:183
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:192
 msgid "Choose phrases from backward"
 msgstr "뒤에서 단어 선택 "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:186
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:195
 msgid "Choose phrases from the back, without moving cursor."
 msgstr "커서를 이동하지 않고 뒤에서 단어를 선택합니다. "
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:190
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:199
 msgid "Space to select"
 msgstr "선택 공간 "
+
+#: /home/dchen/ibus-chewing/src/IBusChewingSystray.c:175
+msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+msgstr ""
 
 #: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"

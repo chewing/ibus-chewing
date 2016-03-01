@@ -1,9 +1,9 @@
 # Zdenek <chmelarz@gmail.com>, 2015. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: ibus-chewing 1.4.15\n"
+"Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-01-13 18:21+1000\n"
+"POT-Creation-Date: 2016-03-01 16:47+1000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,30 +11,30 @@ msgstr ""
 "Last-Translator: Zdenek <chmelarz@gmail.com>\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
-"X-Generator: Zanata 3.7.3\n"
+"X-Generator: Zanata 3.8.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:229
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
 msgid "Chi"
 msgstr "Čín"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:232
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:239
 msgid "Eng"
 msgstr "Ang"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
 msgid "Click to switch to English"
 msgstr "Klikni pro přepnutí da angličtiny"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:240
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:247
 msgid "Click to switch to Chinese"
 msgstr "Klikni pro přepnutí do čínštiny"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:249
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:256
 msgid "Full"
 msgstr "Úplný"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:252
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:259
 msgid "Half"
 msgstr "Poloviční"
 
@@ -147,63 +147,73 @@ msgstr ""
 "Klávesy pro výběr Hsu klávesnice, 1 pro asdfjkl789, 2 pro asdfzxcv89 ."
 
 #: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:84
+msgid "Show systray icons"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:88
+msgid ""
+"On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+"Off: Do not show the status icon"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:93
 msgid "Auto move cursor"
 msgstr "Automatický pohyb kurzoru"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:87
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:96
 msgid "Automatically move cursor to next character."
 msgstr "Automaticky přesunout kurzor na další znak."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:91
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:100
 msgid "Add phrases in front"
 msgstr "Přidat fráze dopředu"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:94
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:103
 msgid "Add phrases in the front."
 msgstr "Přidat fráze dopředu."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:98
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
 msgid "Clean pre-edit buffer when focus out"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:102
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:111
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:116
 msgid "Easy symbol input"
 msgstr "Snadný vstup symbolů"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:110
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:119
 msgid "Easy symbol input."
 msgstr "Snadný vstup symbolů."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:114
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:123
 msgid "Esc clean all buffer"
 msgstr "Esc vyčistí celou vyrovnávací paměť"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:117
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:126
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr "Esc klávesa čistí text v přededitační paměti."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:121
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:130
 msgid "Maximum Chinese characters"
 msgstr "Maximum čínských znaků"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:125
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:134
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
 msgstr ""
 "Maximum čínských znaků v přededitační paměti včetně vkládání symbolů Zhuyin"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:129
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:138
 msgid "Force lowercase in En mode"
 msgstr "Vynutit malá písmena v režimu Ang"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:132
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:141
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default.\n"
@@ -213,11 +223,11 @@ msgstr ""
 "To je užitečné, pokud chcete přidat malá písmena ve výchozím nastavení.\n"
 "Velká písmena lze stále zadat pomocí klávesy Shift."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:140
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:149
 msgid "Sync between CapsLock and IM"
 msgstr "Sync mezi CapsLock a IM"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:147
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:156
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -231,27 +241,27 @@ msgstr ""
 "\"klávesnice\": Stav IM následuje stav klávesnice.\n"
 "\"IM\": Stav klávesnice následuje stav IM."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:154
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:163
 msgid "Number pad always input number"
 msgstr "Číselná klávenice vždy vkládá číslo"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:157
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:166
 msgid "Always input numbers when number keys from key pad is inputted."
 msgstr "Vždy vložit čísla, pokud jsou stisknuty číselné klávesy."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:161
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:170
 msgid "Shift toggle Chinese Mode"
 msgstr "Shift přepíná režim čínštiny"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:164
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:173
 msgid "Shift key to toggle Chinese Mode"
 msgstr "Shift klávesa přepíná čínský režim"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:168
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:177
 msgid "Plain Zhuyin mode"
 msgstr "Prostý režim Zhuyin"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:172
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:181
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
@@ -259,25 +269,29 @@ msgstr ""
 "V prostém režimu Zhuyin jsou automatický výběr kandidátů a související "
 "možnosti deaktivovány nebo ignorovány."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:176
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:185
 msgid "Candidate per page"
 msgstr "Kandidát na stránku"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:179
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:188
 msgid "Number of candidate per page."
 msgstr "Počet kandidátů na stránku"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:183
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:192
 msgid "Choose phrases from backward"
 msgstr "Vybírat sousloví zpětně"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:186
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:195
 msgid "Choose phrases from the back, without moving cursor."
 msgstr "Vybírat sousloví odzadu, bez pohybu kurzoru."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:190
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:199
 msgid "Space to select"
 msgstr "Klávesa Space pro výběr"
+
+#: /home/dchen/ibus-chewing/src/IBusChewingSystray.c:175
+msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+msgstr ""
 
 #: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"

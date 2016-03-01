@@ -1,9 +1,9 @@
 # Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2015. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: ibus-chewing 1.4.15\n"
+"Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-01-13 18:21+1000\n"
+"POT-Creation-Date: 2016-03-01 16:47+1000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,30 +11,30 @@ msgstr ""
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
-"X-Generator: Zanata 3.7.3\n"
+"X-Generator: Zanata 3.8.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:229
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
 msgid "Chi"
 msgstr "Xin"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:232
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:239
 msgid "Eng"
 msgstr "Ang"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
 msgid "Click to switch to English"
 msgstr "Feu clic per commutar a l'anglès"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:240
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:247
 msgid "Click to switch to Chinese"
 msgstr "Feu clic per commutar al xinès"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:249
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:256
 msgid "Full"
 msgstr "Complet"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:252
+#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:259
 msgid "Half"
 msgstr "Mitjà"
 
@@ -149,53 +149,63 @@ msgstr ""
 "l'asdfzxcv89."
 
 #: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:84
+msgid "Show systray icons"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:88
+msgid ""
+"On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+"Off: Do not show the status icon"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:93
 msgid "Auto move cursor"
 msgstr "Mou automàticament el cursor"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:87
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:96
 msgid "Automatically move cursor to next character."
 msgstr "Mou automàticament el cursor al següent caràcter."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:91
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:100
 msgid "Add phrases in front"
 msgstr "Afegeix les frases al principi"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:94
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:103
 msgid "Add phrases in the front."
 msgstr "Afegeix les frases al principi."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:98
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
 msgid "Clean pre-edit buffer when focus out"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:102
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:111
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:116
 msgid "Easy symbol input"
 msgstr "Entrada senzilla de símbols"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:110
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:119
 msgid "Easy symbol input."
 msgstr "Entrada senzilla de símbols."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:114
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:123
 msgid "Esc clean all buffer"
 msgstr "La tecla Esc neteja tota la memòria intermèdia"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:117
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:126
 msgid "Escape key cleans the text in pre-edit-buffer."
 msgstr ""
 "La tecla d'escapament neteja tota la memòria intermèdia de pre-edició."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:121
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:130
 msgid "Maximum Chinese characters"
 msgstr "Màxim de caràcters xinesos"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:125
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:134
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols"
@@ -203,11 +213,11 @@ msgstr ""
 "El màxim de caràcters xinesos en la memòria intermèdia de pre-edició, que "
 "inclou l'entrada de símbols Zhuyin"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:129
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:138
 msgid "Force lowercase in En mode"
 msgstr "Força l'ús de minúscules en el mode anglès"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:132
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:141
 msgid ""
 "Ignore CapsLock status and input lowercase by default.\n"
 "It is handy if you wish to enter lowercase by default.\n"
@@ -218,11 +228,11 @@ msgstr ""
 "És útil si voleu introduir per defecte minúscules.\n"
 "Les majúscules encara poden introduir-se amb la tecla de majúscules."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:140
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:149
 msgid "Sync between CapsLock and IM"
 msgstr "Sincronització entre la tecla Bloc. Maj. i el mètode d'entrada"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:147
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:156
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
@@ -237,29 +247,29 @@ msgstr ""
 "\"keyboard\": L'estat del mètode d'entrada segueix l'estat del teclat.\n"
 "\"IM\": L'estat del teclat segueix l'estat del mètode d'entrada."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:154
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:163
 msgid "Number pad always input number"
 msgstr "El teclat numèric sempre introdueix un número"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:157
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:166
 msgid "Always input numbers when number keys from key pad is inputted."
 msgstr ""
 "Sempre s'introdueixen números quan es pressionen les tecles numèriques del "
 "teclat numèric."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:161
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:170
 msgid "Shift toggle Chinese Mode"
 msgstr "La tecla Maj. alterna al mode xinès"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:164
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:173
 msgid "Shift key to toggle Chinese Mode"
 msgstr "La tecla de majúscules alterna al mode xinès"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:168
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:177
 msgid "Plain Zhuyin mode"
 msgstr "Mode pla del zhuyin"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:172
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:181
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
@@ -267,25 +277,29 @@ msgstr ""
 "Al mode pla del zhuyin, l'opció de la selecció automàtica del candidat i les "
 "opcions relacionades, estan inhabilitades o s'ignoren."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:176
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:185
 msgid "Candidate per page"
 msgstr "Candidats per pàgina"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:179
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:188
 msgid "Number of candidate per page."
 msgstr "Nombre de candidats per pàgina."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:183
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:192
 msgid "Choose phrases from backward"
 msgstr "Tria les frases d'endarrere"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:186
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:195
 msgid "Choose phrases from the back, without moving cursor."
 msgstr "Tria frases de la part de darrere, sense moure el cursor."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:190
+#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:199
 msgid "Space to select"
 msgstr "Tecla Espai per seleccionar"
+
+#: /home/dchen/ibus-chewing/src/IBusChewingSystray.c:175
+msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+msgstr ""
 
 #: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:7
 msgctxt "Configure"
