@@ -157,6 +157,18 @@ gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
+gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
+                                           gpointer userData)
+{
+    GValue *value = &(ctx->value);
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
+
+    ibus_chewing_pre_edit_set_property_boolean(icPreEdit,
+                                               "shift-toggle-chinese",
+                                               g_value_get_boolean(value));
+    return TRUE;
+}
+
 gboolean candPerPage_apply_callback(PropertyContext * ctx,
 				    gpointer userData)
 {

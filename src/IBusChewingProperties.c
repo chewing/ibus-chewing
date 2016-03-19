@@ -169,7 +169,7 @@ Uppercase can still be inputted with Shift."),
     {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
      N_("Shift toggle Chinese Mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     easySymbolInput_apply_callback, 0,
+     shiftToggleChinese_apply_callback, 0,
      N_("Shift key to toggle Chinese Mode"),
      }
     ,

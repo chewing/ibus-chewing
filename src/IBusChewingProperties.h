@@ -75,6 +75,9 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
 gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
 					   gpointer userData);
 
+gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
+                                           gpointer userData);
+
 gboolean candPerPage_apply_callback(PropertyContext * ctx,
 				    gpointer userData);
 
