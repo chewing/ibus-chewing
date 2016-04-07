@@ -248,6 +248,12 @@ void mkdg_wgt_set_width(MkdgWgt * wgt, gint width)
 void mkdg_wgt_set_alignment(MkdgWgt * wgt, gfloat xAlign, gfloat yAlign)
 {
     gtk_misc_set_alignment(GTK_MISC(wgt), xAlign, yAlign);
+    if (GTK_IS_LABEL(wgt)){
+	/* gtk_label_set_justify takes no effect on single line label,
+	 * but multi-lined label need this
+	 */
+	gtk_label_set_justify(GTK_LABEL(wgt),GTK_JUSTIFY_RIGHT);
+    }
 }
 
 void mkdg_wgt_show(MkdgWgt * wgt)
