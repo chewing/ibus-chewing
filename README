@@ -15,9 +15,10 @@ Google Code IBus: http://code.google.com/p/ibus/issues/list
 For debugging ibus-chewing:
 1. Quit existing ibus-daemon 
    By right click on IBus systray icon, then quit, or kill the process.
-2. Run ibus-daemon in command line with following command
+2. Edit  /usr/share/ibus/component/chewing.xml, add "-v 7"
+   to turn verbose level 7
+3. Run ibus-daemon in command line with following command
    export G_MESSAGES_DEBUG=all
-   export G_DEBUG=MKDG,ibus-chewing
    ibus-daemon -rvx
 
 
