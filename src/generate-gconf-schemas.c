@@ -59,7 +59,11 @@ static void ctx_write_locale(PropertyContext * ctx,
 
 gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
 		   const gchar * owner, FILE * outF)
+
 {
+    if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_BACKEND){
+	return TRUE;
+    }
     mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL,
 			NULL);
     gchar buf[XML_BUFFER_SIZE];

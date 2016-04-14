@@ -29,15 +29,22 @@ PropertyContext *property_context_new(MkdgPropertySpec * spec,
 	return NULL;
     }
     mkdg_log(INFO, "property_context_new(%s,-,-,-)", spec->key);
-    PropertyContext *result = g_new0(PropertyContext, 1);
-    result->spec = spec;
-    result->backend = backend;
-    result->parent = parent;
-    result->auxData = auxData;
-    g_value_init(&(result->value), result->spec->valueType);
-    property_context_default(result);
-    mkdg_log(DEBUG, "property_context_new(%s):Done", result->spec->key);
-    return result;
+    PropertyContext *ctx = g_new0(PropertyContext, 1);
+    ctx->spec = spec;
+    ctx->backend = backend;
+    ctx->parent = parent;
+    ctx->auxData = auxData;
+    g_value_init(&(ctx->value), ctx->spec->valueType);
+    if (ctx->backend != NULL) {
+	GValue *value = property_context_read(ctx, NULL);
+	if (value == NULL) {
+	    property_context_default(ctx);
+	}
+    } else {
+	property_context_default(ctx);
+    }
+    mkdg_log(DEBUG, "property_context_new(%s):Done", ctx->spec->key);
+    return ctx;
 }
 
 gchar *property_context_to_string(PropertyContext * ctx)
@@ -70,7 +77,7 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
     return TRUE;
 }
 
-/* read: backend -> Context or Default */
+/* read: backend -> Context */
 /* write: Context -> backend */
 /* get: Context -> GValue */
 /* set: GValue -> Context */
@@ -81,13 +88,21 @@ gboolean property_context_from_gvalue(PropertyContext * ctx,
 /* assign: save then apply */
 GValue *property_context_read(PropertyContext * ctx, gpointer userData)
 {
-    if (ctx == NULL || ctx->backend == NULL) {
+    if (ctx == NULL) {
 	return NULL;
     }
     mkdg_log(DEBUG, "property_context_read(%s,-)", ctx->spec->key);
+    if (mkdg_has_flag
+	(ctx->spec->propertyFlags, MKDG_PROPERTY_FLAG_NO_BACKEND)) {
+	return NULL;
+    }
+    if (ctx->backend == NULL) {
+	return NULL;
+    }
     GValue *result = mkdg_backend_read(ctx->backend, &(ctx->value),
 				       ctx->spec->subSection,
 				       ctx->spec->key, userData);
+
     if (result == NULL) {
 	mkdg_log(WARN, "property_context_read(%s): failed to read key",
 		 ctx->spec->key);
@@ -97,10 +112,17 @@ GValue *property_context_read(PropertyContext * ctx, gpointer userData)
 
 gboolean property_context_write(PropertyContext * ctx, gpointer userData)
 {
-    if (ctx == NULL || ctx->backend == NULL) {
-	return FALSE;
+    if (ctx == NULL) {
+	return NULL;
     }
-    mkdg_log(DEBUG, "property_context_write(%s, - )", ctx->spec->key);
+    mkdg_log(DEBUG, "property_context_read(%s,-)", ctx->spec->key);
+    if (mkdg_has_flag
+	(ctx->spec->propertyFlags, MKDG_PROPERTY_FLAG_NO_BACKEND)) {
+	return NULL;
+    }
+    if (ctx->backend == NULL) {
+	return NULL;
+    }
     return ctx->backend->writeFunc(ctx->backend, &(ctx->value),
 				   ctx->spec->subSection, ctx->spec->key,
 				   userData);

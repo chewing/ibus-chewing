@@ -99,6 +99,9 @@ gchar *mkdg_g_variant_to_string(GVariant * gVar)
 gboolean mkdg_g_settings_write_schema_spec(FILE * file,
 					   MkdgPropertySpec * spec)
 {
+    if (spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_BACKEND){
+	return TRUE;
+    }
     gchar attrBuf[KEY_BUFFER_SIZE];
     const gchar *typeString = mkdg_g_variant_type_string(spec->valueType);
     g_strlcpy(attrBuf, "", KEY_BUFFER_SIZE);

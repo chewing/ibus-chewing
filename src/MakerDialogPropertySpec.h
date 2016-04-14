@@ -41,6 +41,7 @@
  * @MKDG_PROPERTY_FLAG_INSENSITIVE:     The property is gray-out and not editable.
  * @MKDG_PROPERTY_FLAG_NO_NEW:          The property does not accept new values.
  * @MKDG_PROPERTY_FLAG_HAS_TRANSLATION: The property should show translated value.
+ * @MKDG_PROPERTY_FLAG_NO_BACKEND:      The property has no backend, thus will not be saved.
  *
  * MakerDialog flag controls how the property displayed in UI.
  */
@@ -49,6 +50,7 @@ typedef enum {
     MKDG_PROPERTY_FLAG_INSENSITIVE = 1 << 1,
     MKDG_PROPERTY_FLAG_NO_NEW = 1 << 2,
     MKDG_PROPERTY_FLAG_HAS_TRANSLATION = 1 << 3,
+    MKDG_PROPERTY_FLAG_NO_BACKEND = 1 << 4
 } MkdgPropertyFlags;
 
 typedef struct _PropertyContext PropertyContext;
