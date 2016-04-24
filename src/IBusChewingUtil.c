@@ -176,15 +176,6 @@ const char *key_sym_get_name(KSym k)
 	if (isprint(k)) {
 	    return &asciiConst[(k - ' ') * 2];
 	}
-#if 0
-	if (k >= '0' && k <= '9') {
-	    return &numConst[(k - '0') * 2];
-	} else if (k >= 'a' && k <= 'z') {
-	    return &alphaConstL[(k - 'a') * 2];
-	} else if (k >= 'A' && k <= 'Z') {
-	    return &alphaConstU[(k - 'A') * 2];
-	}
-#endif
 	break;
     }
     return "Others";

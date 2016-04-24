@@ -3,13 +3,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-
-#define is_plain_zhuyin ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin")
-#define bpmf_check ibus_chewing_bopomofo_check(self->context)
-#define table_is_showing ibus_chewing_pre_edit_has_flag(self,FLAG_TABLE_SHOW)
-
-#define cursor_current chewing_cursor_Current(self->context)
-#define total_choice chewing_cand_TotalChoice(self->context)
+#include "IBusChewingPreEdit-private.h"
 
 /**************************************
  * Methods
@@ -39,11 +33,10 @@ IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend * backend)
 #endif
     self->context = chewing_new();
     chewing_set_ChiEngMode(self->context, CHINESE_MODE);
-    ibus_chewing_pre_edit_use_all_configure(self);
+
     self->iTable =
 	g_object_ref_sink(ibus_chewing_lookup_table_new
 			  (self->iProperties, self->context));
-
     return self;
 }
 
@@ -83,12 +76,12 @@ void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
     if (chewing_commit_Check(self->context)) {
 	/* commit_Check=1 means new commit available */
 	gchar *commitStr = chewing_commit_String(self->context);
-	printf("### commitStr=|%s|\n", commitStr);
+	IBUS_CHEWING_LOG(INFO, "commitStr=|%s|\n", commitStr);
 	g_string_append(self->outgoing, commitStr);
 	g_free(commitStr);
 	ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
     }
-    printf("### outgoing=|%s|\n", self->outgoing->str);
+    IBUS_CHEWING_LOG(INFO, "outgoing=|%s|\n", self->outgoing->str);
     IBUS_CHEWING_LOG(DEBUG,
 		     "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
 		     self->outgoing->str);
@@ -96,7 +89,7 @@ void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit * self)
 
 void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
 {
-    IBUS_CHEWING_LOG(MSG, "* ibus_chewing_pre_edit_update(-)");
+    IBUS_CHEWING_LOG(DEBUG, "* ibus_chewing_pre_edit_update(-)");
 
     /* Make preEdit */
     gchar *bufferStr = chewing_buffer_String(self->context);
@@ -106,7 +99,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     gchar *cP = bufferStr;
     gunichar uniCh;
     IBUS_CHEWING_LOG(INFO,
-	    "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
+		     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
 		     bufferStr, bpmfStr, self->bpmfLen, cursor_current);
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
 	if (i == cursor_current) {
@@ -204,60 +197,81 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
 
 }
 
-#define is_chinese (chewing_get_ChiEngMode(self->context)!=0)
-#define is_full_shape (chewing_get_ShapeMode(self->context)!=0)
+#define is_chinese ibus_chewing_pre_edit_get_chi_eng_mode(self)
+#define is_full_shape ibus_chewing_pre_edit_get_full_half_mode(self)
 gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self)
 {
-    return is_chinese;
+    return chewing_get_ChiEngMode(self->context) != 0;
 }
 
-gboolean ibus_chewing_pre_edit_get_full_half(IBusChewingPreEdit * self)
+gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit *
+						  self)
 {
-    return is_full_shape;
+    return chewing_get_ShapeMode(self->context) != 0;
 }
 
-void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self)
-{
-    /* When Chi->Eng with incomplete character */
-    if (is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
-    }
-    chewing_set_ChiEngMode(self->context, !is_chinese);
-}
-
-void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit * self)
+void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,
+					    gboolean chineseMode)
 {
     /* When Chi->Eng with incomplete character */
-    if (is_chinese && bpmf_check) {
+    if (!chineseMode && is_chinese && bpmf_check) {
 	ibus_chewing_pre_edit_force_commit(self);
     }
-    chewing_set_ShapeMode(self->context, !is_full_shape);
+    chewing_set_ChiEngMode(self->context, (chineseMode) ? 1 : 0);
+}
+
+void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,
+					      gboolean fullShapeMode)
+{
+    if (is_chinese && bpmf_check) {
+	/* When Chi->Eng with incomplete character */
+	ibus_chewing_pre_edit_force_commit(self);
+    }
+    chewing_set_ShapeMode(self->context, (fullShapeMode) ? 1 : 0);
 }
 
 /**************************************
  * ibus_chewing_pre_edit key processing
  */
-
-
-#define modifiers_mask(unmaskedMod) unmaskedMod & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK)
-
-#define event_is_released(unmaskedMod) ((unmaskedMod & IBUS_RELEASE_MASK) !=0 )
-#define is_shift_only (maskedMod == IBUS_SHIFT_MASK)
-#define is_shift (unmaskedMod & IBUS_SHIFT_MASK)
-#define is_ctrl_only (maskedMod == IBUS_CONTROL_MASK)
-#define buffer_is_empty (ibus_chewing_pre_edit_is_empty(self))
-#define filter_modifiers(mask) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
-    if (maskedMod & (~mask)){ return EVENT_RESPONSE_IGNORE; } \
-    if (maskedMod == (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK)){ return EVENT_RESPONSE_IGNORE; }
-#define absorb_when_release if (event_is_released(unmaskedMod)){ return EVENT_RESPONSE_ABSORB; }
-#define ignore_when_buffer_is_empty if (buffer_is_empty) { return EVENT_RESPONSE_IGNORE;}
-
-
-
-#define event_process_or_ignore(cond) (cond) ? EVENT_RESPONSE_PROCESS: EVENT_RESPONSE_IGNORE
-
-#define handle_log(funcName) IBUS_CHEWING_LOG(INFO, "* self_handle_%s(-,%x(%s),%x(%s))", funcName, kSym, key_sym_get_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
-
+KSym self_key_sym_fix(IBusChewingPreEdit * self, KSym kSym,
+		 KeyModifiers unmaskedMod)
+{
+    gchar caseConversionMode=default_english_case_short;
+    if (! ibus_chewing_pre_edit_get_property_boolean(self,
+	    "capslock-toggle-chinese")){
+	caseConversionMode='n';
+    }
+    if (is_chinese){
+	/* 
+	 * Ignore the status of CapsLock, thus
+	 */
+	if (is_shift){
+	    return toupper(kSym);
+	}
+	return tolower(kSym);
+    }else{
+	/* May need to change case if Caps Lock toggle chinese */
+	switch (caseConversionMode) {
+	    case 'l':
+		if (is_shift) {
+		    /* Uppercase */
+		    return toupper(kSym);
+		}
+		/* Lowercase */
+		return tolower(kSym);
+	    case 'u':
+		if (is_shift) {
+		    /* Lowercase */
+		    return tolower(kSym);
+		}
+		/* Uppercase */
+		return toupper(kSym);
+	    default:
+		break;
+	}
+    }
+    return kSym;
+}
 
 EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
 					  KSym kSym,
@@ -274,20 +288,10 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
 	chewing_set_easySymbolInput(self->context, 0);
     }
     EventResponse response = EVENT_RESPONSE_UNDECIDED;
-
-    if (!is_chinese && !is_full_shape
-	&& ibus_chewing_pre_edit_get_property_boolean(self,
-						      "force-lowercase-english"))
-    {
-	/* English mode and force-lower-case-engligh=TRUE */
-	if (isupper(kSym) && !is_shift_only) {
-	    kSym = tolower(kSym);
-	} else if (islower(kSym) && is_shift_only) {
-	    kSym = toupper(kSym);
-	}
-    }
-
-    gint ret = chewing_handle_Default(self->context, kSym);
+    KSym fixedKSym=self_key_sym_fix(self, kSym, unmaskedMod);
+    IBUS_CHEWING_LOG(DEBUG,
+	    "* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)", fixedKSym, key_sym_get_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+    gint ret = chewing_handle_Default(self->context, fixedKSym);
     /* Handle quick commit */
     ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
@@ -366,8 +370,16 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    if (!ibus_chewing_pre_edit_get_property_boolean(self,
+						    "capslock-toggle-chinese"))
+    {
+	/* Ignore the Caps Lock event when Caps Lock does not toggle Chinese */
+	return EVENT_RESPONSE_IGNORE;
+    }
+
     absorb_when_release;
     handle_log("caps_lock");
+
 
     /* When Chi->Eng with incomplete character */
     if (is_chinese && bpmf_check) {
@@ -416,7 +428,7 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
     handle_log("space");
 
     if (is_shift_only) {
-	ibus_chewing_pre_edit_toggle_full_half(self);
+	ibus_chewing_pre_edit_toggle_full_half_mode(self);
 	return EVENT_RESPONSE_PROCESS;
     }
 
@@ -622,63 +634,64 @@ EventResponse self_handle_default(IBusChewingPreEdit * self, KSym kSym,
 }
 
 KeyHandlingRule keyHandlingRules[] = {
-    {IBUS_KEY_0, IBUS_KEY_9, self_handle_num}
-    ,
-    {IBUS_KEY_KP_0, IBUS_KEY_KP_9, self_handle_num_keypad}
-    ,
-    {IBUS_KEY_Caps_Lock, IBUS_KEY_Caps_Lock, self_handle_caps_lock}
-    ,
-    {IBUS_KEY_Shift_L, IBUS_KEY_Shift_R, self_handle_shift}
-    ,
-    {IBUS_KEY_space, IBUS_KEY_space, self_handle_space}
-    ,
-    {IBUS_KEY_Return, IBUS_KEY_Return, self_handle_return}
-    ,
-    {IBUS_KEY_KP_Enter, IBUS_KEY_KP_Enter, self_handle_return}
-    ,
-    {IBUS_KEY_BackSpace, IBUS_KEY_BackSpace, self_handle_backspace}
-    ,
-    {IBUS_KEY_Delete, IBUS_KEY_Delete, self_handle_delete}
-    ,
-    {IBUS_KEY_Escape, IBUS_KEY_Escape, self_handle_escape}
-    ,
-    {IBUS_KEY_Left, IBUS_KEY_Left, self_handle_left}
-    ,
-    {IBUS_KEY_KP_Left, IBUS_KEY_KP_Left, self_handle_left}
-    ,
-    {IBUS_KEY_Up, IBUS_KEY_Up, self_handle_up}
-    ,
-    {IBUS_KEY_KP_Up, IBUS_KEY_KP_Up, self_handle_up}
-    ,
-    {IBUS_KEY_Right, IBUS_KEY_Right, self_handle_right}
-    ,
-    {IBUS_KEY_KP_Right, IBUS_KEY_KP_Right, self_handle_right}
-    ,
-    {IBUS_KEY_Down, IBUS_KEY_Down, self_handle_down}
-    ,
-    {IBUS_KEY_KP_Down, IBUS_KEY_KP_Down, self_handle_down}
-    ,
-    {IBUS_KEY_Page_Up, IBUS_KEY_Page_Up, self_handle_page_up}
-    ,
-    {IBUS_KEY_KP_Page_Up, IBUS_KEY_KP_Page_Up, self_handle_page_up}
-    ,
-    {IBUS_KEY_Page_Down, IBUS_KEY_Page_Down, self_handle_page_down}
-    ,
-    {IBUS_KEY_KP_Page_Down, IBUS_KEY_KP_Page_Down, self_handle_page_down}
-    ,
-    {IBUS_KEY_Tab, IBUS_KEY_Tab, self_handle_tab}
-    ,
-    {IBUS_KEY_Home, IBUS_KEY_Home, self_handle_home}
-    ,
-    {IBUS_KEY_KP_Home, IBUS_KEY_KP_Home, self_handle_home}
-    ,
-    {IBUS_KEY_End, IBUS_KEY_Home, self_handle_end}
-    ,
-    {IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end}
-    ,
-    {128, G_MAXUINT, self_handle_special}
-    ,
-    {0, 0, self_handle_default}
+    {
+     IBUS_KEY_0, IBUS_KEY_9, self_handle_num}
+    , {
+       IBUS_KEY_KP_0, IBUS_KEY_KP_9, self_handle_num_keypad}
+    , {
+       IBUS_KEY_Caps_Lock, IBUS_KEY_Caps_Lock, self_handle_caps_lock}
+    , {
+       IBUS_KEY_Shift_L, IBUS_KEY_Shift_R, self_handle_shift}
+    , {
+       IBUS_KEY_space, IBUS_KEY_space, self_handle_space}
+    , {
+       IBUS_KEY_Return, IBUS_KEY_Return, self_handle_return}
+    , {
+       IBUS_KEY_KP_Enter, IBUS_KEY_KP_Enter, self_handle_return}
+    , {
+       IBUS_KEY_BackSpace, IBUS_KEY_BackSpace, self_handle_backspace}
+    , {
+       IBUS_KEY_Delete, IBUS_KEY_Delete, self_handle_delete}
+    , {
+       IBUS_KEY_Escape, IBUS_KEY_Escape, self_handle_escape}
+    , {
+       IBUS_KEY_Left, IBUS_KEY_Left, self_handle_left}
+    , {
+       IBUS_KEY_KP_Left, IBUS_KEY_KP_Left, self_handle_left}
+    , {
+       IBUS_KEY_Up, IBUS_KEY_Up, self_handle_up}
+    , {
+       IBUS_KEY_KP_Up, IBUS_KEY_KP_Up, self_handle_up}
+    , {
+       IBUS_KEY_Right, IBUS_KEY_Right, self_handle_right}
+    , {
+       IBUS_KEY_KP_Right, IBUS_KEY_KP_Right, self_handle_right}
+    , {
+       IBUS_KEY_Down, IBUS_KEY_Down, self_handle_down}
+    , {
+       IBUS_KEY_KP_Down, IBUS_KEY_KP_Down, self_handle_down}
+    , {
+       IBUS_KEY_Page_Up, IBUS_KEY_Page_Up, self_handle_page_up}
+    , {
+       IBUS_KEY_KP_Page_Up, IBUS_KEY_KP_Page_Up, self_handle_page_up}
+    , {
+       IBUS_KEY_Page_Down, IBUS_KEY_Page_Down, self_handle_page_down}
+    , {
+       IBUS_KEY_KP_Page_Down, IBUS_KEY_KP_Page_Down, self_handle_page_down}
+    , {
+       IBUS_KEY_Tab, IBUS_KEY_Tab, self_handle_tab}
+    , {
+       IBUS_KEY_Home, IBUS_KEY_Home, self_handle_home}
+    , {
+       IBUS_KEY_KP_Home, IBUS_KEY_KP_Home, self_handle_home}
+    , {
+       IBUS_KEY_End, IBUS_KEY_Home, self_handle_end}
+    , {
+       IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end}
+    , {
+       128, G_MAXUINT, self_handle_special}
+    , {
+       0, 0, self_handle_default}
     ,
 };
 
@@ -737,7 +750,6 @@ gboolean ibus_chewing_pre_edit_process_key
 	break;
     }
 
-
     /** 
      *Plain zhuyin mode
      */
@@ -789,7 +801,7 @@ KSym ibus_chewing_pre_edit_key_code_to_key_sym
     (IBusChewingPreEdit * self, KSym keySym,
      guint keyCode, KeyModifiers unmaskedMod) {
     KSym kSym = keySym;
-    if (!chewing_get_ChiEngMode(self->context)) {
+    if (!is_chinese) {
 	/* English mode, pass as-is */
 	return kSym;
     }

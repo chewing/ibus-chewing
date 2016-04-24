@@ -56,22 +56,24 @@ gint start_dialog()
 {
 #ifdef USE_GSETTINGS
     MkdgBackend *backend =
-        mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID), QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
+	mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
+				    QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
 #elif defined USE_GCONF2
     MkdgBackend *backend =
-        gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
+	gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
 #else
     MkdgBackend *backend = NULL;
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
     return 1;
-#endif /* GSETTINGS_SUPPORT */
+#endif				/* GSETTINGS_SUPPORT */
     IBusChewingProperties *iProperties =
 	ibus_chewing_properties_new(backend, NULL, NULL);
 
     MakerDialog *mDialog =
 	maker_dialog_new_full(iProperties->properties, _("Setting"),
 			      MKDG_WIDGET_FLAG_SET_IMMEDIATELY,
-                              MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
+			      MKDG_BUTTON_FLAG_OK |
+			      MKDG_BUTTON_FLAG_CANCEL);
     GtkWidget *sDialog = GTK_WIDGET(mDialog);
     gtk_widget_show_all(sDialog);
     gint result = gtk_dialog_run(GTK_DIALOG(sDialog));
@@ -79,7 +81,7 @@ gint start_dialog()
     if (result != GTK_RESPONSE_OK) {
 	return 3;
     }
-    maker_dialog_save_all_widgets_values(mDialog,NULL);
+    maker_dialog_save_all_widgets_values(mDialog, NULL);
     return 0;
 }
 
@@ -107,8 +109,7 @@ gint main(gint argc, gchar * argv[])
     g_option_context_free(context);
     if (showFlags) {
 	printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
-	printf("DATA_DIR=" QUOTE_ME(DATA_DIR)
-	       "\n");
+	printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
 	printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
 	       "\n");
 	return 0;

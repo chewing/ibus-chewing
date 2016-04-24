@@ -37,6 +37,7 @@ IBusChewingSystrayIcon
 				    rightClickFunc,
 				    gpointer rightClickData, ...)
 {
+    IBUS_CHEWING_LOG(DEBUG, "* ibus_chewing_systray_icon_new()");
     va_list argList;
     const gchar *iconFile;
     GPtrArray *fileArray = g_ptr_array_new();
@@ -106,37 +107,15 @@ void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self)
 
 
 /*=== Chi_Eng systray Icon ===*/
-void ibus_chewing_systray_chi_eng_refresh_value(IBusChewingSystrayIcon *
-						self,
-						IBusChewingPreEdit *
-						icPreEdit)
-{
-    if (ibus_chewing_pre_edit_get_chi_eng_mode(icPreEdit)) {
-	mkdg_set_flag(self->value, IBUS_CHEWING_SYSTRAY_CHINESE_FLAG);
-    } else {
-	mkdg_clear_flag(self->value, IBUS_CHEWING_SYSTRAY_CHINESE_FLAG);
-    }
-
-    if (ibus_chewing_pre_edit_get_full_half(icPreEdit)) {
-	mkdg_set_flag(self->value,
-		      IBUS_CHEWING_SYSTRAY_FULL_HALF_SHAPE_FLAG);
-    } else {
-	mkdg_clear_flag(self->value,
-			IBUS_CHEWING_SYSTRAY_FULL_HALF_SHAPE_FLAG);
-    }
-    ibus_chewing_systray_icon_update(self);
-}
-
 /**
  * ibus_chewing_systray_chi_eng_toggle_callback:
  */
 void ibus_chewing_systray_chi_eng_toggle_callback(IBusChewingSystrayIcon *
-						  self,
-						  gpointer icPreEditPtr)
+						  self, gpointer userData)
 {
-    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) icPreEditPtr;
-    ibus_chewing_pre_edit_toggle_chi_eng_mode(icPreEdit);
-    ibus_chewing_systray_chi_eng_refresh_value(self, icPreEdit);
+    IBusChewingEngine *iEngine = (IBusChewingEngine *) userData;
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(iEngine->icPreEdit);
+    ibus_chewing_systray_chi_eng_icon_refresh_value(iEngine);
 }
 
 /**
@@ -144,23 +123,23 @@ void ibus_chewing_systray_chi_eng_toggle_callback(IBusChewingSystrayIcon *
  */
 void ibus_chewing_systray_full_half_toggle_callback(IBusChewingSystrayIcon
 						    * self,
-						    gpointer icPreEditPtr)
+						    gpointer userData)
 {
-    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) icPreEditPtr;
-    ibus_chewing_pre_edit_toggle_full_half(icPreEdit);
-    ibus_chewing_systray_chi_eng_refresh_value(self, icPreEdit);
+    IBusChewingEngine *iEngine = (IBusChewingEngine *) userData;
+    ibus_chewing_pre_edit_toggle_full_half_mode(iEngine->icPreEdit);
+    ibus_chewing_systray_chi_eng_icon_refresh_value(iEngine);
 }
 
 IBusChewingSystrayIcon
-    * ibus_chewing_systray_chi_eng_icon_new(IBusChewingPreEdit * icPreEdit)
+    * ibus_chewing_systray_chi_eng_icon_new(IBusChewingEngine * iEngine)
 {
     IBusChewingSystrayIcon *iChiEngSystrayIcon =
 	ibus_chewing_systray_icon_new(1,
 				      ibus_chewing_systray_chi_eng_toggle_callback,
 				      (gpointer)
-				      icPreEdit,
+				      iEngine,
 				      ibus_chewing_systray_full_half_toggle_callback,
-				      icPreEdit,
+				      iEngine,
 				      QUOTE_ME(PRJ_ICON_DIR)
 				      "/ibus-chewing-eng-half.svg",
 				      QUOTE_ME(PRJ_ICON_DIR)
@@ -174,4 +153,47 @@ IBusChewingSystrayIcon
 				     _
 				     ("Left click to toggle Chi/Eng; Right click to toggle full/half shape"));
     return iChiEngSystrayIcon;
+}
+
+gboolean
+ibus_chewing_systray_chi_eng_icon_create_or_destroy(IBusChewingEngine *
+						    iEngine)
+{
+    if (ibus_chewing_pre_edit_get_property_boolean
+	(iEngine->icPreEdit, "show-systray")) {
+	if (iEngine->iChiEngSystrayIcon == NULL) {
+	    iEngine->iChiEngSystrayIcon =
+		ibus_chewing_systray_chi_eng_icon_new(iEngine);
+	}
+	ibus_chewing_systray_icon_set_visible(iEngine->iChiEngSystrayIcon,
+					      TRUE);
+	return TRUE;
+    }
+    if (iEngine->iChiEngSystrayIcon != NULL) {
+	ibus_chewing_systray_icon_set_visible(iEngine->iChiEngSystrayIcon,
+					      FALSE);
+	ibus_chewing_systray_icon_free(iEngine->iChiEngSystrayIcon);
+    }
+    return FALSE;
+}
+
+void ibus_chewing_systray_chi_eng_icon_refresh_value(IBusChewingEngine *
+						     iEngine)
+{
+    if (ibus_chewing_pre_edit_get_chi_eng_mode(iEngine->icPreEdit)) {
+	mkdg_set_flag(iEngine->iChiEngSystrayIcon->value,
+		      IBUS_CHEWING_SYSTRAY_CHINESE_FLAG);
+    } else {
+	mkdg_clear_flag(iEngine->iChiEngSystrayIcon->value,
+			IBUS_CHEWING_SYSTRAY_CHINESE_FLAG);
+    }
+
+    if (ibus_chewing_pre_edit_get_full_half_mode(iEngine->icPreEdit)) {
+	mkdg_set_flag(iEngine->iChiEngSystrayIcon->value,
+		      IBUS_CHEWING_SYSTRAY_FULL_HALF_SHAPE_FLAG);
+    } else {
+	mkdg_clear_flag(iEngine->iChiEngSystrayIcon->value,
+			IBUS_CHEWING_SYSTRAY_FULL_HALF_SHAPE_FLAG);
+    }
+    ibus_chewing_systray_icon_update(iEngine->iChiEngSystrayIcon);
 }

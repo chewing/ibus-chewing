@@ -85,21 +85,52 @@ void ibus_chewing_systray_icon_free(IBusChewingSystrayIcon * self);
  */
 #define ibus_chewing_systray_icon_get_icon_file(self, index) (const gchar *) g_ptr_array_index(self->iconFileArray,index)
 
+/**
+ * ibus_chewing_systray_icon_set_value:
+ * @self: An IBusChewingSystrayIcon
+ * @value: The value to set.
+ *
+ * Sets value to IBusChewingSystrayIcon.
+ * This does not update display icon, see ibus_chewing_systray_icon_update for that.
+ */
 void ibus_chewing_systray_icon_set_value(IBusChewingSystrayIcon *
 					 self, guint value);
 
+/**
+ * ibus_chewing_systray_icon_set_visible:
+ * @self: An IBusChewingSystrayIcon
+ * @visible: TRUE for visible, FALSE for not visible.
+ *
+ * Sets whether this SystrayIcon visible.
+ */
 void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
 					   self, gboolean visible);
 
+/**
+ * ibus_chewing_systray_icon_update:
+ * @self: An IBusChewingSystrayIcon
+ *
+ * Updates display icon according to value.
+ */
 void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self);
 
+
+#include "ibus-chewing-engine.h"
+
 IBusChewingSystrayIcon
-    * ibus_chewing_systray_chi_eng_icon_new(IBusChewingPreEdit *
-					    icPreEdit);
+    * ibus_chewing_systray_chi_eng_icon_new(IBusChewingEngine * iEngine);
 
-void ibus_chewing_systray_chi_eng_refresh_value(IBusChewingSystrayIcon *
-						self,
-						IBusChewingPreEdit *
-						icPreEdit);
+/**
+ * ibus_chewing_systray_chi_eng_icon_create_or_destroy:
+ * @iEngine: An IBusChewingEngine
+ *
+ * Create or destroy systray icon depending on property 'show-systray'
+ * @returns: TRUE if systray icon created; FALSE otherwise.
+ */
+gboolean
+ibus_chewing_systray_chi_eng_icon_create_or_destroy(IBusChewingEngine *
+						    iEngine);
 
+void ibus_chewing_systray_chi_eng_icon_refresh_value(IBusChewingEngine *
+						     iEngine);
 #endif

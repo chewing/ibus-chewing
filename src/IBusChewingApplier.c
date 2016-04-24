@@ -1,7 +1,6 @@
 #include <chewing.h>
 #include "IBusChewingPreEdit.h"
 #include "IBusChewingLookupTable.h"
-#include "ibus-chewing-engine.h"
 
 static ChewingKbType kbType_id_get_index(const gchar * kbType_id)
 {
@@ -50,19 +49,8 @@ gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean showSystray_apply_callback(PropertyContext * ctx,
-				    gpointer userData)
-{
-    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-    IBusService *service = IBUS_SERVICE(icPreEdit->engine);
-    ibus_service_emit_signal(service, NULL, IBUS_INTERFACE_ENGINE,
-			     "config_changed",
-			     g_variant_new_string("show-systray"), NULL);
-    return TRUE;
-}
-
-gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
-				     gpointer userData)
+gboolean
+autoShiftCur_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -71,8 +59,8 @@ gboolean autoShiftCur_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
-					   gpointer userData)
+gboolean
+addPhraseDirection_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -82,26 +70,27 @@ gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
 }
 
 
-gboolean cleanBufferFocusOut_apply_callback(PropertyContext * ctx,
-					    gpointer userData)
+gboolean
+cleanBufferFocusOut_apply_callback(PropertyContext
+				   * ctx, gpointer userData)
 {
     return TRUE;
 }
 
 
-gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
-					gpointer userData)
+gboolean
+easySymbolInput_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
     chewing_set_easySymbolInput(icPreEdit->context,
 				(g_value_get_boolean(value)) ? 1 : 0);
-    /* Use MkdgProperty directly, no need to keep flag */
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
-				       gpointer userData)
+gboolean
+escCleanAllBuf_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -111,8 +100,8 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
 }
 
 /* Additional symbol buffer length */
-gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
-					gpointer userData)
+gboolean
+maxChiSymbolLen_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -121,15 +110,15 @@ gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
-					      gpointer userData)
-{
-    /* Use MkdgProperty directly, no need to keep flag */
+gboolean
+    defaultEnglishLetterCase_apply_callback
+    (PropertyContext * ctx, gpointer userData) {
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
-				     gpointer userData)
+gboolean
+syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -137,40 +126,37 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx,
     if (strcmp(str, "keyboard") == 0) {
 	ibus_chewing_pre_edit_set_flag(icPreEdit, FLAG_SYNC_FROM_KEYBOARD);
 	ibus_chewing_pre_edit_clear_flag(icPreEdit, FLAG_SYNC_FROM_IM);
-
     } else if (strcmp(str, "input method") == 0) {
 	ibus_chewing_pre_edit_set_flag(icPreEdit, FLAG_SYNC_FROM_IM);
 	ibus_chewing_pre_edit_clear_flag(icPreEdit,
 					 FLAG_SYNC_FROM_KEYBOARD);
     } else {
 	ibus_chewing_pre_edit_clear_flag(icPreEdit,
-					 FLAG_SYNC_FROM_IM |
-					 FLAG_SYNC_FROM_KEYBOARD);
+					 FLAG_SYNC_FROM_IM
+					 | FLAG_SYNC_FROM_KEYBOARD);
     }
     return TRUE;
 }
 
-gboolean numpadAlwaysNumber_apply_callback(PropertyContext * ctx,
-					   gpointer userData)
+gboolean
+numpadAlwaysNumber_apply_callback(PropertyContext * ctx, gpointer userData)
 {
-    /* Use MkdgProperty directly, no need to keep flag */
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
-                                           gpointer userData)
+gboolean
+shiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-
-    ibus_chewing_pre_edit_set_property_boolean(icPreEdit,
-                                               "shift-toggle-chinese",
-                                               g_value_get_boolean(value));
+    ibus_chewing_pre_edit_set_property_boolean
+	(icPreEdit, "shift-toggle-chinese", g_value_get_boolean(value));
     return TRUE;
 }
 
-gboolean candPerPage_apply_callback(PropertyContext * ctx,
-				    gpointer userData)
+gboolean
+candPerPage_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
     ibus_chewing_lookup_table_resize(icPreEdit->iTable,
@@ -179,9 +165,16 @@ gboolean candPerPage_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
-					     gpointer userData)
-{
+gboolean
+    capslockToggleChinese_apply_callback
+    (PropertyContext * ctx, gpointer userData) {
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
+    return TRUE;
+}
+
+gboolean
+    phraseChoiceRearward_apply_callback
+    (PropertyContext * ctx, gpointer userData) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
     chewing_set_phraseChoiceRearward(icPreEdit->context,
@@ -189,8 +182,8 @@ gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
-					 gpointer userData)
+gboolean
+spaceAsSelection_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -199,9 +192,9 @@ gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
     return TRUE;
 }
 
-gboolean plainZhuyin_apply_callback(PropertyContext * ctx,
-				    gpointer userData)
+gboolean
+plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData)
 {
-    /* Use MkdgProperty directly, no need to keep flag */
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }

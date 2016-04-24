@@ -68,48 +68,55 @@ static void start_component(void)
     g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb),
 		     NULL);
 
-    factory = ibus_factory_new(ibus_bus_get_connection(bus));
+    if (! ibus_bus_is_connected (bus)){
+        IBUS_CHEWING_LOG(ERROR, _("Can not connect to IBus!"));
+        exit(2);
+    }
 
+    IBusComponent *component = NULL;
+    if (xml) {
+        component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR)
+                "/ibus/component/chewing.xml");
+    } else {
+        component = ibus_component_new(QUOTE_ME(PROJECT_SCHEMA_ID),
+                _("Chewing component"),
+                QUOTE_ME(PRJ_VER), "GPLv2+",
+                _("Peng Huang, Ding-Yi Chen"),
+                "http://code.google.com/p/ibus",
+                QUOTE_ME(LIBEXEC_DIR)
+                "/ibus-engine-chewing --ibus",
+                QUOTE_ME(PROJECT_NAME));
+    }
+
+    IBusEngineDesc *engineDesc =
+        ibus_engine_desc_new_varargs("name", "chewing",
+                "longname", _("Chewing"),
+                "description",
+                _("Chinese chewing input method"),
+                "language", "zh_TW",
+                "license", "GPLv2+",
+                "author",
+                _("Peng Huang, Ding-Yi Chen"),
+                "icon",
+                QUOTE_ME(PRJ_DATA_DIR) "/icons/"
+                QUOTE_ME(PROJECT_NAME) ".png",
+                "layout", "us",
+                "setup",
+                QUOTE_ME(LIBEXEC_DIR)
+                "/ibus-setup-chewing",
+                "version", QUOTE_ME(PRJ_VER),
+                "textdomain",
+                QUOTE_ME(PROJECT_NAME),
+                NULL);
+
+    ibus_component_add_engine(component, engineDesc);
+    factory = ibus_factory_new(ibus_bus_get_connection(bus));
     ibus_factory_add_engine(factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {
-	ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
+	guint32 ret=ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
+        IBUS_CHEWING_LOG(INFO, "start_component: request_name: %u",ret);
     } else {
-	IBusComponent *component = NULL;
-	if (xml) {
-	    component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR)
-						     "/ibus/component/chewing.xml");
-	} else {
-	    component = ibus_component_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-					   _("Chewing component"),
-					   QUOTE_ME(PRJ_VER), "GPLv2+",
-					   _("Peng Huang, Ding-Yi Chen"),
-					   "http://code.google.com/p/ibus",
-					   QUOTE_ME(LIBEXEC_DIR)
-					   "/ibus-engine-chewing --ibus",
-					   QUOTE_ME(PROJECT_NAME));
-	}
-	IBusEngineDesc *engineDesc =
-	    ibus_engine_desc_new_varargs("name", "chewing",
-					 "longname", _("Chewing"),
-					 "description",
-					 _("Chinese chewing input method"),
-					 "language", "zh_TW",
-					 "license", "GPLv2+",
-					 "author",
-					 _("Peng Huang, Ding-Yi Chen"),
-					 "icon",
-					 QUOTE_ME(PRJ_DATA_DIR) "/icons/"
-					 QUOTE_ME(PROJECT_NAME) ".png",
-					 "layout", "us",
-					 "setup",
-					 QUOTE_ME(LIBEXEC_DIR)
-					 "/ibus-setup-chewing",
-					 "version", QUOTE_ME(PRJ_VER),
-					 "textdomain",
-					 QUOTE_ME(PROJECT_NAME),
-					 NULL);
-	ibus_component_add_engine(component, engineDesc);
 	ibus_bus_register_component(bus, component);
     }
     ibus_main();

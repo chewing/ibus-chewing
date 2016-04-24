@@ -41,6 +41,13 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE + 1] = {
     NULL
 };
 
+const gchar *propDefaultEnglishLettercase_array[] = {
+    N_("no default"),
+    N_("lowercase"),
+    N_("uppercase"),
+    NULL
+};
+
 const gchar *syncCapsLock_strs[] = {
     NC_("Sync", "disable"),
     NC_("Sync", "keyboard"),
@@ -60,8 +67,7 @@ MkdgPropertySpec propSpecs[] = {
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "default", kbType_ids, NULL, 0, 0,
      KBType_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-     N_("Select Zhuyin keyboard layout."),
-     }
+     N_("Select Zhuyin keyboard layout"), NULL}
     ,
     {G_TYPE_STRING, "sel-keys", PAGE_KEYBOARD, N_("Selection keys"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1234567890", selKeys_array, NULL,
@@ -70,7 +76,7 @@ MkdgPropertySpec propSpecs[] = {
      selKeys_apply_callback, 0,
      N_
      ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
-     }
+     NULL}
     ,
     {G_TYPE_INT, "hsu-sel-key-type", PAGE_KEYBOARD,
      N_("Hsu's selection key"),
@@ -78,30 +84,28 @@ MkdgPropertySpec propSpecs[] = {
      hsuSelKeyType_apply_callback, 0,
      N_
      ("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
-     }
+     NULL}
     ,
+    /*== The callback will be handled in IBusChewingEngine.gob ==*/
     {G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD,
      N_("Show systray icons"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     showSystray_apply_callback, 0,
+     NULL, 0,
      N_
      ("On: Show Chinese/English and Full/Half shape status as a systray icon\n"
-      "Off: Do not show the status icon"),
-     }
+      "Off: Do not show the status icon"), NULL}
     ,
     {G_TYPE_BOOLEAN, "auto-shift-cur", PAGE_EDITING,
      N_("Auto move cursor"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      autoShiftCur_apply_callback, 0,
-     N_("Automatically move cursor to next character."),
-     }
+     N_("Automatically move cursor to next character"), NULL}
     ,
     {G_TYPE_BOOLEAN, "add-phrase-direction", PAGE_EDITING,
-     N_("Add phrases in front"),
+     N_("Add phrases to the front"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      addPhraseDirection_apply_callback, 0,
-     N_("Add phrases in the front."),
-     }
+     N_("Add phrases to the front"), NULL}
     ,
     {G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
      N_("Clean pre-edit buffer when focus out"),
@@ -109,41 +113,28 @@ MkdgPropertySpec propSpecs[] = {
      cleanBufferFocusOut_apply_callback, 0,
      N_
      ("On: Clean pre-edit buffer when focus out to prevent program crash\n"
-      "Off: Keep what you already type for convenience"),
-     }
+      "Off: Keep what you already type for convenience"), NULL}
     ,
     {G_TYPE_BOOLEAN, "easy-symbol-input", PAGE_EDITING,
      N_("Easy symbol input"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      easySymbolInput_apply_callback, 0,
-     N_("Easy symbol input."),
-     }
+     N_("Press shift to input Chinese symbols"), NULL}
     ,
     {G_TYPE_BOOLEAN, "esc-clean-all-buf", PAGE_EDITING,
      N_("Esc clean all buffer"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
      escCleanAllBuf_apply_callback, 0,
-     N_("Escape key cleans the text in pre-edit-buffer."),
-     }
+     N_("Escape key cleans the text in pre-edit-buffer"), NULL}
     ,
     {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
      N_("Maximum Chinese characters"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 8, 39,
      maxChiSymbolLen_apply_callback, 0,
      N_
-     ("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols"),
-     }
+     ("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols."),
+     NULL}
     ,
-    {G_TYPE_BOOLEAN, "force-lowercase-english", PAGE_EDITING,
-     N_("Force lowercase in En mode"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-     forceLowercaseEnglish_apply_callback, 0,
-     N_("Ignore CapsLock status and input lowercase by default.\n\
-It is handy if you wish to enter lowercase by default.\n\
-Uppercase can still be inputted with Shift."),
-     }
-    ,
-
     /* Sync between CapsLock and IM */
     {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
      N_("Sync between CapsLock and IM"),
@@ -153,62 +144,82 @@ Uppercase can still be inputted with Shift."),
      syncCapsLock_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
      N_
-     ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n\
-\"disable\": Do nothing.\n\
-\"keyboard\": IM status follows keyboard status.\n\
-\"IM\": Keyboard status follows IM status."),
-     }
+     ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n"
+      "\"disable\": Do nothing\n"
+      "\"keyboard\": IM status follows keyboard status\n"
+      "\"IM\": Keyboard status follows IM status"), NULL}
     ,
     {G_TYPE_BOOLEAN, "numpad-always-number", PAGE_EDITING,
      N_("Number pad always input number"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      numpadAlwaysNumber_apply_callback, 0,
-     N_("Always input numbers when number keys from key pad is inputted."),
-     }
+     N_("Always input numbers when number keys from key pad is inputted"),
+     NULL}
     ,
     {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
      N_("Shift toggle Chinese Mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      shiftToggleChinese_apply_callback, 0,
-     N_("Shift key to toggle Chinese Mode"),
-     }
+     N_("Shift key to toggle Chinese Mode"), NULL}
     ,
-    {G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING,
+    {G_TYPE_BOOLEAN, "capslock-toggle-chinese", PAGE_EDITING,
+     N_("Caps Lock toggles Chinese Mode"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     capslockToggleChinese_apply_callback, 0,
+     N_("On: Caps Lock toggle Chinese/English\n"
+	"Off: Caps Lock only affect English letter case"), NULL}
+    ,
+    {
+     G_TYPE_STRING, "default-english-case", PAGE_EDITING,
+     N_("Default English letter case\n"
+	"  (Only effective when Caps Lock toggles Chinese is ON)"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "lowercase",
+     propDefaultEnglishLettercase_array, NULL, 0, 1,
+     defaultEnglishLetterCase_apply_callback,
+     MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
+     N_("no control: No default letter case. Not recommend if you use multiple keyboards or synergy\n"
+        "lowercase: Default to lowercase, press shift for uppercase.\n"
+	"uppercase: Default to uppercase, press shift for lowercase."),
+     NULL}
+    ,
+    {
+     G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING,
      N_("Plain Zhuyin mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
      plainZhuyin_apply_callback, 0,
      N_
      ("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
-     }
+     NULL}
     ,
-    {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING,
+    {
+     G_TYPE_UINT, "cand-per-page", PAGE_SELECTING,
      N_("Candidate per page"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
      candPerPage_apply_callback, 0,
      N_("Number of candidate per page."),
-     }
+     NULL}
     ,
-    {G_TYPE_BOOLEAN, "phrase-choice-from-last", PAGE_SELECTING,
+    {
+     G_TYPE_BOOLEAN, "phrase-choice-from-last", PAGE_SELECTING,
      N_("Choose phrases from backward"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      phraseChoiceRearward_apply_callback, 0,
      N_("Choose phrases from the back, without moving cursor."),
-     }
+     NULL}
     ,
-    {G_TYPE_BOOLEAN, "space-as-selection", PAGE_SELECTING,
+    {
+     G_TYPE_BOOLEAN, "space-as-selection", PAGE_SELECTING,
      N_("Space to select"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION,
      "0", NULL, NULL, 0, 1,
      spaceAsSelection_apply_callback, 0,
      "Press Space to select the candidate.",
-     }
+     NULL}
     ,
-    {G_TYPE_INVALID, "", "", "",
+    {
+     G_TYPE_INVALID, "", "", "",
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL, NULL, 0, 0,
-     NULL,
-     0,
-     NULL,
-     }
+     NULL, 0, NULL, NULL}
     ,
 };
 
@@ -278,12 +289,13 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 			     key, userData);
 }
 
-gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
-						      * self,
-						      const gchar *
-						      section,
-						      const gchar * key,
-						      gpointer userData)
+gboolean
+ibus_chewing_properties_read_boolean_general(IBusChewingProperties
+					     * self,
+					     const gchar *
+					     section,
+					     const gchar * key,
+					     gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_BOOLEAN);
@@ -294,10 +306,11 @@ gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
     return result;
 }
 
-gint ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-					      const gchar * section,
-					      const gchar * key,
-					      gpointer userData)
+gint
+ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
+					 const gchar * section,
+					 const gchar * key,
+					 gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_INT);

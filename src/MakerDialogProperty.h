@@ -51,10 +51,40 @@ typedef struct {
     gpointer auxData;
 } MkdgProperties;
 
+/**
+ * Terminology:
+ * @read: backend -> Context
+ * @write: Context -> backend
+ * @get: Context -> GValue
+ * @set: GValue -> Context
+ * @load: read then get, errors in read are ignored
+ * @save: set then write
+ * @apply: Context -> apply callback
+ * @use: load then apply
+ * @assign: save then apply
+ */
 
+/**
+ * property_context_new:
+ * @spec: The MkdgPropertySpec it use
+ * @backend: Backend to be use to store the property
+ * @parent: The object that contain this property
+ * @auxData: Other data that may be store with the property
+ *
+ * This subroutine create a new PropertyContext.
+ * It also read the value from backend, if backend is not available.
+ */
 PropertyContext *property_context_new(MkdgPropertySpec * spec,
 				      MkdgBackend * backend,
 				      gpointer parent, gpointer auxData);
+
+/**
+ * property_context_default:
+ * @ctx: PropertyContex
+ * 
+ * Set the PropertyContext with default value.
+ */
+void property_context_default(PropertyContext * ctx);
 
 gchar *property_context_to_string(PropertyContext * ctx);
 
@@ -147,7 +177,6 @@ gboolean mkdg_properties_save_string_by_key(MkdgProperties * properties,
 gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
 				      const gchar * key,
 				      gpointer userData);
-
 
 gsize mkdg_properties_size(MkdgProperties * properties);
 

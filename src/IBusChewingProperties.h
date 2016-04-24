@@ -81,11 +81,17 @@ gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
 gboolean candPerPage_apply_callback(PropertyContext * ctx,
 				    gpointer userData);
 
+gboolean capslockToggleChinese_apply_callback(PropertyContext * ctx,
+					      gpointer userData);
+
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
 					     gpointer userData);
 
 gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
 					 gpointer userData);
+
+gboolean defaultEnglishLetterCase_apply_callback(PropertyContext * ctx,
+						  gpointer userData);
 
 gboolean plainZhuyin_apply_callback(PropertyContext * ctx,
 				    gpointer userData);

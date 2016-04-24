@@ -1,7 +1,34 @@
-/*=================================================
- * Signal process routines
+/*================================================= Signal process routines
  *
  */
+
+/**
+ * ibus_chewing_engine_start:
+ * @self: IBusChewingEngine instance.
+ *
+ * This is different with init. This will be called in the beginning of 
+ * reset, enable, and focus_in for setup.
+ */
+void ibus_chewing_engine_start(IBusChewingEngine * self)
+{
+#ifndef UNIT_TEST
+    if (!ibus_chewing_engine_has_status_flag
+	    (self, ENGINE_FLAG_PROPERTIES_REGISTERED)) {
+	IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
+		"InputMode");
+	IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
+		"chewing_alnumSize_prop");
+	ibus_engine_register_properties(IBUS_ENGINE(self),
+		self->prop_list);
+	ibus_chewing_engine_set_status_flag(self,
+		ENGINE_FLAG_PROPERTIES_REGISTERED);
+    }
+#endif
+    ibus_chewing_engine_use_setting(self);
+    ibus_chewing_engine_restore_mode(self);
+    ibus_chewing_engine_refresh_property_list(self);
+
+}
 
 /**
  * ibus_chewing_engine_reset:
@@ -23,6 +50,7 @@ void ibus_chewing_engine_reset(IBusChewingEngine * self)
     ibus_engine_update_preedit_text(engine,
 				    SELF_GET_CLASS(self)->emptyText, 0,
 				    FALSE);
+
 #endif
 }
 
@@ -30,7 +58,7 @@ void ibus_chewing_engine_enable(IBusChewingEngine * self)
 {
     IBUS_CHEWING_LOG(MSG, "* enable(): statusFlags=%x",
 		     self->_priv->statusFlags);
-    ibus_chewing_engine_use_setting(self);
+    ibus_chewing_engine_start(self);
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_ENABLED);
 }
 
@@ -45,9 +73,7 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
 {
     IBUS_CHEWING_LOG(MSG, "* focus_in(): statusFlags=%x",
 		     self->_priv->statusFlags);
-    ibus_chewing_engine_use_setting(self);
-    ibus_chewing_engine_restore_mode(self);
-    ibus_chewing_engine_refresh_property_list(self);
+    ibus_chewing_engine_start(self);
     /* Shouldn't have anything to commit when Focus-in */
     ibus_chewing_pre_edit_clear(self->icPreEdit);
     refresh_pre_edit_text(self);
@@ -70,8 +96,9 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
 					  ENGINE_FLAG_FOCUS_IN |
 					  ENGINE_FLAG_PROPERTIES_REGISTERED);
     ibus_chewing_engine_hide_property_list(self);
-    
-    if(ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "clean-buffer-focus-out")){
+
+    if (ibus_chewing_pre_edit_get_property_boolean
+	(self->icPreEdit, "clean-buffer-focus-out")) {
 	/* Clean the buffer when focus out */
 	ibus_chewing_pre_edit_clear(self->icPreEdit);
 	refresh_pre_edit_text(self);
@@ -269,8 +296,8 @@ void refresh_aux_text(IBusChewingEngine * self)
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
     } else {
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmf_check=%x",
-			 ibus_chewing_bopomofo_check(self->
-						     icPreEdit->context));
+			 ibus_chewing_bopomofo_check(self->icPreEdit->
+						     context));
 	gchar *bpmfStr =
 	    ibus_chewing_pre_edit_get_bopomofo_string(self->icPreEdit);
 	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmfStr=%s", bpmfStr);

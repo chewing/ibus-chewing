@@ -40,7 +40,6 @@ void focus_out_then_focus_in_with_aux_text_test()
 
     /* focus out should not touch Texts
      */
-    printf("########### cleanBufferFocusOut: %d\n", cleanBufferFocusOut);
     ibus_chewing_engine_focus_out(engine);
     g_assert(cleanBufferFocusOut==ibus_chewing_pre_edit_get_property_boolean(engine->icPreEdit, "clean-buffer-focus-out"));
     if (cleanBufferFocusOut){
@@ -82,6 +81,7 @@ gint main(gint argc, gchar ** argv)
 					       "plain-zhuyin", FALSE);
 
     gboolean cleanBufferFocusOut=ibus_chewing_pre_edit_get_property_boolean(engine->icPreEdit, "clean-buffer-focus-out");
+
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
     ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,

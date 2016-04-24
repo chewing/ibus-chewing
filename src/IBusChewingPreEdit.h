@@ -110,8 +110,6 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self);
 
 #define ibus_chewing_pre_edit_is_system_keyboard_layout(self) ibus_chewing_properties_read_boolean_general(self->iProperties, "ibus/general", "use-system-keyboard-layout", NULL)
 
-#define ibus_chewing_pre_edit_is_embed_preedit_text(self) ibus_chewing_properties_read_boolean_general(self->iProperties, "ibus/general", "embed-preedit-text", NULL)
-
 #define ibus_chewing_pre_edit_apply_property(self,propertyKey) mkdg_properties_apply_by_key(self->iProperties->properties, propertyKey, NULL)
 
 #define ibus_chewing_pre_edit_save_property_boolean(self,propertyKey,boolValue) mkdg_properties_save_boolean_by_key(self->iProperties->properties, propertyKey, boolValue, NULL)
@@ -170,10 +168,13 @@ void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self);
 
 gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self);
-gboolean ibus_chewing_pre_edit_get_full_half(IBusChewingPreEdit * self);
+gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit * self);
 
-void ibus_chewing_pre_edit_toggle_chi_eng_mode(IBusChewingPreEdit * self);
-void ibus_chewing_pre_edit_toggle_full_half(IBusChewingPreEdit * self);
+void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,gboolean chineseMode);
+void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,gboolean fullShapeMode);
+
+#define ibus_chewing_pre_edit_toggle_chi_eng_mode(self)     ibus_chewing_pre_edit_set_chi_eng_mode(self, !ibus_chewing_pre_edit_get_chi_eng_mode(self))
+#define ibus_chewing_pre_edit_toggle_full_half_mode(self) ibus_chewing_pre_edit_set_full_half_mode(self, !ibus_chewing_pre_edit_get_full_half_mode(self))
 
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit * self,
 					   KSym kSym,

@@ -181,6 +181,10 @@ gboolean property_context_apply(PropertyContext * ctx, gpointer userData)
 		 ctx->spec->key);
 	return FALSE;
     }
+    if (ctx->spec->applyFunc == NULL ){
+	mkdg_log(DEBUG, "property_context_apply(%s,-): No apply function, skip", ctx->spec->key);
+	return TRUE;
+    }
     mkdg_log(DEBUG, "property_context_apply(%s,-): value %s",
 	     ctx->spec->key, mkdg_g_value_to_string(&(ctx->value)));
     return ctx->spec->applyFunc(ctx, userData);

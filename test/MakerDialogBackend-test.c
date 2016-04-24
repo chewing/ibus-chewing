@@ -19,7 +19,7 @@ MkdgBackend *backend = NULL;
 
 gchar *command_run_obtain_output(const gchar * cmd)
 {
-    mkdg_log(DEBUG, "### command_run_obtain_output(%s)\n",cmd);
+    mkdg_log(DEBUG, "command_run_obtain_output(%s)\n", cmd);
     static gchar readBuffer[FILE_BUFFER_SIZE];
     FILE *stream = popen(cmd, "r");
     if (stream == NULL) {
@@ -29,10 +29,10 @@ gchar *command_run_obtain_output(const gchar * cmd)
     gchar *line = fgets(readBuffer, FILE_BUFFER_SIZE, stream);
     pclose(stream);
     if (line == NULL) {
-	printf("### line=NULL\n");
+	mkdg_log(DEBUG, "line=NULL\n");
     } else {
 	line[strlen(line) - 1] = '\0';
-	printf("### line=%s\n", line);
+	mkdg_log(DEBUG, "line=%s\n", line);
     }
     return line;
 }
@@ -40,7 +40,7 @@ gchar *command_run_obtain_output(const gchar * cmd)
 GValue *backend_command_get_key_value(const gchar * key, GValue * value)
 {
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
-    gchar *cKey=mkdg_backend_get_key(backend, NULL, key, NULL);
+    gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 #ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gsettings get %s %s",
 	       QUOTE_ME(PROJECT_SCHEMA_ID), cKey);
@@ -68,7 +68,7 @@ void backend_command_set_key_value(const gchar * key, GValue * value)
 	valueStr = (g_value_get_boolean(value)) ? "true" : "false";
     }
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
-    gchar *cKey=mkdg_backend_get_key(backend, NULL, key, NULL);
+    gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 #ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE,
 	       "gsettings set %s %s %s",
@@ -161,8 +161,8 @@ void change_new_value_from_orig_value(GValue * newValue,
 
 void write_key_with_g_value(const gchar * key, GValue * value)
 {
-    mkdg_backend_write(backend, value, QUOTE_ME(PROJECT_SCHEMA_SECTION), key,
-		       NULL);
+    mkdg_backend_write(backend, value, QUOTE_ME(PROJECT_SCHEMA_SECTION),
+		       key, NULL);
 }
 
 void assert_new_value_is_written(const gchar * key, GValue * newValue)
@@ -224,8 +224,8 @@ void int_w_test()
     GValue newValue = { 0 };
     g_value_init(&newValue, G_TYPE_BOOLEAN);
     g_value_set_int(&newValue, !g_value_get_int(&origValue));
-    mkdg_backend_write(backend, &newValue, QUOTE_ME(PROJECT_SCHEMA_SECTION),
-		       GCONF_KEY, NULL);
+    mkdg_backend_write(backend, &newValue,
+		       QUOTE_ME(PROJECT_SCHEMA_SECTION), GCONF_KEY, NULL);
 
     GValue storedValue = { 0 };
     g_value_init(&storedValue, G_TYPE_BOOLEAN);
