@@ -92,6 +92,67 @@ void reset_properties_default(IBusChewingPreEdit * self)
 }
 
 /*== Unit cases start ==*/
+EventResponse filter_modifiers_test_0_0(){
+    KeyModifiers allow=0, unmaskedMod=0;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_0_shift(){
+    KeyModifiers allow=0, unmaskedMod=IBUS_SHIFT_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_0_control(){
+    KeyModifiers allow=0, unmaskedMod=IBUS_CONTROL_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_0_shift_control(){
+    KeyModifiers allow=0, unmaskedMod=IBUS_SHIFT_MASK|IBUS_CONTROL_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_shift_0(){
+    KeyModifiers allow=IBUS_SHIFT_MASK, unmaskedMod=0;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_shift_shift(){
+    KeyModifiers allow=IBUS_SHIFT_MASK, unmaskedMod=IBUS_SHIFT_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_shift_control(){
+    KeyModifiers allow=IBUS_SHIFT_MASK, unmaskedMod=IBUS_CONTROL_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+EventResponse filter_modifiers_test_shift_shift_control(){
+    KeyModifiers allow=IBUS_SHIFT_MASK, unmaskedMod=IBUS_SHIFT_MASK|IBUS_CONTROL_MASK;
+    filter_modifiers(allow);
+    return EVENT_RESPONSE_PROCESS;
+}
+
+
+void filter_modifiers_test(){
+    g_assert(filter_modifiers_test_0_0()==EVENT_RESPONSE_PROCESS);
+    g_assert(filter_modifiers_test_0_shift()==EVENT_RESPONSE_IGNORE);
+    g_assert(filter_modifiers_test_0_control()==EVENT_RESPONSE_IGNORE);
+    g_assert(filter_modifiers_test_0_shift_control()==EVENT_RESPONSE_IGNORE);
+
+    g_assert(filter_modifiers_test_shift_0()==EVENT_RESPONSE_PROCESS);
+    g_assert(filter_modifiers_test_shift_shift()==EVENT_RESPONSE_PROCESS);
+    g_assert(filter_modifiers_test_shift_control()==EVENT_RESPONSE_IGNORE);
+    g_assert(filter_modifiers_test_shift_shift_control()==EVENT_RESPONSE_IGNORE);
+}
+
 void self_key_sym_fix_test(){
     ibus_chewing_pre_edit_set_chi_eng_mode(self,FALSE);
 
@@ -578,6 +639,7 @@ gint main(gint argc, gchar ** argv)
     ibus_chewing_pre_edit_use_all_configure(self);
 
     g_assert(self != NULL);
+    TEST_RUN_THIS(filter_modifiers_test);
     TEST_RUN_THIS(self_key_sym_fix_test);
     TEST_RUN_THIS(self_handle_key_sym_default_test);
     TEST_RUN_THIS(process_key_normal_test);

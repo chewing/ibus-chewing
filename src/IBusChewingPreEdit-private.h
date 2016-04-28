@@ -49,8 +49,15 @@
 /* We only recognize the combination of shift, control and alt */
 #define modifiers_mask(unmaskedMod) unmaskedMod & (IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK)
 
-#define filter_modifiers(mask) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
-							if (! (mask) && (maskedMod & (~(mask)))){ return EVENT_RESPONSE_IGNORE; }
+/**
+ * filter_modifier:
+ * @allowed Allowed modifler.
+ *
+ * allowed=0 means only the keysym is allowed, no shift, alt, control are allowed.
+ * allowed=IBUS_SHIFT_MASK means both keysym without modifier or shift are allowed.
+ */
+#define filter_modifiers(allowed) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
+							if ( (maskedMod) & (~(allowed))){ return EVENT_RESPONSE_IGNORE; }
 #define absorb_when_release if (event_is_released(unmaskedMod)){ return EVENT_RESPONSE_ABSORB; }
 #define ignore_when_buffer_is_empty if (buffer_is_empty) { return EVENT_RESPONSE_IGNORE;}
 

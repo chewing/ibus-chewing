@@ -234,40 +234,41 @@ void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,
  * ibus_chewing_pre_edit key processing
  */
 KSym self_key_sym_fix(IBusChewingPreEdit * self, KSym kSym,
-		 KeyModifiers unmaskedMod)
+		      KeyModifiers unmaskedMod)
 {
-    gchar caseConversionMode=default_english_case_short;
-    if (! ibus_chewing_pre_edit_get_property_boolean(self,
-	    "capslock-toggle-chinese")){
-	caseConversionMode='n';
+    gchar caseConversionMode = default_english_case_short;
+    if (!ibus_chewing_pre_edit_get_property_boolean(self,
+						    "capslock-toggle-chinese"))
+    {
+	caseConversionMode = 'n';
     }
-    if (is_chinese){
+    if (is_chinese) {
 	/* 
 	 * Ignore the status of CapsLock, thus
 	 */
-	if (is_shift){
+	if (is_shift) {
 	    return toupper(kSym);
 	}
 	return tolower(kSym);
-    }else{
+    } else {
 	/* May need to change case if Caps Lock toggle chinese */
 	switch (caseConversionMode) {
-	    case 'l':
-		if (is_shift) {
-		    /* Uppercase */
-		    return toupper(kSym);
-		}
-		/* Lowercase */
-		return tolower(kSym);
-	    case 'u':
-		if (is_shift) {
-		    /* Lowercase */
-		    return tolower(kSym);
-		}
+	case 'l':
+	    if (is_shift) {
 		/* Uppercase */
 		return toupper(kSym);
-	    default:
-		break;
+	    }
+	    /* Lowercase */
+	    return tolower(kSym);
+	case 'u':
+	    if (is_shift) {
+		/* Lowercase */
+		return tolower(kSym);
+	    }
+	    /* Uppercase */
+	    return toupper(kSym);
+	default:
+	    break;
 	}
     }
     return kSym;
@@ -288,9 +289,11 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
 	chewing_set_easySymbolInput(self->context, 0);
     }
     EventResponse response = EVENT_RESPONSE_UNDECIDED;
-    KSym fixedKSym=self_key_sym_fix(self, kSym, unmaskedMod);
+    KSym fixedKSym = self_key_sym_fix(self, kSym, unmaskedMod);
     IBUS_CHEWING_LOG(DEBUG,
-	    "* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)", fixedKSym, key_sym_get_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+		     "* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)",
+		     fixedKSym, key_sym_get_name(fixedKSym), unmaskedMod,
+		     modifiers_to_string(unmaskedMod));
     gint ret = chewing_handle_Default(self->context, fixedKSym);
     /* Handle quick commit */
     ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);

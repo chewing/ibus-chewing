@@ -388,56 +388,35 @@ class IBus:Chewing:Engine from IBus:Engine {
 	}
 
 	if (STRING_EQUALS(prop_name, "InputMode")) {
-	    IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 1 status=%x",
-		    prop_name, self->_priv->statusFlags);
 	    if (ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)) {
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 2 status=%x",
-			prop_name, self->_priv->statusFlags);
 		/* Chinese  */
 		ibus_property_set_label(self->chieng_prop,
 					SELF_GET_CLASS(self)->
 					chieng_prop_label_chi);
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 3 status=%x",
-			prop_name, self->_priv->statusFlags);
 		ibus_property_set_tooltip(self->chieng_prop,
 					  SELF_GET_CLASS(self)->
 					  chieng_prop_tooltip_chi);
 #if IBUS_CHECK_VERSION(1, 5, 0)
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 4 status=%x",
-			prop_name, self->_priv->statusFlags);
 		ibus_property_set_symbol(self->chieng_prop,
 					 SELF_GET_CLASS(self)->
 					 chieng_prop_symbol_chi);
 #endif
 	    } else {
 		/* English  */
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 5 status=%x",
-			prop_name, self->_priv->statusFlags);
-
 		ibus_property_set_label(self->chieng_prop,
 					SELF_GET_CLASS(self)->
 					chieng_prop_label_eng);
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 6 status=%x",
-			prop_name, self->_priv->statusFlags);
 		ibus_property_set_tooltip(self->chieng_prop,
 					  SELF_GET_CLASS(self)->
 					  chieng_prop_tooltip_eng);
 #if IBUS_CHECK_VERSION(1, 5, 0)
-		IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 7 status=%x",
-			prop_name, self->_priv->statusFlags);
-
 		ibus_property_set_symbol(self->chieng_prop,
 					 SELF_GET_CLASS(self)->
 					 chieng_prop_symbol_eng);
 #endif
 	    }
-	    IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 8 status=%x",
-		    prop_name, self->_priv->statusFlags);
-
 	    ibus_engine_update_property(IBUS_ENGINE(self),
 					    self->chieng_prop);
-	    IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) 9 status=%x",
-		    prop_name, self->_priv->statusFlags);
 
 	} else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
 	    if (chewing_get_ShapeMode(self->icPreEdit->context)) {
