@@ -70,6 +70,7 @@ struct _IBusChewingSystrayIcon {
     GtkStatusIcon *icon;
     guint value;
     GPtrArray *iconFileArray;
+    GPtrArray *iconCacheArray;
     IBusChewingSystrayClickFunc leftClickFunc;
     gpointer leftClickData;
     IBusChewingSystrayClickFunc rightClickFunc;
@@ -121,14 +122,14 @@ IBusChewingSystrayIcon
     * ibus_chewing_systray_chi_eng_icon_new(IBusChewingEngine * iEngine);
 
 /**
- * ibus_chewing_systray_chi_eng_icon_create_or_destroy:
+ * ibus_chewing_systray_chi_eng_icon_create_or_hide:
  * @iEngine: An IBusChewingEngine
  *
  * Create or destroy systray icon depending on property 'show-systray'
  * @returns: TRUE if systray icon created; FALSE otherwise.
  */
 gboolean
-ibus_chewing_systray_chi_eng_icon_create_or_destroy(IBusChewingEngine *
+ibus_chewing_systray_chi_eng_icon_create_or_hide(IBusChewingEngine *
 						    iEngine);
 
 void ibus_chewing_systray_chi_eng_icon_refresh_value(IBusChewingEngine *

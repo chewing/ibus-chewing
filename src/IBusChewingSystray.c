@@ -48,12 +48,12 @@ IBusChewingSystrayIcon
 	    break;
 	}
 	g_ptr_array_add(fileArray, (gpointer) iconFile);
-
     }
     va_end(argList);
 
     IBusChewingSystrayIcon *self = g_new0(IBusChewingSystrayIcon, 1);
     self->iconFileArray = fileArray;
+    self->iconCacheArray = g_ptr_array_sized_new(fileArray->len);
     self->icon = gtk_status_icon_new();
     self->leftClickFunc = leftClickFunc;
     self->leftClickData = leftClickData;
@@ -99,9 +99,22 @@ void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
 
 void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self)
 {
-    gtk_status_icon_set_from_file(self->icon,
-				  ibus_chewing_systray_icon_get_icon_file
-				  (self, self->value));
+    GIcon *iconCache = NULL;
+    if (self->iconCacheArray->len <= self->value
+	|| (g_ptr_array_index(self->iconCacheArray, self->value) ==
+	    NULL)) {
+	/* Put icon in cache */
+	gtk_status_icon_set_from_file(self->icon,
+				      ibus_chewing_systray_icon_get_icon_file
+				      (self, self->value));
+	iconCache = gtk_status_icon_get_gicon(self->icon);
+	g_ptr_array_insert(self->iconCacheArray, self->value,
+			   (gpointer) iconCache);
+    } else {
+	iconCache =
+	    (GIcon *) g_ptr_array_index(self->iconCacheArray, self->value);
+	gtk_status_icon_set_from_gicon(self->icon, iconCache);
+    }
     ibus_chewing_systray_icon_set_visible(self, TRUE);
 }
 
@@ -156,8 +169,8 @@ IBusChewingSystrayIcon
 }
 
 gboolean
-ibus_chewing_systray_chi_eng_icon_create_or_destroy(IBusChewingEngine *
-						    iEngine)
+ibus_chewing_systray_chi_eng_icon_create_or_hide(IBusChewingEngine *
+						 iEngine)
 {
     if (ibus_chewing_pre_edit_get_property_boolean
 	(iEngine->icPreEdit, "show-systray")) {
@@ -172,7 +185,6 @@ ibus_chewing_systray_chi_eng_icon_create_or_destroy(IBusChewingEngine *
     if (iEngine->iChiEngSystrayIcon != NULL) {
 	ibus_chewing_systray_icon_set_visible(iEngine->iChiEngSystrayIcon,
 					      FALSE);
-	ibus_chewing_systray_icon_free(iEngine->iChiEngSystrayIcon);
     }
     return FALSE;
 }

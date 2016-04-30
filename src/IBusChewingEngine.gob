@@ -383,7 +383,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 #ifndef UNIT_TEST
 	IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
 			 prop_name, self->_priv->statusFlags);
-	if (ibus_chewing_systray_chi_eng_icon_create_or_destroy(self)){
+	if (ibus_chewing_systray_chi_eng_icon_create_or_hide(self)){
 	    ibus_chewing_systray_chi_eng_icon_refresh_value(self);
 	}
 
