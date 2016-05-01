@@ -119,7 +119,7 @@ MkdgPropertySpec propSpecs[] = {
      N_("Easy symbol input"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      easySymbolInput_apply_callback, 0,
-     N_("Press shift to input Chinese symbols"), NULL}
+     N_("Press shift to input Chinese punctuation symbols"), NULL}
     ,
     {G_TYPE_BOOLEAN, "esc-clean-all-buf", PAGE_EDITING,
      N_("Esc clean all buffer"),

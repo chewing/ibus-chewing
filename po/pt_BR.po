@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-03-01 16:47+1000\n"
+"POT-Creation-Date: 2016-05-02 00:48+1000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,149 +11,132 @@ msgstr ""
 "Last-Translator: Marco Aurélio Krause <ouesten@me.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt-BR\n"
-"X-Generator: Zanata 3.8.2\n"
+"X-Generator: Zanata 3.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:236
-msgid "Chi"
-msgstr "Chi"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:239
-msgid "Eng"
-msgstr "Eng"
-
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:243
-msgid "Click to switch to English"
-msgstr "Clique para alternar para inglês"
-
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:247
-msgid "Click to switch to Chinese"
-msgstr "Clique para alternar para chinês"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:256
-msgid "Full"
-msgstr "Cheio"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingEngine.gob:259
-msgid "Half"
-msgstr "Meio"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:13
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:13
 msgid "Editing"
 msgstr "Editando"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:14
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:14
 msgid "Selecting"
 msgstr "Selecionando"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:15
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:15
 msgid "Keyboard"
 msgstr "Teclado"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:18
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:18
 msgid "default"
 msgstr "padrão"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:19
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:19
 msgid "hsu"
 msgstr "hsu"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:20
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:20
 msgid "ibm"
 msgstr "ibm"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:21
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:21
 msgid "gin_yieh"
 msgstr "gin_yieh"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:22
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:22
 msgid "eten"
 msgstr "eten"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:23
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:23
 msgid "eten26"
 msgstr "eten26"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:24
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:24
 msgid "dvorak"
 msgstr "dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:25
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:25
 msgid "dvorak_hsu"
 msgstr "dvorak_hsu"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:26
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:26
 msgid "dachen_26"
 msgstr "dachen_26"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:27
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:27
 msgid "hanyu"
 msgstr "hanyu"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:45
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:45
+msgid "no default"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:46
+msgid "lowercase"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:47
+msgid "uppercase"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:52
 msgctxt "Sync"
 msgid "disable"
 msgstr "Desabilitar"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:46
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:53
 msgctxt "Sync"
 msgid "keyboard"
 msgstr "Teclado"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:47
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:54
 msgctxt "Sync"
 msgid "input method"
 msgstr "método de entrada"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:52
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:59
 msgid "Auto"
 msgstr "Auto"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:53
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:60
 msgid "Big5"
 msgstr "Big5"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:54
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:61
 msgid "UTF8"
 msgstr "UTF8"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:59
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:66
 msgid "Keyboard Type"
 msgstr "Tipo de Teclado"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:63
-msgid "Select Zhuyin keyboard layout."
-msgstr "Selecionar layout do teclado Zhuyin."
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:70
+msgid "Select Zhuyin keyboard layout"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:66
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:72
 msgid "Selection keys"
 msgstr "Teclas de seleção"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:72
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:78
 msgid ""
 "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
 "select the 1st candidate, 's' for 2nd, and so on."
@@ -163,152 +146,141 @@ msgstr ""
 "diante."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:76
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:82
 msgid "Hsu's selection key"
 msgstr "tela de seleção do Hsu"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:80
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:86
 msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
 msgstr ""
 "teclas de seleção do teclado de Hsu , 1 para asdfjkl789, 2 para asdfzxcv89 ."
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:84
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:91
 msgid "Show systray icons"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:88
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:95
 msgid ""
 "On: Show Chinese/English and Full/Half shape status as a systray icon\n"
 "Off: Do not show the status icon"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:93
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:99
 msgid "Auto move cursor"
 msgstr "Auto mover o cursor"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:96
-msgid "Automatically move cursor to next character."
-msgstr "Mover automaticamente o cursor para o próximo carácter"
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:102
+msgid "Automatically move cursor to next character"
+msgstr ""
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:100
-msgid "Add phrases in front"
-msgstr "Adicionar frases na frente"
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:105
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:108
+msgid "Add phrases to the front"
+msgstr ""
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:103
-msgid "Add phrases in the front."
-msgstr "Adicionar frases na frente"
-
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:107
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:111
 msgid "Clean pre-edit buffer when focus out"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:111
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:115
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:116
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:119
 msgid "Easy symbol input"
 msgstr "Entrada de símbolo fácil"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:119
-msgid "Easy symbol input."
-msgstr "Entrada de símbolo fácil."
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:122
+msgid "Press shift to input Chinese punctuation symbols"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:123
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:125
 msgid "Esc clean all buffer"
 msgstr "Esc limpar todo o buffer"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:126
-msgid "Escape key cleans the text in pre-edit-buffer."
-msgstr "Tecla Escape limpa o texto no buffer de pré-edição"
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:128
+msgid "Escape key cleans the text in pre-edit-buffer"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:130
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:131
 msgid "Maximum Chinese characters"
 msgstr "Máximo de Caracteres chineses"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:134
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:135
 msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
-"symbols"
+"symbols."
 msgstr ""
-"Máximo de caracteres chineses no buffer de pré-edição, incluindo os simbolos "
-"Zhuyin de inserção."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:138
-msgid "Force lowercase in En mode"
-msgstr "Forçar letra minúscula no modo En"
-
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:141
-msgid ""
-"Ignore CapsLock status and input lowercase by default.\n"
-"It is handy if you wish to enter lowercase by default.\n"
-"Uppercase can still be inputted with Shift."
-msgstr ""
-"Ignorar o estado CapsLock e inserir letra minúscula por padrão.\n"
-"É fácil se você deseja inserir letras minúsculas por padrão.\n"
-"A letra maiúscula pode ainda ser inserida com o Shift."
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:149
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:140
 msgid "Sync between CapsLock and IM"
 msgstr "Sinc entre o CapsLock e IM"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:156
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:147
 msgid ""
 "Occasionally, the CapsLock status does not match the IM, this option "
 "determines how these status be synchronized. Valid values:\n"
-"\"disable\": Do nothing.\n"
-"\"keyboard\": IM status follows keyboard status.\n"
-"\"IM\": Keyboard status follows IM status."
+"\"disable\": Do nothing\n"
+"\"keyboard\": IM status follows keyboard status\n"
+"\"IM\": Keyboard status follows IM status"
 msgstr ""
-"Geralmente o status do CapsLock não coincide com o IM, esta opção determina "
-"como estes status são sincronizados. Valores válidos:\n"
-"\"disable\": Não faz nada.¶\n"
-"\"keyboard\": status do IM segue o status do teclado.¶\n"
-"\"IM\": Status do Teclado segue o status do IM."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:163
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:153
 msgid "Number pad always input number"
 msgstr "Pad de números sempre insere números"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:166
-msgid "Always input numbers when number keys from key pad is inputted."
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:156
+msgid "Always input numbers when number keys from key pad is inputted"
 msgstr ""
-"Sempre inserir números quando as chaves de números a partir do pad é "
-"inserida"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:170
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:160
 msgid "Shift toggle Chinese Mode"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:173
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:163
 msgid "Shift key to toggle Chinese Mode"
 msgstr ""
 
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:166
+msgid "Caps Lock toggles Chinese Mode"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:169
+msgid ""
+"On: Caps Lock toggle Chinese/English\n"
+"Off: Caps Lock only affect English letter case"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:174
+msgid ""
+"Default English letter case\n"
+"  (Only effective when Caps Lock toggles Chinese is ON)"
+msgstr ""
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:180
+msgid ""
+"no control: No default letter case. Not recommend if you use multiple "
+"keyboards or synergy\n"
+"lowercase: Default to lowercase, press shift for uppercase.\n"
+"uppercase: Default to uppercase, press shift for lowercase."
+msgstr ""
+
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:177
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:187
 msgid "Plain Zhuyin mode"
 msgstr "Modo Simples Zhuyin"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:181
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:191
 msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
@@ -317,80 +289,84 @@ msgstr ""
 "relacionadas são desabilitadas ou ignoradas."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:185
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:196
 msgid "Candidate per page"
 msgstr "Candidato por página"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:188
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:199
 msgid "Number of candidate per page."
 msgstr "Número de candidato por página"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:192
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:204
 msgid "Choose phrases from backward"
 msgstr "Escolher frases de tras para frente"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:195
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:207
 msgid "Choose phrases from the back, without moving cursor."
 msgstr "Escolehr frases a partir do final, sem mover o cursor"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/IBusChewingProperties.c:199
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:212
 msgid "Space to select"
 msgstr "Espaço para selecionar"
 
-#: /home/dchen/ibus-chewing/src/IBusChewingSystray.c:175
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingSystray.c:167
 msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
 msgstr ""
 
-#: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:7
+#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:7
 msgctxt "Configure"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:8
+#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:8
 msgctxt "Configure"
 msgid "Save"
 msgstr "Salvar"
 
-#: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:9
+#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:9
 msgctxt "Configure"
 msgid "Apply"
 msgstr "Aplicar"
 
-#: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:10
+#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:10
 msgctxt "Configure"
 msgid "Close"
 msgstr "Fechar"
 
-#: /home/dchen/ibus-chewing/src/MakerDialogWidget.c:11
+#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:11
 msgctxt "Configure"
 msgid "Ok"
 msgstr "Ok"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/ibus-setup-chewing.c:72
+#: /home/dchen/ibus-chewing/po/../src/ibus-setup-chewing.c:73
 msgid "Setting"
 msgstr "Configuração"
 
+#: /home/dchen/ibus-chewing/po/../src/main.c:72
+msgid "Cannot connect to IBus!"
+msgstr ""
+
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/main.c:84
+#: /home/dchen/ibus-chewing/po/../src/main.c:82
 msgid "Chewing component"
 msgstr "Componente Chewing"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/main.c:86
-#: /home/dchen/ibus-chewing/src/main.c:100
+#: /home/dchen/ibus-chewing/po/../src/main.c:84
+#: /home/dchen/ibus-chewing/po/../src/main.c:99
 msgid "Peng Huang, Ding-Yi Chen"
 msgstr "Peng Huang, Ding-Yi Chen"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: /home/dchen/ibus-chewing/src/main.c:94
+#: /home/dchen/ibus-chewing/po/../src/main.c:93
 msgid "Chewing"
 msgstr "Chewing"
 
-#: /home/dchen/ibus-chewing/src/main.c:96
+#: /home/dchen/ibus-chewing/po/../src/main.c:95
 msgid "Chinese chewing input method"
 msgstr ""

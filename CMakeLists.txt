@@ -252,8 +252,8 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/chewing.xml.in ${CMAKE_BINARY_DIR}/data/
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/data/ibus-setup-chewing.desktop.in ${CMAKE_BINARY_DIR}/data/ibus-setup-chewing.desktop)
 
 #=== Sub directories
-ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(po)
+ADD_SUBDIRECTORY(src bin)
 ADD_SUBDIRECTORY(test test-bin)
 
 ####################################################################

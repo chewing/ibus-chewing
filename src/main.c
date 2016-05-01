@@ -69,7 +69,7 @@ static void start_component(void)
 		     NULL);
 
     if (! ibus_bus_is_connected (bus)){
-        IBUS_CHEWING_LOG(ERROR, _("Can not connect to IBus!"));
+        IBUS_CHEWING_LOG(ERROR, _("Cannot connect to IBus!"));
         exit(2);
     }
 
