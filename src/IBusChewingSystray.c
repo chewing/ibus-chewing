@@ -40,21 +40,26 @@ IBusChewingSystrayIcon
     IBUS_CHEWING_LOG(DEBUG, "* ibus_chewing_systray_icon_new()");
     va_list argList;
     const gchar *iconFile;
-    GPtrArray *fileArray = g_ptr_array_new();
+
+    IBusChewingSystrayIcon *self = g_new0(IBusChewingSystrayIcon, 1);
+    self->icon = gtk_status_icon_new();
+    self->iconFileArray = g_ptr_array_new();
+    self->iconCacheArray = g_ptr_array_new();
+
     va_start(argList, rightClickData);
     for (gint i = 0; i < IBUS_CHEWING_SYSTRAY_ICON_COUNT_MAX; i++) {
 	iconFile = va_arg(argList, const gchar *);
 	if (iconFile == NULL) {
 	    break;
 	}
-	g_ptr_array_add(fileArray, (gpointer) iconFile);
+	gtk_status_icon_set_from_file(self->icon, iconFile);
+	GIcon *gIcon = gtk_status_icon_get_gicon(self->icon);
+	GVariant *cacheGVar=g_icon_serialize(gIcon);
+	g_ptr_array_add(self->iconFileArray, (gpointer) iconFile);
+	g_ptr_array_add(self->iconCacheArray, (gpointer) cacheGVar);
     }
     va_end(argList);
 
-    IBusChewingSystrayIcon *self = g_new0(IBusChewingSystrayIcon, 1);
-    self->iconFileArray = fileArray;
-    self->iconCacheArray = g_ptr_array_sized_new(fileArray->len);
-    self->icon = gtk_status_icon_new();
     self->leftClickFunc = leftClickFunc;
     self->leftClickData = leftClickData;
     if (leftClickFunc != NULL) {
@@ -80,6 +85,7 @@ void ibus_chewing_systray_icon_free(IBusChewingSystrayIcon * self)
 {
     gtk_status_icon_set_visible(self->icon, FALSE);
     g_object_unref(self->icon);
+    g_ptr_array_free(self->iconCacheArray, TRUE);
     g_ptr_array_free(self->iconFileArray, TRUE);
     g_free(self);
 }
@@ -99,22 +105,10 @@ void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
 
 void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self)
 {
-    GIcon *iconCache = NULL;
-    if (self->iconCacheArray->len <= self->value
-	|| (g_ptr_array_index(self->iconCacheArray, self->value) ==
-	    NULL)) {
-	/* Put icon in cache */
-	gtk_status_icon_set_from_file(self->icon,
-				      ibus_chewing_systray_icon_get_icon_file
-				      (self, self->value));
-	iconCache = gtk_status_icon_get_gicon(self->icon);
-	g_ptr_array_insert(self->iconCacheArray, self->value,
-			   (gpointer) iconCache);
-    } else {
-	iconCache =
-	    (GIcon *) g_ptr_array_index(self->iconCacheArray, self->value);
-	gtk_status_icon_set_from_gicon(self->icon, iconCache);
-    }
+    GVariant *cacheGVar =
+	(GVariant *) g_ptr_array_index(self->iconCacheArray, self->value);
+    GIcon *cachedIcon=g_icon_deserialize(cacheGVar);
+    gtk_status_icon_set_from_gicon(self->icon, cachedIcon);
     ibus_chewing_systray_icon_set_visible(self, TRUE);
 }
 
