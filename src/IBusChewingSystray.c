@@ -53,8 +53,8 @@ IBusChewingSystrayIcon
 	    break;
 	}
 	gtk_status_icon_set_from_file(self->icon, iconFile);
-	GIcon *gIcon = gtk_status_icon_get_gicon(self->icon);
-	GVariant *cacheGVar=g_icon_serialize(gIcon);
+	GdkPixbuf *pbuf=gtk_status_icon_get_pixbuf(self->icon);
+	GVariant *cacheGVar=g_icon_serialize(G_ICON(pbuf));
 	g_ptr_array_add(self->iconFileArray, (gpointer) iconFile);
 	g_ptr_array_add(self->iconCacheArray, (gpointer) cacheGVar);
     }
@@ -107,11 +107,11 @@ void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self)
 {
     GVariant *cacheGVar =
 	(GVariant *) g_ptr_array_index(self->iconCacheArray, self->value);
-    GIcon *cachedIcon=g_icon_deserialize(cacheGVar);
+    GIcon *cachedIcon=g_icon_deserialize(g_variant_ref_sink(cacheGVar));
+    g_variant_unref(cacheGVar);
     gtk_status_icon_set_from_gicon(self->icon, cachedIcon);
     ibus_chewing_systray_icon_set_visible(self, TRUE);
 }
-
 
 /*=== Chi_Eng systray Icon ===*/
 /**
