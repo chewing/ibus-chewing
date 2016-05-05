@@ -155,7 +155,6 @@ void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit * self)
 
     /* Ignore the context and
      * Commit whatever in preedit buffer
-     * TODO: an option to control this behavior
      */
     g_string_append(self->outgoing, self->preEdit->str);
 

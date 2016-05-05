@@ -47,6 +47,7 @@ ibus-chewing.spec
 install_manifest.txt
 ltmain.sh
 missing
+po/locale/
 py-compile
 src/ibus-chewing-engine*.[ch]
 src/maker-dialog*.[ch]
