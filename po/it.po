@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: dchen <dchen@fedoraproject.org>\n"
 "Language-Team: Italian\n"
 "Language: it\n"
-"X-Generator: Zanata 3.8.3\n"
+"X-Generator: Zanata 3.8.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen

@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Michelle Kim <mkim33@gmail.com>\n"
 "Language-Team: Korean\n"
 "Language: ko\n"
-"X-Generator: Zanata 3.8.3\n"
+"X-Generator: Zanata 3.8.4\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim

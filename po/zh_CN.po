@@ -15,7 +15,7 @@ msgstr ""
 "Last-Translator: Pany <geekpany@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh-CN\n"
-"X-Generator: Zanata 3.8.3\n"
+"X-Generator: Zanata 3.8.4\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author leahliu
