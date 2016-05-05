@@ -118,7 +118,7 @@ SET(COMMON_SOURCE_FILES
 
 FILE(GLOB poFiles RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../po" "../po/*.po")
 STRING(REPLACE ".po" ""  TRANSLATED "${poFiles}")
-M_MSG(${M_INFO2} "TRANSLATED=${TRANSLATED}")
+M_MSG(${M_INFO1} "TRANSLATED=${TRANSLATED}")
 
 #==================================================================
 # Schemas
