@@ -10,7 +10,7 @@
   * Fixed GitHub issue #61 GConf2 should be removed from INSTALL document
   * Fixed GitHub issue #64 systray should be able to show the Chinese/English mode
   * Fixed GitHub issue #68 CPU usage very high when switch to Chewing Engine
-  * Fixed Bug 1177198 - [abrt] ibus-chewing: XGetKeyboardControl(): ibus-engine-chewing killed by SIGSEGV								    
+  * Fixed Bug 1177198 - [abrt] ibus-chewing: XGetKeyboardControl(): ibus-engine-chewing killed by SIGSEGV
   * Fixed Bug 1319403 - [RFE] ibus-chewing: New option: Caps Lock behavior
     a.k.a. GitHub issue #66
   * Fixed Bug 1330194 - Ctrl-c failed to output as Ctrl-c
@@ -53,7 +53,7 @@
 - Resolves Bug 1054937 - Broken defattr in ibus-chewing
 
 * Thu Jan 16 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.7
-- Target "translation" is built separately with all, 
+- Target "translation" is built separately with all,
   in order to tame multiple job make.
 
 * Thu Jan 16 2014 Ding-Yi Chen <dchen at redhat.com> - 1.4.6
@@ -69,11 +69,11 @@
     "keyboard" cause bug 1028911 for GNOME Shell.
   + Now Sync from "input method" can control Caps LED in GNOME shell.
 - Translation added: de_DE, es_ES, it_IT, pt_BR, uk_UA
-- Set environment IBUS_CHEWING_LOGFILE for ibus-chewing log. 
+- Set environment IBUS_CHEWING_LOGFILE for ibus-chewing log.
 
 * Mon Dec 23 2013 Ding-Yi Chen <dchen at redhat.com> - 1.4.4
 - Resolves Bug 842856 - ibus-chewing 1.4.3-1 not built with $RPM_OPT_FLAGS
-- Resolves Bug 1027030 - CVE-2013-4509 ibus-chewing: ibus: visible 
+- Resolves Bug 1027030 - CVE-2013-4509 ibus-chewing: ibus: visible
   password entry flaw [fedora-all]
   Thanks czchen for the GitHub pull request 39.
 - Added translations: fr_FR, ja_JP, ko_KR
