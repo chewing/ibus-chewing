@@ -1,23 +1,7 @@
-PRJ_VER=1.5.0
-SUMMARY=Fixed the issues found in static checks, systray support, option to clean pre-edit buffer
-REDHAT_BUGZILLA=1177198, 1182813, 1309524, 11319403, 1330194
+PRJ_VER=1.5.1
+SUMMARY=
+REDHAT_BUGZILLA=
 [Changes]
 - Enhancement:
-  * New option: "Clean pre-edit buffer when focus out"
 - Fix:
-  * Fixed the issues found in static checks
-  * Fixed Bug 1182813 ibus-chewing crashes gedit in search box while window out of focus
-    a.k.a GitHub issue #28
-  * Fixed GitHub issue #37 Cannot use cmake out of source build Cannot use cmake out of source build
-  * Fixed GitHub issue #47 CHEWING_DATADIR CMake variable name mismatch
-  * Fixed GitHub issue #61 GConf2 should be removed from INSTALL document
-  * Fixed GitHub issue #64 systray should be able to show the Chinese/English mode
-  * Fixed GitHub issue #68 CPU usage very high when switch to Chewing Engine
-  * Fixed Bug 1177198 - [abrt] ibus-chewing: XGetKeyboardControl(): ibus-engine-chewing killed by SIGSEGV
-  * Fixed Bug 1319403 - [RFE] ibus-chewing: New option: Caps Lock behavior
-    a.k.a. GitHub issue #66
-  * Fixed Bug 1330194 - Ctrl-c failed to output as Ctrl-c
-    a.k.a. GitHub issue #69
-  * Pull Request #67 Fix property "easy-symbol-input" is covered by "shift-toggle-chinese"
-    Thanks southernbear for providing this fix.
 
