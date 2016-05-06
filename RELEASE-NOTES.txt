@@ -4,4 +4,5 @@ REDHAT_BUGZILLA=
 [Changes]
 - Enhancement:
 - Fix:
-
+- Acknowledge:
+  + Thank Obata Akio for submitting pull request 71, 72, 73
