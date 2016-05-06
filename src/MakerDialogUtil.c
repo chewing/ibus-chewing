@@ -249,7 +249,7 @@ gchar *mkdg_str_dash_to_camel(const gchar * argStr)
     int i;
     for (i = 0; i < strlen(argStr); i++) {
 	if (upper) {
-	    g_string_append_c(string, toupper(argStr[i]));
+	    g_string_append_c(string, g_ascii_toupper(argStr[i]));
 	    upper = FALSE;
 	} else {
 	    switch (argStr[i]) {
