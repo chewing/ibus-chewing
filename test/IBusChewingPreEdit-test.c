@@ -532,35 +532,40 @@ void process_key_shift_and_caps_test()
 						     "capslock-toggle-chinese",
 						     TRUE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
+
     key_press_from_string("ji3ul4fm4 ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     assert_outgoing_pre_edit("我要去 ", "");
-    /* Shift */
+
+    /* Shift: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
-    /* B */
-    key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK);
+    g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK); /* B */
     key_press_from_string("risbane ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     assert_outgoing_pre_edit("我要去 Brisbane ", "");
 
-    /* Caps Lock */
+    /* Caps Lock ON: change to Chi-Mode */
     key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
+    g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     key_press_from_string("xk7");
-    key_press_from_key_sym(IBUS_KEY_period, IBUS_SHIFT_MASK);
+    key_press_from_key_sym(IBUS_KEY_greater, IBUS_SHIFT_MASK);
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     assert_outgoing_pre_edit("我要去 Brisbane 了。", "");
 
-    /* Caps Lock */
+    /* Caps Lock OFF: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
-    /* D */
-    key_press_from_key_sym(IBUS_KEY_D, IBUS_SHIFT_MASK);
+    g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    key_press_from_key_sym(IBUS_KEY_D, IBUS_SHIFT_MASK); /* D */
     key_press_from_string("addy ");
 
-    /* Shift */
+    /* Shift: change to Chi-Mode */
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
-    key_press_from_string("cl3a8 ");
+    g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
+    key_press_from_string("cl3a87");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     assert_outgoing_pre_edit("我要去 Brisbane 了。Daddy 好嗎", "");
+
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
 }
