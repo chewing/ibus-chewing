@@ -730,6 +730,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_test);
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
+    TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
     TEST_RUN_THIS(free_test);
     return g_test_run();
 }
