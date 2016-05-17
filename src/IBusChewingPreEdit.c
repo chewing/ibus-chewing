@@ -175,18 +175,24 @@ void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self)
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_pre_edit(-)");
-    /* Clear chewing buffer */
+
     /* Save the orig Esc clean buffer state */
     gint origState = chewing_get_escCleanAllBuf(self->context);
-
-    /* Send a false event, then clean it to wipe the commit  */
-    chewing_handle_Default(self->context, '1');
-
     chewing_set_escCleanAllBuf(self->context, TRUE);
-    chewing_handle_Esc(self->context);
-    chewing_set_escCleanAllBuf(self->context, origState);
 
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
+    /**
+     * Use ESC to clear chewing buffer. If buffer contains bopomofo
+     * (incomplete character), we have to call ESC twice: one for
+     * bopomofo, one for the rest (complete characcter).
+     */
+    if (bpmf_check) {
+        chewing_handle_Esc(self->context);
+    }
+
+    chewing_handle_Esc(self->context);
+
+    chewing_set_escCleanAllBuf(self->context, origState);
+    ibus_chewing_pre_edit_update(self);
 }
 
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
