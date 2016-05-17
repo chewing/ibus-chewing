@@ -480,11 +480,10 @@ void process_key_buffer_full_handling_test()
 {
     TEST_CASE_INIT();
     key_press_from_string("ji3ru8 ap6fu06u.3vul3ck6");
-    key_press_from_key_sym(',', IBUS_SHIFT_MASK);
+    key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);
     key_press_from_string("c.4au04u.3g0 qi ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我家門前有小河，後面有山坡",
-			     "");
+    assert_outgoing_pre_edit("我家門前有小河，後面有山坡", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
