@@ -690,6 +690,17 @@ void plain_zhuyin_full_half_shape_test()
     assert_outgoing_pre_edit("", "");
 }
 
+void test_ibus_chewing_pre_edit_clear_pre_edit()
+{
+    TEST_CASE_INIT();
+
+    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    assert_outgoing_pre_edit("", "你ㄏㄠ");
+
+    ibus_chewing_pre_edit_clear_pre_edit(self);
+    assert_outgoing_pre_edit("", "");
+}
+
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
@@ -724,6 +735,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_test);
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
+    TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
     TEST_RUN_THIS(free_test);
     return g_test_run();
 }
