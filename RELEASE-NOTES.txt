@@ -4,5 +4,8 @@ REDHAT_BUGZILLA=
 [Changes]
 - Enhancement:
 - Fix:
+  + GH issue #73: Ctrl, Alt, Ins causes the pre-edit duplicate commit
+    Thank for contribution from hiunnhue 
 - Acknowledge:
-  + Thank Obata Akio for submitting pull request 71, 72, 73
+  + Obata Akio contributed pull request 71, 72, 73
+  + hiunnhue contributed pull request 75, 76, 77
