@@ -661,6 +661,8 @@ KeyHandlingRule keyHandlingRules[] = {
     , {
        IBUS_KEY_Delete, IBUS_KEY_Delete, self_handle_delete}
     , {
+       IBUS_KEY_KP_Delete, IBUS_KEY_KP_Delete, self_handle_delete}
+    , {
        IBUS_KEY_Escape, IBUS_KEY_Escape, self_handle_escape}
     , {
        IBUS_KEY_Left, IBUS_KEY_Left, self_handle_left}
@@ -693,7 +695,7 @@ KeyHandlingRule keyHandlingRules[] = {
     , {
        IBUS_KEY_KP_Home, IBUS_KEY_KP_Home, self_handle_home}
     , {
-       IBUS_KEY_End, IBUS_KEY_Home, self_handle_end}
+       IBUS_KEY_End, IBUS_KEY_End, self_handle_end}
     , {
        IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end}
     , {
