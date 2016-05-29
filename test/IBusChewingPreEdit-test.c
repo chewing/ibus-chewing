@@ -701,6 +701,18 @@ void test_ibus_chewing_pre_edit_clear_pre_edit()
     assert_outgoing_pre_edit("", "");
 }
 
+/* GitHub #79: Cannot input space when "space to select" is enabled  */
+void test_space_as_selection()
+{
+    TEST_CASE_INIT();
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+						     "space-as-selection",
+						     TRUE);
+
+    key_press_from_key_sym(IBUS_KEY_space, 0);
+    assert_outgoing_pre_edit(" ", "");
+}
+
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
@@ -736,6 +748,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
+    TEST_RUN_THIS(test_space_as_selection);
     TEST_RUN_THIS(free_test);
     return g_test_run();
 }

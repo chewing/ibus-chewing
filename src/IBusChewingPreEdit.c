@@ -436,28 +436,24 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
     handle_log("space");
 
     if (is_shift_only) {
-	ibus_chewing_pre_edit_toggle_full_half_mode(self);
-	return EVENT_RESPONSE_PROCESS;
+	    ibus_chewing_pre_edit_toggle_full_half_mode(self);
+	    return EVENT_RESPONSE_PROCESS;
     }
 
-
-    gint easySymbolInput = chewing_get_easySymbolInput(self->context);
-    /**
-     * Fix for space in Temporary English mode.
+    /* Bug of libchewing: 
+     * when "space to select" is enabled, chewing_handle_Space() will
+     * ignore the first space. Therefore, use chewing_handle_Space()
+     * only if the buffer is not empty and we want to select.
      */
-    if (!is_shift_only) {
-	/* fixed #33 first space wouldn't be outgoing */
-	chewing_set_easySymbolInput(self->context, 0);
+    gboolean spaceAsSelection =
+	ibus_chewing_pre_edit_get_property_boolean(self,
+						   "space-as-selection");
+
+    if (is_chinese && !buffer_is_empty && !bpmf_check && spaceAsSelection) {
+        return event_process_or_ignore(!chewing_handle_Space(self->context));
+    } else {
+        return self_handle_key_sym_default(self, kSym, unmaskedMod);
     }
-    EventResponse response =
-	event_process_or_ignore(!chewing_handle_Space(self->context));
-
-    /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
-    ibus_chewing_pre_edit_update_outgoing(self);
-
-    chewing_set_easySymbolInput(self->context, easySymbolInput);
-    return response;
 }
 
 EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
