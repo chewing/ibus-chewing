@@ -172,22 +172,33 @@ void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self)
     ibus_chewing_pre_edit_update(self);
 }
 
+void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self)
+{
+    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_bopomofo(-)");
+
+    /* Esc key can close candidate list, clear bopomofo, and clear 
+     * the whole pre-edit buffer. Make sure it acts as we expected.
+     */
+    if (table_is_showing) {
+        chewing_handle_Esc(self->context);
+    }
+
+    if (bpmf_check) {
+        chewing_handle_Esc(self->context);
+    }
+
+    ibus_chewing_pre_edit_update(self);
+}
+
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_pre_edit(-)");
 
+    ibus_chewing_pre_edit_clear_bopomofo(self);
+
     /* Save the orig Esc clean buffer state */
     gint origState = chewing_get_escCleanAllBuf(self->context);
     chewing_set_escCleanAllBuf(self->context, TRUE);
-
-    /**
-     * Use ESC to clear chewing buffer. If buffer contains bopomofo
-     * (incomplete character), we have to call ESC twice: one for
-     * bopomofo, one for the rest (complete characcter).
-     */
-    if (bpmf_check) {
-        chewing_handle_Esc(self->context);
-    }
 
     chewing_handle_Esc(self->context);
 

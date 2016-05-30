@@ -164,6 +164,7 @@ gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit * self);
 
 void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self);
+void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self);
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self);
 

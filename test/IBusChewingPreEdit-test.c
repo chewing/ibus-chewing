@@ -690,6 +690,18 @@ void plain_zhuyin_full_half_shape_test()
     assert_outgoing_pre_edit("", "");
 }
 
+
+void test_ibus_chewing_pre_edit_clear_bopomofo()
+{
+    TEST_CASE_INIT();
+
+    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    assert_outgoing_pre_edit("", "你ㄏㄠ");
+
+    ibus_chewing_pre_edit_clear_bopomofo(self);
+    assert_outgoing_pre_edit("", "你");
+}
+
 void test_ibus_chewing_pre_edit_clear_pre_edit()
 {
     TEST_CASE_INIT();
@@ -701,9 +713,9 @@ void test_ibus_chewing_pre_edit_clear_pre_edit()
     assert_outgoing_pre_edit("", "");
 }
 
-/* GitHub #79: Cannot input space when "space to select" is enabled  */
 void test_space_as_selection()
 {
+/* GitHub #79: Cannot input space when "space to select" is enabled  */
     TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "space-as-selection",
@@ -715,7 +727,7 @@ void test_space_as_selection()
 
 void test_arrow_keys_buffer_empty()
 {
-/* Fix #50: Cannot use Up, Down, PgUp, Ese ... etc. within "`" menu */
+/* GitHub #50: Cannot use Up, Down, PgUp, Ese ... etc. within "`" menu */
 
     TEST_CASE_INIT();
 
@@ -778,6 +790,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_test);
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
+    TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_bopomofo);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
     TEST_RUN_THIS(test_space_as_selection);
     TEST_RUN_THIS(test_arrow_keys_buffer_empty);
