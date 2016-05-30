@@ -479,7 +479,11 @@ EventResponse self_handle_backspace(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("backspace");
 
     return
@@ -502,7 +506,11 @@ EventResponse self_handle_escape(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("escape");
 
     return event_process_or_ignore(!chewing_handle_Esc(self->context));
@@ -513,7 +521,11 @@ EventResponse self_handle_left(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(IBUS_SHIFT_MASK);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("left");
 
     if (is_shift_only) {
@@ -530,7 +542,11 @@ EventResponse self_handle_up(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("up");
 
     return event_process_or_ignore(!chewing_handle_Up(self->context));
@@ -541,7 +557,11 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(IBUS_SHIFT_MASK);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("right");
 
     if (is_shift_only) {
@@ -558,7 +578,11 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("down");
 
     return event_process_or_ignore(!chewing_handle_Down(self->context));
@@ -569,7 +593,11 @@ EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("page_up");
 
     return event_process_or_ignore(!chewing_handle_PageUp(self->context));
@@ -580,7 +608,11 @@ EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     absorb_when_release;
-    ignore_when_buffer_is_empty;
+
+    if (buffer_is_empty && !table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     handle_log("page_down");
 
     return
