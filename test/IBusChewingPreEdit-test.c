@@ -713,6 +713,37 @@ void test_space_as_selection()
     assert_outgoing_pre_edit(" ", "");
 }
 
+void test_arrow_keys_buffer_empty()
+{
+/* Fix #50: Cannot use Up, Down, PgUp, Ese ... etc. within "`" menu */
+
+    TEST_CASE_INIT();
+
+    key_press_from_string("`");
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    g_assert(chewing_cand_CurrentPage(self->context) == 0);
+    key_press_from_key_sym(IBUS_KEY_Right, 0);
+    g_assert(chewing_cand_CurrentPage(self->context) == 1);
+    key_press_from_key_sym(IBUS_KEY_Left, 0);
+    g_assert(chewing_cand_CurrentPage(self->context) == 0);
+    key_press_from_key_sym(IBUS_KEY_Page_Down, 0);
+    g_assert(chewing_cand_CurrentPage(self->context) == 1);
+    key_press_from_key_sym(IBUS_KEY_Page_Up, 0);
+    g_assert(chewing_cand_CurrentPage(self->context) == 0);
+    key_press_from_key_sym(IBUS_KEY_Up, 0);
+    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+
+    key_press_from_string("`");
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_BackSpace, 0);
+    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+
+    key_press_from_string("`");
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_Escape, 0);
+    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+}
+
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
@@ -749,6 +780,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
     TEST_RUN_THIS(test_space_as_selection);
+    TEST_RUN_THIS(test_arrow_keys_buffer_empty);
     TEST_RUN_THIS(free_test);
     return g_test_run();
 }
