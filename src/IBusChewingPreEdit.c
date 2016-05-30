@@ -229,9 +229,9 @@ gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit *
 void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,
 					    gboolean chineseMode)
 {
-    /* When Chi->Eng with incomplete character */
+    /* Clear bopomofo when toggling Chi-Eng Mode */
     if (!chineseMode && is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
     chewing_set_ChiEngMode(self->context, (chineseMode) ? 1 : 0);
 }
@@ -240,8 +240,8 @@ void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,
 					      gboolean fullShapeMode)
 {
     if (is_chinese && bpmf_check) {
-	/* When Chi->Eng with incomplete character */
-	ibus_chewing_pre_edit_force_commit(self);
+    /* Clear bopomofo when toggling Full-Half Mode */
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
     chewing_set_ShapeMode(self->context, (fullShapeMode) ? 1 : 0);
 }
@@ -389,20 +389,19 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+
     if (!ibus_chewing_pre_edit_get_property_boolean(self,
-						    "capslock-toggle-chinese"))
-    {
-	/* Ignore the Caps Lock event when Caps Lock does not toggle Chinese */
-	return EVENT_RESPONSE_IGNORE;
+						    "capslock-toggle-chinese")) {
+        /* Ignore the Caps Lock event when it does not toggle Chinese */
+        return EVENT_RESPONSE_IGNORE;
     }
 
     absorb_when_release;
     handle_log("caps_lock");
 
-
-    /* When Chi->Eng with incomplete character */
+    /* Clear bopomofo when toggling Chi-Eng Mode */
     if (is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
 
     return

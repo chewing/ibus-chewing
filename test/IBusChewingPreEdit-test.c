@@ -690,7 +690,6 @@ void plain_zhuyin_full_half_shape_test()
     assert_outgoing_pre_edit("", "");
 }
 
-
 void test_ibus_chewing_pre_edit_clear_bopomofo()
 {
     TEST_CASE_INIT();
@@ -711,6 +710,16 @@ void test_ibus_chewing_pre_edit_clear_pre_edit()
 
     ibus_chewing_pre_edit_clear_pre_edit(self);
     assert_outgoing_pre_edit("", "");
+}
+
+void test_ibus_chewing_pre_edit_set_chi_eng_mode()
+{
+    TEST_CASE_INIT();    
+
+    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
+    g_assert(chewing_get_ChiEngMode(self->context) == 0);
+    assert_outgoing_pre_edit("", "你");
 }
 
 void test_space_as_selection()
@@ -792,6 +801,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_bopomofo);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
+    TEST_RUN_THIS(test_ibus_chewing_pre_edit_set_chi_eng_mode);
     TEST_RUN_THIS(test_space_as_selection);
     TEST_RUN_THIS(test_arrow_keys_buffer_empty);
     TEST_RUN_THIS(free_test);
