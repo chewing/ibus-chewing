@@ -172,22 +172,33 @@ void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self)
     ibus_chewing_pre_edit_update(self);
 }
 
+void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self)
+{
+    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_bopomofo(-)");
+
+    /* Esc key can close candidate list, clear bopomofo, and clear 
+     * the whole pre-edit buffer. Make sure it acts as we expected.
+     */
+    if (table_is_showing) {
+        chewing_handle_Esc(self->context);
+    }
+
+    if (bpmf_check) {
+        chewing_handle_Esc(self->context);
+    }
+
+    ibus_chewing_pre_edit_update(self);
+}
+
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_pre_edit(-)");
 
+    ibus_chewing_pre_edit_clear_bopomofo(self);
+
     /* Save the orig Esc clean buffer state */
     gint origState = chewing_get_escCleanAllBuf(self->context);
     chewing_set_escCleanAllBuf(self->context, TRUE);
-
-    /**
-     * Use ESC to clear chewing buffer. If buffer contains bopomofo
-     * (incomplete character), we have to call ESC twice: one for
-     * bopomofo, one for the rest (complete characcter).
-     */
-    if (bpmf_check) {
-        chewing_handle_Esc(self->context);
-    }
 
     chewing_handle_Esc(self->context);
 
@@ -218,9 +229,9 @@ gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit *
 void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,
 					    gboolean chineseMode)
 {
-    /* When Chi->Eng with incomplete character */
+    /* Clear bopomofo when toggling Chi-Eng Mode */
     if (!chineseMode && is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
     chewing_set_ChiEngMode(self->context, (chineseMode) ? 1 : 0);
 }
@@ -229,8 +240,8 @@ void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,
 					      gboolean fullShapeMode)
 {
     if (is_chinese && bpmf_check) {
-	/* When Chi->Eng with incomplete character */
-	ibus_chewing_pre_edit_force_commit(self);
+    /* Clear bopomofo when toggling Full-Half Mode */
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
     chewing_set_ShapeMode(self->context, (fullShapeMode) ? 1 : 0);
 }
@@ -378,20 +389,19 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
 				    KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+
     if (!ibus_chewing_pre_edit_get_property_boolean(self,
-						    "capslock-toggle-chinese"))
-    {
-	/* Ignore the Caps Lock event when Caps Lock does not toggle Chinese */
-	return EVENT_RESPONSE_IGNORE;
+						    "capslock-toggle-chinese")) {
+        /* Ignore the Caps Lock event when it does not toggle Chinese */
+        return EVENT_RESPONSE_IGNORE;
     }
 
     absorb_when_release;
     handle_log("caps_lock");
 
-
-    /* When Chi->Eng with incomplete character */
+    /* Clear bopomofo when toggling Chi-Eng Mode */
     if (is_chinese && bpmf_check) {
-	ibus_chewing_pre_edit_force_commit(self);
+        ibus_chewing_pre_edit_clear_bopomofo(self);
     }
 
     return
