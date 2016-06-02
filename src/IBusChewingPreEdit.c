@@ -771,8 +771,6 @@ gboolean ibus_chewing_pre_edit_process_key
 		     unmaskedMod, modifiers_to_string(unmaskedMod));
     process_key_debug("Before response");
 
-    gboolean bufferEmpty =
-	(ibus_chewing_pre_edit_length(self) == 0) ? TRUE : FALSE;
     /* Find corresponding rule */
     EventResponse response;
     response = handle_key(kSym, unmaskedMod);
@@ -786,13 +784,6 @@ gboolean ibus_chewing_pre_edit_process_key
     case EVENT_RESPONSE_ABSORB:
 	return TRUE;
     case EVENT_RESPONSE_IGNORE:
-	/* Play conservatively, commit everything when unhandled key is received.
-	 * Use case: In gedit, press Ctrl-F to open search UI 
-	 * Better to commit every thing before the search field active.
-	 */
-	if (!bufferEmpty) {
-	    ibus_chewing_pre_edit_force_commit(self);
-	}
 	return FALSE;
     default:
 	break;
