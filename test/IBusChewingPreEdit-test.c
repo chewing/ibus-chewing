@@ -765,6 +765,16 @@ void test_arrow_keys_buffer_empty()
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 }
 
+void test_ctrol_1_open_candidate_list()
+{
+/* GitHub #63: Cannnot add user-phrase via ctrl+num */
+
+    TEST_CASE_INIT();
+
+    key_press_from_key_sym(IBUS_KEY_1, IBUS_CONTROL_MASK);
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+}
+
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
@@ -804,6 +814,7 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_set_chi_eng_mode);
     TEST_RUN_THIS(test_space_as_selection);
     TEST_RUN_THIS(test_arrow_keys_buffer_empty);
+    TEST_RUN_THIS(test_ctrol_1_open_candidate_list);
     TEST_RUN_THIS(free_test);
     return g_test_run();
 }
