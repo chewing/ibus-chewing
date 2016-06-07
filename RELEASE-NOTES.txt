@@ -1,11 +1,18 @@
 PRJ_VER=1.5.1
 SUMMARY=
-REDHAT_BUGZILLA=
+REDHAT_BUGZILLA=1337185
 [Changes]
 - Enhancement:
 - Fix:
   + GH issue #73: Ctrl, Alt, Ins causes the pre-edit duplicate commit
     Thank for contribution from hiunnhue 
+  + GH issue #74: Failed to clean the PreEdit when changing input focus
+    Thank for contribution from hiunnhue 
+  + GH issue #79: Failed to input space when "space-as-selection"
+    Thank for contribution from hiunnhue 
+  + RHBZ #1337185 - Cannot add phrases with Ctrl
+    A.k.a GH issue #63
+    Thank for contribution from hiunnhue 
 - Acknowledge:
   + Obata Akio contributed pull request 71, 72, 73
-  + hiunnhue contributed pull request 75, 76, 77
+  + hiunnhue contributed pull request 75, 76, 77, 78, 80, 81, 82, 83, 84, 86
