@@ -78,11 +78,8 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
     ibus_chewing_pre_edit_clear(self->icPreEdit);
     refresh_pre_edit_text(self);
     refresh_aux_text(self);
-#ifdef UNIT_TEST
     refresh_outgoing_text(self);
-#else
-    commit_text(self);
-#endif
+
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_FOCUS_IN);
     IBUS_CHEWING_LOG(INFO, "focus_in() statusFlags=%x: return",
 		     self->_priv->statusFlags);
