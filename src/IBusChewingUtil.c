@@ -172,6 +172,26 @@ const char *key_sym_get_name(KSym k)
 	return "ISO_Level3_Lock";
     case IBUS_ISO_Level3_Shift:
 	return "ISO_Level3_Shift";
+    case IBUS_KP_0:
+	return "KP_0";
+    case IBUS_KP_1:
+	return "KP_1";
+    case IBUS_KP_2:
+	return "KP_2";
+    case IBUS_KP_3:
+	return "KP_3";
+    case IBUS_KP_4:
+	return "KP_4";
+    case IBUS_KP_5:
+	return "KP_5";
+    case IBUS_KP_6:
+	return "KP_6";
+    case IBUS_KP_7:
+	return "KP_7";
+    case IBUS_KP_8:
+	return "KP_8";
+    case IBUS_KP_9:
+	return "KP_9";
     default:
 	if (isprint(k)) {
 	    return &asciiConst[(k - ' ') * 2];
