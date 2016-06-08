@@ -74,7 +74,7 @@ MkdgPropertySpec propSpecs[] = {
      0,
      0,
      selKeys_apply_callback,
-     MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
+     MKDG_PROPERTY_FLAG_NO_NEW,
      N_
      ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
      NULL}
