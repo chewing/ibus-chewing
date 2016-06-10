@@ -150,13 +150,6 @@ MkdgPropertySpec propSpecs[] = {
       "\"keyboard\": IM status follows keyboard status\n"
       "\"IM\": Keyboard status follows IM status"), NULL}
     ,
-    {G_TYPE_BOOLEAN, "numpad-always-number", PAGE_EDITING,
-     N_("Number pad always input number"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     numpadAlwaysNumber_apply_callback, 0,
-     N_("Always input numbers when number keys from key pad is inputted"),
-     NULL}
-    ,
     {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
      N_("Shift toggle Chinese Mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,

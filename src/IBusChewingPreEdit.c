@@ -362,27 +362,32 @@ EventResponse self_handle_num_keypad(IBusChewingPreEdit * self,
     absorb_when_release;
     handle_log("num_keypad");
 
+    KSym kSymEquiv = key_sym_KP_to_normal(kSym);
+
     if ((maskedMod != 0) && (!is_shift_only) && (!is_ctrl_only)) {
 	return EVENT_RESPONSE_IGNORE;
     }
 
-
-    KSym kSymFinal = kSym;
-    KSym kSymEquiv = key_sym_KP_to_normal(kSym);
-    gboolean numpadIsAlwaysNum =
-	ibus_chewing_pre_edit_get_property_boolean(self,
-						   "numpad-always-number");
-
-    if (numpadIsAlwaysNum) {
-	kSymFinal = kSymEquiv;
-    }
     if (is_ctrl_only) {
 	return
 	    event_process_or_ignore(!chewing_handle_CtrlNum
-				    (self->context, kSymFinal));
+				    (self->context, kSymEquiv));
     }
+
+    if (bpmf_check) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
+    if (!buffer_is_empty && table_is_showing) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     /* maskedMod= 0 */
-    return self_handle_key_sym_default(self, kSym, unmaskedMod);
+    gint origChiEngMode = chewing_get_ChiEngMode(self->context);
+    ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
+
+    return self_handle_key_sym_default(self, kSymEquiv, unmaskedMod);
+    ibus_chewing_pre_edit_set_chi_eng_mode(self, origChiEngMode);
 }
 
 EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
