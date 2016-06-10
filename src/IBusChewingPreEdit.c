@@ -496,6 +496,12 @@ EventResponse self_handle_backspace(IBusChewingPreEdit * self, KSym kSym,
 
     handle_log("backspace");
 
+#if !CHEWING_CHECK_VERSION(0,4,0)
+    if (table_is_showing) {
+        return event_process_or_ignore(!chewing_handle_Esc(self->context));
+    }
+#endif
+
     return
 	event_process_or_ignore(!chewing_handle_Backspace(self->context));
 }
@@ -610,6 +616,12 @@ EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
 
     handle_log("page_up");
 
+#if !CHEWING_CHECK_VERSION(0,4,0)
+    if (table_is_showing) {
+        return event_process_or_ignore(!chewing_handle_Left(self->context));
+    }
+#endif
+
     return event_process_or_ignore(!chewing_handle_PageUp(self->context));
 }
 
@@ -624,6 +636,12 @@ EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
     }
 
     handle_log("page_down");
+
+#if !CHEWING_CHECK_VERSION(0,4,0)
+    if (table_is_showing) {
+        return event_process_or_ignore(!chewing_handle_Right(self->context));
+    }
+#endif
 
     return
 	event_process_or_ignore(!chewing_handle_PageDown(self->context));
