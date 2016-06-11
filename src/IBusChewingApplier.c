@@ -139,13 +139,6 @@ syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData)
 }
 
 gboolean
-numpadAlwaysNumber_apply_callback(PropertyContext * ctx, gpointer userData)
-{
-    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
-    return TRUE;
-}
-
-gboolean
 shiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
