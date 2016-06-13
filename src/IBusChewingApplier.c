@@ -40,15 +40,6 @@ gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData)
     return TRUE;
 }
 
-gboolean hsuSelKeyType_apply_callback(PropertyContext * ctx,
-				      gpointer userData)
-{
-    GValue *value = &(ctx->value);
-    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-    chewing_set_hsuSelKeyType(icPreEdit->context, g_value_get_int(value));
-    return TRUE;
-}
-
 gboolean
 autoShiftCur_apply_callback(PropertyContext * ctx, gpointer userData)
 {
