@@ -130,10 +130,10 @@ MkdgPropertySpec propSpecs[] = {
     ,
     {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
      N_("Maximum Chinese characters"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 8, 39,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 11, 33,
      maxChiSymbolLen_apply_callback, 0,
      N_
-     ("Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin symbols."),
+     ("Maximum Chinese characters in pre-edit buffer, not including inputing Zhuyin symbols."),
      NULL}
     ,
     /* Sync between CapsLock and IM */
