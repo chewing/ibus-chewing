@@ -106,7 +106,7 @@ maxChiSymbolLen_apply_callback(PropertyContext * ctx, gpointer userData)
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
     chewing_set_maxChiSymbolLen(icPreEdit->context,
-				g_value_get_int(value));
+				g_value_get_int(value) + 5); /* 5 for incomplete bopomofos */
     return TRUE;
 }
 
