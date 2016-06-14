@@ -79,14 +79,6 @@ MkdgPropertySpec propSpecs[] = {
      ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
      NULL}
     ,
-    {G_TYPE_INT, "hsu-sel-key-type", PAGE_KEYBOARD,
-     N_("Hsu's selection key"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 1, 2,
-     hsuSelKeyType_apply_callback, 0,
-     N_
-     ("Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."),
-     NULL}
-    ,
     /*== The callback will be handled in IBusChewingEngine.gob ==*/
     {G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD,
      N_("Show systray icons"),
