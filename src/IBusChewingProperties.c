@@ -25,6 +25,10 @@ const gchar *kbType_ids[] = {
     N_("dvorak_hsu"),
     N_("dachen_26"),
     N_("hanyu"),
+#if CHEWING_CHECK_VERSION(0,3,4)
+    N_("thl_pinying"),
+    N_("mps2_pinyin"),
+#endif
     NULL
 };
 
