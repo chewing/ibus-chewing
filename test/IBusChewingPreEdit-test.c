@@ -499,7 +499,6 @@ void process_key_down_arrow_test()
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "phrase-choice-from-last",
 						     TRUE);
-
     key_press_from_string("t/6g4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("1");
@@ -794,7 +793,22 @@ void test_kp_eng_mode()
     assert_outgoing_pre_edit("190", "");
 }
 
-void test_kp_chi_default()
+void test_kp_eng_mode_buffer()
+{
+/* Eng-Mode: When buffer is not empty, keypad outputs numbers into buffer. */
+
+    TEST_CASE_INIT();
+
+    key_press_from_string("su3cl3"); /* 你好 */
+    ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
+    g_assert(chewing_get_ChiEngMode(self->context) == 0);
+    key_press_from_key_sym(IBUS_KP_1, 0);
+    key_press_from_key_sym(IBUS_KEY_KP_9, 0);
+    key_press_from_key_sym(IBUS_KP_0, 0);
+    assert_outgoing_pre_edit("", "你好190");
+}
+
+void test_kp_chi_mode()
 {
 /* Chi-Mode: keypad outputs numbers by default */
 
@@ -806,11 +820,34 @@ void test_kp_chi_default()
     key_press_from_key_sym(IBUS_KEY_KP_9, 0);
     key_press_from_key_sym(IBUS_KP_0, 0);
     assert_outgoing_pre_edit("190", "");
+
+    /* should remain chi-mode */
+    g_assert(chewing_get_ChiEngMode(self->context) == 1);
+}
+
+void test_kp_chi_mode_buffer()
+{
+/* Chi-Mode: When buffer is not empty, keypad outputs numbers into buffer */
+
+    TEST_CASE_INIT();
+
+    g_assert(chewing_get_ChiEngMode(self->context) == 1);
+
+    key_press_from_string("su3cl3"); /* 你好 */
+    key_press_from_key_sym(IBUS_KP_1, 0);
+    key_press_from_key_sym(IBUS_KEY_KP_9, 0);
+    key_press_from_key_sym(IBUS_KP_0, 0);
+    assert_outgoing_pre_edit("", "你好190");
+
+    /* should remain chi-mode */
+    g_assert(chewing_get_ChiEngMode(self->context) == 1);
 }
 
 void test_kp_chi_incomplete()
 {
-/* Chi-Mode with incomplete character: do nothing */
+/* Chi-Mode with bopmofos (incomplete characters):
+ * clear bopomofos and output numbers into buffer.
+ */
 
     TEST_CASE_INIT();
 
@@ -818,7 +855,7 @@ void test_kp_chi_incomplete()
 
     key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字) */
     key_press_from_key_sym(IBUS_KP_1, 0);
-    assert_outgoing_pre_edit("", "你ㄏㄠ");
+    assert_outgoing_pre_edit("", "你1");
 }
 
 void test_kp_selecting()
@@ -832,15 +869,41 @@ void test_kp_selecting()
     key_press_from_key_sym(IBUS_KP_2, 0);
     assert_outgoing_pre_edit("", "※");
 
+    key_press_from_key_sym(IBUS_KP_1, IBUS_CONTROL_MASK);
+    key_press_from_key_sym(IBUS_KP_1, 0);
+    assert_outgoing_pre_edit("", "※…");
+
 //  TODO: need to check if selkeys are 1234567890
+}
+
+void test_kp_other_keys()
+{
+    TEST_CASE_INIT();
+
+    g_assert(chewing_get_ChiEngMode(self->context) == 1);
+
+    key_press_from_string("su3cl3"); /* 你好 */
+    key_press_from_key_sym(IBUS_KP_Multiply, 0);
+    key_press_from_key_sym(IBUS_KP_Add, 0);
+    key_press_from_key_sym(IBUS_KP_Separator, 0);
+    key_press_from_key_sym(IBUS_KP_Subtract, 0);
+    key_press_from_key_sym(IBUS_KP_Decimal, 0);
+    key_press_from_key_sym(IBUS_KP_Divide, 0);
+    assert_outgoing_pre_edit("", "你好*+,-./");
+
+    /* should remain chi-mode */
+    g_assert(chewing_get_ChiEngMode(self->context) == 1);
 }
 
 void test_keypad()
 {
     test_kp_eng_mode();
-    test_kp_chi_default();
+    test_kp_eng_mode_buffer();
+    test_kp_chi_mode();
+    test_kp_chi_mode_buffer();
     test_kp_chi_incomplete();
     test_kp_selecting();
+    test_kp_other_keys();
 }
 
 gint main(gint argc, gchar ** argv)

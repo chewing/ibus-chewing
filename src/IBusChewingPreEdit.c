@@ -374,20 +374,17 @@ EventResponse self_handle_num_keypad(IBusChewingPreEdit * self,
 				    (self->context, kSymEquiv));
     }
 
-    if (bpmf_check) {
-        return EVENT_RESPONSE_IGNORE;
-    }
-
-    if (!buffer_is_empty && table_is_showing) {
-        return EVENT_RESPONSE_IGNORE;
-    }
-
-    /* maskedMod= 0 */
+    /* maskedMod = 0 */
+    /* switch to eng-mode temporary */
     gint origChiEngMode = chewing_get_ChiEngMode(self->context);
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
 
-    return self_handle_key_sym_default(self, kSymEquiv, unmaskedMod);
-    ibus_chewing_pre_edit_set_chi_eng_mode(self, origChiEngMode);
+    EventResponse 
+    response = self_handle_key_sym_default(self, kSymEquiv, unmaskedMod);
+
+    chewing_set_ChiEngMode(self->context, origChiEngMode);
+
+    return response;
 }
 
 EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
@@ -759,6 +756,8 @@ KeyHandlingRule keyHandlingRules[] = {
        IBUS_KEY_End, IBUS_KEY_End, self_handle_end}
     , {
        IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end}
+    , {
+       IBUS_KP_Multiply, IBUS_KP_Divide, self_handle_num_keypad}
     , {
        128, G_MAXUINT, self_handle_special}
     , {

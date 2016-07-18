@@ -65,20 +65,22 @@ void add_tone(char *str, gint tone)
 KSym key_sym_KP_to_normal(KSym k)
 {
     if (k < IBUS_KP_0 || k > IBUS_KP_9) {
-	switch (k) {
-	case IBUS_KP_Decimal:
-	    return IBUS_period;
-	case IBUS_KP_Add:
-	    return IBUS_plus;
-	case IBUS_KP_Subtract:
-	    return IBUS_minus;
-	case IBUS_KP_Multiply:
-	    return IBUS_asterisk;
-	case IBUS_KP_Divide:
-	    return IBUS_slash;
-	default:
-	    return 0;
-	}
+        switch (k) {
+        case IBUS_KP_Multiply:
+            return IBUS_asterisk;
+        case IBUS_KP_Add:
+            return IBUS_plus;
+        case IBUS_KP_Separator:
+            return IBUS_comma;
+        case IBUS_KP_Subtract:
+            return IBUS_minus;
+        case IBUS_KP_Decimal:
+            return IBUS_period;
+        case IBUS_KP_Divide:
+            return IBUS_slash;
+        default:
+            return 0;
+        }
     }
     return k - IBUS_KP_0 + IBUS_0;
 }
@@ -192,6 +194,18 @@ const char *key_sym_get_name(KSym k)
 	return "KP_8";
     case IBUS_KP_9:
 	return "KP_9";
+	case IBUS_KP_Multiply:
+	return "KP_Multiply";
+	case IBUS_KP_Add:
+	return "KP_Add";
+	case IBUS_KP_Separator:
+	return "KP_Separator";
+    case IBUS_KP_Subtract:
+	return "KP_Subtract";
+	case IBUS_KP_Decimal:
+	return "KP_Decimal";
+	case IBUS_KP_Divide:
+	return "KP_Divide";
     default:
 	if (isprint(k)) {
 	    return &asciiConst[(k - ' ') * 2];
