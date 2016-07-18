@@ -496,6 +496,9 @@ void process_key_down_arrow_test()
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
 						     "plain-zhuyin",
 						     FALSE);
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+						     "phrase-choice-from-last",
+						     TRUE);
     key_press_from_string("t/6g4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("1");
