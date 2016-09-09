@@ -282,7 +282,7 @@ void refresh_aux_text(IBusChewingEngine * self)
     }
 
     /* Make auxText (text to be displayed in auxiliary candidate window).
-     * Use auxText to show messages from libchewing, such as "新增：".
+     * Use auxText to show messages from libchewing, such as "已有：".
      */
     if (chewing_aux_Length(self->icPreEdit->context) > 0) {
         IBUS_CHEWING_LOG(INFO, "update_aux_text() chewing_aux_Length=%x",
