@@ -180,8 +180,8 @@ void parent_update_auxiliary_text(IBusEngine * iEngine,
         (iText) ? iText->text : "NULL", visible);
 #else
     if (!visible || ibus_text_is_empty(iText)) {
-    ibus_engine_hide_auxiliary_text(iEngine);
-    return;
+        ibus_engine_hide_auxiliary_text(iEngine);
+        return;
     }
     ibus_engine_update_auxiliary_text(iEngine, iText, visible);
     ibus_engine_show_auxiliary_text(iEngine);
