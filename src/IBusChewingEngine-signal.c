@@ -171,23 +171,19 @@ void parent_update_pre_edit_text_with_mode(IBusEngine * iEngine,
 #endif
 }
 
-void parent_update_auxiliary_text(IBusEngine * iEngine, IBusText * iText,
-				  gboolean visible)
+void parent_update_auxiliary_text(IBusEngine * iEngine, 
+                                  IBusText * iText,
+                                  gboolean visible)
 {
 #ifdef UNIT_TEST
-    printf
-	("* parent_update_auxiliary_text(-, %s, %x)\n",
-	 (iText) ? iText->text : "NULL", visible);
+    printf("* parent_update_auxiliary_text(-, %s, %x)\n",
+        (iText) ? iText->text : "NULL", visible);
 #else
-    if (!visible) {
-	ibus_engine_hide_auxiliary_text(iEngine);
-	return;
+    if (!visible || ibus_text_is_empty(iText)) {
+    ibus_engine_hide_auxiliary_text(iEngine);
+    return;
     }
-
-    if (ibus_text_is_empty(iText)) {
-	ibus_engine_hide_auxiliary_text(iEngine);
-	return;
-    }
+    ibus_engine_update_auxiliary_text(iEngine, iText, visible);
     ibus_engine_show_auxiliary_text(iEngine);
 #endif
 }
@@ -279,37 +275,31 @@ void update_pre_edit_text(IBusChewingEngine * self)
 
 void refresh_aux_text(IBusChewingEngine * self)
 {
-    if (!ibus_chewing_engine_has_capabilite(self, IBUS_CAP_AUXILIARY_TEXT)) {
-	return;
-    }
     IBUS_CHEWING_LOG(INFO, "refresh_aux_text()");
-    gchar *auxStr;
+
     if (self->auxText != NULL) {
-	g_object_unref(self->auxText);
+        g_object_unref(self->auxText);
     }
 
+    /* Make auxText (text to be displayed in auxiliary candidate window).
+     * Use auxText to show messages from libchewing, such as "新增：".
+     */
     if (chewing_aux_Length(self->icPreEdit->context) > 0) {
-	auxStr = chewing_aux_String(self->icPreEdit->context);
-	IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
+        IBUS_CHEWING_LOG(INFO, "update_aux_text() chewing_aux_Length=%x",
+            chewing_aux_Length(self->icPreEdit->context));
+        gchar *auxStr = chewing_aux_String(self->icPreEdit->context);
+        IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
+        self->auxText = g_object_ref_sink(ibus_text_new_from_string(auxStr));
+        g_free(auxStr);
     } else {
-	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmf_check=%x",
-			 ibus_chewing_bopomofo_check(self->icPreEdit->
-						     context));
-	gchar *bpmfStr =
-	    ibus_chewing_pre_edit_get_bopomofo_string(self->icPreEdit);
-	IBUS_CHEWING_LOG(INFO, "update_aux_text() bpmfStr=%s", bpmfStr);
-	self->auxText =
-	    g_object_ref_sink(ibus_text_new_from_string(bpmfStr));
-	g_free(bpmfStr);
+        /* clear out auxText, otherwise it will be displayed continually. */
+        self->auxText = 0;
     }
 }
 
 void update_aux_text(IBusChewingEngine * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "update_aux_text()");
-    if (!ibus_chewing_engine_has_capabilite(self, IBUS_CAP_AUXILIARY_TEXT)) {
-	return;
-    }
     refresh_aux_text(self);
     parent_update_auxiliary_text(IBUS_ENGINE(self), self->auxText, TRUE);
 }
