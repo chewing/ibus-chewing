@@ -143,10 +143,10 @@ extern gint ibus_chewing_verbose;
 %}
 
 class IBus:Chewing:Engine from IBus:Engine {
-    public IBusChewingPreEdit *icPreEdit= NULL 
+    public IBusChewingPreEdit *icPreEdit = NULL 
 	destroywith ibus_chewing_pre_edit_free;
 
-    public GtkWidget *sDialog=NULL;
+    public GtkWidget *sDialog = NULL;
 
     /**
      * preEditText: text in pre-edit buffer.
@@ -158,7 +158,7 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *preEditText=NULL;
+    public IBusText *preEditText = NULL;
 
     /**
      * auxText: text to be displayed in auxiliary candidate window.
@@ -169,7 +169,7 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *auxText=NULL;
+    public IBusText *auxText = NULL;
 
     /**
      * outgoingText: text to be committed to engine.
@@ -177,9 +177,9 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *outgoingText=NULL;
+    public IBusText *outgoingText = NULL;
 
-    protected IBusChewingSystrayIcon *iChiEngSystrayIcon=NULL
+    protected IBusChewingSystrayIcon *iChiEngSystrayIcon = NULL
 	destroywith ibus_chewing_systray_icon_free;
 
     /* Log file */
@@ -193,7 +193,7 @@ class IBus:Chewing:Engine from IBus:Engine {
 
     private EngineFlag statusFlags = 0;
 
-    private IBusCapabilite capabilite =0 ;
+    private IBusCapabilite capabilite = 0 ;
 
     private ChewingInputStyle inputStyle;
 
@@ -251,6 +251,20 @@ class IBus:Chewing:Engine from IBus:Engine {
     };
     classwide IBusText *alnumSize_prop_label_half = {
 	g_object_ref_sink(ibus_text_new_from_static_string(_("Half")))
+    };
+    classwide IBusText *alnumSize_prop_tooltip_full = {
+	g_object_ref_sink(ibus_text_new_from_static_string
+			  (_("Click to switch to Half")))
+    };
+    classwide IBusText *alnumSize_prop_tooltip_half = {
+	g_object_ref_sink(ibus_text_new_from_static_string
+			  (_("Click to switch to Full")))
+    };
+    classwide IBusText *alnumSize_prop_symbol_full = {
+	g_object_ref_sink(ibus_text_new_from_static_string("全"))
+    };
+    classwide IBusText *alnumSize_prop_symbol_half = {
+	g_object_ref_sink(ibus_text_new_from_static_string("半"))
     };
     classwide IBusText *emptyText = {
 	g_object_ref_sink(ibus_text_new_from_static_string(""))
@@ -381,59 +395,63 @@ class IBus:Chewing:Engine from IBus:Engine {
     protected void refresh_property(self, const gchar * prop_name)
     {
 #ifndef UNIT_TEST
-	IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
-			 prop_name, self->_priv->statusFlags);
-	if (ibus_chewing_systray_chi_eng_icon_create_or_hide(self)){
-	    ibus_chewing_systray_chi_eng_icon_refresh_value(self);
-	}
+    IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
+                     prop_name, self->_priv->statusFlags);
 
-	if (STRING_EQUALS(prop_name, "InputMode")) {
-	    if (ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)) {
-		/* Chinese  */
-		ibus_property_set_label(self->chieng_prop,
-					SELF_GET_CLASS(self)->
-					chieng_prop_label_chi);
-		ibus_property_set_tooltip(self->chieng_prop,
-					  SELF_GET_CLASS(self)->
-					  chieng_prop_tooltip_chi);
+    if (ibus_chewing_systray_chi_eng_icon_create_or_hide(self)) {
+        ibus_chewing_systray_chi_eng_icon_refresh_value(self);
+    }
+
+    if (STRING_EQUALS(prop_name, "InputMode")) {
+        if (ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)) {
+            /* Chinese  */
+            ibus_property_set_label(self->chieng_prop,
+                                    SELF_GET_CLASS(self)->chieng_prop_label_chi);
+            ibus_property_set_tooltip(self->chieng_prop,
+                                      SELF_GET_CLASS(self)->chieng_prop_tooltip_chi);
 #if IBUS_CHECK_VERSION(1, 5, 0)
-		ibus_property_set_symbol(self->chieng_prop,
-					 SELF_GET_CLASS(self)->
-					 chieng_prop_symbol_chi);
+            ibus_property_set_symbol(self->chieng_prop,
+                                     SELF_GET_CLASS(self)->chieng_prop_symbol_chi);
 #endif
-	    } else {
-		/* English  */
-		ibus_property_set_label(self->chieng_prop,
-					SELF_GET_CLASS(self)->
-					chieng_prop_label_eng);
-		ibus_property_set_tooltip(self->chieng_prop,
-					  SELF_GET_CLASS(self)->
-					  chieng_prop_tooltip_eng);
+        } else {
+            /* English  */
+            ibus_property_set_label(self->chieng_prop,
+                                    SELF_GET_CLASS(self)->chieng_prop_label_eng);
+            ibus_property_set_tooltip(self->chieng_prop,
+                                      SELF_GET_CLASS(self)->chieng_prop_tooltip_eng);
 #if IBUS_CHECK_VERSION(1, 5, 0)
-		ibus_property_set_symbol(self->chieng_prop,
-					 SELF_GET_CLASS(self)->
-					 chieng_prop_symbol_eng);
+            ibus_property_set_symbol(self->chieng_prop,
+                                     SELF_GET_CLASS(self)->chieng_prop_symbol_eng);
 #endif
 	    }
-	    ibus_engine_update_property(IBUS_ENGINE(self),
-					    self->chieng_prop);
+	    ibus_engine_update_property(IBUS_ENGINE(self), self->chieng_prop);
 
-	} else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
-	    if (chewing_get_ShapeMode(self->icPreEdit->context)) {
-		/* Full-Sized Shape */
-		ibus_property_set_label(self->alnumSize_prop,
-					SELF_GET_CLASS(self)->
-					alnumSize_prop_label_full);
-	    } else {
-		/* Half-Sized Shape */
-		ibus_property_set_label(self->alnumSize_prop,
-					SELF_GET_CLASS(self)->
-					alnumSize_prop_label_half);
-	    }
-	    if (self->_priv->
-		statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
-		ibus_engine_update_property(IBUS_ENGINE(self),
-					    self->alnumSize_prop);
+    } else if (STRING_EQUALS(prop_name, "chewing_alnumSize_prop")) {
+
+        if (chewing_get_ShapeMode(self->icPreEdit->context)) {
+            /* Full-Sized Shape */
+            ibus_property_set_label(self->alnumSize_prop,
+                                    SELF_GET_CLASS(self)->alnumSize_prop_label_full);
+            ibus_property_set_tooltip(self->alnumSize_prop,
+                                      SELF_GET_CLASS(self)->alnumSize_prop_tooltip_full);
+#if IBUS_CHECK_VERSION(1, 5, 0)
+            ibus_property_set_symbol(self->alnumSize_prop,
+                                      SELF_GET_CLASS(self)->alnumSize_prop_symbol_full);
+#endif
+        } else {
+            /* Half-Sized Shape */
+            ibus_property_set_label(self->alnumSize_prop,
+                                    SELF_GET_CLASS(self)->alnumSize_prop_label_half);
+            ibus_property_set_tooltip(self->alnumSize_prop,
+                                      SELF_GET_CLASS(self)->alnumSize_prop_tooltip_half);
+#if IBUS_CHECK_VERSION(1, 5, 0)
+            ibus_property_set_symbol(self->alnumSize_prop,
+                                      SELF_GET_CLASS(self)->alnumSize_prop_symbol_half);
+#endif
+        }
+
+        if (self->_priv->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
+            ibus_engine_update_property(IBUS_ENGINE(self),self->alnumSize_prop);
 	}
 #endif
     }
