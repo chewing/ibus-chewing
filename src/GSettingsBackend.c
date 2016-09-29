@@ -190,15 +190,16 @@ gboolean mkdg_g_settings_write_schema_from_spec_array(const gchar *
 /*=== End Schema Writing ===*/
 
 GValue *mkdg_g_settings_read_value(GSettings * settings,
-				   GValue * value, const gchar * key)
+                                   GValue * value, const gchar * key)
 {
     GVariant *confValue = g_settings_get_value(settings, key);
     mkdg_log(DEBUG, "mkdg_g_settings_read_value(-,-,%s)", key);
     if (confValue == NULL) {
-	mkdg_log(ERROR, "mkdg_g_settings_read_value(-,-,%s)", key);
-	return NULL;
+        mkdg_log(ERROR, "mkdg_g_settings_read_value(-,-,%s)", key);
+        return NULL;
     }
     mkdg_g_variant_to_g_value(confValue, value);
+    g_variant_unref(confValue);
     return value;
 }
 
