@@ -289,7 +289,7 @@ void refresh_aux_text(IBusChewingEngine * self)
         g_free(auxStr);
     } else {
         /* clear out auxText, otherwise it will be displayed continually. */
-        self->auxText = 0;
+        self->auxText = g_object_ref_sink(ibus_text_new_from_static_string(""));
     }
 }
 
