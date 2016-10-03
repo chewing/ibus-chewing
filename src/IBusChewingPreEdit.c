@@ -99,26 +99,25 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     gchar *cP = bufferStr;
     gunichar uniCh;
     IBUS_CHEWING_LOG(INFO,
-		     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
-		     bufferStr, bpmfStr, self->bpmfLen, cursor_current);
+                    "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
+                    bufferStr, bpmfStr, self->bpmfLen, cursor_current);
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
-	if (i == cursor_current) {
-	    /* Insert bopomofo string */
-	    g_string_append(self->preEdit, bpmfStr);
-	}
-	uniCh = g_utf8_get_char(cP);
-	g_string_append_unichar(self->preEdit, uniCh);
-	cP = g_utf8_next_char(cP);
+        if (i == cursor_current) {
+            /* Insert bopomofo string */
+            g_string_append(self->preEdit, bpmfStr);
+        }
+        uniCh = g_utf8_get_char(cP);
+        g_string_append_unichar(self->preEdit, uniCh);
+        cP = g_utf8_next_char(cP);
     }
     if (chewing_buffer_Len(self->context) <= cursor_current) {
-	g_string_append(self->preEdit, bpmfStr);
+        g_string_append(self->preEdit, bpmfStr);
     }
     self->wordLen = i + self->bpmfLen;
     g_free(bufferStr);
     g_free(bpmfStr);
 
     ibus_chewing_pre_edit_update_outgoing(self);
-
 }
 
 guint ibus_chewing_pre_edit_length(IBusChewingPreEdit * self)
@@ -146,30 +145,24 @@ gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit * self)
     return self->outgoing->str;
 }
 
-/* force_commit is run when receiving IGNORE event */
+/* currently, ibus_chewing_pre_edit_force_commit() is called only by test cases. */
 void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(INFO,
-		     "ibus_chewing_pre_edit_force_commit(-) bpmf_check=%d buffer_check=%d",
-		     bpmf_check, chewing_buffer_Check(self->context));
+                    "ibus_chewing_pre_edit_force_commit(-) bpmf_check=%d buffer_check=%d",
+                    bpmf_check, chewing_buffer_Check(self->context));
 
-    /* Ignore the context and
-     * Commit whatever in preedit buffer
-     */
+    /* Ignore the context and commit whatever in preedit buffer */
     g_string_append(self->outgoing, self->preEdit->str);
-
     ibus_chewing_pre_edit_clear_pre_edit(self);
     ibus_chewing_pre_edit_update(self);
-
 }
 
 void ibus_chewing_pre_edit_clear(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(INFO, "ibus_chewing_pre_edit_clear(-)");
-
-    ibus_chewing_pre_edit_clear_pre_edit(self);
     ibus_chewing_pre_edit_clear_outgoing(self);
-    ibus_chewing_pre_edit_update(self);
+    ibus_chewing_pre_edit_clear_pre_edit(self);
 }
 
 void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self)
@@ -182,12 +175,10 @@ void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self)
     if (table_is_showing) {
         chewing_handle_Esc(self->context);
     }
-
     if (bpmf_check) {
         chewing_handle_Esc(self->context);
+        ibus_chewing_pre_edit_update(self);
     }
-
-    ibus_chewing_pre_edit_update(self);
 }
 
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit * self)
@@ -210,7 +201,6 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_outgoing(-)");
     g_string_assign(self->outgoing, "");
-
 }
 
 #define is_chinese ibus_chewing_pre_edit_get_chi_eng_mode(self)
@@ -220,14 +210,13 @@ gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit * self)
     return chewing_get_ChiEngMode(self->context) != 0;
 }
 
-gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit *
-						  self)
+gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit * self)
 {
     return chewing_get_ShapeMode(self->context) != 0;
 }
 
 void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,
-					    gboolean chineseMode)
+                                            gboolean chineseMode)
 {
     /* Clear bopomofo when toggling Chi-Eng Mode */
     if (!chineseMode && is_chinese && bpmf_check) {
@@ -237,7 +226,7 @@ void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit * self,
 }
 
 void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit * self,
-					      gboolean fullShapeMode)
+                                              gboolean fullShapeMode)
 {
     if (is_chinese && bpmf_check) {
     /* Clear bopomofo when toggling Full-Half Mode */
