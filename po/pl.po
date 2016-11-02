@@ -1,4 +1,4 @@
-# Piotr Drąg <pdrag@aviary.pl>, 2016. #zanata
+# Piotr Drąg <piotrdrag@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
@@ -7,11 +7,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-05-02 06:14-0400\n"
-"Last-Translator: Piotr Drąg <pdrag@aviary.pl>\n"
+"PO-Revision-Date: 2016-09-05 01:47-0400\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
-"X-Generator: Zanata 3.8.4\n"
+"X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2)\n"
 
@@ -124,7 +124,7 @@ msgid ""
 "select the 1st candidate, 's' for 2nd, and so on."
 msgstr ""
 "Klawisze używane do wybierania kandydatów. Na przykład „asdfghjkl;”, "
-"naciśnięcie „a” wybiera pierwszego kandydata, „s” drugiego, i tak dalej."
+"naciśnięcie „a” wybiera pierwszego kandydata, „s” drugiego, i tak dalej."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:82
 msgid "Hsu's selection key"
@@ -136,14 +136,14 @@ msgstr "Klawisze wyboru klawiatury Hsu, 1 dla asdfjkl789, 2 dla asdfzxcv89."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:91
 msgid "Show systray icons"
-msgstr "Ikona w obszarze powiadamiana"
+msgstr "Ikona w obszarze powiadamiana"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:95
 msgid ""
 "On: Show Chinese/English and Full/Half shape status as a systray icon\n"
 "Off: Do not show the status icon"
 msgstr ""
-"Włączone: wyświetlanie stanu języka chińskiego/angielskiego i pełnych/"
+"Włączone: wyświetlanie stanu języka chińskiego/angielskiego i pełnych/"
 "połówek znaków jako ikona stanu\n"
 "Wyłączone: bez wyświetlania ikony stanu"
 
@@ -189,7 +189,7 @@ msgstr "Escape czyści cały bufor"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:128
 msgid "Escape key cleans the text in pre-edit-buffer"
-msgstr "Klawisz Escape czyści tekst w buforze sprzed edycji"
+msgstr "Klawisz Escape czyści tekst w buforze sprzed edycji"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:131
 msgid "Maximum Chinese characters"
@@ -200,12 +200,12 @@ msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols."
 msgstr ""
-"Maksymalna liczba chińskich znaków w buforze sprzed edycji, w tym "
+"Maksymalna liczba chińskich znaków w buforze sprzed edycji, w tym "
 "wprowadzanych symboli Zhuyin."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:140
 msgid "Sync between CapsLock and IM"
-msgstr "Synchronizowanie między klawiszem Caps Lock a metodą wprowadzania"
+msgstr "Synchronizowanie między klawiszem Caps Lock a metodą wprowadzania"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:147
 msgid ""
@@ -215,9 +215,9 @@ msgid ""
 "\"keyboard\": IM status follows keyboard status\n"
 "\"IM\": Keyboard status follows IM status"
 msgstr ""
-"Czasami stan klawisza Caps Lock nie pasuje do metody wprowadzania, a ta "
+"Czasami stan klawisza Caps Lock nie pasuje do metody wprowadzania, a ta "
 "opcja określa, jak synchronizować oba stany. Prawidłowe wartości:\n"
-"„disable”: nie robienie niczego\n"
+"„disable”: nierobienie niczego\n"
 "„keyboard”: stan metody wprowadzania odpowiada stanowi klawiatury\n"
 "„IM”: stan klawiatury odpowiada stanowi metody wprowadzania"
 
@@ -246,7 +246,7 @@ msgid ""
 "On: Caps Lock toggle Chinese/English\n"
 "Off: Caps Lock only affect English letter case"
 msgstr ""
-"Włączone: Caps Lock przełącza między językiem chińskim a angielskim\n"
+"Włączone: Caps Lock przełącza między językiem chińskim a angielskim\n"
 "Wyłączone: Caps Lock wpływa tylko na wielkość angielskiej litery"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:174
@@ -280,7 +280,7 @@ msgid ""
 "In plain Zhuyin mode, automatic candidate selection and related options are "
 "disabled or ignored."
 msgstr ""
-"W prostym trybie Zhuyin automatyczny wybór kandydatów i powiązane opcje są "
+"W prostym trybie Zhuyin automatyczny wybór kandydatów i powiązane opcje są "
 "wyłączone lub ignorowane."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:196
@@ -306,7 +306,7 @@ msgstr "Spacja wybiera"
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingSystray.c:167
 msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
 msgstr ""
-"Lewy przycisk przełącza między językiem chińskim a angielskim, prawy "
+"Lewy przycisk przełącza między językiem chińskim a angielskim, prawy "
 "przycisk przełącza między pełnymi/połowami znaków"
 
 #: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:7
@@ -340,7 +340,7 @@ msgstr "Ustawienie"
 
 #: /home/dchen/ibus-chewing/po/../src/main.c:72
 msgid "Cannot connect to IBus!"
-msgstr "Nie można połączyć z usługą IBus."
+msgstr "Nie można połączyć z usługą IBus."
 
 #: /home/dchen/ibus-chewing/po/../src/main.c:82
 msgid "Chewing component"

@@ -1,4 +1,5 @@
 # Zdenek <chmelarz@gmail.com>, 2015. #zanata
+# Zdenek <chmelarz@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
@@ -7,11 +8,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-02-18 04:23-0500\n"
+"PO-Revision-Date: 2016-10-23 01:21-0400\n"
 "Last-Translator: Zdenek <chmelarz@gmail.com>\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
-"X-Generator: Zanata 3.8.4\n"
+"X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:13
@@ -68,15 +69,15 @@ msgstr "hanyu"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:45
 msgid "no default"
-msgstr ""
+msgstr "žádné výchozí"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:46
 msgid "lowercase"
-msgstr ""
+msgstr "malá písmena"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:47
 msgid "uppercase"
-msgstr ""
+msgstr "velká písmena"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:52
 msgctxt "Sync"
@@ -111,7 +112,7 @@ msgstr "Typ klávesnice"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:70
 msgid "Select Zhuyin keyboard layout"
-msgstr ""
+msgstr "Vyberte rozložení klávesnice Zhuyin"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:72
 msgid "Selection keys"
@@ -136,13 +137,16 @@ msgstr ""
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:91
 msgid "Show systray icons"
-msgstr ""
+msgstr "Zobrazit ikony nástrojové lišty"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:95
 msgid ""
 "On: Show Chinese/English and Full/Half shape status as a systray icon\n"
 "Off: Do not show the status icon"
 msgstr ""
+"Zapnuto: zobrazovat čínské/anglické a plný/částečný stav tvaru jako ikonu "
+"nástrojové lišty \n"
+"Vypnuto: nezobrazovat ikonu stavu"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:99
 msgid "Auto move cursor"
@@ -150,22 +154,25 @@ msgstr "Automatický pohyb kurzoru"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:102
 msgid "Automatically move cursor to next character"
-msgstr ""
+msgstr "Automaticky přesunout kurzor na další znak"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:105
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:108
 msgid "Add phrases to the front"
-msgstr ""
+msgstr "Přidat sousloví do popředí"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:111
 msgid "Clean pre-edit buffer when focus out"
-msgstr ""
+msgstr "Vyčistit přededitační vyrovnávací paměť jakmile vyjde z fokusu"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:115
 msgid ""
 "On: Clean pre-edit buffer when focus out to prevent program crash\n"
 "Off: Keep what you already type for convenience"
 msgstr ""
+"Zapnuto: Vyčistit přededitační vyrovnávací paměť jakmile vyjde z fokusu pro "
+"prevenci pádu programu\n"
+"Vypnuto: Zachovat to, co už bylo napsáno pro usnadnění"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:119
 msgid "Easy symbol input"
@@ -173,7 +180,7 @@ msgstr "Snadný vstup symbolů"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:122
 msgid "Press shift to input Chinese punctuation symbols"
-msgstr ""
+msgstr "Stisknout shift pro vložení čínského interpunkčního znaménka"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:125
 msgid "Esc clean all buffer"
@@ -181,7 +188,7 @@ msgstr "Esc vyčistí celou vyrovnávací paměť"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:128
 msgid "Escape key cleans the text in pre-edit-buffer"
-msgstr ""
+msgstr "Escape klávesa vyčistí text v přededitační vyrovnávací paměti"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:131
 msgid "Maximum Chinese characters"
@@ -192,6 +199,7 @@ msgid ""
 "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
 "symbols."
 msgstr ""
+"Maximum čínských znaků v přededitační paměti včetně vkládání symbolů Zhuyin."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:140
 msgid "Sync between CapsLock and IM"
@@ -205,6 +213,11 @@ msgid ""
 "\"keyboard\": IM status follows keyboard status\n"
 "\"IM\": Keyboard status follows IM status"
 msgstr ""
+"Příležitostně, stav CapsLock neodpovídá IM, tato volba určuje, jak "
+"synchronizovat tyto stavy. Platné hodnoty:\n"
+"\"vypnout\": Nedělat nic\n"
+"\"klávesnice\": Stav IM následuje stav klávesnice.\n"
+"\"IM\": Stav klávesnice následuje stav IM."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:153
 msgid "Number pad always input number"
@@ -212,7 +225,7 @@ msgstr "Číselná klávenice vždy vkládá číslo"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:156
 msgid "Always input numbers when number keys from key pad is inputted"
-msgstr ""
+msgstr "Vždy vložit čísla, pokud jsou stisknuty číselné klávesy"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:160
 msgid "Shift toggle Chinese Mode"
@@ -224,19 +237,23 @@ msgstr "Shift klávesa přepíná čínský režim"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:166
 msgid "Caps Lock toggles Chinese Mode"
-msgstr ""
+msgstr "Klávesa Caps Lock přepíná čínský mód"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:169
 msgid ""
 "On: Caps Lock toggle Chinese/English\n"
 "Off: Caps Lock only affect English letter case"
 msgstr ""
+"Zapnuto: Caps Lock přepíná čínštinu/angličtinu\n"
+"Vypnuto: Caps Lock má vliv pouze na anglická malá a velká písmena"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:174
 msgid ""
 "Default English letter case\n"
 "  (Only effective when Caps Lock toggles Chinese is ON)"
 msgstr ""
+"Výchozí hodnota anglických velkých a malých písmen\n"
+"  (Efektivní pouze pokud Caps Lock přepíná čínštinu na aktivní)"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:180
 msgid ""
@@ -245,6 +262,10 @@ msgid ""
 "lowercase: Default to lowercase, press shift for uppercase.\n"
 "uppercase: Default to uppercase, press shift for lowercase."
 msgstr ""
+"žádná kontrola: Žádná výchozí velikost písmen. Není doporučeno v případě "
+"použití více klávesnic nebo synergie\n"
+"malá písmena: Výchozí jsou malá písmena, stisknout shift pro velká písmena.\n"
+"velká písmena: Vychozí jsou velká písmena, stisknout shift pro malá písmena."
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:187
 msgid "Plain Zhuyin mode"
@@ -281,6 +302,8 @@ msgstr "Klávesa Space pro výběr"
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingSystray.c:167
 msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
 msgstr ""
+"Kliknout levým tlačítkem pro přepnutí Čínštiny/Angličtiny; kliknutí pravým "
+"přepíná plný/částečný tvar"
 
 #: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:7
 msgctxt "Configure"
@@ -313,7 +336,7 @@ msgstr "Nastavení"
 
 #: /home/dchen/ibus-chewing/po/../src/main.c:72
 msgid "Cannot connect to IBus!"
-msgstr ""
+msgstr "Nelze se připojit k IBus!"
 
 #: /home/dchen/ibus-chewing/po/../src/main.c:82
 msgid "Chewing component"
