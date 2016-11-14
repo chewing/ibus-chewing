@@ -19,6 +19,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * SECTION:MakerDialogUtil.h
+ * @short_description: Utility functions for MakerDialog
+ * @title: MakerDialog Util
+ * @stability: Stable
+ * @include: MakerDialogUtil.h
+ *
+ * Utility functions for MakerDialog.
+ * The functions have <emphasis>mkdg_</emphasis> prefix,
+ * while definitions have <emphasis>Mkdg</emphasis> prefix.
+ */
+
 #ifndef _MAKER_DIALOG_UTIL_H_
 #define _MAKER_DIALOG_UTIL_H_
 #include <ctype.h>
@@ -26,6 +38,17 @@
 #include <string.h>
 #include <glib-object.h>
 
+/**
+ * MkdgLogLevel:
+ * @ERROR: Show auses of failure, the program should stop
+ * @WARN:  Show issues to be address, the program will still run.
+ * @MSG:   Show normal message
+ * @INFO:  Show information message
+ * @DEBUG: Show debug message
+ *
+ * Message verbose level, from low to high. Similar to Log level of Gtk.
+ *
+ */
 typedef enum {
     ERROR,
     WARN,
