@@ -37,7 +37,11 @@ while read File; do
     case $Ext in
     c|h)
 	echo "Indenting " $File > /dev/stderr
-	"$Indent" -kr "$File"
+	"$Indent" -kr --no-tabs\
+	    --line-length 80\
+	    --blank-lines-after-declarations\
+	    --preprocessor-indentation 4\
+	    "$File"
 	;;
     esac
     echo "Chopping  " $File > /dev/stderr
