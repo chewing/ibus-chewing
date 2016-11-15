@@ -4,9 +4,9 @@
 #include "IBusChewingPreEdit-private.h"
 #include "IBusChewingUtil.h"
 #ifdef USE_GSETTINGS
-#include "GSettingsBackend.h"
+#    include "GSettingsBackend.h"
 #elif defined USE_GCONF2
-#include "GConf2Backend.h"
+#    include "GConf2Backend.h"
 #endif
 #include "MakerDialogUtil.h"
 #include "test-util.h"
@@ -23,19 +23,17 @@ static IBusChewingPreEdit *self = NULL;
 
 
 
-void assert_outgoing_pre_edit(const gchar * outgoing,
-			      const gchar * pre_edit)
+void assert_outgoing_pre_edit(const gchar * outgoing, const gchar * pre_edit)
 {
-    g_assert_cmpstr(outgoing, ==,
-		    ibus_chewing_pre_edit_get_outgoing(self));
-    g_assert_cmpstr(pre_edit, ==,
-		    ibus_chewing_pre_edit_get_pre_edit(self));
+    g_assert_cmpstr(outgoing, ==, ibus_chewing_pre_edit_get_outgoing(self));
+    g_assert_cmpstr(pre_edit, ==, ibus_chewing_pre_edit_get_pre_edit(self));
 }
 
 void assert_substring(const gchar * haystack, const gchar * needle,
-		      gint begin, gint length)
+                      gint begin, gint length)
 {
     gchar *subStr = g_utf8_substring(haystack, begin, begin + length);
+
     g_assert_cmpstr(subStr, ==, needle);
     g_free(subStr);
 }
@@ -45,49 +43,51 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers)
     switch (keySym) {
     case IBUS_KEY_Shift_L:
     case IBUS_KEY_Shift_R:
-	ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
-	ibus_chewing_pre_edit_process_key(self, keySym,
-					  modifiers | IBUS_RELEASE_MASK |
-					  IBUS_SHIFT_MASK);
-	break;
+        ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
+        ibus_chewing_pre_edit_process_key(self, keySym,
+                                          modifiers | IBUS_RELEASE_MASK |
+                                          IBUS_SHIFT_MASK);
+        break;
     default:
-	if (modifiers & IBUS_SHIFT_MASK) {
-	    ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L, 0);
-	}
-	ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
-	ibus_chewing_pre_edit_process_key(self, keySym,
-					  modifiers | IBUS_RELEASE_MASK);
-	if (modifiers & IBUS_SHIFT_MASK) {
-	    ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
-					      IBUS_SHIFT_MASK |
-					      IBUS_RELEASE_MASK);
-	}
-	break;
+        if (modifiers & IBUS_SHIFT_MASK) {
+            ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L, 0);
+        }
+        ibus_chewing_pre_edit_process_key(self, keySym, modifiers);
+        ibus_chewing_pre_edit_process_key(self, keySym,
+                                          modifiers | IBUS_RELEASE_MASK);
+        if (modifiers & IBUS_SHIFT_MASK) {
+            ibus_chewing_pre_edit_process_key(self, IBUS_KEY_Shift_L,
+                                              IBUS_SHIFT_MASK |
+                                              IBUS_RELEASE_MASK);
+        }
+        break;
 
     }
 
     printf
-	("key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n",
-	 keySym, key_sym_get_name(keySym), modifiers,
-	 ibus_chewing_pre_edit_get_pre_edit(self),
-	 ibus_chewing_pre_edit_get_outgoing(self));
+        ("key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n",
+         keySym, key_sym_get_name(keySym), modifiers,
+         ibus_chewing_pre_edit_get_pre_edit(self),
+         ibus_chewing_pre_edit_get_outgoing(self));
 }
 
 void key_press_from_string(const gchar * keySeq)
 {
     gint i;
+
     for (i = 0; i < strlen(keySeq); i++) {
-	key_press_from_key_sym((guint) keySeq[i], 0);
+        key_press_from_key_sym((guint) keySeq[i], 0);
     }
 }
 
 void reset_properties_default(IBusChewingPreEdit * self)
 {
     gsize size = mkdg_properties_size(self->iProperties->properties);
+
     for (gsize i = 0; i < size; i++) {
-	PropertyContext *ctx =
-	    mkdg_properties_index(self->iProperties->properties, i);
-	property_context_default(ctx);
+        PropertyContext *ctx =
+            mkdg_properties_index(self->iProperties->properties, i);
+        property_context_default(ctx);
     }
 }
 
@@ -95,6 +95,7 @@ void reset_properties_default(IBusChewingPreEdit * self)
 EventResponse filter_modifiers_test_0_0()
 {
     KeyModifiers allow = 0, unmaskedMod = 0;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -102,6 +103,7 @@ EventResponse filter_modifiers_test_0_0()
 EventResponse filter_modifiers_test_0_shift()
 {
     KeyModifiers allow = 0, unmaskedMod = IBUS_SHIFT_MASK;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -109,14 +111,15 @@ EventResponse filter_modifiers_test_0_shift()
 EventResponse filter_modifiers_test_0_control()
 {
     KeyModifiers allow = 0, unmaskedMod = IBUS_CONTROL_MASK;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
 
 EventResponse filter_modifiers_test_0_shift_control()
 {
-    KeyModifiers allow = 0, unmaskedMod =
-	IBUS_SHIFT_MASK | IBUS_CONTROL_MASK;
+    KeyModifiers allow = 0, unmaskedMod = IBUS_SHIFT_MASK | IBUS_CONTROL_MASK;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -124,6 +127,7 @@ EventResponse filter_modifiers_test_0_shift_control()
 EventResponse filter_modifiers_test_shift_0()
 {
     KeyModifiers allow = IBUS_SHIFT_MASK, unmaskedMod = 0;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -131,6 +135,7 @@ EventResponse filter_modifiers_test_shift_0()
 EventResponse filter_modifiers_test_shift_shift()
 {
     KeyModifiers allow = IBUS_SHIFT_MASK, unmaskedMod = IBUS_SHIFT_MASK;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -138,6 +143,7 @@ EventResponse filter_modifiers_test_shift_shift()
 EventResponse filter_modifiers_test_shift_control()
 {
     KeyModifiers allow = IBUS_SHIFT_MASK, unmaskedMod = IBUS_CONTROL_MASK;
+
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -145,7 +151,7 @@ EventResponse filter_modifiers_test_shift_control()
 EventResponse filter_modifiers_test_shift_shift_control()
 {
     KeyModifiers allow = IBUS_SHIFT_MASK, unmaskedMod =
-	IBUS_SHIFT_MASK | IBUS_CONTROL_MASK;
+        IBUS_SHIFT_MASK | IBUS_CONTROL_MASK;
     filter_modifiers(allow);
     return EVENT_RESPONSE_PROCESS;
 }
@@ -156,16 +162,13 @@ void filter_modifiers_test()
     g_assert(filter_modifiers_test_0_0() == EVENT_RESPONSE_PROCESS);
     g_assert(filter_modifiers_test_0_shift() == EVENT_RESPONSE_IGNORE);
     g_assert(filter_modifiers_test_0_control() == EVENT_RESPONSE_IGNORE);
-    g_assert(filter_modifiers_test_0_shift_control() ==
-	     EVENT_RESPONSE_IGNORE);
+    g_assert(filter_modifiers_test_0_shift_control() == EVENT_RESPONSE_IGNORE);
 
     g_assert(filter_modifiers_test_shift_0() == EVENT_RESPONSE_PROCESS);
-    g_assert(filter_modifiers_test_shift_shift() ==
-	     EVENT_RESPONSE_PROCESS);
-    g_assert(filter_modifiers_test_shift_control() ==
-	     EVENT_RESPONSE_IGNORE);
+    g_assert(filter_modifiers_test_shift_shift() == EVENT_RESPONSE_PROCESS);
+    g_assert(filter_modifiers_test_shift_control() == EVENT_RESPONSE_IGNORE);
     g_assert(filter_modifiers_test_shift_shift_control() ==
-	     EVENT_RESPONSE_IGNORE);
+             EVENT_RESPONSE_IGNORE);
 }
 
 void self_key_sym_fix_test()
@@ -173,10 +176,9 @@ void self_key_sym_fix_test()
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
 
     ibus_chewing_pre_edit_set_property_boolean(self,
-					       "capslock-toggle-chinese",
-					       TRUE);
+                                               "capslock-toggle-chinese", TRUE);
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
-					      "no control");
+                                              "no control");
     g_assert(self_key_sym_fix(self, '1', 0) == '1');
     g_assert(self_key_sym_fix(self, 'a', 0) == 'a');
     g_assert(self_key_sym_fix(self, 'A', 0) == 'A');
@@ -185,13 +187,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'a', IBUS_LOCK_MASK) == 'a');
     g_assert(self_key_sym_fix(self, 'A', IBUS_LOCK_MASK) == 'A');
     g_assert(self_key_sym_fix(self, 'a', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'a');
+             == 'a');
     g_assert(self_key_sym_fix(self, 'A', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'A');
+             == 'A');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "lowercase");
+                                              "default-english-case",
+                                              "lowercase");
     g_assert(self_key_sym_fix(self, '2', 0) == '2');
     g_assert(self_key_sym_fix(self, 'b', 0) == 'b');
     g_assert(self_key_sym_fix(self, 'B', 0) == 'b');
@@ -200,13 +202,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'b', IBUS_LOCK_MASK) == 'b');
     g_assert(self_key_sym_fix(self, 'B', IBUS_LOCK_MASK) == 'b');
     g_assert(self_key_sym_fix(self, 'b', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'B');
+             == 'B');
     g_assert(self_key_sym_fix(self, 'B', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'B');
+             == 'B');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "uppercase");
+                                              "default-english-case",
+                                              "uppercase");
     g_assert(self_key_sym_fix(self, 'c', 0) == 'C');
     g_assert(self_key_sym_fix(self, 'C', 0) == 'C');
     g_assert(self_key_sym_fix(self, 'c', IBUS_SHIFT_MASK) == 'c');
@@ -214,15 +216,15 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'c', IBUS_LOCK_MASK) == 'C');
     g_assert(self_key_sym_fix(self, 'C', IBUS_LOCK_MASK) == 'C');
     g_assert(self_key_sym_fix(self, 'c', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'c');
+             == 'c');
     g_assert(self_key_sym_fix(self, 'C', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'c');
+             == 'c');
 
     ibus_chewing_pre_edit_set_property_boolean(self,
-					       "capslock-toggle-chinese",
-					       FALSE);
+                                               "capslock-toggle-chinese",
+                                               FALSE);
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
-					      "no control");
+                                              "no control");
     g_assert(self_key_sym_fix(self, 'd', 0) == 'd');
     g_assert(self_key_sym_fix(self, 'D', 0) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK) == 'd');
@@ -230,14 +232,14 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'd', IBUS_LOCK_MASK) == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_LOCK_MASK) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'd');
+             == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'D');
+             == 'D');
 
     /* This should act as "no control" */
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "lowercase");
+                                              "default-english-case",
+                                              "lowercase");
     g_assert(self_key_sym_fix(self, 'd', 0) == 'd');
     g_assert(self_key_sym_fix(self, 'D', 0) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK) == 'd');
@@ -245,14 +247,14 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'd', IBUS_LOCK_MASK) == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_LOCK_MASK) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'd');
+             == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'D');
+             == 'D');
 
     /* This should act as "no control" */
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "uppercase");
+                                              "default-english-case",
+                                              "uppercase");
     g_assert(self_key_sym_fix(self, 'd', 0) == 'd');
     g_assert(self_key_sym_fix(self, 'D', 0) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK) == 'd');
@@ -260,9 +262,9 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'd', IBUS_LOCK_MASK) == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_LOCK_MASK) == 'D');
     g_assert(self_key_sym_fix(self, 'd', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'd');
+             == 'd');
     g_assert(self_key_sym_fix(self, 'D', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'D');
+             == 'D');
 
     /* In Chinese mode, the case should be determine by the shift, not the
      * case itself.
@@ -271,10 +273,9 @@ void self_key_sym_fix_test()
      */
     ibus_chewing_pre_edit_set_chi_eng_mode(self, TRUE);
     ibus_chewing_pre_edit_set_property_boolean(self,
-					       "capslock-toggle-chinese",
-					       TRUE);
+                                               "capslock-toggle-chinese", TRUE);
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
-					      "no control");
+                                              "no control");
     g_assert(self_key_sym_fix(self, 'e', 0) == 'e');
     g_assert(self_key_sym_fix(self, 'E', 0) == 'e');
     g_assert(self_key_sym_fix(self, 'e', IBUS_SHIFT_MASK) == 'E');
@@ -282,13 +283,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'e', IBUS_LOCK_MASK) == 'e');
     g_assert(self_key_sym_fix(self, 'E', IBUS_LOCK_MASK) == 'e');
     g_assert(self_key_sym_fix(self, 'e', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'E');
+             == 'E');
     g_assert(self_key_sym_fix(self, 'E', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'E');
+             == 'E');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "lowercase");
+                                              "default-english-case",
+                                              "lowercase");
     g_assert(self_key_sym_fix(self, 'f', 0) == 'f');
     g_assert(self_key_sym_fix(self, 'F', 0) == 'f');
     g_assert(self_key_sym_fix(self, 'f', IBUS_SHIFT_MASK) == 'F');
@@ -296,13 +297,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'f', IBUS_LOCK_MASK) == 'f');
     g_assert(self_key_sym_fix(self, 'F', IBUS_LOCK_MASK) == 'f');
     g_assert(self_key_sym_fix(self, 'f', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'F');
+             == 'F');
     g_assert(self_key_sym_fix(self, 'F', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'F');
+             == 'F');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "uppercase");
+                                              "default-english-case",
+                                              "uppercase");
     g_assert(self_key_sym_fix(self, 'g', 0) == 'g');
     g_assert(self_key_sym_fix(self, 'G', 0) == 'g');
     g_assert(self_key_sym_fix(self, 'g', IBUS_SHIFT_MASK) == 'G');
@@ -310,15 +311,15 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'g', IBUS_LOCK_MASK) == 'g');
     g_assert(self_key_sym_fix(self, 'G', IBUS_LOCK_MASK) == 'g');
     g_assert(self_key_sym_fix(self, 'g', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'G');
+             == 'G');
     g_assert(self_key_sym_fix(self, 'G', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'G');
+             == 'G');
 
     ibus_chewing_pre_edit_set_property_boolean(self,
-					       "capslock-toggle-chinese",
-					       FALSE);
+                                               "capslock-toggle-chinese",
+                                               FALSE);
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
-					      "no control");
+                                              "no control");
     g_assert(self_key_sym_fix(self, 'h', 0) == 'h');
     g_assert(self_key_sym_fix(self, 'H', 0) == 'h');
     g_assert(self_key_sym_fix(self, 'h', IBUS_SHIFT_MASK) == 'H');
@@ -326,13 +327,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'h', IBUS_LOCK_MASK) == 'h');
     g_assert(self_key_sym_fix(self, 'H', IBUS_LOCK_MASK) == 'h');
     g_assert(self_key_sym_fix(self, 'h', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'H');
+             == 'H');
     g_assert(self_key_sym_fix(self, 'H', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'H');
+             == 'H');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "lowercase");
+                                              "default-english-case",
+                                              "lowercase");
     g_assert(self_key_sym_fix(self, 'i', 0) == 'i');
     g_assert(self_key_sym_fix(self, 'I', 0) == 'i');
     g_assert(self_key_sym_fix(self, 'i', IBUS_SHIFT_MASK) == 'I');
@@ -340,13 +341,13 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'i', IBUS_LOCK_MASK) == 'i');
     g_assert(self_key_sym_fix(self, 'I', IBUS_LOCK_MASK) == 'i');
     g_assert(self_key_sym_fix(self, 'i', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'I');
+             == 'I');
     g_assert(self_key_sym_fix(self, 'I', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'I');
+             == 'I');
 
     ibus_chewing_pre_edit_set_property_string(self,
-					      "default-english-case",
-					      "uppercase");
+                                              "default-english-case",
+                                              "uppercase");
     g_assert(self_key_sym_fix(self, 'j', 0) == 'j');
     g_assert(self_key_sym_fix(self, 'J', 0) == 'j');
     g_assert(self_key_sym_fix(self, 'j', IBUS_SHIFT_MASK) == 'J');
@@ -354,9 +355,9 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'j', IBUS_LOCK_MASK) == 'j');
     g_assert(self_key_sym_fix(self, 'J', IBUS_LOCK_MASK) == 'j');
     g_assert(self_key_sym_fix(self, 'j', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'J');
+             == 'J');
     g_assert(self_key_sym_fix(self, 'J', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
-	     == 'J');
+             == 'J');
 }
 
 void self_handle_key_sym_default_test()
@@ -364,6 +365,7 @@ void self_handle_key_sym_default_test()
     TEST_CASE_INIT();
 
     EventResponse eResponse = self_handle_key_sym_default(self, 'q', 0);
+
     g_assert_cmpuint(eResponse, ==, EVENT_RESPONSE_PROCESS);
     /* self_handle_key_sym_default does not update pre_edit in self */
     ibus_chewing_pre_edit_update(self);
@@ -373,8 +375,8 @@ void self_handle_key_sym_default_test()
     /*=== Test default-english-case handling ===*/
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
     ibus_chewing_pre_edit_set_apply_property_string(self,
-						    "default-english-case",
-						    "lowercase");
+                                                    "default-english-case",
+                                                    "lowercase");
     eResponse = self_handle_key_sym_default(self, 'a', 0);
     ibus_chewing_pre_edit_update(self);
     assert_outgoing_pre_edit("a", "");
@@ -389,12 +391,12 @@ void self_handle_key_sym_default_test()
     eResponse = self_handle_key_sym_default(self, 'A', IBUS_LOCK_MASK);
     assert_outgoing_pre_edit("aaAAaa", "");
     eResponse =
-	self_handle_key_sym_default(self, 'a',
-				    IBUS_SHIFT_MASK | IBUS_LOCK_MASK);
+        self_handle_key_sym_default(self, 'a',
+                                    IBUS_SHIFT_MASK | IBUS_LOCK_MASK);
     assert_outgoing_pre_edit("aaAAaaA", "");
     eResponse =
-	self_handle_key_sym_default(self, 'A',
-				    IBUS_SHIFT_MASK | IBUS_LOCK_MASK);
+        self_handle_key_sym_default(self, 'A',
+                                    IBUS_SHIFT_MASK | IBUS_LOCK_MASK);
     assert_outgoing_pre_edit("aaAAaaAA", "");
 
     ibus_chewing_pre_edit_clear(self);
@@ -494,11 +496,10 @@ void process_key_down_arrow_test()
 {
     TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin",
-						     FALSE);
+                                                     "plain-zhuyin", FALSE);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "phrase-choice-from-last",
-						     TRUE);
+                                                     "phrase-choice-from-last",
+                                                     TRUE);
     key_press_from_string("t/6g4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("1");
@@ -523,17 +524,16 @@ void process_key_shift_and_caps_test()
 {
     TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin",
-						     FALSE);
+                                                     "plain-zhuyin", FALSE);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "space-as-selection",
-						     FALSE);
+                                                     "space-as-selection",
+                                                     FALSE);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "shift-toggle-chinese",
-						     TRUE);
+                                                     "shift-toggle-chinese",
+                                                     TRUE);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "capslock-toggle-chinese",
-						     TRUE);
+                                                     "capslock-toggle-chinese",
+                                                     TRUE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
 
     key_press_from_string("ji3ul4fm4 ");
@@ -543,7 +543,7 @@ void process_key_shift_and_caps_test()
     /* Shift: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
-    key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK); /* B */
+    key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK);        /* B */
     key_press_from_string("risbane ");
     key_press_from_key_sym(IBUS_KEY_Return, 0);
     assert_outgoing_pre_edit("我要去 Brisbane ", "");
@@ -559,7 +559,7 @@ void process_key_shift_and_caps_test()
     /* Caps Lock OFF: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
-    key_press_from_key_sym(IBUS_KEY_D, IBUS_SHIFT_MASK); /* D */
+    key_press_from_key_sym(IBUS_KEY_D, IBUS_SHIFT_MASK);        /* D */
     key_press_from_string("addy ");
 
     /* Shift: change to Chi-Mode */
@@ -576,8 +576,7 @@ void process_key_shift_and_caps_test()
 void full_half_shape_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin",
-						     FALSE);
+                                                     "plain-zhuyin", FALSE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
@@ -599,10 +598,9 @@ void full_half_shape_test()
 void plain_zhuyin_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin", TRUE);
+                                                     "plain-zhuyin", TRUE);
 
-    g_assert(ibus_chewing_pre_edit_get_property_boolean
-	     (self, "plain-zhuyin"));
+    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
 
     key_press_from_string("y ");
 
@@ -625,12 +623,11 @@ void plain_zhuyin_test()
 void plain_zhuyin_shift_symbol_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin", TRUE);
-    g_assert(ibus_chewing_pre_edit_get_property_boolean
-	     (self, "plain-zhuyin"));
+                                                     "plain-zhuyin", TRUE);
+    g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "shift-toggle-chinese",
-						     TRUE);
+                                                     "shift-toggle-chinese",
+                                                     TRUE);
 
     key_press_from_string("su31cl31");
 
@@ -665,8 +662,7 @@ void plain_zhuyin_shift_symbol_test()
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
     /* "來訂餐" */
     key_press_from_string("x9612u/42h0 2");
-    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐",
-			     "");
+    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -675,7 +671,7 @@ void plain_zhuyin_shift_symbol_test()
 void plain_zhuyin_full_half_shape_test()
 {
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "plain-zhuyin", TRUE);
+                                                     "plain-zhuyin", TRUE);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
@@ -697,7 +693,7 @@ void test_ibus_chewing_pre_edit_clear_bopomofo()
 {
     TEST_CASE_INIT();
 
-    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    key_press_from_string("su3cl");     /* 你ㄏㄠ (尚未完成組字) */
     assert_outgoing_pre_edit("", "你ㄏㄠ");
 
     ibus_chewing_pre_edit_clear_bopomofo(self);
@@ -708,7 +704,7 @@ void test_ibus_chewing_pre_edit_clear_pre_edit()
 {
     TEST_CASE_INIT();
 
-    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    key_press_from_string("su3cl");     /* 你ㄏㄠ (尚未完成組字) */
     assert_outgoing_pre_edit("", "你ㄏㄠ");
 
     ibus_chewing_pre_edit_clear_pre_edit(self);
@@ -717,9 +713,9 @@ void test_ibus_chewing_pre_edit_clear_pre_edit()
 
 void test_ibus_chewing_pre_edit_set_chi_eng_mode()
 {
-    TEST_CASE_INIT();    
+    TEST_CASE_INIT();
 
-    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字)*/
+    key_press_from_string("su3cl");     /* 你ㄏㄠ (尚未完成組字) */
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
     g_assert(chewing_get_ChiEngMode(self->context) == 0);
     assert_outgoing_pre_edit("", "你");
@@ -730,8 +726,8 @@ void test_space_as_selection()
 /* GitHub #79: Cannot input space when "space to select" is enabled  */
     TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
-						     "space-as-selection",
-						     TRUE);
+                                                     "space-as-selection",
+                                                     TRUE);
 
     key_press_from_key_sym(IBUS_KEY_space, 0);
     assert_outgoing_pre_edit(" ", "");
@@ -799,7 +795,7 @@ void test_kp_eng_mode_buffer()
 
     TEST_CASE_INIT();
 
-    key_press_from_string("su3cl3"); /* 你好 */
+    key_press_from_string("su3cl3");    /* 你好 */
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
     g_assert(chewing_get_ChiEngMode(self->context) == 0);
     key_press_from_key_sym(IBUS_KP_1, 0);
@@ -833,7 +829,7 @@ void test_kp_chi_mode_buffer()
 
     g_assert(chewing_get_ChiEngMode(self->context) == 1);
 
-    key_press_from_string("su3cl3"); /* 你好 */
+    key_press_from_string("su3cl3");    /* 你好 */
     key_press_from_key_sym(IBUS_KP_1, 0);
     key_press_from_key_sym(IBUS_KEY_KP_9, 0);
     key_press_from_key_sym(IBUS_KP_0, 0);
@@ -853,7 +849,7 @@ void test_kp_chi_incomplete()
 
     g_assert(chewing_get_ChiEngMode(self->context) == 1);
 
-    key_press_from_string("su3cl"); /* 你ㄏㄠ (尚未完成組字) */
+    key_press_from_string("su3cl");     /* 你ㄏㄠ (尚未完成組字) */
     key_press_from_key_sym(IBUS_KP_1, 0);
     assert_outgoing_pre_edit("", "你1");
 }
@@ -882,7 +878,7 @@ void test_kp_other_keys()
 
     g_assert(chewing_get_ChiEngMode(self->context) == 1);
 
-    key_press_from_string("su3cl3"); /* 你好 */
+    key_press_from_string("su3cl3");    /* 你好 */
     key_press_from_key_sym(IBUS_KP_Multiply, 0);
     key_press_from_key_sym(IBUS_KP_Add, 0);
     key_press_from_key_sym(IBUS_KP_Separator, 0);
@@ -911,16 +907,17 @@ gint main(gint argc, gchar ** argv)
     g_test_init(&argc, &argv, NULL);
 #ifdef USE_GSETTINGS
     MkdgBackend *backend =
-	mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-				    QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
+        mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
+                                    QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
 #elif defined USE_GCONF2
     MkdgBackend *backend =
-	gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
+        gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
 #else
     MkdgBackend *backend = NULL;
+
     g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
     return 1;
-#endif				/* USE_GSETTINGS */
+#endif                          /* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
     self = ibus_chewing_pre_edit_new(backend);
     ibus_chewing_pre_edit_use_all_configure(self);

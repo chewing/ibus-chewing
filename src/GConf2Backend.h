@@ -30,9 +30,9 @@
  */
 
 #ifndef _G_CONF2_BACKEND_H_
-#define _G_CONF2_BACKEND_H_
-#include "MakerDialogBackend.h"
-#define GCONF2_BACKEND_ID "gconf2"
+#    define _G_CONF2_BACKEND_H_
+#    include "MakerDialogBackend.h"
+#    define GCONF2_BACKEND_ID "gconf2"
 
 /**
  * gconf2_backend_new:
@@ -43,4 +43,4 @@
  */
 MkdgBackend *gconf2_backend_new(const gchar * basePath, gpointer auxData);
 
-#endif				/* _G_CONF2_BACKEND_H_ */
+#endif                          /* _G_CONF2_BACKEND_H_ */

@@ -66,58 +66,71 @@ static void start_component(void)
     ibus_init();
     bus = ibus_bus_new();
     g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb),
-		     NULL);
+                     NULL);
 
-    if (! ibus_bus_is_connected (bus)){
+    if (!ibus_bus_is_connected(bus)) {
         IBUS_CHEWING_LOG(ERROR, _("Cannot connect to IBus!"));
         exit(2);
     }
 
     IBusComponent *component = NULL;
+
     if (xml) {
         component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR)
-                "/ibus/component/chewing.xml");
+                                                 "/ibus/component/chewing.xml");
     } else {
         component = ibus_component_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-                _("Chewing component"),
-                QUOTE_ME(PRJ_VER), "GPLv2+",
-                _("Peng Huang, Ding-Yi Chen"),
-                "http://code.google.com/p/ibus",
-                QUOTE_ME(LIBEXEC_DIR)
-                "/ibus-engine-chewing --ibus",
-                QUOTE_ME(PROJECT_NAME));
+                                       _("Chewing component"),
+                                       QUOTE_ME(PRJ_VER), "GPLv2+",
+                                       _("Peng Huang, Ding-Yi Chen"),
+                                       "http://code.google.com/p/ibus",
+                                       QUOTE_ME(LIBEXEC_DIR)
+                                       "/ibus-engine-chewing --ibus",
+                                       QUOTE_ME(PROJECT_NAME));
     }
 
-    IBusEngineDesc *engineDesc =
-        ibus_engine_desc_new_varargs("name", "chewing",
-                "longname", _("Chewing"),
-                "description",
-                _("Chinese chewing input method"),
-                "language", "zh_TW",
-                "license", "GPLv2+",
-                "author",
-                _("Peng Huang, Ding-Yi Chen"),
-                "icon",
-                QUOTE_ME(PRJ_DATA_DIR) "/icons/"
-                QUOTE_ME(PROJECT_NAME) ".png",
-                "layout", "us",
-                "setup",
-                QUOTE_ME(LIBEXEC_DIR)
-                "/ibus-setup-chewing",
-                "version", QUOTE_ME(PRJ_VER),
-                "textdomain",
-                QUOTE_ME(PROJECT_NAME),
-                NULL);
+    IBusEngineDesc *engineDesc = ibus_engine_desc_new_varargs("name", "chewing",
+                                                              "longname",
+                                                              _("Chewing"),
+                                                              "description",
+                                                              _
+                                                              ("Chinese chewing input method"),
+                                                              "language",
+                                                              "zh_TW",
+                                                              "license",
+                                                              "GPLv2+",
+                                                              "author",
+                                                              _
+                                                              ("Peng Huang, Ding-Yi Chen"),
+                                                              "icon",
+                                                              QUOTE_ME
+                                                              (PRJ_DATA_DIR)
+                                                              "/icons/"
+                                                              QUOTE_ME
+                                                              (PROJECT_NAME)
+                                                              ".png",
+                                                              "layout", "us",
+                                                              "setup",
+                                                              QUOTE_ME
+                                                              (LIBEXEC_DIR)
+                                                              "/ibus-setup-chewing",
+                                                              "version",
+                                                              QUOTE_ME(PRJ_VER),
+                                                              "textdomain",
+                                                              QUOTE_ME
+                                                              (PROJECT_NAME),
+                                                              NULL);
 
     ibus_component_add_engine(component, engineDesc);
     factory = ibus_factory_new(ibus_bus_get_connection(bus));
     ibus_factory_add_engine(factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {
-	guint32 ret=ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
-        IBUS_CHEWING_LOG(INFO, "start_component: request_name: %u",ret);
+        guint32 ret =
+            ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
+        IBUS_CHEWING_LOG(INFO, "start_component: request_name: %u", ret);
     } else {
-	ibus_bus_register_component(bus, component);
+        ibus_bus_register_component(bus, component);
     }
     ibus_main();
 }
@@ -133,25 +146,26 @@ const char *locale_env_strings[] = {
 void determine_locale()
 {
 #ifndef STRING_BUFFER_SIZE
-#define STRING_BUFFER_SIZE 100
+#    define STRING_BUFFER_SIZE 100
 #endif
     gchar *localePtr = NULL;
     gchar localeStr[STRING_BUFFER_SIZE];
     int i;
+
     for (i = 0; locale_env_strings[i] != NULL; i++) {
-	if (getenv(locale_env_strings[i])) {
-	    localePtr = getenv(locale_env_strings[i]);
-	    break;
-	}
+        if (getenv(locale_env_strings[i])) {
+            localePtr = getenv(locale_env_strings[i]);
+            break;
+        }
     }
     if (!localePtr) {
-	localePtr = "en_US.utf8";
+        localePtr = "en_US.utf8";
     }
     /* Use UTF8 as charset unconditionally */
     for (i = 0; localePtr[i] != '\0'; i++) {
-	if (localePtr[i] == '.')
-	    break;
-	localeStr[i] = localePtr[i];
+        if (localePtr[i] == '.')
+            break;
+        localeStr[i] = localePtr[i];
     }
     localeStr[i] = '\0';
     g_strlcat(localeStr, ".utf8", STRING_BUFFER_SIZE);
@@ -165,6 +179,7 @@ int main(gint argc, gchar * argv[])
 {
     GError *error = NULL;
     GOptionContext *context;
+
     gtk_init(&argc, &argv);
 
     /* Init i18n messages */
@@ -175,24 +190,23 @@ int main(gint argc, gchar * argv[])
 
     context = g_option_context_new("- ibus chewing engine component");
 
-    g_option_context_add_main_entries(context, entries,
-				      QUOTE_ME(PROJECT_NAME));
+    g_option_context_add_main_entries(context, entries, QUOTE_ME(PROJECT_NAME));
 
     if (!g_option_context_parse(context, &argc, &argv, &error)) {
-	g_print("Option parsing failed: %s\n", error->message);
-	exit(-1);
+        g_print("Option parsing failed: %s\n", error->message);
+        exit(-1);
     }
 
     g_option_context_free(context);
     mkdg_log_set_level(ibus_chewing_verbose);
 
     if (showFlags) {
-	printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
-	printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
-	printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
-	       "\n");
+        printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
+        printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
+        printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
+               "\n");
     } else {
-	start_component();
+        start_component();
     }
     return 0;
 }

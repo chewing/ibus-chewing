@@ -8,7 +8,7 @@
  * Callback should be skipped
  */
 #ifndef MKDG_SPEC_ONLY
-#define MKDG_SPEC_ONLY
+#    define MKDG_SPEC_ONLY
 #endif
 
 #include "MakerDialogUtil.h"
@@ -40,77 +40,75 @@ static const GOptionEntry entries[] = {
  */
 
 static void ctx_write_locale(PropertyContext * ctx,
-			     FILE * outF, const gchar * locale)
+                             FILE * outF, const gchar * locale)
 {
     gchar buf[XML_BUFFER_SIZE];
+
     mkdg_log(DEBUG, "ctx_write_locale(%s,-,%s)", ctx->spec->key, locale);
     setlocale(LC_ALL, "locale");
     g_snprintf(buf, 50, "name=\"%s\"", locale);
     setlocale(LC_MESSAGES, locale);
     mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_BEGIN_ONLY, buf,
-			NULL);
+                        NULL);
     mkdg_xml_tags_write(outF, "short", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			gettext(ctx->spec->label));
+                        gettext(ctx->spec->label));
     mkdg_xml_tags_write(outF, "long", MKDG_XML_TAG_TYPE_LONG, NULL,
-			gettext(ctx->spec->tooltip));
-    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_END_ONLY, NULL,
-			NULL);
+                        gettext(ctx->spec->tooltip));
+    mkdg_xml_tags_write(outF, "locale", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
 }
 
 gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
-		   const gchar * owner, FILE * outF)
-
+                   const gchar * owner, FILE * outF)
 {
-    if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_BACKEND){
-	return TRUE;
+    if (ctx->spec->propertyFlags & MKDG_PROPERTY_FLAG_NO_BACKEND) {
+        return TRUE;
     }
     mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL,
-			NULL);
+                        NULL);
     gchar buf[XML_BUFFER_SIZE];
-    gchar *camalCasedKey=mkdg_str_dash_to_camel(ctx->spec->key);
-    g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s",schemasHome);
+    gchar *camalCasedKey = mkdg_str_dash_to_camel(ctx->spec->key);
 
-    if (! STRING_IS_EMPTY(ctx->spec->subSection)) {
-	g_strlcat(buf, "/", XML_BUFFER_SIZE);
-	g_strlcat(buf, ctx->spec->subSection, XML_BUFFER_SIZE);
-    } 
+    g_snprintf(buf, XML_BUFFER_SIZE, "/schemas%s", schemasHome);
+
+    if (!STRING_IS_EMPTY(ctx->spec->subSection)) {
+        g_strlcat(buf, "/", XML_BUFFER_SIZE);
+        g_strlcat(buf, ctx->spec->subSection, XML_BUFFER_SIZE);
+    }
     g_strlcat(buf, "/", XML_BUFFER_SIZE);
     g_strlcat(buf, camalCasedKey, XML_BUFFER_SIZE);
 
     mkdg_xml_tags_write(outF, "key", MKDG_XML_TAG_TYPE_SHORT, NULL, buf);
     mkdg_xml_tags_write(outF, "applyto", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			buf + strlen("/schemas"));
-    mkdg_xml_tags_write(outF, "owner", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			owner);
+                        buf + strlen("/schemas"));
+    mkdg_xml_tags_write(outF, "owner", MKDG_XML_TAG_TYPE_SHORT, NULL, owner);
     switch (ctx->spec->valueType) {
     case G_TYPE_BOOLEAN:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			    "bool");
-	break;
+        mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
+                            "bool");
+        break;
     case G_TYPE_INT:
     case G_TYPE_UINT:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			    "int");
-	break;
+        mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL, "int");
+        break;
     case G_TYPE_STRING:
-	mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			    "string");
-	break;
+        mkdg_xml_tags_write(outF, "type", MKDG_XML_TAG_TYPE_SHORT, NULL,
+                            "string");
+        break;
     default:
-	break;
+        break;
     }
     if (ctx->spec->defaultValue) {
-	mkdg_xml_tags_write(outF, "default", MKDG_XML_TAG_TYPE_SHORT, NULL,
-			    ctx->spec->defaultValue);
+        mkdg_xml_tags_write(outF, "default", MKDG_XML_TAG_TYPE_SHORT, NULL,
+                            ctx->spec->defaultValue);
     }
     int i;
+
     for (i = 0; localeArray[i] != NULL; i++) {
-	ctx_write_locale(ctx, outF, localeArray[i]);
+        ctx_write_locale(ctx, outF, localeArray[i]);
     }
 
     setlocale(LC_ALL, NULL);
-    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_END_ONLY, NULL,
-			NULL);
+    mkdg_xml_tags_write(outF, "schema", MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
     return TRUE;
 }
 
@@ -125,48 +123,51 @@ gboolean ctx_write(PropertyContext * ctx, const gchar * schemasHome,
  * Output the parameters as GConf schemes file.
  */
 gboolean write_gconf_schemas_file(const gchar * filename,
-				  const gchar * owner,
-				  const gchar * schemasHome,
-				  const gchar * localeStr)
+                                  const gchar * owner,
+                                  const gchar * schemasHome,
+                                  const gchar * localeStr)
 {
     mkdg_log(INFO, "write_gconf_schemes_file(%s,%s,%s,%s)", filename,
-	     owner, schemasHome, localeStr);
+             owner, schemasHome, localeStr);
     FILE *outF = fopen(filename, "w");
+
     if (outF == NULL) {
-	mkdg_log(DEBUG,
-		 "write_gconf_schemas_file(%s) file %s cannot be written!",
-		 filename, filename);
-	return FALSE;
+        mkdg_log(DEBUG,
+                 "write_gconf_schemas_file(%s) file %s cannot be written!",
+                 filename, filename);
+        return FALSE;
     }
     localeArray = g_strsplit_set(localeStr, ":;", -1);
     gchar **loc;
+
     for (loc = localeArray; *loc != NULL; loc++) {
-	mkdg_log(DEBUG, "write_gconf_schemas_file() locale=%s", *loc);
+        mkdg_log(DEBUG, "write_gconf_schemas_file() locale=%s", *loc);
     }
 
     /* Header */
     mkdg_xml_tags_write(outF, "gconfschemafile",
-			MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+                        MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     mkdg_xml_tags_write(outF, "schemalist",
-			MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
+                        MKDG_XML_TAG_TYPE_BEGIN_ONLY, NULL, NULL);
     /* Body */
     /* Backend is not needed for schema generation */
     IBusChewingProperties *iProperties =
-	ibus_chewing_properties_new(NULL, NULL, NULL);
+        ibus_chewing_properties_new(NULL, NULL, NULL);
     gsize i;
+
     for (i = 0; i < mkdg_properties_size(iProperties->properties); i++) {
-	PropertyContext *ctx =
-	    mkdg_properties_index(iProperties->properties, i);
-	ctx_write(ctx, schemasHome, owner, outF);
+        PropertyContext *ctx =
+            mkdg_properties_index(iProperties->properties, i);
+        ctx_write(ctx, schemasHome, owner, outF);
     }
 
     /* Footer */
     mkdg_xml_tags_write(outF, "schemalist", MKDG_XML_TAG_TYPE_END_ONLY,
-			NULL, NULL);
+                        NULL, NULL);
     mkdg_xml_tags_write(outF, "gconfschemafile",
-			MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
+                        MKDG_XML_TAG_TYPE_END_ONLY, NULL, NULL);
     if (fclose(outF))
-	return FALSE;
+        return FALSE;
     mkdg_log(DEBUG, "write_gconf_schemas_file(%s) ... done.", filename);
     return TRUE;
 }
@@ -186,27 +187,27 @@ int main(gint argc, gchar * argv[])
     g_option_context_add_main_entries(context, entries, "ibus-chewing");
 
     if (!g_option_context_parse(context, &argc, &argv, &error)) {
-	g_print("Option parsing failed: %s\n", error->message);
-	return 2;
+        g_print("Option parsing failed: %s\n", error->message);
+        return 2;
     }
     g_option_context_free(context);
     if (argc < 2) {
-	fprintf(stderr, "Specify output schemas file!\n");
-	return 2;
+        fprintf(stderr, "Specify output schemas file!\n");
+        return 2;
     }
     mkdg_log_set_level(verbose);
     schemasFilename = argv[1];
 
-    localeStr=(localeOptStr)? localeOptStr : DEFAULT_LOCALES;
+    localeStr = (localeOptStr) ? localeOptStr : DEFAULT_LOCALES;
     g_type_init();
-    gboolean result =
-	write_gconf_schemas_file(schemasFilename, "ibus-chewing",
-				 QUOTE_ME(PROJECT_SCHEMA_BASE), localeStr);
+    gboolean result = write_gconf_schemas_file(schemasFilename, "ibus-chewing",
+                                               QUOTE_ME(PROJECT_SCHEMA_BASE),
+                                               localeStr);
 
     if (localeOptStr)
-	g_free(localeOptStr);
+        g_free(localeOptStr);
     if (!result) {
-	return 1;
+        return 1;
     }
     return 0;
 }

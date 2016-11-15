@@ -32,20 +32,19 @@
  */
 
 #ifndef _IBUS_CHEWING_SYSTRAY_H_
-#define _IBUS_CHEWING_SYSTRAY_H_
-#include <stdarg.h>
-#include <glib.h>
-#include <gtk/gtk.h>
-#include <locale.h>
-#include <glib/gi18n.h>
-#include "MakerDialogUtil.h"
-#include "IBusChewingPreEdit.h"
-#define IBUS_CHEWING_SYSTRAY_ICON_COUNT_MAX 5
+#    define _IBUS_CHEWING_SYSTRAY_H_
+#    include <stdarg.h>
+#    include <glib.h>
+#    include <gtk/gtk.h>
+#    include <locale.h>
+#    include <glib/gi18n.h>
+#    include "MakerDialogUtil.h"
+#    include "IBusChewingPreEdit.h"
+#    define IBUS_CHEWING_SYSTRAY_ICON_COUNT_MAX 5
 typedef struct _IBusChewingSystrayIcon IBusChewingSystrayIcon;
 
 typedef void (*IBusChewingSystrayClickFunc) (IBusChewingSystrayIcon *
-					     iSystrayIcon,
-					     gpointer userData);
+                                             iSystrayIcon, gpointer userData);
 
 typedef enum {
     IBUS_CHEWING_SYSTRAY_CHINESE_FLAG = 1,
@@ -84,7 +83,7 @@ void ibus_chewing_systray_icon_free(IBusChewingSystrayIcon * self);
  * @self: An IBusChewingSystrayIcon
  * @index: File index that starts from 0
  */
-#define ibus_chewing_systray_icon_get_icon_file(self, index) (const gchar *) g_ptr_array_index(self->iconFileArray,index)
+#    define ibus_chewing_systray_icon_get_icon_file(self, index) (const gchar *) g_ptr_array_index(self->iconFileArray,index)
 
 /**
  * ibus_chewing_systray_icon_set_value:
@@ -95,7 +94,7 @@ void ibus_chewing_systray_icon_free(IBusChewingSystrayIcon * self);
  * This does not update display icon, see ibus_chewing_systray_icon_update for that.
  */
 void ibus_chewing_systray_icon_set_value(IBusChewingSystrayIcon *
-					 self, guint value);
+                                         self, guint value);
 
 /**
  * ibus_chewing_systray_icon_set_visible:
@@ -105,7 +104,7 @@ void ibus_chewing_systray_icon_set_value(IBusChewingSystrayIcon *
  * Sets whether this SystrayIcon visible.
  */
 void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
-					   self, gboolean visible);
+                                           self, gboolean visible);
 
 /**
  * ibus_chewing_systray_icon_update:
@@ -116,7 +115,7 @@ void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
 void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self);
 
 
-#include "ibus-chewing-engine.h"
+#    include "ibus-chewing-engine.h"
 
 IBusChewingSystrayIcon
     * ibus_chewing_systray_chi_eng_icon_new(IBusChewingEngine * iEngine);
@@ -129,9 +128,8 @@ IBusChewingSystrayIcon
  * @returns: TRUE if systray icon created; FALSE otherwise.
  */
 gboolean
-ibus_chewing_systray_chi_eng_icon_create_or_hide(IBusChewingEngine *
-						    iEngine);
+ibus_chewing_systray_chi_eng_icon_create_or_hide(IBusChewingEngine * iEngine);
 
 void ibus_chewing_systray_chi_eng_icon_refresh_value(IBusChewingEngine *
-						     iEngine);
+                                                     iEngine);
 #endif

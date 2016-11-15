@@ -20,17 +20,17 @@
  */
 
 #ifndef _IBUS_CHEWING_UTIL_H_
-#define _IBUS_CHEWING_UTIL_H_
-#include <string.h>
-#include <glib.h>
-#include <ibus.h>
-#include <chewing.h>
-#include <X11/Xlib.h>
-#include <X11/XKBlib.h>
+#    define _IBUS_CHEWING_UTIL_H_
+#    include <string.h>
+#    include <glib.h>
+#    include <ibus.h>
+#    include <chewing.h>
+#    include <X11/Xlib.h>
+#    include <X11/XKBlib.h>
 
-#define ZHUYIN_BUFFER_SIZE 12
+#    define ZHUYIN_BUFFER_SIZE 12
 
-#define CHEWING_CHECK_VERSION(major,minor,patch)	\
+#    define CHEWING_CHECK_VERSION(major,minor,patch)	\
     (CHEWING_VERSION_MAJOR > (major) || \
      (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR > (minor)) || \
      (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR == (minor) && \
@@ -38,16 +38,16 @@
       )\
     )
 
-#define IBUS_CHEWING_LOG_DOMAIN "ibus-chewing"
+#    define IBUS_CHEWING_LOG_DOMAIN "ibus-chewing"
 
-#define IBUS_CHEWING_LOG(level, msg, args...) \
+#    define IBUS_CHEWING_LOG(level, msg, args...) \
     mkdg_log_domain(IBUS_CHEWING_LOG_DOMAIN, level, msg, ##args)
 
 typedef guint KSym;
 
 typedef guint KeyModifiers;
 
-typedef enum  {
+typedef enum {
     CHEWING_KBTYPE_INVALID = -1,
     CHEWING_KBTYPE_DEFAULT,
     CHEWING_KBTYPE_HSU,
@@ -59,10 +59,10 @@ typedef enum  {
     CHEWING_KBTYPE_DVORAK_HSU,
     CHEWING_KBTYPE_DACHEN_CP26,
     CHEWING_KBTYPE_HAN_YU
-#if CHEWING_CHECK_VERSION(0,3,4)
-    , CHEWING_KBTYPE_LUOMA_PINYIN,
+#    if CHEWING_CHECK_VERSION(0,3,4)
+        , CHEWING_KBTYPE_LUOMA_PINYIN,
     CHEWING_KBTYPE_MSP2
-#endif
+#    endif
 } ChewingKbType;
 
 
@@ -84,4 +84,4 @@ const gchar *modifiers_to_string(guint modifier);
 
 gboolean ibus_chewing_property_get_state(IBusProperty * prop);
 
-#endif				/* _IBUS_CHEWING_UTIL_H_ */
+#endif                          /* _IBUS_CHEWING_UTIL_H_ */

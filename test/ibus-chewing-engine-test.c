@@ -33,32 +33,28 @@ void focus_out_then_focus_in_with_aux_text_test()
     ibus_chewing_engine_set_capabilite(engine, IBUS_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
     ibus_chewing_engine_enable(engine);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         'j', 0x24, 0);
+                                          'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         'j', 0x24, IBUS_RELEASE_MASK);
+                                          '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '3', 0x04, 0);
+                                          'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '3', 0x04, IBUS_RELEASE_MASK);
+                                          '3', 0x04, IBUS_RELEASE_MASK);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         'j', 0x24, 0);
+                                          '2', 0x03, IBUS_CONTROL_MASK);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         'j', 0x24, IBUS_RELEASE_MASK);
-    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '3', 0x04, 0);
-    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '3', 0x04, IBUS_RELEASE_MASK);
-    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '2', 0x03, IBUS_CONTROL_MASK);
-    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine),
-                                         '2', 0x03, IBUS_RELEASE_MASK);
+                                          '2', 0x03, IBUS_RELEASE_MASK);
     check_output("", "五五", "已有：五五");
 
     /* focus out should not touch Texts */
     ibus_chewing_engine_focus_out(engine);
     g_assert(cleanBufferFocusOut == ibus_chewing_pre_edit_get_property_boolean
-        (engine->icPreEdit, "clean-buffer-focus-out"));
+             (engine->icPreEdit, "clean-buffer-focus-out"));
 
     if (cleanBufferFocusOut) {
         check_output("", "", "");
@@ -77,14 +73,15 @@ void focus_out_then_focus_in_with_aux_text_test()
 void focus_out_then_focus_in_with_aux_text_clean_buffer_on_test()
 {
     ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-	    "clean-buffer-focus-out", TRUE);
+                                                "clean-buffer-focus-out", TRUE);
     focus_out_then_focus_in_with_aux_text_test();
 }
 
 void focus_out_then_focus_in_with_aux_text_clean_buffer_off_test()
 {
     ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-	    "clean-buffer-focus-out", FALSE);
+                                                "clean-buffer-focus-out",
+                                                FALSE);
     focus_out_then_focus_in_with_aux_text_test();
 }
 
@@ -94,16 +91,19 @@ gint main(gint argc, gchar ** argv)
     mkdg_log_set_level(DEBUG);
     engine = ibus_chewing_engine_new();
     ibus_chewing_pre_edit_save_property_int(engine->icPreEdit,
-					   "max-chi-symbol-len", 8);
+                                            "max-chi-symbol-len", 8);
     ibus_chewing_pre_edit_set_apply_property_boolean(engine->icPreEdit,
-					       "plain-zhuyin", FALSE);
+                                                     "plain-zhuyin", FALSE);
 
-    gboolean cleanBufferFocusOut=ibus_chewing_pre_edit_get_property_boolean(engine->icPreEdit, "clean-buffer-focus-out");
+    gboolean cleanBufferFocusOut =
+        ibus_chewing_pre_edit_get_property_boolean(engine->icPreEdit,
+                                                   "clean-buffer-focus-out");
 
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
     ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-	    "clean-buffer-focus-out", cleanBufferFocusOut);
+                                                "clean-buffer-focus-out",
+                                                cleanBufferFocusOut);
 
     return g_test_run();
 }

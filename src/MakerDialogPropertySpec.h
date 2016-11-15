@@ -31,9 +31,9 @@
  */
 
 #ifndef _MAKER_DIALOG_PROPERTY_SPEC_H_
-#define _MAKER_DIALOG_PROPERTY_SPEC_H_
-#include <glib.h>
-#include <glib-object.h>
+#    define _MAKER_DIALOG_PROPERTY_SPEC_H_
+#    include <glib.h>
+#    include <glib-object.h>
 
 /**
  * MkdgPropertyFlags:
@@ -96,4 +96,4 @@ typedef struct {
     gpointer auxData;
 } MkdgPropertySpec;
 
-#endif /* _MAKER_DIALOG_PROPERTY_SPEC_H_ */
+#endif                          /* _MAKER_DIALOG_PROPERTY_SPEC_H_ */
