@@ -29,9 +29,9 @@
  * A MakerDialog backend provides an interface to configuration service like GConf2 or dconf
  */
 #ifndef _MAKER_DIALOG_BACKEND_H_
-#define _MAKER_DIALOG_BACKEND_H_
-#include <glib.h>
-#include <glib-object.h>
+#    define _MAKER_DIALOG_BACKEND_H_
+#    include <glib.h>
+#    include <glib-object.h>
 
 typedef struct MkdgBackend_ MkdgBackend;
 
@@ -48,16 +48,16 @@ typedef enum {
 } MkdgBackendFlag;
 
 typedef gchar *(*BackendGetKeyFunc) (MkdgBackend * backend,
-				     const gchar * section,
-				     const gchar * key, gpointer userData);
+                                     const gchar * section,
+                                     const gchar * key, gpointer userData);
 
 typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
-				    const gchar * section,
-				    const gchar * key, gpointer userData);
+                                    const gchar * section,
+                                    const gchar * key, gpointer userData);
 
 typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
-				     const gchar * section,
-				     const gchar * key, gpointer userData);
+                                     const gchar * section,
+                                     const gchar * key, gpointer userData);
 
 /**
  * MkdgBackend:
@@ -82,18 +82,18 @@ struct MkdgBackend_ {
 };
 
 MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
-			      const gchar * basePath, gpointer auxData);
+                              const gchar * basePath, gpointer auxData);
 
 gchar *mkdg_backend_get_key(MkdgBackend * backend,
-			    const gchar * section, const gchar * key,
-			    gpointer userData);
+                            const gchar * section, const gchar * key,
+                            gpointer userData);
 
 GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
-			  const gchar * section, const gchar * key,
-			  gpointer userData);
+                          const gchar * section, const gchar * key,
+                          gpointer userData);
 
 gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
-			    const gchar * section, const gchar * key,
-			    gpointer userData);
+                            const gchar * section, const gchar * key,
+                            gpointer userData);
 
-#endif				/* _MAKER_DIALOG_BACKEND_H_ */
+#endif                          /* _MAKER_DIALOG_BACKEND_H_ */

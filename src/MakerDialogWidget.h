@@ -1,15 +1,15 @@
 #ifndef _MAKER_DIALOG_WIDGET_H_
-#define _MAKER_DIALOG_WIDGET_H_
-#include <gtk/gtk.h>
-#include "MakerDialogProperty.h"
+#    define _MAKER_DIALOG_WIDGET_H_
+#    include <gtk/gtk.h>
+#    include "MakerDialogProperty.h"
 
-#ifndef MKDG_HBOX_SPACING_DEFAULT
-#define MKDG_HBOX_SPACING_DEFAULT 2
-#endif
+#    ifndef MKDG_HBOX_SPACING_DEFAULT
+#        define MKDG_HBOX_SPACING_DEFAULT 2
+#    endif
 
-#ifndef MKDG_VBOX_SPACING_DEFAULT
-#define MKDG_VBOX_SPACING_DEFAULT 2
-#endif
+#    ifndef MKDG_VBOX_SPACING_DEFAULT
+#        define MKDG_VBOX_SPACING_DEFAULT 2
+#    endif
 
 typedef enum {
     MKDG_WIDGET_FLAG_SET_IMMEDIATELY = 1,
@@ -77,7 +77,7 @@ typedef GtkLabel MkdgWgtLabel;
  * 
  * Cast the object as MkdgWgt.
  */
-#define MKDG_WGT(obj) GTK_WIDGET(obj)
+#    define MKDG_WGT(obj) GTK_WIDGET(obj)
 
 gint mkdg_wgt_get_width(MkdgWgt * wgt);
 
@@ -101,7 +101,7 @@ typedef struct {
 } MkdgWidgetContainer;
 
 typedef struct {
-    MkdgWgtLabel  *label;
+    MkdgWgtLabel *label;
     MkdgWgt *wgt;
     PropertyContext *ctx;
     MkdgWidgetFlag flags;
@@ -112,22 +112,21 @@ MkdgWidgetContainer *mkdg_widget_container_new(MkdgWgt * wgt);
 
 
 void mkdg_widget_container_add_widget(MkdgWidgetContainer * container,
-				      MkdgWidget * mWidget);
+                                      MkdgWidget * mWidget);
 
 void mkdg_widget_container_align_all_children(MkdgWidgetContainer *
-					      container,
-					      gfloat labelXAlign,
-					      gfloat labelYAlign,
-					      gfloat wgtXAlign,
-					      gfloat wgtYAlign);
+                                              container,
+                                              gfloat labelXAlign,
+                                              gfloat labelYAlign,
+                                              gfloat wgtXAlign,
+                                              gfloat wgtYAlign);
 
 gint mkdg_widget_container_count_children(MkdgWidgetContainer * container);
 
 void mkdg_widget_cointainer_free(MkdgWidgetContainer * container);
 
 
-MkdgWidget *mkdg_widget_new(PropertyContext * ctx,
-			    MkdgWidgetFlag widgetFlags);
+MkdgWidget *mkdg_widget_new(PropertyContext * ctx, MkdgWidgetFlag widgetFlags);
 
 
 /**
@@ -153,7 +152,6 @@ GValue *mkdg_widget_get_widget_value(MkdgWidget * mWidget, GValue * value);
  * @see_also: property_context_set(), mkdg_widget_get_widget_value()
  * @returns: TRUE if success, FALSE if either mWidget or it's members are NULL
  */
-gboolean mkdg_widget_set_widget_value(MkdgWidget * mWidget,
-				      GValue * value);
+gboolean mkdg_widget_set_widget_value(MkdgWidget * mWidget, GValue * value);
 
-#endif				/* _MAKER_DIALOG_WIDGET_H_ */
+#endif                          /* _MAKER_DIALOG_WIDGET_H_ */

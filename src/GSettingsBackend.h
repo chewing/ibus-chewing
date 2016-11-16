@@ -30,16 +30,16 @@
  */
 
 #ifndef _MKDG_GSETTINGS_BACKEND_H_
-#define _MKDG_GSETTINGS_BACKEND_H_
-#include <stdio.h>
-#include <glib.h>
-#include <gio/gio.h>
-#include "MakerDialogPropertySpec.h"
-#include "MakerDialogBackend.h"
-#define GSETTINGS_BACKEND_ID "gsettings"
+#    define _MKDG_GSETTINGS_BACKEND_H_
+#    include <stdio.h>
+#    include <glib.h>
+#    include <gio/gio.h>
+#    include "MakerDialogPropertySpec.h"
+#    include "MakerDialogBackend.h"
+#    define GSETTINGS_BACKEND_ID "gsettings"
 
 GValue *mkdg_g_settings_read_value(GSettings * settings,
-				   GValue * value, const gchar * key);
+                                   GValue * value, const gchar * key);
 
 
 /**
@@ -53,17 +53,17 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
  */
 
 MkdgBackend *mkdg_g_settings_backend_new(const gchar * schemaId,
-					 const gchar * basePath,
-					 gpointer auxData);
+                                         const gchar * basePath,
+                                         gpointer auxData);
 
 gboolean mkdg_g_settings_write_schema_from_spec_array(const gchar *
-						      schemaId,
-						      const gchar *
-						      basePath,
-						      FILE * file,
-						      MkdgPropertySpec
-						      specs[],
-						      const gchar *
-						      gettextDomain);
+                                                      schemaId,
+                                                      const gchar *
+                                                      basePath,
+                                                      FILE * file,
+                                                      MkdgPropertySpec
+                                                      specs[],
+                                                      const gchar *
+                                                      gettextDomain);
 
-#endif				/* _MKDG_GSETTINGS_BACKEND_H_ */
+#endif                          /* _MKDG_GSETTINGS_BACKEND_H_ */

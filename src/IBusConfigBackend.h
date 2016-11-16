@@ -31,13 +31,12 @@
  */
 
 #ifndef _IBUS_CONFIG_BACKEND_H_
-#define _IBUS_CONFIG_BACKEND_H_
-#include "ibus.h"
-#include "MakerDialogBackend.h"
-#define IBUS_CONFIG_BACKEND_ID "ibus_config"
+#    define _IBUS_CONFIG_BACKEND_H_
+#    include "ibus.h"
+#    include "MakerDialogBackend.h"
+#    define IBUS_CONFIG_BACKEND_ID "ibus_config"
 
 MkdgBackend *ibus_config_backend_new(IBusService * service,
-				     const gchar * baseDir,
-				     gpointer auxData);
+                                     const gchar * baseDir, gpointer auxData);
 
-#endif				/* _IBUS_CONFIG_BACKEND_H_ */
+#endif                          /* _IBUS_CONFIG_BACKEND_H_ */

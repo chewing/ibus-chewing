@@ -32,11 +32,11 @@
  */
 
 #ifndef _MAKER_DIALOG_UTIL_H_
-#define _MAKER_DIALOG_UTIL_H_
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
-#include <glib-object.h>
+#    define _MAKER_DIALOG_UTIL_H_
+#    include <ctype.h>
+#    include <stdio.h>
+#    include <string.h>
+#    include <glib-object.h>
 
 /**
  * MkdgLogLevel:
@@ -66,24 +66,23 @@ void mkdg_log_set_file(FILE * file);
 void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
 
 void mkdg_log_domain(const gchar * domain, MkdgLogLevel level,
-		     const gchar * format, ...);
+                     const gchar * format, ...);
 
 gchar *mkdg_g_value_to_string(GValue * value);
 
-gboolean mkdg_g_value_reset(GValue * value, GType type,
-			    gboolean overwrite);
+gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite);
 
 gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
 
 gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
 
-#define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value)==G_TYPE_BOOLEAN)
+#    define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value)==G_TYPE_BOOLEAN)
 
-#define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value)==G_TYPE_INT)
+#    define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value)==G_TYPE_INT)
 
-#define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value)==G_TYPE_UINT)
+#    define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value)==G_TYPE_UINT)
 
-#define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value)==G_TYPE_STRING)
+#    define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value)==G_TYPE_STRING)
 
 void mkdg_g_variant_to_g_value(GVariant * gVar, GValue * value);
 
@@ -94,15 +93,15 @@ GVariant *mkdg_g_value_to_g_variant(GValue * value);
  * String Utility Macros and Functions
  */
 
-#define QUOTE_ME_INNER(s) #s
-#define QUOTE_ME(s) QUOTE_ME_INNER(s)
+#    define QUOTE_ME_INNER(s) #s
+#    define QUOTE_ME(s) QUOTE_ME_INNER(s)
 
-#define STRING_IS_EMPTY(str) \
+#    define STRING_IS_EMPTY(str) \
     (!str  || \
      (str[0] == '\0')\
     )
 
-#define STRING_EQUALS(str1, str2) \
+#    define STRING_EQUALS(str1, str2) \
     ((str1==NULL && str2==NULL) ||\
      ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
     )
@@ -113,9 +112,9 @@ gchar *mkdg_str_dash_to_camel(const gchar * argStr);
  * Flag Utility Macros
  */
 
-#define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
-#define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
-#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
+#    define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
+#    define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
+#    define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
 
 /**************************************
  * XML data structure and functions
@@ -131,11 +130,11 @@ typedef enum {
 } MkdgXmlTagType;
 
 gchar *mkdg_xml_attr_append(gchar * buf, gint bufferSize,
-			    const gchar * attr, const gchar * value);
+                            const gchar * attr, const gchar * value);
 
 gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
-			     MkdgXmlTagType type, const gchar * attribute,
-			     const gchar * value);
+                             MkdgXmlTagType type, const gchar * attribute,
+                             const gchar * value);
 
-#define MAKER_DIALOG_VALUE_LENGTH 200
-#endif				/* _MAKER_DIALOG_UTIL_H_ */
+#    define MAKER_DIALOG_VALUE_LENGTH 200
+#endif                          /* _MAKER_DIALOG_UTIL_H_ */

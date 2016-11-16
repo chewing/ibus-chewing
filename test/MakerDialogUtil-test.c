@@ -1,12 +1,12 @@
 #include <glib.h>
 #include "test-util.h"
 #include "MakerDialogUtil.h"
-#define TEST_RUN_THIS(f) add_test_case("MakerDialogUtil", f)    
+#define TEST_RUN_THIS(f) add_test_case("MakerDialogUtil", f)
 
 void mkdg_g_value_to_string_test()
 {
     /* Test int */
-    GValue intValue={0};
+    GValue intValue = { 0 };
     g_value_init(&intValue, G_TYPE_INT);
     g_value_set_int(&intValue, 0);
     g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&intValue));
@@ -16,7 +16,7 @@ void mkdg_g_value_to_string_test()
     g_value_unset(&intValue);
 
     /* Test uint */
-    GValue uintValue={0};
+    GValue uintValue = { 0 };
     g_value_init(&uintValue, G_TYPE_UINT);
     g_value_set_uint(&uintValue, 0);
     g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&uintValue));
@@ -26,12 +26,12 @@ void mkdg_g_value_to_string_test()
     g_value_unset(&uintValue);
 
     /* Test boolean */
-    GValue booleanValue={0};
+    GValue booleanValue = { 0 };
     g_value_init(&booleanValue, G_TYPE_BOOLEAN);
     g_value_set_boolean(&booleanValue, TRUE);
     g_assert_cmpstr("1", ==, mkdg_g_value_to_string(&booleanValue));
 
-    g_value_set_boolean(&booleanValue,FALSE);
+    g_value_set_boolean(&booleanValue, FALSE);
     g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&booleanValue));
     g_value_unset(&booleanValue);
 }
@@ -39,7 +39,7 @@ void mkdg_g_value_to_string_test()
 void mkdg_g_value_from_string_test()
 {
     /* Test int */
-    GValue intValue={0};
+    GValue intValue = { 0 };
     g_value_init(&intValue, G_TYPE_INT);
 
     mkdg_g_value_from_string(&intValue, "0");
@@ -51,7 +51,7 @@ void mkdg_g_value_from_string_test()
     g_value_unset(&intValue);
 
     /* Test uint */
-    GValue uintValue={0};
+    GValue uintValue = { 0 };
     g_value_init(&uintValue, G_TYPE_UINT);
 
     mkdg_g_value_from_string(&uintValue, "0");
@@ -63,7 +63,7 @@ void mkdg_g_value_from_string_test()
     g_value_unset(&uintValue);
 
     /* Test boolean */
-    GValue booleanValue={0};
+    GValue booleanValue = { 0 };
     g_value_init(&booleanValue, G_TYPE_BOOLEAN);
 
     mkdg_g_value_from_string(&booleanValue, "1");
@@ -95,44 +95,47 @@ void mkdg_g_value_from_string_test()
 void QUOTE_ME_test()
 {
 #define PRJ_TEST  MKDG
-    g_assert_cmpstr("MKDG",==,QUOTE_ME(PRJ_TEST));
+    g_assert_cmpstr("MKDG", ==, QUOTE_ME(PRJ_TEST));
 #undef PRJ_TEST
 }
 
 void STRING_IS_EMPTY_test()
 {
-    gchar *nulStr=NULL;
-    g_assert( STRING_IS_EMPTY(nulStr));
-    g_assert( STRING_IS_EMPTY(""));
+    gchar *nulStr = NULL;
+
+    g_assert(STRING_IS_EMPTY(nulStr));
+    g_assert(STRING_IS_EMPTY(""));
     g_assert(!STRING_IS_EMPTY("NULL"));
 }
 
 void STRING_EQUALS_test()
 {
-    gchar *nulStr=NULL;
+    gchar *nulStr = NULL;
+
     g_assert(STRING_EQUALS("", ""));
     g_assert(!STRING_EQUALS("", nulStr));
     g_assert(STRING_EQUALS(nulStr, nulStr));
-    g_assert(!STRING_EQUALS("HI","Hi"));
-    g_assert(STRING_EQUALS("YO\"","YO\""));
+    g_assert(!STRING_EQUALS("HI", "Hi"));
+    g_assert(STRING_EQUALS("YO\"", "YO\""));
 }
 
 void mkdg_xml_attr_append_test()
 {
 #define BUFFER_SIZE 200
     gchar buf[BUFFER_SIZE];
-    buf[0]='\0';
+
+    buf[0] = '\0';
     mkdg_xml_attr_append(buf, BUFFER_SIZE, "", NULL);
-    g_assert_cmpstr("", == , buf);
+    g_assert_cmpstr("", ==, buf);
 
     mkdg_xml_attr_append(buf, BUFFER_SIZE, "foo", NULL);
-    g_assert_cmpstr("foo", == , buf);
+    g_assert_cmpstr("foo", ==, buf);
 
     mkdg_xml_attr_append(buf, BUFFER_SIZE, "animal", "sheep");
-    g_assert_cmpstr("foo animal=\"sheep\"", == , buf);
+    g_assert_cmpstr("foo animal=\"sheep\"", ==, buf);
 
     mkdg_xml_attr_append(buf, BUFFER_SIZE, "lang", "zh_TW");
-    g_assert_cmpstr("foo animal=\"sheep\" lang=\"zh_TW\"", == , buf);
+    g_assert_cmpstr("foo animal=\"sheep\" lang=\"zh_TW\"", ==, buf);
 }
 
 
@@ -149,4 +152,3 @@ gint main(gint argc, gchar ** argv)
     TEST_RUN_THIS(mkdg_xml_attr_append_test);
     return g_test_run();
 }
-

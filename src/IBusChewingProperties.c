@@ -7,7 +7,7 @@
 #include "IBusChewingProperties.h"
 #include "IBusConfigBackend.h"
 #ifdef USE_GSETTINGS
-#include "GSettingsBackend.h"
+#    include "GSettingsBackend.h"
 #endif
 
 #define PAGE_EDITING  N_("Editing")
@@ -38,9 +38,9 @@ const gchar *selKeys_array[SELKEYS_ARRAY_SIZE + 1] = {
     "asdfghjkl;",
     "asdfzxcv89",
     "asdfjkl789",
-    "aoeu;qjkix",		/* Dvorak */
-    "aoeuhtnsid",		/* Dvorak */
-    "aoeuidhtns",		/* Dvorak */
+    "aoeu;qjkix",               /* Dvorak */
+    "aoeuhtnsid",               /* Dvorak */
+    "aoeuidhtns",               /* Dvorak */
     "1234qweras",
     NULL
 };
@@ -157,19 +157,20 @@ MkdgPropertySpec propSpecs[] = {
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      capslockToggleChinese_apply_callback, 0,
      N_("On: Caps Lock toggle Chinese/English\n"
-	"Off: Caps Lock only affect English letter case"), NULL}
+        "Off: Caps Lock only affect English letter case"), NULL}
     ,
     {
      G_TYPE_STRING, "default-english-case", PAGE_EDITING,
      N_("Default English letter case\n"
-	"  (Only effective when Caps Lock toggles Chinese is ON)"),
+        "  (Only effective when Caps Lock toggles Chinese is ON)"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "lowercase",
      propDefaultEnglishLettercase_array, NULL, 0, 1,
      defaultEnglishLetterCase_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-     N_("no control: No default letter case. Not recommend if you use multiple keyboards or synergy\n"
-        "lowercase: Default to lowercase, press shift for uppercase.\n"
-	"uppercase: Default to uppercase, press shift for lowercase."),
+     N_
+     ("no control: No default letter case. Not recommend if you use multiple keyboards or synergy\n"
+      "lowercase: Default to lowercase, press shift for uppercase.\n"
+      "uppercase: Default to uppercase, press shift for lowercase."),
      NULL}
     ,
     {
@@ -218,13 +219,13 @@ MkdgPropertySpec propSpecs[] = {
  */
 
 IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
-						   gpointer parent,
-						   gpointer auxData)
+                                                   gpointer parent,
+                                                   gpointer auxData)
 {
     IBusChewingProperties *self = g_new0(IBusChewingProperties, 1);
+
     self->properties =
-	mkdg_properties_from_spec_array(propSpecs, backend, parent,
-					auxData);
+        mkdg_properties_from_spec_array(propSpecs, backend, parent, auxData);
 
     /* In schema generation, backend is NULL */
 #ifdef USE_GSETTINGS
@@ -241,72 +242,74 @@ static GString *ibus_section_to_schema(const gchar * section)
     GString *result = g_string_new("org.freedesktop");
     gchar **strArr = g_strsplit(section, "/", -1);
     gint i;
+
     for (i = 0; strArr[i] != NULL; i++) {
-	g_string_append_printf(result, ".%s", strArr[i]);
+        g_string_append_printf(result, ".%s", strArr[i]);
     }
     g_strfreev(strArr);
     return result;
 }
-#endif				/* USE_GSETTINGS */
+#endif                          /* USE_GSETTINGS */
 
 GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
-					     GValue * value,
-					     const gchar * section,
-					     const gchar * key,
-					     gpointer userData)
+                                             GValue * value,
+                                             const gchar * section,
+                                             const gchar * key,
+                                             gpointer userData)
 {
     g_assert(self);
     g_assert(value);
 #ifdef USE_GSETTINGS
     if (STRING_EQUALS(self->properties->backend->id, GSETTINGS_BACKEND_ID)) {
-	GSettings *confObj;
-	if (!g_hash_table_contains(self->confObjTable, (gpointer) section)) {
-	    GString *schemaIdStr = ibus_section_to_schema(section);
-	    confObj = g_settings_new(schemaIdStr->str);
-	    g_hash_table_insert(self->confObjTable, (gpointer) section,
-				(gpointer) confObj);
-	    g_string_free(schemaIdStr, TRUE);
-	} else {
-	    confObj =
-		(GSettings *) g_hash_table_lookup(self->confObjTable,
-						  (gconstpointer) section);
-	}
-	g_assert(confObj);
-	return mkdg_g_settings_read_value(confObj, value, key);
+        GSettings *confObj;
+
+        if (!g_hash_table_contains(self->confObjTable, (gpointer) section)) {
+            GString *schemaIdStr = ibus_section_to_schema(section);
+
+            confObj = g_settings_new(schemaIdStr->str);
+            g_hash_table_insert(self->confObjTable, (gpointer) section,
+                                (gpointer) confObj);
+            g_string_free(schemaIdStr, TRUE);
+        } else {
+            confObj =
+                (GSettings *) g_hash_table_lookup(self->confObjTable,
+                                                  (gconstpointer) section);
+        }
+        g_assert(confObj);
+        return mkdg_g_settings_read_value(confObj, value, key);
     }
-#endif				/* USE_GSETTINGS */
+#endif                          /* USE_GSETTINGS */
     return mkdg_backend_read(self->properties->backend, value, section,
-			     key, userData);
+                             key, userData);
 }
 
 gboolean
 ibus_chewing_properties_read_boolean_general(IBusChewingProperties
-					     * self,
-					     const gchar *
-					     section,
-					     const gchar * key,
-					     gpointer userData)
+                                             * self,
+                                             const gchar *
+                                             section,
+                                             const gchar * key,
+                                             gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_BOOLEAN);
-    ibus_chewing_properties_read_general(self, &gValue, section, key,
-					 userData);
+    ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
     gboolean result = g_value_get_boolean(&gValue);
+
     g_value_unset(&gValue);
     return result;
 }
 
 gint
 ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-					 const gchar * section,
-					 const gchar * key,
-					 gpointer userData)
+                                         const gchar * section,
+                                         const gchar * key, gpointer userData)
 {
     GValue gValue = { 0 };
     g_value_init(&gValue, G_TYPE_INT);
-    ibus_chewing_properties_read_general(self, &gValue, section, key,
-					 userData);
+    ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
     gint result = g_value_get_int(&gValue);
+
     g_value_unset(&gValue);
     return result;
 }
