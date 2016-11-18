@@ -89,39 +89,23 @@ static void start_component(void)
                                        QUOTE_ME(PROJECT_NAME));
     }
 
-    IBusEngineDesc *engineDesc = ibus_engine_desc_new_varargs("name", "chewing",
-                                                              "longname",
-                                                              _("Chewing"),
-                                                              "description",
-                                                              _
-                                                              ("Chinese chewing input method"),
-                                                              "language",
-                                                              "zh_TW",
-                                                              "license",
-                                                              "GPLv2+",
-                                                              "author",
-                                                              _
-                                                              ("Peng Huang, Ding-Yi Chen"),
-                                                              "icon",
-                                                              QUOTE_ME
-                                                              (PRJ_DATA_DIR)
-                                                              "/icons/"
-                                                              QUOTE_ME
-                                                              (PROJECT_NAME)
-                                                              ".png",
-                                                              "layout", "us",
-                                                              "setup",
-                                                              QUOTE_ME
-                                                              (LIBEXEC_DIR)
-                                                              "/ibus-setup-chewing",
-                                                              "version",
-                                                              QUOTE_ME(PRJ_VER),
-                                                              "textdomain",
-                                                              QUOTE_ME
-                                                              (PROJECT_NAME),
-                                                              NULL);
+    IBusEngineDesc *engineDesc =
+        ibus_engine_desc_new_varargs
+            ("name", "chewing",
+             "longname", _("Chewing"),
+             "description", _("Chinese chewing input method"),
+             "language", "zh_TW",
+             "license", "GPLv2+",
+             "author", _("Peng Huang, Ding-Yi Chen"),
+             "icon", QUOTE_ME(PRJ_DATA_DIR)"/icons/"QUOTE_ME(PROJECT_NAME)".png",
+             "layout", "us",
+             "setup", QUOTE_ME(LIBEXEC_DIR)"/ibus-setup-chewing",
+             "version", QUOTE_ME(PRJ_VER),
+             "textdomain", QUOTE_ME(PROJECT_NAME),
+             NULL);
 
     ibus_component_add_engine(component, engineDesc);
+
     factory = ibus_factory_new(ibus_bus_get_connection(bus));
     ibus_factory_add_engine(factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
@@ -132,6 +116,8 @@ static void start_component(void)
     } else {
         ibus_bus_register_component(bus, component);
     }
+
+    g_object_unref(component);
     ibus_main();
 }
 
