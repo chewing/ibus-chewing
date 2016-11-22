@@ -192,49 +192,42 @@ IBusText *decorate_pre_edit(IBusChewingPreEdit * icPreEdit,
     gchar *preEdit = ibus_chewing_pre_edit_get_pre_edit(icPreEdit);
     IBusText *iText = ibus_text_new_from_string(preEdit);
     gint chiSymbolCursor = chewing_cursor_Current(icPreEdit->context);
-
-    IBUS_CHEWING_LOG(DEBUG, "decorate_pre_edit() cursor=%d preEdit=%s",
-                     chiSymbolCursor, preEdit);
-
     gint charLen = (gint) g_utf8_strlen(preEdit, -1);
-    gint cursorRight = chiSymbolCursor + icPreEdit->bpmfLen;
 
-    IBUS_CHEWING_LOG(DEBUG, "decorate_pre_edit() charLen=%d cursorRight=%d",
-                     charLen, cursorRight);
+    IBUS_CHEWING_LOG(DEBUG, "decorate_pre_edit() cursor=%d preEdit=%s charLen=%d",
+                     chiSymbolCursor, preEdit, charLen);
+
+    /* Use single underline to mark whole pre-edit buffer */
+    ibus_text_append_attribute(iText,
+                               IBUS_ATTR_TYPE_UNDERLINE,
+                               IBUS_ATTR_UNDERLINE_SINGLE,
+                               0, charLen);
 
     IntervalType it;
 
     chewing_interval_Enumerate(icPreEdit->context);
     /* Add double lines on chewing interval that contains cursor */
-    /* Add single line on other chewing interval */
     while (chewing_interval_hasNext(icPreEdit->context)) {
         chewing_interval_Get(icPreEdit->context, &it);
         if (it.from <= chiSymbolCursor && chiSymbolCursor <= it.to) {
             ibus_text_append_attribute(iText,
                                        IBUS_ATTR_TYPE_UNDERLINE,
                                        IBUS_ATTR_UNDERLINE_DOUBLE,
-                                       it.from, it.to + 1);
-        } else {
-            ibus_text_append_attribute(iText,
-                                       IBUS_ATTR_TYPE_UNDERLINE,
-                                       IBUS_ATTR_UNDERLINE_SINGLE,
-                                       it.from, it.to + 1);
+                                       it.from, it.to);
         }
     }
 
-    if (!mkdg_has_flag(capabilite, IBUS_CAP_SURROUNDING_TEXT)
-        || !mkdg_has_flag(capabilite, IBUS_CAP_AUXILIARY_TEXT)) {
-        /* Cannot change color when if the client is not capable
-         * of showing surrounding text or auxiliary text
-         */
-        return iText;
+    /* Use background color to show current cursor */
+    if (chiSymbolCursor < charLen) {
+        ibus_text_append_attribute(iText,
+                                   IBUS_ATTR_TYPE_BACKGROUND,
+                                   0x00c8c8f0,
+                                   chiSymbolCursor, chiSymbolCursor + 1);
+        ibus_text_append_attribute(iText,
+                                   IBUS_ATTR_TYPE_FOREGROUND,
+                                   0x00000000,
+                                   chiSymbolCursor, chiSymbolCursor + 1);
     }
-
-    /* Show current cursor in red */
-    ibus_text_append_attribute(iText,
-                               IBUS_ATTR_TYPE_BACKGROUND,
-                               0x00ff0000,
-                               chiSymbolCursor, chiSymbolCursor + 1);
 
     return iText;
 }
