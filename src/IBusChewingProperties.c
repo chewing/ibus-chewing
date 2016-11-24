@@ -104,14 +104,6 @@ MkdgPropertySpec propSpecs[] = {
      addPhraseDirection_apply_callback, 0,
      N_("Add phrases to the front"), NULL}
     ,
-    {G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
-     N_("Clean pre-edit buffer when focus out"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-     cleanBufferFocusOut_apply_callback, 0,
-     N_
-     ("On: Clean pre-edit buffer when focus out to prevent program crash\n"
-      "Off: Keep what you already type for convenience"), NULL}
-    ,
     {G_TYPE_BOOLEAN, "easy-symbol-input", PAGE_EDITING,
      N_("Easy symbol input"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
