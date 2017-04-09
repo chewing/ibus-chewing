@@ -27,9 +27,6 @@ void check_output(const gchar * outgoing, const gchar * preEdit,
 
 void focus_out_then_focus_in_with_aux_text_test()
 {
-    gboolean cleanBufferFocusOut = ibus_chewing_pre_edit_get_property_boolean
-        (engine->icPreEdit, "clean-buffer-focus-out");
-
     ibus_chewing_engine_set_capabilite(engine, IBUS_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
     ibus_chewing_engine_enable(engine);
@@ -51,38 +48,15 @@ void focus_out_then_focus_in_with_aux_text_test()
                                           '2', 0x03, IBUS_RELEASE_MASK);
     check_output("", "五五", "已有：五五");
 
-    /* focus out should not touch Texts */
-    ibus_chewing_engine_focus_out(engine);
-    g_assert(cleanBufferFocusOut == ibus_chewing_pre_edit_get_property_boolean
-             (engine->icPreEdit, "clean-buffer-focus-out"));
-
-    if (cleanBufferFocusOut) {
-        check_output("", "", "");
-    } else {
-        check_output("", "五五", "已有：五五");
-    }
-
     /* all should be clean */
+    ibus_chewing_engine_focus_out(engine);
+    check_output("", "", "");
+
     ibus_chewing_engine_focus_in(engine);
     check_output("", "", "");
 
     ibus_chewing_pre_edit_clear(engine->icPreEdit);
     check_output("", "", "");
-}
-
-void focus_out_then_focus_in_with_aux_text_clean_buffer_on_test()
-{
-    ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-                                                "clean-buffer-focus-out", TRUE);
-    focus_out_then_focus_in_with_aux_text_test();
-}
-
-void focus_out_then_focus_in_with_aux_text_clean_buffer_off_test()
-{
-    ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-                                                "clean-buffer-focus-out",
-                                                FALSE);
-    focus_out_then_focus_in_with_aux_text_test();
 }
 
 gint main(gint argc, gchar ** argv)
@@ -95,15 +69,7 @@ gint main(gint argc, gchar ** argv)
     ibus_chewing_pre_edit_set_apply_property_boolean(engine->icPreEdit,
                                                      "plain-zhuyin", FALSE);
 
-    gboolean cleanBufferFocusOut =
-        ibus_chewing_pre_edit_get_property_boolean(engine->icPreEdit,
-                                                   "clean-buffer-focus-out");
-
-    TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
-    TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
-    ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
-                                                "clean-buffer-focus-out",
-                                                cleanBufferFocusOut);
+    TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_test);
 
     return g_test_run();
 }

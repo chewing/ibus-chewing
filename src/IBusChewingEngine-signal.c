@@ -26,7 +26,6 @@ void ibus_chewing_engine_start(IBusChewingEngine * self)
     ibus_chewing_engine_use_setting(self);
     ibus_chewing_engine_restore_mode(self);
     ibus_chewing_engine_refresh_property_list(self);
-
 }
 
 /**
@@ -72,14 +71,10 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
 {
     IBUS_CHEWING_LOG(MSG, "* focus_in(): statusFlags=%x",
                      self->_priv->statusFlags);
-    ibus_chewing_engine_start(self);
-    /* Shouldn't have anything to commit when Focus-in */
-    ibus_chewing_pre_edit_clear(self->icPreEdit);
-    refresh_pre_edit_text(self);
-    refresh_aux_text(self);
-    refresh_outgoing_text(self);
 
+    ibus_chewing_engine_start(self);
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_FOCUS_IN);
+
     IBUS_CHEWING_LOG(INFO, "focus_in() statusFlags=%x: return",
                      self->_priv->statusFlags);
 }
@@ -93,13 +88,11 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
                                           ENGINE_FLAG_PROPERTIES_REGISTERED);
     ibus_chewing_engine_hide_property_list(self);
 
-    if (ibus_chewing_pre_edit_get_property_boolean
-        (self->icPreEdit, "clean-buffer-focus-out")) {
-        /* Clean the buffer when focus out */
-        ibus_chewing_pre_edit_clear(self->icPreEdit);
-        refresh_pre_edit_text(self);
-        refresh_aux_text(self);
-    }
+    /* Clean the buffer when focus out */
+    ibus_chewing_pre_edit_clear(self->icPreEdit);
+    refresh_pre_edit_text(self);
+    refresh_aux_text(self);
+    refresh_outgoing_text(self);
 
     IBUS_CHEWING_LOG(DEBUG, "focus_out(): return");
 }
