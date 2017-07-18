@@ -1,3 +1,12 @@
+* Tue Jul 18 2017 Ding-Yi Chen <dchen at redhat.com> - 1.6.0
+- Enhancement:
+  + GitHub Issue: #35 Support KB_THL_PINYIN and KB_MPS2_PINYIN
+    RHBZ: #1182819: - RFE: Support KB_THL_PINYIN and KB_MPS2_PINYIN
+- Fix:
+  + GitHub Issue: #51 Hard-coded path in data/ibus-setup-chewing.desktop
+  + GitHub Issue: #85 Adding phrase using Ctrl + Num failed to respond
+  + GitHub Issue: #93 Remove XTST from CMakeLists.txt
+
 * Thu Jun 16 2016 Ding-Yi Chen <dchen at redhat.com> - 1.5.1
 - Enhancement:
 - Fix:
