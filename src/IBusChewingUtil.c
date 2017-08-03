@@ -1,12 +1,9 @@
-#include <ctype.h>
-#include <glib.h>
-#include <ibus.h>
-#include <IBusChewingUtil.h>
-
 /**
  * Utility routines that do not depend on
  * IBusChewingEngine
  */
+
+#include <IBusChewingUtil.h>
 
 /*=====================================
  * Tone
@@ -101,6 +98,8 @@ const char asciiConst[] =
 const char *key_sym_get_name(KSym k)
 {
     switch (k) {
+    case 0:
+        return "";
     case IBUS_Return:
         return "Return";
     case IBUS_KP_Enter:
@@ -207,13 +206,22 @@ const char *key_sym_get_name(KSym k)
         return "KP_Decimal";
     case IBUS_KP_Divide:
         return "KP_Divide";
+    case IBUS_KP_Insert:
+        return "KP_Insert";
     default:
-        if (isprint(k)) {
+        /* asciiConst only handle the ASCII */
+        if (isascii(k) && isprint(k)) {
             return &asciiConst[(k - ' ') * 2];
+        }
+        if (k <= 0xffff) {
+            return "Others";
         }
         break;
     }
-    return "Others";
+    /* Keycode should NOT greater than 0xffff
+     * investigate this if it appear in production
+     */
+    return "WARN";
 }
 
 /*=====================================
