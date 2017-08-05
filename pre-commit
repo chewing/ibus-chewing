@@ -10,9 +10,9 @@
 
 function exit_print_error(){
     if [[ -z $Indent ]];then
-	echo "Please install 'indent' and put it in system PATH," > /dev/stderr
-	echo "or specify it in 'git config hooks.indent'" > /dev/stderr
-	exit 1
+        echo "Please install 'indent' and put it in system PATH," > /dev/stderr
+        echo "or specify it in 'git config hooks.indent'" > /dev/stderr
+        exit 1
     fi
 }
 
@@ -29,20 +29,23 @@ fi
 ## Loop on modified files
 while read File; do
     if [[ ! -r $File ]];then
-	continue
+        continue
+    fi
+    if [[ ! -f $File ]];then
+        continue
     fi
 
     ## Assume we do not have files named "c" or "h"
     Ext=${File##*.}
     case $Ext in
-    c|h)
-	echo "Indenting " $File > /dev/stderr
-	"$Indent" -kr --no-tabs\
-	    --line-length 80\
-	    --blank-lines-after-declarations\
-	    --preprocessor-indentation 4\
-	    "$File"
-	;;
+        c|h)
+            echo "Indenting " $File > /dev/stderr
+            "$Indent" -kr --no-tabs\
+                --line-length 80\
+                --blank-lines-after-declarations\
+                --preprocessor-indentation 4\
+                "$File"
+            ;;
     esac
     echo "Chopping  " $File > /dev/stderr
     sed -r -i -e 's/[[:blank:]]+$//' $File

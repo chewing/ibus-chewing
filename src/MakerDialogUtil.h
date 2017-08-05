@@ -33,7 +33,6 @@
 
 #ifndef _MAKER_DIALOG_UTIL_H_
 #    define _MAKER_DIALOG_UTIL_H_
-#    include <ctype.h>
 #    include <stdio.h>
 #    include <string.h>
 #    include <glib-object.h>

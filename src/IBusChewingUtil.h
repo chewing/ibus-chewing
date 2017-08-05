@@ -21,6 +21,7 @@
 
 #ifndef _IBUS_CHEWING_UTIL_H_
 #    define _IBUS_CHEWING_UTIL_H_
+#    include <ctype.h>
 #    include <string.h>
 #    include <glib.h>
 #    include <ibus.h>
