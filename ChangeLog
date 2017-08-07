@@ -1,3 +1,8 @@
+* Mon Aug 07 2017 Ding-Yi Chen <dchen at redhat.com> - 1.6.1
+- Fixed RHBZ#1411189 - ibus-engine-chewing killed by SIGSEGV when receiving KP_Insert
+- Update cmake-fedora to 2.9.3
+- Fixed pre-commit so it does not chop directory
+
 * Tue Jul 18 2017 Ding-Yi Chen <dchen at redhat.com> - 1.6.0
 - Enhancement:
   + GitHub Issue: #35 Support KB_THL_PINYIN and KB_MPS2_PINYIN
@@ -13,14 +18,14 @@
   + GH issue #73: Ctrl, Alt, Ins causes the pre-edit duplicate commit
   + GH issue #74: Failed to clean the PreEdit when changing input focus
   + GH issue #79: Failed to input space when "space-as-selection"
-  + GH issue #87 Modify dropdown menu for selecting keys 
+  + GH issue #87 Modify dropdown menu for selecting keys
   + GH issue #88 Numpad should be able to select
   + RHBZ #1337185 - Cannot add phrases with Ctrl
     A.k.a GH issue #63
-    Thank for contribution from hiunnhue 
+    Thank for contribution from hiunnhue
 - Acknowledge:
   + Obata Akio contributed pull request 71, 72, 73
-  + hiunnhue contributed pull request 75, 76, 77, 78, 80, 81, 82, 83, 84, 86, 
+  + hiunnhue contributed pull request 75, 76, 77, 78, 80, 81, 82, 83, 84, 86,
     87, 90, 91, 92, 94
   + hiunnhue fixed issue 73, 74, 79, 87, 88, 90, 91, 92, 94
 
