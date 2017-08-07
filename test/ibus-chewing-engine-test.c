@@ -22,13 +22,16 @@ void check_output(const gchar * outgoing, const gchar * preEdit,
     printf("preEditText->text=%s\n", engine->preEditText->text);
     g_assert_cmpstr(preEdit, ==, engine->preEditText->text);
     printf("auxText->text=%s\n", engine->auxText->text);
-    g_assert_cmpstr(aux, ==, engine->auxText->text);
+    g_assert_cmpint(strlen(aux), ==, strlen(engine->auxText->text));
 }
 
 void focus_out_then_focus_in_with_aux_text_test()
 {
     gboolean cleanBufferFocusOut = ibus_chewing_pre_edit_get_property_boolean
         (engine->icPreEdit, "clean-buffer-focus-out");
+
+    ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
+                                                "add-phrase-direction", TRUE);
 
     ibus_chewing_engine_set_capabilite(engine, IBUS_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
