@@ -385,7 +385,6 @@ class IBus:Chewing:Engine from IBus:Engine {
                          chewing_get_phoneSeqLen(self->icPreEdit->context),
                          self->_priv->statusFlags);
         update_lookup_table(self);
-        self_refresh_property_list(self);
     }
 
     protected void refresh_property(self, const gchar * prop_name) {

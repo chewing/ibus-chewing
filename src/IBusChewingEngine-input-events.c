@@ -24,6 +24,15 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
     IBUS_CHEWING_LOG(MSG, "process_key_event() result=%d", result);
     self_update(self);
 
+    if (kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R || 
+        kSym == IBUS_KEY_Caps_Lock) {
+        /* Refresh property list (language bar) only when users toggle
+         * Chi-Eng Mode or Shape Mode with Shift or Caps Lock, otherwise
+         * the bar will stick to the cursor and block the candidats list.
+         */
+        self_refresh_property_list(self);
+    }
+
     return result;
 }
 
