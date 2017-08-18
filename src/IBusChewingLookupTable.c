@@ -5,8 +5,7 @@ IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
                                                iProperties,
                                                ChewingContext * context)
 {
-    guint size = mkdg_properties_get_uint_by_key
-        (iProperties->properties, "cand-per-page");
+    guint size = 10;
     gboolean cursorShow = FALSE;
     gboolean wrapAround = TRUE;
     IBusLookupTable *iTable = ibus_lookup_table_new
@@ -26,18 +25,21 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
     guint candPerPage = mkdg_properties_get_uint_by_key(iProperties->properties,
                                                         "cand-per-page");
 
-    int len = MIN(strlen(selKeyStr), MAX_SELKEY);
-
-    len = MIN(len, candPerPage);
-    IBusText *iText;
+    /* Users are allowed to specify their own selKeys,
+     * we have to check the length and take the smaller one.
+     */
+    int len = MIN(strlen(selKeyStr), candPerPage);
     int i;
+    IBusText *iText;
 
     if (iTable != NULL) {
-        ibus_lookup_table_clear(iTable);
+        ibus_lookup_table_set_page_size(iTable, len);
+
         for (i = 0; i < len; i++) {
             selKSym[i] = (gint) selKeyStr[i];
-            iText = g_object_ref_sink(ibus_text_new_from_unichar
-                                      ((gunichar) selKeyStr[i]));
+
+            iText = g_object_ref_sink(ibus_text_new_from_printf
+                                      ("%c.", toupper(selKeyStr[i])));
             ibus_lookup_table_set_label(iTable, i, iText);
             g_object_unref(iText);
         }
@@ -50,7 +52,6 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
                                        IBusChewingProperties * iProperties,
                                        ChewingContext * context)
 {
-    ibus_chewing_lookup_table_resize(iTable, iProperties, context);
     IBusText *iText = NULL;
     guint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);
@@ -60,6 +61,8 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
     IBUS_CHEWING_LOG(INFO,
                      "***** ibus_chewing_lookup_table_update(): choicePerPage=%d, totalChoice=%d, currentPage=%d",
                      choicePerPage, totalChoice, currentPage);
+
+    ibus_lookup_table_clear(iTable);
     chewing_cand_Enumerate(context);
     for (i = 0; i < choicePerPage; i++) {
         if (chewing_cand_hasNext(context)) {
