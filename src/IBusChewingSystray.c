@@ -127,6 +127,7 @@ void ibus_chewing_systray_chi_eng_toggle_callback(IBusChewingSystrayIcon *
 
     ibus_chewing_pre_edit_toggle_chi_eng_mode(iEngine->icPreEdit);
     ibus_chewing_systray_chi_eng_icon_refresh_value(iEngine);
+    ibus_chewing_engine_refresh_property_list(iEngine);
 }
 
 /**
@@ -139,6 +140,7 @@ void ibus_chewing_systray_full_half_toggle_callback(IBusChewingSystrayIcon
 
     ibus_chewing_pre_edit_toggle_full_half_mode(iEngine->icPreEdit);
     ibus_chewing_systray_chi_eng_icon_refresh_value(iEngine);
+    ibus_chewing_engine_refresh_property_list(iEngine);
 }
 
 IBusChewingSystrayIcon
