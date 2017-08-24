@@ -15,9 +15,11 @@ void ibus_chewing_engine_start(IBusChewingEngine * self)
     if (!ibus_chewing_engine_has_status_flag
         (self, ENGINE_FLAG_PROPERTIES_REGISTERED)) {
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
-                                                   "InputMode");
+                                                   "chiEng_prop");
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
-                                                   "chewing_alnumSize_prop");
+                                                   "alnumSize_prop");
+        IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
+                                                   "setup_prop");
         ibus_engine_register_properties(IBUS_ENGINE(self), self->prop_list);
         ibus_chewing_engine_set_status_flag(self,
                                             ENGINE_FLAG_PROPERTIES_REGISTERED);
