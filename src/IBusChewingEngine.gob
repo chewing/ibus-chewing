@@ -403,9 +403,9 @@ class IBus:Chewing:Engine from IBus:Engine {
 
     protected void update(self) {
         IBUS_CHEWING_LOG(DEBUG, "update() statusFlags=%x", self->_priv->statusFlags);
+        commit_text(self);
         update_pre_edit_text(self);
         update_aux_text(self);
-        commit_text(self);
 
         IBUS_CHEWING_LOG(DEBUG,
                          "update() nPhoneSeq=%d statusFlags=%x",
