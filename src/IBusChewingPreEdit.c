@@ -750,10 +750,12 @@ KeyHandlingRule keyHandlingRules[] = {
     {IBUS_KP_Multiply, IBUS_KP_Divide, self_handle_num_keypad}
     ,
 
-    {128, G_MAXUINT, self_handle_special}
+    {32, 127, self_handle_default}
     ,
-
-    {0, 0, self_handle_default}
+    /* we need only printable ascii characters (32~127) and keys
+     * like enter, esc, backspace ... etc. The rest can be ignored.
+     */
+    {0, G_MAXUINT, self_handle_special}
     ,
 };
 
