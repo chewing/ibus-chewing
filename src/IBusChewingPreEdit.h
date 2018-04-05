@@ -42,7 +42,7 @@
 #    include "IBusChewingLookupTable.h"
 #    include "IBusChewingProperties.h"
 
-#    define UTF8_MAX_BYTES 6
+#    define UTF8_MAX_BYTES 4
 #    ifndef IBUS_CHEWING_MAX_WORD
 #        define IBUS_CHEWING_MAX_WORD 100
 #    endif
