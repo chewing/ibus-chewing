@@ -58,8 +58,6 @@ gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit * self)
 {
 #if CHEWING_CHECK_VERSION(0,4,0)
     const gchar *buf = chewing_bopomofo_String_static(self->context);
-
-    self->bpmfLen = (gint) g_utf8_strlen(buf, 0);
     return g_strdup(buf);
 #else
     return chewing_zuin_String(self->context, &(self->bpmfLen));
@@ -99,6 +97,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     /* Make preEdit */
     gchar *bufferStr = chewing_buffer_String(self->context);
     gchar *bpmfStr = ibus_chewing_pre_edit_get_bopomofo_string(self);
+    self->bpmfLen = (gint) g_utf8_strlen(bpmfStr, -1);
 
     g_string_assign(self->preEdit, "");
     gint i;
@@ -108,6 +107,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     IBUS_CHEWING_LOG(INFO,
                      "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, bpmfStr=|%s| bpmfLen=%d cursor=%d",
                      bufferStr, bpmfStr, self->bpmfLen, cursor_current);
+
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
         if (i == cursor_current) {
             /* Insert bopomofo string */
@@ -120,7 +120,9 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     if (chewing_buffer_Len(self->context) <= cursor_current) {
         g_string_append(self->preEdit, bpmfStr);
     }
+
     self->wordLen = i + self->bpmfLen;
+
     g_free(bufferStr);
     g_free(bpmfStr);
 
