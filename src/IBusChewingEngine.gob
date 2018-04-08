@@ -155,7 +155,9 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *preEditText = NULL;
+    public IBusText *preEditText = NULL
+        destroywith g_object_unref;
+
 
     /**
      * auxText: text to be displayed in auxiliary candidate window.
@@ -166,7 +168,9 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *auxText = NULL;
+    public IBusText *auxText = NULL
+        destroywith g_object_unref;
+
 
     /**
      * outgoingText: text to be committed to engine.
@@ -174,7 +178,9 @@ class IBus:Chewing:Engine from IBus:Engine {
      * This variable is not update until next "update" event,
      * so it can be used in integration test.
      */
-    public IBusText *outgoingText = NULL;
+    public IBusText *outgoingText = NULL
+        destroywith g_object_unref;
+
 
     protected IBusChewingSystrayIcon *iChiEngSystrayIcon = NULL
         destroywith ibus_chewing_systray_icon_free;
