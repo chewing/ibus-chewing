@@ -49,7 +49,7 @@ requires 2.0.0
 %}
 
 %{
-#define GETTEXT_PACKAGE "gtk20"
+#define GETTEXT_PACKAGE "gtk30"
 #include <glib/gi18n.h>
 %}
 
@@ -122,7 +122,7 @@ class Maker:Dialog from Gtk:Dialog {
         /* Create Notebook */
         self->notebookWgt = gtk_notebook_new();
         mkdg_wgt_show(self->notebookWgt);
-        GtkWidget *dialogVboxWgt = GTK_DIALOG(self)->vbox;
+        GtkWidget *dialogVboxWgt = gtk_dialog_get_content_area(GTK_DIALOG(self));
         mkdg_wgt_show(dialogVboxWgt);
         gtk_box_pack_start(GTK_BOX(dialogVboxWgt), self->notebookWgt, TRUE, TRUE, 0);
 

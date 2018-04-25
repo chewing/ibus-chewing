@@ -1,4 +1,4 @@
-#define GETTEXT_PACKAGE "gtk20"
+#define GETTEXT_PACKAGE "gtk30"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
