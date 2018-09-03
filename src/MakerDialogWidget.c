@@ -1,4 +1,4 @@
-#define GETTEXT_PACKAGE "gtk20"
+#define GETTEXT_PACKAGE "gtk30"
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
 #include "MakerDialogWidget.h"
@@ -436,12 +436,13 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx, MkdgWidgetFlag widgetFlags)
                 }
             } else {
                 wgt =
-                    gtk_combo_box_entry_new_with_model(GTK_TREE_MODEL
-                                                       (listStore),
-                                                       (ctx->spec->
-                                                        propertyFlags &
-                                                        MKDG_PROPERTY_FLAG_HAS_TRANSLATION)
-                                                       ? 1 : 0);
+                    gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL
+                                                           (listStore));
+                gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX(wgt),
+                                                     (ctx->spec->
+                                                      propertyFlags &
+                                                      MKDG_PROPERTY_FLAG_HAS_TRANSLATION)
+                                                     ? 1 : 0);
             }
             gtk_combo_box_set_active(GTK_COMBO_BOX(wgt), index);
             g_signal_connect(wgt, "changed",
