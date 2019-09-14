@@ -372,6 +372,7 @@ void self_handle_key_sym_default_test()
     assert_outgoing_pre_edit("", "ㄆ");
     ibus_chewing_pre_edit_clear(self);
 
+#if 0
     /*=== Test default-english-case handling ===*/
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
     ibus_chewing_pre_edit_set_apply_property_string(self,
@@ -400,6 +401,8 @@ void self_handle_key_sym_default_test()
     assert_outgoing_pre_edit("aaAAaaAA", "");
 
     ibus_chewing_pre_edit_clear(self);
+#endif
+
     assert_outgoing_pre_edit("", "");
 }
 
@@ -451,7 +454,7 @@ void process_key_text_with_symbol_test()
 }
 
 /* Mix english and chinese */
-/* " 這是ibus-chewing 輸入法"*/
+/* "這是ibus-chewing 輸入法"*/
 void process_key_mix_test()
 {
     TEST_CASE_INIT();
@@ -534,27 +537,26 @@ void process_key_shift_and_caps_test()
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
                                                      "capslock-toggle-chinese",
                                                      TRUE);
+    ibus_chewing_pre_edit_set_apply_property_int(self,
+                                                 "max-chi-symbol-len", 33);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
 
     key_press_from_string("ji3ul4fm4 ");
-    key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我要去 ", "");
+    assert_outgoing_pre_edit("", "我要去 ");
 
     /* Shift: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
     key_press_from_key_sym(IBUS_KEY_B, IBUS_SHIFT_MASK);        /* B */
     key_press_from_string("risbane ");
-    key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我要去 Brisbane ", "");
+    assert_outgoing_pre_edit("", "我要去 Brisbane ");
 
     /* Caps Lock ON: change to Chi-Mode */
     key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     key_press_from_string("xk7");
     key_press_from_key_sym(IBUS_KEY_greater, IBUS_SHIFT_MASK);
-    key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我要去 Brisbane 了。", "");
+    assert_outgoing_pre_edit("", "我要去 Brisbane 了。");
 
     /* Caps Lock OFF: change to Eng-Mode */
     key_press_from_key_sym(IBUS_KEY_Caps_Lock, 0);
@@ -566,8 +568,7 @@ void process_key_shift_and_caps_test()
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     key_press_from_string("cl3a87");
-    key_press_from_key_sym(IBUS_KEY_Return, 0);
-    assert_outgoing_pre_edit("我要去 Brisbane 了。Daddy 好嗎", "");
+    assert_outgoing_pre_edit("", "我要去 Brisbane 了。Daddy 好嗎");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -658,11 +659,11 @@ void plain_zhuyin_shift_symbol_test()
     /* String is bypass in English mode */
     key_press_from_string("4321-9876 ");
 
-    assert_outgoing_pre_edit("你好，打電話；4321-9876 ", "");
+    assert_outgoing_pre_edit("你好，打電話；", "");
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
     /* "來訂餐" */
     key_press_from_string("x9612u/42h0 2");
-    assert_outgoing_pre_edit("你好，打電話；4321-9876 來訂餐", "");
+    assert_outgoing_pre_edit("你好，打電話；來訂餐", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -772,6 +773,7 @@ void test_ctrl_1_open_candidate_list()
 
     key_press_from_key_sym(IBUS_KEY_1, IBUS_CONTROL_MASK);
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_Escape, 0);
 }
 
 void test_kp_eng_mode()
@@ -786,7 +788,7 @@ void test_kp_eng_mode()
     key_press_from_key_sym(IBUS_KP_1, 0);
     key_press_from_key_sym(IBUS_KEY_KP_9, 0);
     key_press_from_key_sym(IBUS_KP_0, 0);
-    assert_outgoing_pre_edit("190", "");
+    assert_outgoing_pre_edit("", "");
 }
 
 void test_kp_eng_mode_buffer()
@@ -815,7 +817,7 @@ void test_kp_chi_mode()
     key_press_from_key_sym(IBUS_KP_1, 0);
     key_press_from_key_sym(IBUS_KEY_KP_9, 0);
     key_press_from_key_sym(IBUS_KP_0, 0);
-    assert_outgoing_pre_edit("190", "");
+    assert_outgoing_pre_edit("", "");
 
     /* should remain chi-mode */
     g_assert(chewing_get_ChiEngMode(self->context) == 1);

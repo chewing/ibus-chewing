@@ -294,6 +294,14 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
                                           KSym kSym, KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
+
+    if (!is_full_shape && !is_chinese) {
+	/* Users treat English Sub-mode as IM Disabled,
+	 * So key strokes should be passed to client directly. Github 144.
+	 */
+        ignore_when_buffer_is_empty_and_table_not_showing; 
+    }
+
     handle_log("key_sym_default");
 
     /* Seem like we need to disable easy symbol temporarily 
@@ -345,7 +353,13 @@ EventResponse self_handle_num(IBusChewingPreEdit * self, KSym kSym,
                               KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
-    absorb_when_release;
+    if ((maskedMod == 0) && !is_full_shape && !is_chinese) {
+	/* Users treat English Sub-mode as IM Disabled,
+	 * So key strokes should be passed to client directly. Github 144.
+	 */
+        ignore_when_buffer_is_empty_and_table_not_showing; 
+    }  
+    ignore_when_release;
     handle_log("num");
 
     if (is_ctrl_only) {
@@ -361,7 +375,13 @@ EventResponse self_handle_num_keypad(IBusChewingPreEdit * self,
                                      KSym kSym, KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
-    absorb_when_release;
+    if ((maskedMod == 0) && (!is_full_shape)) {
+	/* Let libchewing handles Keypad keys only when needed.
+	 * Otherwise it might cause some issues. Github 144.
+	 */
+        ignore_when_buffer_is_empty_and_table_not_showing; 
+    }
+    ignore_when_release;
     handle_log("num_keypad");
 
     KSym kSymEquiv = key_sym_KP_to_normal(kSym);
@@ -402,7 +422,7 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
         return EVENT_RESPONSE_IGNORE;
     }
 
-    absorb_when_release;
+    ignore_when_release;
     handle_log("caps_lock");
 
     /* Clear bopomofo when toggling Chi-Eng Mode */
@@ -446,7 +466,13 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
                                 KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
-    absorb_when_release;
+    if (!is_shift_only && !is_chinese && !is_full_shape) { 
+	/* Let libchewing handles Keypad keys only when needed.
+	 * Otherwise it might cause some issues. Github 144.
+	 */
+        ignore_when_buffer_is_empty_and_table_not_showing; 
+    }
+    ignore_when_release;
     handle_log("space");
 
     if (is_shift_only) {
@@ -473,8 +499,8 @@ EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
                                  KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
-    ignore_when_buffer_is_empty;
-    absorb_when_release;
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
     handle_log("return");
 
     EventResponse response =
@@ -492,7 +518,7 @@ EventResponse self_handle_backspace(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    absorb_when_release; // Triggers focus-out and focus-in on ignore, so use absorb.
     handle_log("backspace");
 
 #if !CHEWING_CHECK_VERSION(0,4,0)
@@ -508,8 +534,8 @@ EventResponse self_handle_delete(IBusChewingPreEdit * self, KSym kSym,
                                  KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
-    ignore_when_buffer_is_empty;
-    absorb_when_release;
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
     handle_log("delete");
 
     return event_process_or_ignore(!chewing_handle_Del(self->context));
@@ -520,7 +546,7 @@ EventResponse self_handle_escape(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("escape");
 
     return event_process_or_ignore(!chewing_handle_Esc(self->context));
@@ -531,7 +557,7 @@ EventResponse self_handle_left(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(IBUS_SHIFT_MASK);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("left");
 
     if (is_shift_only) {
@@ -547,7 +573,7 @@ EventResponse self_handle_up(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("up");
 
     return event_process_or_ignore(!chewing_handle_Up(self->context));
@@ -558,7 +584,7 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(IBUS_SHIFT_MASK);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("right");
 
     if (is_shift_only) {
@@ -574,7 +600,7 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("down");
 
     return event_process_or_ignore(!chewing_handle_Down(self->context));
@@ -585,7 +611,7 @@ EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("page_up");
 
 #if !CHEWING_CHECK_VERSION(0,4,0)
@@ -602,7 +628,7 @@ EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
 {
     filter_modifiers(0);
     ignore_when_buffer_is_empty_and_table_not_showing;
-    absorb_when_release;
+    ignore_when_release;
     handle_log("page_down");
 
 #if !CHEWING_CHECK_VERSION(0,4,0)
@@ -618,8 +644,8 @@ EventResponse self_handle_tab(IBusChewingPreEdit * self, KSym kSym,
                               KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
-    ignore_when_buffer_is_empty;
-    absorb_when_release;
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
     handle_log("tab");
 
     return event_process_or_ignore(!chewing_handle_Tab(self->context));
@@ -629,8 +655,8 @@ EventResponse self_handle_home(IBusChewingPreEdit * self, KSym kSym,
                                KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
-    ignore_when_buffer_is_empty;
-    absorb_when_release;
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
     handle_log("home");
 
     return event_process_or_ignore(!chewing_handle_Home(self->context));
@@ -640,8 +666,8 @@ EventResponse self_handle_end(IBusChewingPreEdit * self, KSym kSym,
                               KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
-    ignore_when_buffer_is_empty;
-    absorb_when_release;
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
     handle_log("end");
 
     return event_process_or_ignore(!chewing_handle_End(self->context));
@@ -658,7 +684,7 @@ EventResponse self_handle_default(IBusChewingPreEdit * self, KSym kSym,
                                   KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
-    absorb_when_release;
+    ignore_when_release;
     handle_log("default");
 
     return self_handle_key_sym_default(self, kSym, unmaskedMod);
