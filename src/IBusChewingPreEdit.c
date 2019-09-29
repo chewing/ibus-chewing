@@ -477,6 +477,12 @@ EventResponse self_handle_return(IBusChewingPreEdit * self, KSym kSym,
     absorb_when_release;
     handle_log("return");
 
+    if (table_is_showing) {
+        int cursorInPage = ibus_lookup_table_get_cursor_in_page(self->iTable);
+        cursorInPage = chewing_get_selKey(self->context)[cursorInPage];
+        return self_handle_key_sym_default(self, cursorInPage, unmaskedMod);
+    }
+
     EventResponse response =
         event_process_or_ignore(!chewing_handle_Enter(self->context));
 
@@ -539,6 +545,17 @@ EventResponse self_handle_left(IBusChewingPreEdit * self, KSym kSym,
             event_process_or_ignore(!chewing_handle_ShiftLeft(self->context));
     }
 
+    if (table_is_showing) {
+        if(!ibus_chewing_pre_edit_is_vertical_table(self)) {
+            /* horizontal look-up table */
+            int pos = ibus_lookup_table_get_cursor_in_page(self->iTable);
+            if (pos) {
+                ibus_lookup_table_cursor_up(self->iTable);
+                return EVENT_RESPONSE_ABSORB;
+            }
+        }
+    }
+
     return event_process_or_ignore(!chewing_handle_Left(self->context));
 }
 
@@ -549,6 +566,18 @@ EventResponse self_handle_up(IBusChewingPreEdit * self, KSym kSym,
     ignore_when_buffer_is_empty_and_table_not_showing;
     absorb_when_release;
     handle_log("up");
+
+    if (table_is_showing) {
+        if(ibus_chewing_pre_edit_is_vertical_table(self)) {
+            /* vertical look-up table */
+            int pos = ibus_lookup_table_get_cursor_in_page(self->iTable);
+            if (pos) {
+                ibus_lookup_table_cursor_up(self->iTable);
+                return EVENT_RESPONSE_ABSORB;
+            }
+        }
+            return event_process_or_ignore(!chewing_handle_Left(self->context));
+    }
 
     return event_process_or_ignore(!chewing_handle_Up(self->context));
 }
@@ -566,6 +595,19 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
             event_process_or_ignore(!chewing_handle_ShiftRight(self->context));
     }
 
+    if (table_is_showing) {
+        if(!ibus_chewing_pre_edit_is_vertical_table(self)) {
+            /* horizontal look-up table */
+            int numberCand = ibus_lookup_table_get_number_of_candidates(self->iTable);
+            int cursorInPage = ibus_lookup_table_get_cursor_in_page(self->iTable) + 1;
+            if (cursorInPage != numberCand) {
+                ibus_lookup_table_cursor_down(self->iTable);
+                return EVENT_RESPONSE_ABSORB;
+            }
+        }
+        return event_process_or_ignore(!chewing_handle_Space(self->context));
+    }
+
     return event_process_or_ignore(!chewing_handle_Right(self->context));
 }
 
@@ -576,6 +618,20 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
     ignore_when_buffer_is_empty_and_table_not_showing;
     absorb_when_release;
     handle_log("down");
+
+    if (table_is_showing) {
+        if(ibus_chewing_pre_edit_is_vertical_table(self)) {
+
+            /* vertical look-up table */
+            int numberCand = ibus_lookup_table_get_number_of_candidates(self->iTable);
+            int cursorInPage = ibus_lookup_table_get_cursor_in_page(self->iTable) + 1;
+            if (cursorInPage != numberCand) {
+                ibus_lookup_table_cursor_down(self->iTable);
+                return EVENT_RESPONSE_ABSORB;
+            }
+        }
+        return event_process_or_ignore(!chewing_handle_Space(self->context));
+    }
 
     return event_process_or_ignore(!chewing_handle_Down(self->context));
 }
