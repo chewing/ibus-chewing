@@ -162,6 +162,12 @@ gboolean
     return TRUE;
 }
 
+gboolean showPageNumber_apply_callback(PropertyContext * ctx, gpointer userData)
+{
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
+    return TRUE;
+}
+
 gboolean
     phraseChoiceRearward_apply_callback
     (PropertyContext * ctx, gpointer userData) {

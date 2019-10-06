@@ -185,9 +185,17 @@ MkdgPropertySpec propSpecs[] = {
     {
      G_TYPE_UINT, "cand-per-page", PAGE_SELECTING,
      N_("Candidate per page"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "5", NULL, NULL, 4, 10,
      candPerPage_apply_callback, 0,
      N_("Number of candidate per page."),
+     NULL}
+    ,
+    {
+     G_TYPE_BOOLEAN, "show-page-number", PAGE_SELECTING,
+     N_("Show page number"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
+     showPageNumber_apply_callback, 0,
+     N_("Display the page number of the candidate list."),
      NULL}
     ,
     {
