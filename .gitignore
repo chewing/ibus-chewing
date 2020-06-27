@@ -25,6 +25,7 @@
 *NO_PACK*
 *~
 .*
+ibus-chewing.cbp
 CMakeCache.txt
 CPack*Config.cmake
 CTestTestfile.cmake
@@ -36,6 +37,7 @@ arch/PKGBUILD
 bin/
 bodhi.template
 cmake-fedora/
+cmake-build-debug/
 cmake_*install.cmake
 data/*.schemas
 data/*.xml
