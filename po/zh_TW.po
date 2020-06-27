@@ -225,12 +225,20 @@ msgid "Always input numbers when number keys from key pad is inputted"
 msgstr "用數字版輸入時總是輸入數字，並不負責選字"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:160
-msgid "Shift toggle Chinese Mode"
-msgstr "Shift 切換中文"
+msgid "Right shift toggle Chinese Mode"
+msgstr "右 Shift 切換中文模式"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:163
-msgid "Shift key to toggle Chinese Mode"
-msgstr "Shift 鍵切換中文模式"
+msgid "Right shift key to toggle Chinese Mode"
+msgstr "右 Shift 鍵切換中文模式"
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:160
+msgid "Left shift toggle Chinese Mode"
+msgstr "左 Shift 切換中文模式"
+
+#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:163
+msgid "Left shift key to toggle Chinese Mode"
+msgstr "左 Shift 鍵切換中文模式"
 
 #: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:166
 msgid "Caps Lock toggles Chinese Mode"
