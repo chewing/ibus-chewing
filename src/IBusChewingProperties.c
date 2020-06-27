@@ -67,13 +67,13 @@ const gchar *outputCharsets[] = {
 };
 
 MkdgPropertySpec propSpecs[] = {
-    {G_TYPE_STRING, "kb-type", PAGE_KEYBOARD, N_("Keyboard Type"),
+    { G_TYPE_STRING, "kb-type", PAGE_KEYBOARD, N_("Keyboard Type"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "default", kbType_ids, NULL, 0, 0,
      KBType_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-     N_("Select Zhuyin keyboard layout"), NULL}
+     N_("Select Zhuyin keyboard layout"), NULL }
     ,
-    {G_TYPE_STRING, "sel-keys", PAGE_KEYBOARD, N_("Selection keys"),
+    { G_TYPE_STRING, "sel-keys", PAGE_KEYBOARD, N_("Selection keys"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1234567890", selKeys_array, NULL,
      0,
      0,
@@ -81,59 +81,59 @@ MkdgPropertySpec propSpecs[] = {
      MKDG_PROPERTY_FLAG_NO_NEW,
      N_
      ("Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to select the 1st candidate, 's' for 2nd, and so on."),
-     NULL}
+     NULL }
     ,
     /*== The callback will be handled in IBusChewingEngine.gob ==*/
-    {G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD,
+    { G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD,
      N_("Show systray icons"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      NULL, 0,
      N_
      ("On: Show Chinese/English and Full/Half shape status as a systray icon\n"
-      "Off: Do not show the status icon"), NULL}
+      "Off: Do not show the status icon"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "auto-shift-cur", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "auto-shift-cur", PAGE_EDITING,
      N_("Auto move cursor"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      autoShiftCur_apply_callback, 0,
-     N_("Automatically move cursor to next character"), NULL}
+     N_("Automatically move cursor to next character"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "add-phrase-direction", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "add-phrase-direction", PAGE_EDITING,
      N_("Add phrases to the front"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      addPhraseDirection_apply_callback, 0,
-     N_("Add phrases to the front"), NULL}
+     N_("Add phrases to the front"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
      N_("Clean pre-edit buffer when focus out"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
      cleanBufferFocusOut_apply_callback, 0,
      N_
      ("On: Clean pre-edit buffer when focus out to prevent program crash\n"
-      "Off: Keep what you already type for convenience"), NULL}
+      "Off: Keep what you already type for convenience"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "easy-symbol-input", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "easy-symbol-input", PAGE_EDITING,
      N_("Easy symbol input"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      easySymbolInput_apply_callback, 0,
-     N_("Press shift to input Chinese punctuation symbols"), NULL}
+     N_("Press shift to input Chinese punctuation symbols"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "esc-clean-all-buf", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "esc-clean-all-buf", PAGE_EDITING,
      N_("Esc clean all buffer"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
      escCleanAllBuf_apply_callback, 0,
-     N_("Escape key cleans the text in pre-edit-buffer"), NULL}
+     N_("Escape key cleans the text in pre-edit-buffer"), NULL }
     ,
-    {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
+    { G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
      N_("Maximum Chinese characters"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "20", NULL, NULL, 11, 33,
      maxChiSymbolLen_apply_callback, 0,
      N_
      ("Maximum Chinese characters in pre-edit buffer, not including inputing Zhuyin symbols."),
-     NULL}
+     NULL }
     ,
     /* Sync between CapsLock and IM */
-    {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
+    { G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
      N_("Sync between CapsLock and IM"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "disable", syncCapsLock_strs,
      "Sync",
@@ -144,20 +144,26 @@ MkdgPropertySpec propSpecs[] = {
      ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n"
       "\"disable\": Do nothing\n"
       "\"keyboard\": IM status follows keyboard status\n"
-      "\"IM\": Keyboard status follows IM status"), NULL}
+      "\"IM\": Keyboard status follows IM status"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
-     N_("Shift toggle Chinese Mode"),
+    { G_TYPE_BOOLEAN, "right-shift-toggle-chinese", PAGE_EDITING,
+     N_("Right shift toggle Chinese Mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     shiftToggleChinese_apply_callback, 0,
-     N_("Shift key to toggle Chinese Mode"), NULL}
+     rightShiftToggleChinese_apply_callback, 0,
+     N_("Right shift key to toggle Chinese Mode"), NULL }
     ,
-    {G_TYPE_BOOLEAN, "capslock-toggle-chinese", PAGE_EDITING,
+    { G_TYPE_BOOLEAN, "left-shift-toggle-chinese", PAGE_EDITING,
+     N_("Left shift toggle Chinese Mode"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
+     leftShiftToggleChinese_apply_callback, 0,
+     N_("Left shift key to toggle Chinese Mode"), NULL }
+    ,
+    { G_TYPE_BOOLEAN, "capslock-toggle-chinese", PAGE_EDITING,
      N_("Caps Lock toggles Chinese Mode"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      capslockToggleChinese_apply_callback, 0,
      N_("On: Caps Lock toggle Chinese/English\n"
-        "Off: Caps Lock only affect English letter case"), NULL}
+        "Off: Caps Lock only affect English letter case"), NULL }
     ,
     {
      G_TYPE_STRING, "default-english-case", PAGE_EDITING,
@@ -171,7 +177,7 @@ MkdgPropertySpec propSpecs[] = {
      ("no control: No default letter case. Not recommend if you use multiple keyboards or synergy\n"
       "lowercase: Default to lowercase, press shift for uppercase.\n"
       "uppercase: Default to uppercase, press shift for lowercase."),
-     NULL}
+     NULL }
     ,
     {
      G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING,
@@ -180,7 +186,7 @@ MkdgPropertySpec propSpecs[] = {
      plainZhuyin_apply_callback, 0,
      N_
      ("In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored."),
-     NULL}
+     NULL }
     ,
     {
      G_TYPE_UINT, "cand-per-page", PAGE_SELECTING,
@@ -188,7 +194,7 @@ MkdgPropertySpec propSpecs[] = {
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 8, 10,
      candPerPage_apply_callback, 0,
      N_("Number of candidate per page."),
-     NULL}
+     NULL }
     ,
     {
      G_TYPE_BOOLEAN, "phrase-choice-from-last", PAGE_SELECTING,
@@ -196,7 +202,7 @@ MkdgPropertySpec propSpecs[] = {
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      phraseChoiceRearward_apply_callback, 0,
      N_("Choose phrases from the back, without moving cursor."),
-     NULL}
+     NULL }
     ,
     {
      G_TYPE_BOOLEAN, "space-as-selection", PAGE_SELECTING,
@@ -205,12 +211,12 @@ MkdgPropertySpec propSpecs[] = {
      "0", NULL, NULL, 0, 1,
      spaceAsSelection_apply_callback, 0,
      "Press Space to select the candidate.",
-     NULL}
+     NULL }
     ,
     {
      G_TYPE_INVALID, "", "", "",
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL, NULL, 0, 0,
-     NULL, 0, NULL, NULL}
+     NULL, 0, NULL, NULL }
     ,
 };
 

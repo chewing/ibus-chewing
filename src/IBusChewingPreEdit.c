@@ -58,6 +58,7 @@ gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit * self)
 {
 #if CHEWING_CHECK_VERSION(0,4,0)
     const gchar *buf = chewing_bopomofo_String_static(self->context);
+
     return g_strdup(buf);
 #else
     return chewing_zuin_String(self->context, &(self->bpmfLen));
@@ -97,6 +98,7 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit * self)
     /* Make preEdit */
     gchar *bufferStr = chewing_buffer_String(self->context);
     gchar *bpmfStr = ibus_chewing_pre_edit_get_bopomofo_string(self);
+
     self->bpmfLen = (gint) g_utf8_strlen(bpmfStr, -1);
 
     g_string_assign(self->preEdit, "");
@@ -178,7 +180,7 @@ void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit * self)
 {
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_bopomofo(-)");
 
-    /* Esc key can close candidate list, clear bopomofo, and clear 
+    /* Esc key can close candidate list, clear bopomofo, and clear
      * the whole pre-edit buffer. Make sure it acts as we expected.
      */
     if (table_is_showing) {
@@ -259,7 +261,7 @@ KSym self_key_sym_fix(IBusChewingPreEdit * self, KSym kSym,
         caseConversionMode = 'n';
     }
     if (is_chinese) {
-        /* 
+        /*
          * Ignore the status of CapsLock, thus
          */
         if (is_shift) {
@@ -296,7 +298,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit * self,
     filter_modifiers(IBUS_SHIFT_MASK);
     handle_log("key_sym_default");
 
-    /* Seem like we need to disable easy symbol temporarily 
+    /* Seem like we need to disable easy symbol temporarily
      * otherwise the key won't process
      */
     gint easySymbolInput = chewing_get_easySymbolInput(self->context);
@@ -413,17 +415,17 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
     return event_process_or_ignore(!chewing_handle_Capslock(self->context));
 }
 
-EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
-                                KeyModifiers unmaskedMod)
+EventResponse self_handle_right_shift(IBusChewingPreEdit * self, KSym kSym,
+                                      KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
-    handle_log("shift");
+    handle_log("shift_right");
 
-    gboolean shiftIsToggleChinese =
+    gboolean rightShiftIsToggleChinese =
         ibus_chewing_pre_edit_get_property_boolean(self,
-                                                   "shift-toggle-chinese");
+                                                   "right-shift-toggle-chinese");
 
-    if (!shiftIsToggleChinese) {
+    if (!rightShiftIsToggleChinese) {
         return EVENT_RESPONSE_IGNORE;
     }
 
@@ -434,7 +436,36 @@ EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
     /* keyLast != Shift means Shift is just part of combination,
      * thus should not be recognized as single Shift key
      */
-    if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R) {
+    if (self->keyLast != IBUS_KEY_Shift_R) {
+        return EVENT_RESPONSE_ABSORB;
+    }
+
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    return EVENT_RESPONSE_ABSORB;
+}
+
+EventResponse self_handle_left_shift(IBusChewingPreEdit * self, KSym kSym,
+                                     KeyModifiers unmaskedMod)
+{
+    filter_modifiers(IBUS_SHIFT_MASK);
+    handle_log("shift_left");
+
+    gboolean leftShiftIsToggleChinese =
+        ibus_chewing_pre_edit_get_property_boolean(self,
+                                                   "left-shift-toggle-chinese");
+
+    if (!leftShiftIsToggleChinese) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
+    if (!event_is_released(unmaskedMod)) {
+        return EVENT_RESPONSE_ABSORB;
+    }
+
+    /* keyLast != Shift means Shift is just part of combination,
+     * thus should not be recognized as single Shift key
+     */
+    if (self->keyLast != IBUS_KEY_Shift_L) {
         return EVENT_RESPONSE_ABSORB;
     }
 
@@ -454,7 +485,7 @@ EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
         return EVENT_RESPONSE_PROCESS;
     }
 
-    /* Bug of libchewing: 
+    /* Bug of libchewing:
      * when "space to select" is enabled, chewing_handle_Space() will
      * ignore the first space. Therefore, use chewing_handle_Space()
      * only if the buffer is not empty and we want to select.
@@ -665,99 +696,102 @@ EventResponse self_handle_default(IBusChewingPreEdit * self, KSym kSym,
 }
 
 KeyHandlingRule keyHandlingRules[] = {
-    {IBUS_KEY_0, IBUS_KEY_9, self_handle_num}
+    { IBUS_KEY_0, IBUS_KEY_9, self_handle_num }
     ,
 
-    {IBUS_KEY_KP_0, IBUS_KEY_KP_9, self_handle_num_keypad}
+    { IBUS_KEY_KP_0, IBUS_KEY_KP_9, self_handle_num_keypad }
     ,
 
-    {IBUS_KEY_Caps_Lock, IBUS_KEY_Caps_Lock, self_handle_caps_lock}
+    { IBUS_KEY_Caps_Lock, IBUS_KEY_Caps_Lock, self_handle_caps_lock }
     ,
 
-    {IBUS_KEY_Shift_L, IBUS_KEY_Shift_R, self_handle_shift}
+    { IBUS_KEY_Shift_R, IBUS_KEY_Shift_R, self_handle_right_shift }
     ,
 
-    {IBUS_KEY_space, IBUS_KEY_space, self_handle_space}
+    { IBUS_KEY_Shift_L, IBUS_KEY_Shift_L, self_handle_left_shift }
     ,
 
-    {IBUS_KEY_Return, IBUS_KEY_Return, self_handle_return}
+    { IBUS_KEY_space, IBUS_KEY_space, self_handle_space }
     ,
 
-    {IBUS_KEY_KP_Enter, IBUS_KEY_KP_Enter, self_handle_return}
+    { IBUS_KEY_Return, IBUS_KEY_Return, self_handle_return }
     ,
 
-    {IBUS_KEY_BackSpace, IBUS_KEY_BackSpace, self_handle_backspace}
+    { IBUS_KEY_KP_Enter, IBUS_KEY_KP_Enter, self_handle_return }
     ,
 
-    {IBUS_KEY_Delete, IBUS_KEY_Delete, self_handle_delete}
+    { IBUS_KEY_BackSpace, IBUS_KEY_BackSpace, self_handle_backspace }
     ,
 
-    {IBUS_KEY_KP_Delete, IBUS_KEY_KP_Delete, self_handle_delete}
+    { IBUS_KEY_Delete, IBUS_KEY_Delete, self_handle_delete }
     ,
 
-    {IBUS_KEY_Escape, IBUS_KEY_Escape, self_handle_escape}
+    { IBUS_KEY_KP_Delete, IBUS_KEY_KP_Delete, self_handle_delete }
     ,
 
-    {IBUS_KEY_Left, IBUS_KEY_Left, self_handle_left}
+    { IBUS_KEY_Escape, IBUS_KEY_Escape, self_handle_escape }
     ,
 
-    {IBUS_KEY_KP_Left, IBUS_KEY_KP_Left, self_handle_left}
+    { IBUS_KEY_Left, IBUS_KEY_Left, self_handle_left }
     ,
 
-    {IBUS_KEY_Up, IBUS_KEY_Up, self_handle_up}
+    { IBUS_KEY_KP_Left, IBUS_KEY_KP_Left, self_handle_left }
     ,
 
-    {IBUS_KEY_KP_Up, IBUS_KEY_KP_Up, self_handle_up}
+    { IBUS_KEY_Up, IBUS_KEY_Up, self_handle_up }
     ,
 
-    {IBUS_KEY_Right, IBUS_KEY_Right, self_handle_right}
+    { IBUS_KEY_KP_Up, IBUS_KEY_KP_Up, self_handle_up }
     ,
 
-    {IBUS_KEY_KP_Right, IBUS_KEY_KP_Right, self_handle_right}
+    { IBUS_KEY_Right, IBUS_KEY_Right, self_handle_right }
     ,
 
-    {IBUS_KEY_Down, IBUS_KEY_Down, self_handle_down}
+    { IBUS_KEY_KP_Right, IBUS_KEY_KP_Right, self_handle_right }
     ,
 
-    {IBUS_KEY_KP_Down, IBUS_KEY_KP_Down, self_handle_down}
+    { IBUS_KEY_Down, IBUS_KEY_Down, self_handle_down }
     ,
 
-    {IBUS_KEY_Page_Up, IBUS_KEY_Page_Up, self_handle_page_up}
+    { IBUS_KEY_KP_Down, IBUS_KEY_KP_Down, self_handle_down }
     ,
 
-    {IBUS_KEY_KP_Page_Up, IBUS_KEY_KP_Page_Up, self_handle_page_up}
+    { IBUS_KEY_Page_Up, IBUS_KEY_Page_Up, self_handle_page_up }
     ,
 
-    {IBUS_KEY_Page_Down, IBUS_KEY_Page_Down, self_handle_page_down}
+    { IBUS_KEY_KP_Page_Up, IBUS_KEY_KP_Page_Up, self_handle_page_up }
     ,
 
-    {IBUS_KEY_KP_Page_Down, IBUS_KEY_KP_Page_Down, self_handle_page_down}
+    { IBUS_KEY_Page_Down, IBUS_KEY_Page_Down, self_handle_page_down }
     ,
 
-    {IBUS_KEY_Tab, IBUS_KEY_Tab, self_handle_tab}
+    { IBUS_KEY_KP_Page_Down, IBUS_KEY_KP_Page_Down, self_handle_page_down }
     ,
 
-    {IBUS_KEY_Home, IBUS_KEY_Home, self_handle_home}
+    { IBUS_KEY_Tab, IBUS_KEY_Tab, self_handle_tab }
     ,
 
-    {IBUS_KEY_KP_Home, IBUS_KEY_KP_Home, self_handle_home}
+    { IBUS_KEY_Home, IBUS_KEY_Home, self_handle_home }
     ,
 
-    {IBUS_KEY_End, IBUS_KEY_End, self_handle_end}
+    { IBUS_KEY_KP_Home, IBUS_KEY_KP_Home, self_handle_home }
     ,
 
-    {IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end}
+    { IBUS_KEY_End, IBUS_KEY_End, self_handle_end }
     ,
 
-    {IBUS_KP_Multiply, IBUS_KP_Divide, self_handle_num_keypad}
+    { IBUS_KEY_KP_End, IBUS_KEY_KP_End, self_handle_end }
     ,
 
-    {32, 127, self_handle_default}
+    { IBUS_KP_Multiply, IBUS_KP_Divide, self_handle_num_keypad }
+    ,
+
+    { 32, 127, self_handle_default }
     ,
     /* we need only printable ascii characters (32~127) and keys
      * like enter, esc, backspace ... etc. The rest can be ignored.
      */
-    {0, G_MAXUINT, self_handle_special}
+    { 0, G_MAXUINT, self_handle_special }
     ,
 };
 
@@ -810,11 +844,11 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit * self, KSym kSym,
         break;
     }
 
-    /** 
+    /**
      *Plain zhuyin mode
      */
     if (is_plain_zhuyin && !bpmf_check) {
-        /* libchewing functions are used here to skip the check 
+        /* libchewing functions are used here to skip the check
          * that handle_key functions perform.
          */
         if (kSym == IBUS_KEY_Escape) {

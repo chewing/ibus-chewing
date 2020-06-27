@@ -66,8 +66,11 @@ gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
 
 gboolean syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData);
 
-gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
-                                           gpointer userData);
+gboolean rightShiftToggleChinese_apply_callback(PropertyContext * ctx,
+                                                gpointer userData);
+
+gboolean leftShiftToggleChinese_apply_callback(PropertyContext * ctx,
+                                               gpointer userData);
 
 gboolean candPerPage_apply_callback(PropertyContext * ctx, gpointer userData);
 

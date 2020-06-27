@@ -135,13 +135,24 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData)
 }
 
 gboolean
-shiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
+rightShiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
 
     ibus_chewing_pre_edit_set_property_boolean
-        (icPreEdit, "shift-toggle-chinese", g_value_get_boolean(value));
+        (icPreEdit, "right-shift-toggle-chinese", g_value_get_boolean(value));
+    return TRUE;
+}
+
+gboolean
+leftShiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
+{
+    GValue *value = &(ctx->value);
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
+
+    ibus_chewing_pre_edit_set_property_boolean
+        (icPreEdit, "left-shift-toggle-chinese", g_value_get_boolean(value));
     return TRUE;
 }
 
