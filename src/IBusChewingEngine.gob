@@ -200,26 +200,28 @@ class IBus:Chewing:Engine from IBus:Engine {
 
     private ChewingInputStyle inputStyle;
 
-    public IBusProperty *chieng_prop = {
+    /* Do not rename this "InputMode" property, 
+     * otherwise the language indicator on gnome-shell cannot work properly. */
+    public IBusProperty *InputMode = {
         g_object_ref_sink(ibus_property_new
-            ("chiEng_prop",
+            ("InputMode",
              PROP_TYPE_NORMAL,
-             SELF_GET_CLASS(self)->chieng_prop_label_chi,
+             SELF_GET_CLASS(self)->InputMode_label_chi,
              NULL,
-             SELF_GET_CLASS(self)->chieng_prop_tooltip,
+             SELF_GET_CLASS(self)->InputMode_tooltip,
              TRUE,
              TRUE,
              PROP_STATE_UNCHECKED,
              NULL))
     } destroywith g_object_unref;
 
-    public IBusProperty *alnumSize_prop = {
+    public IBusProperty *AlnumSize = {
         g_object_ref_sink(ibus_property_new
-            ("alnumSize_prop",
+            ("AlnumSize",
              PROP_TYPE_NORMAL,
-             SELF_GET_CLASS(self)->alnumSize_prop_label_half,
+             SELF_GET_CLASS(self)->AlnumSize_label_half,
              NULL,
-             SELF_GET_CLASS(self)->alnumSize_prop_tooltip,
+             SELF_GET_CLASS(self)->AlnumSize_tooltip,
              TRUE,
              TRUE,
              PROP_STATE_UNCHECKED,
@@ -249,42 +251,42 @@ class IBus:Chewing:Engine from IBus:Engine {
         XOpenDisplay(NULL)
     } destroywith XCloseDisplay;
 
-    classwide IBusText *chieng_prop_label_chi = {
+    classwide IBusText *InputMode_label_chi = {
         g_object_ref_sink(ibus_text_new_from_static_string(_("Chinese Mode")))
     };
-    classwide IBusText *chieng_prop_label_eng = {
+    classwide IBusText *InputMode_label_eng = {
         g_object_ref_sink(ibus_text_new_from_static_string(_("Alphanumeric Mode")))
     };
-    classwide IBusText *chieng_prop_tooltip = {
+    classwide IBusText *InputMode_tooltip = {
         g_object_ref_sink(ibus_text_new_from_static_string
                           (_("Click to toggle Chinese/Alphanumeric Mode")))
     };
-    classwide IBusText *chieng_prop_symbol_chi = {
+    classwide IBusText *InputMode_symbol_chi = {
         g_object_ref_sink(ibus_text_new_from_static_string("中"))
     };
-    classwide IBusText *chieng_prop_symbol_eng = {
+    classwide IBusText *InputMode_symbol_eng = {
         g_object_ref_sink(ibus_text_new_from_static_string("英"))
     };
 
-    classwide IBusText *alnumSize_prop_label_full = {
+    classwide IBusText *AlnumSize_label_full = {
         g_object_ref_sink(ibus_text_new_from_static_string(_("Fullwidth Form")))
     };
-    classwide IBusText *alnumSize_prop_label_half = {
+    classwide IBusText *AlnumSize_label_half = {
         g_object_ref_sink(ibus_text_new_from_static_string(_("Halfwidth Form")))
     };
-    classwide IBusText *alnumSize_prop_tooltip = {
+    classwide IBusText *AlnumSize_tooltip = {
         g_object_ref_sink(ibus_text_new_from_static_string
                           (_("Click to toggle Halfwidth/Fullwidth Form")))
     };
-    classwide IBusText *alnumSize_prop_symbol_full = {
+    classwide IBusText *AlnumSize_symbol_full = {
         g_object_ref_sink(ibus_text_new_from_static_string("全"))
     };
-    classwide IBusText *alnumSize_prop_symbol_half = {
+    classwide IBusText *AlnumSize_symbol_half = {
         g_object_ref_sink(ibus_text_new_from_static_string("半"))
     };
 
     classwide IBusText *setup_prop_label = {
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Chewing Preferences")))
+        g_object_ref_sink(ibus_text_new_from_static_string(_("IBus-Chewing Preferences")))
     };
     classwide IBusText *setup_prop_tooltip = {
         g_object_ref_sink(ibus_text_new_from_static_string
@@ -344,8 +346,8 @@ class IBus:Chewing:Engine from IBus:Engine {
         self->icPreEdit->engine = IBUS_ENGINE(self);
 
         /* init properties */
-        ibus_prop_list_append(self->prop_list, self->chieng_prop);
-        ibus_prop_list_append(self->prop_list, self->alnumSize_prop);
+        ibus_prop_list_append(self->prop_list, self->InputMode);
+        ibus_prop_list_append(self->prop_list, self->AlnumSize);
         ibus_prop_list_append(self->prop_list, self->setup_prop);
 
         ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_INITIALIZED);
@@ -403,7 +405,7 @@ class IBus:Chewing:Engine from IBus:Engine {
                 IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
                 chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self)) ? 0 : CHINESE_MODE);
             }
-            self_refresh_property(self, "chiEng_prop");
+            self_refresh_property(self, "InputMode");
         }
     }
 
@@ -429,38 +431,38 @@ class IBus:Chewing:Engine from IBus:Engine {
             ibus_chewing_systray_chi_eng_icon_refresh_value(self);
         }
 
-        if (STRING_EQUALS(prop_name, "chiEng_prop")) {
+        if (STRING_EQUALS(prop_name, "InputMode")) {
 
-            ibus_property_set_label(self->chieng_prop,
+            ibus_property_set_label(self->InputMode,
                 ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit) ?
-                SELF_GET_CLASS(self)->chieng_prop_label_chi :
-                SELF_GET_CLASS(self)->chieng_prop_label_eng);
+                SELF_GET_CLASS(self)->InputMode_label_chi :
+                SELF_GET_CLASS(self)->InputMode_label_eng);
 
 #if IBUS_CHECK_VERSION(1, 5, 0)
-            ibus_property_set_symbol(self->chieng_prop,
+            ibus_property_set_symbol(self->InputMode,
                 ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit) ?
-                SELF_GET_CLASS(self)->chieng_prop_symbol_chi :
-                SELF_GET_CLASS(self)->chieng_prop_symbol_eng);
+                SELF_GET_CLASS(self)->InputMode_symbol_chi :
+                SELF_GET_CLASS(self)->InputMode_symbol_eng);
 #endif
 
-            ibus_engine_update_property(IBUS_ENGINE(self), self->chieng_prop);
+            ibus_engine_update_property(IBUS_ENGINE(self), self->InputMode);
 
-        } else if (STRING_EQUALS(prop_name, "alnumSize_prop")) {
+        } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
 
-            ibus_property_set_label(self->alnumSize_prop,
+            ibus_property_set_label(self->AlnumSize,
                 chewing_get_ShapeMode(self->icPreEdit->context) ?
-                SELF_GET_CLASS(self)->alnumSize_prop_label_full :
-                SELF_GET_CLASS(self)->alnumSize_prop_label_half);
+                SELF_GET_CLASS(self)->AlnumSize_label_full :
+                SELF_GET_CLASS(self)->AlnumSize_label_half);
 
 #if IBUS_CHECK_VERSION(1, 5, 0)
-            ibus_property_set_symbol(self->alnumSize_prop,
+            ibus_property_set_symbol(self->AlnumSize,
                 chewing_get_ShapeMode(self->icPreEdit->context) ?
-                SELF_GET_CLASS(self)->alnumSize_prop_symbol_full :
-                SELF_GET_CLASS(self)->alnumSize_prop_symbol_half);
+                SELF_GET_CLASS(self)->AlnumSize_symbol_full :
+                SELF_GET_CLASS(self)->AlnumSize_symbol_half);
 #endif
 
             if (self->_priv->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
-                ibus_engine_update_property(IBUS_ENGINE(self), self->alnumSize_prop);
+                ibus_engine_update_property(IBUS_ENGINE(self), self->AlnumSize);
 
         } else if (STRING_EQUALS(prop_name, "setup_prop")) {
 #if IBUS_CHECK_VERSION(1, 5, 0)
@@ -480,8 +482,8 @@ class IBus:Chewing:Engine from IBus:Engine {
      */
     public void refresh_property_list(self) {
 #ifndef UNIT_TEST
-        self_refresh_property(self, "chiEng_prop");
-        self_refresh_property(self, "alnumSize_prop");
+        self_refresh_property(self, "InputMode");
+        self_refresh_property(self, "AlnumSize");
         self_refresh_property(self, "setup_prop");
 #endif
     }
@@ -495,15 +497,15 @@ class IBus:Chewing:Engine from IBus:Engine {
     public void hide_property_list(self) {
 #ifndef UNIT_TEST
         IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
-                                                   "alnumSize_prop");
+                                                   "AlnumSize");
 #endif
     }
 
     private IBusProperty *get_ibus_property_by_name(self, const gchar * prop_name) {
-        if (STRING_EQUALS(prop_name, "chiEng_prop")) {
-            return self->chieng_prop;
-        } else if (STRING_EQUALS(prop_name, "alnumSize_prop")) {
-            return self->alnumSize_prop;
+        if (STRING_EQUALS(prop_name, "InputMode")) {
+            return self->InputMode;
+        } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
+            return self->AlnumSize;
         } else if (STRING_EQUALS(prop_name, "setup_prop")) {
             return self->setup_prop;
         }

@@ -75,7 +75,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
                      prop_state);
     Self *self = SELF(engine);
 
-    if (STRING_EQUALS(prop_name, "chiEng_prop")) {
+    if (STRING_EQUALS(prop_name, "InputMode")) {
         /* Toggle Chinese <-> English */
         ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
         IBUS_CHEWING_LOG(INFO,
@@ -92,7 +92,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
             }
         }
         self_refresh_property(self, prop_name);
-    } else if (STRING_EQUALS(prop_name, "alnumSize_prop")) {
+    } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
         /* Toggle Full <-> Half */
         chewing_set_ShapeMode(self->icPreEdit->context,
                               !chewing_get_ShapeMode(self->icPreEdit->context));
