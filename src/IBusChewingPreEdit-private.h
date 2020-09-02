@@ -59,6 +59,7 @@
 #    define filter_modifiers(allowed) KeyModifiers maskedMod = modifiers_mask(unmaskedMod); \
 							if ( (maskedMod) & (~(allowed))){ return EVENT_RESPONSE_IGNORE; }
 #    define absorb_when_release if (event_is_released(unmaskedMod)) { return EVENT_RESPONSE_ABSORB; }
+#    define ignore_when_release if (event_is_released(unmaskedMod)) { return EVENT_RESPONSE_IGNORE; }
 #    define ignore_when_buffer_is_empty if (buffer_is_empty) { return EVENT_RESPONSE_IGNORE; }
 #    define ignore_when_buffer_is_empty_and_table_not_showing if (buffer_is_empty && !table_is_showing) { return EVENT_RESPONSE_IGNORE; }
 
