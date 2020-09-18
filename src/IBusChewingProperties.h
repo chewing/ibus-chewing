@@ -77,6 +77,9 @@ gboolean capslockToggleChinese_apply_callback(PropertyContext * ctx,
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
                                              gpointer userData);
 
+gboolean showPageNumber_apply_callback(PropertyContext * ctx,
+                                             gpointer userData);
+
 gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
                                          gpointer userData);
 

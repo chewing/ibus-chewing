@@ -274,6 +274,11 @@ void refresh_aux_text(IBusChewingEngine * self)
     /* Make auxText (text to be displayed in auxiliary candidate window).
      * Use auxText to show messages from libchewing, such as "已有：".
      */
+
+    gboolean showPageNumber =
+        ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit,
+                                                   "show-page-number");
+
     if (chewing_aux_Length(self->icPreEdit->context) > 0) {
         IBUS_CHEWING_LOG(INFO, "update_aux_text() chewing_aux_Length=%x",
                          chewing_aux_Length(self->icPreEdit->context));
@@ -282,6 +287,10 @@ void refresh_aux_text(IBusChewingEngine * self)
         IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
         self->auxText = g_object_ref_sink(ibus_text_new_from_string(auxStr));
         g_free(auxStr);
+    } else if (showPageNumber && (chewing_cand_TotalPage(self->icPreEdit->context) > 0)) {
+        int TotalPage = chewing_cand_TotalPage(self->icPreEdit->context);
+        int currentPage = chewing_cand_CurrentPage(self->icPreEdit->context) + 1;
+        self->auxText = g_object_ref_sink(ibus_text_new_from_printf("(%i/%i)", currentPage, TotalPage));
     } else {
         /* clear out auxText, otherwise it will be displayed continually. */
         self->auxText = g_object_ref_sink(ibus_text_new_from_static_string(""));
