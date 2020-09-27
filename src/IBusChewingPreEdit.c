@@ -462,22 +462,71 @@ EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
     return EVENT_RESPONSE_ABSORB;
 }
 
+EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
+                                  KeyModifiers unmaskedMod)
+{
+    filter_modifiers(0);
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
+    handle_log("page_up");
+
+    int currentPage = chewing_cand_CurrentPage(self->context);
+    int hasNext = chewing_cand_list_has_next(self->context);
+    int hasPrev = chewing_cand_list_has_prev(self->context);
+
+    if (table_is_showing && (currentPage == 0)) {
+        if (hasNext == 1 || hasPrev == 1) {
+            return event_process_or_ignore(!chewing_handle_Down(self->context));
+        }
+    }
+
+    return event_process_or_ignore(!chewing_handle_PageUp(self->context));
+}
+
+EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
+                                    KeyModifiers unmaskedMod)
+{
+    filter_modifiers(0);
+    ignore_when_buffer_is_empty_and_table_not_showing;
+    ignore_when_release;
+    handle_log("page_down");
+
+    int totalPage = chewing_cand_TotalPage(self->context);
+    int currentPage = chewing_cand_CurrentPage(self->context);
+
+    if (table_is_showing && (currentPage == totalPage - 1)) {
+        return event_process_or_ignore(!chewing_handle_Down(self->context));
+    }
+
+    return event_process_or_ignore(!chewing_handle_PageDown(self->context));
+}
+
 EventResponse self_handle_space(IBusChewingPreEdit * self, KSym kSym,
                                 KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
+
     if (!is_shift_only && !is_chinese && !is_full_shape) { 
 	/* Let libchewing handles Keypad keys only when needed.
 	 * Otherwise it might cause some issues. Github 144.
 	 */
         ignore_when_buffer_is_empty_and_table_not_showing; 
     }
+
     ignore_when_release;
     handle_log("space");
 
     if (is_shift_only) {
         ibus_chewing_pre_edit_toggle_full_half_mode(self);
         return EVENT_RESPONSE_PROCESS;
+    }
+
+    /* Bug of libchewing: 
+     * If "Space as selection" is not enabled, Space key cannot be used
+     * to turn pages or switch the length of candidate lis.
+     */
+    if (table_is_showing) {
+        return self_handle_page_down(self, kSym, unmaskedMod);
     }
 
     /* Bug of libchewing: 
@@ -580,6 +629,8 @@ EventResponse self_handle_left(IBusChewingPreEdit * self, KSym kSym,
                 return EVENT_RESPONSE_ABSORB;
             }
         }
+
+        return self_handle_page_up(self, kSym, unmaskedMod);
     }
 
     return event_process_or_ignore(!chewing_handle_Left(self->context));
@@ -602,7 +653,8 @@ EventResponse self_handle_up(IBusChewingPreEdit * self, KSym kSym,
                 return EVENT_RESPONSE_ABSORB;
             }
         }
-            return event_process_or_ignore(!chewing_handle_Left(self->context));
+
+        return self_handle_page_up(self, kSym, unmaskedMod);
     }
 
     return event_process_or_ignore(!chewing_handle_Up(self->context));
@@ -622,6 +674,7 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
     }
 
     if (table_is_showing) {
+
         if(!ibus_chewing_pre_edit_is_vertical_table(self)) {
             /* horizontal look-up table */
             int numberCand = ibus_lookup_table_get_number_of_candidates(self->iTable);
@@ -631,7 +684,8 @@ EventResponse self_handle_right(IBusChewingPreEdit * self, KSym kSym,
                 return EVENT_RESPONSE_ABSORB;
             }
         }
-        return event_process_or_ignore(!chewing_handle_Space(self->context));
+
+        return self_handle_page_down(self, kSym, unmaskedMod);
     }
 
     return event_process_or_ignore(!chewing_handle_Right(self->context));
@@ -656,44 +710,12 @@ EventResponse self_handle_down(IBusChewingPreEdit * self, KSym kSym,
                 return EVENT_RESPONSE_ABSORB;
             }
         }
-        return event_process_or_ignore(!chewing_handle_Space(self->context));
+
+        /* horizontal look-up table */
+        return self_handle_page_down(self, kSym, unmaskedMod);
     }
 
     return event_process_or_ignore(!chewing_handle_Down(self->context));
-}
-
-EventResponse self_handle_page_up(IBusChewingPreEdit * self, KSym kSym,
-                                  KeyModifiers unmaskedMod)
-{
-    filter_modifiers(0);
-    ignore_when_buffer_is_empty_and_table_not_showing;
-    ignore_when_release;
-    handle_log("page_up");
-
-#if !CHEWING_CHECK_VERSION(0,4,0)
-    if (table_is_showing) {
-        return event_process_or_ignore(!chewing_handle_Left(self->context));
-    }
-#endif
-
-    return event_process_or_ignore(!chewing_handle_PageUp(self->context));
-}
-
-EventResponse self_handle_page_down(IBusChewingPreEdit * self, KSym kSym,
-                                    KeyModifiers unmaskedMod)
-{
-    filter_modifiers(0);
-    ignore_when_buffer_is_empty_and_table_not_showing;
-    ignore_when_release;
-    handle_log("page_down");
-
-#if !CHEWING_CHECK_VERSION(0,4,0)
-    if (table_is_showing) {
-        return event_process_or_ignore(!chewing_handle_Right(self->context));
-    }
-#endif
-
-    return event_process_or_ignore(!chewing_handle_PageDown(self->context));
 }
 
 EventResponse self_handle_tab(IBusChewingPreEdit * self, KSym kSym,

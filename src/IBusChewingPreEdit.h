@@ -110,7 +110,7 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit * self);
 
 #    define ibus_chewing_pre_edit_is_system_keyboard_layout(self) ibus_chewing_properties_read_boolean_general(self->iProperties, "ibus/general", "use-system-keyboard-layout", NULL)
 
-#    define ibus_chewing_pre_edit_is_vertical_table(self) ibus_chewing_properties_read_int_general(self->iProperties, "ibus/panel", "lookup-table-orientation", NULL)
+#    define ibus_chewing_pre_edit_is_vertical_table(self) mkdg_properties_get_boolean_by_key(self->iProperties->properties, "vertical-lookup-table")
 
 #    define ibus_chewing_pre_edit_apply_property(self,propertyKey) mkdg_properties_apply_by_key(self->iProperties->properties, propertyKey, NULL)
 
