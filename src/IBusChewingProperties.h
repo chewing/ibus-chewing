@@ -88,6 +88,8 @@ gboolean defaultEnglishLetterCase_apply_callback(PropertyContext * ctx,
 
 gboolean plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData);
 
+gboolean verticalLookupTable_apply_callback(PropertyContext * ctx, gpointer userData);
+
 extern MkdgPropertySpec propSpecs[];
 
 extern const gchar *kbType_ids[];

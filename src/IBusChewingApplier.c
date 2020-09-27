@@ -195,3 +195,9 @@ gboolean plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData)
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
+
+gboolean verticalLookupTable_apply_callback(PropertyContext * ctx, gpointer userData)
+{
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
+    return TRUE;
+}
