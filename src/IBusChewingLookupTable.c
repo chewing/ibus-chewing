@@ -6,7 +6,7 @@ IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
                                                ChewingContext * context)
 {
     guint size = 10;
-    gboolean cursorShow = FALSE;
+    gboolean cursorShow = TRUE;
     gboolean wrapAround = TRUE;
     IBusLookupTable *iTable = ibus_lookup_table_new
         (size, 0, cursorShow, wrapAround);
