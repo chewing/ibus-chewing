@@ -205,20 +205,6 @@ IBusText *decorate_pre_edit(IBusChewingPreEdit * icPreEdit,
                                IBUS_ATTR_UNDERLINE_SINGLE,
                                0, charLen);
 
-    IntervalType it;
-
-    chewing_interval_Enumerate(icPreEdit->context);
-    /* Add double lines on chewing interval that contains cursor */
-    while (chewing_interval_hasNext(icPreEdit->context)) {
-        chewing_interval_Get(icPreEdit->context, &it);
-        if (it.from <= chiSymbolCursor && chiSymbolCursor <= it.to) {
-            ibus_text_append_attribute(iText,
-                                       IBUS_ATTR_TYPE_UNDERLINE,
-                                       IBUS_ATTR_UNDERLINE_DOUBLE,
-                                       it.from, it.to);
-        }
-    }
-
     /* Use background color to show current cursor */
     if (chiSymbolCursor < charLen) {
         ibus_text_append_attribute(iText,
@@ -248,6 +234,7 @@ void update_pre_edit_text(IBusChewingEngine * self)
 {
     refresh_pre_edit_text(self);
     gboolean visible = TRUE;
+    gint bpmfLen = self->icPreEdit->bpmfLen;
 
     IBusPreeditFocusMode mode;
 
@@ -260,7 +247,7 @@ void update_pre_edit_text(IBusChewingEngine * self)
 
     parent_update_pre_edit_text_with_mode(IBUS_ENGINE(self),
                                           self->preEditText,
-                                          cursor_current, visible, mode);
+                                          cursor_current + bpmfLen, visible, mode);
 }
 
 void refresh_aux_text(IBusChewingEngine * self)
