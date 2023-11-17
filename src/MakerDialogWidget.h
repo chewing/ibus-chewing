@@ -4,11 +4,11 @@
 #    include "MakerDialogProperty.h"
 
 #    ifndef MKDG_HBOX_SPACING_DEFAULT
-#        define MKDG_HBOX_SPACING_DEFAULT 2
+#        define MKDG_HBOX_SPACING_DEFAULT 5
 #    endif
 
 #    ifndef MKDG_VBOX_SPACING_DEFAULT
-#        define MKDG_VBOX_SPACING_DEFAULT 2
+#        define MKDG_VBOX_SPACING_DEFAULT 10
 #    endif
 
 typedef enum {

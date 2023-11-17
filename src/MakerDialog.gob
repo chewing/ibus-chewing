@@ -121,6 +121,7 @@ class Maker:Dialog from Gtk:Dialog {
 
         /* Create Notebook */
         self->notebookWgt = gtk_notebook_new();
+        gtk_container_set_border_width(GTK_CONTAINER(self->notebookWgt), 5);
         mkdg_wgt_show(self->notebookWgt);
         GtkWidget *dialogVboxWgt = gtk_dialog_get_content_area(GTK_DIALOG(self));
         mkdg_wgt_show(dialogVboxWgt);
@@ -160,7 +161,8 @@ class Maker:Dialog from Gtk:Dialog {
 
         /* Do we need a new container/page? */
         if (container == NULL) {
-            MkdgWgt * vboxWgt = gtk_vbox_new(FALSE, MKDG_VBOX_SPACING_DEFAULT);
+            MkdgWgt * vboxWgt = gtk_box_new(GTK_ORIENTATION_VERTICAL, MKDG_VBOX_SPACING_DEFAULT);
+            gtk_container_set_border_width(GTK_CONTAINER (vboxWgt), 10);
             mkdg_wgt_show(vboxWgt);
             container = mkdg_widget_container_new(vboxWgt);
             g_hash_table_insert(self->_priv->containerTable, (gpointer) pageName,

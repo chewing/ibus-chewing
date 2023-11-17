@@ -298,7 +298,7 @@ void mkdg_widget_container_add_widget(MkdgWidgetContainer * container,
     MkdgWgt *vbox = container->wgt;
 
     /* Add widget to the vbox */
-    MkdgWgt *hbox = gtk_hbox_new(FALSE, MKDG_HBOX_SPACING_DEFAULT);
+    MkdgWgt *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, MKDG_HBOX_SPACING_DEFAULT); 
     MkdgWgt *labelWgt = MKDG_WGT(mWidget->label);
     MkdgWgt *wgt = mWidget->wgt;
 
