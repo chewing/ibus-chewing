@@ -216,6 +216,15 @@ MkdgPropertySpec propSpecs[] = {
      NULL}
     ,
     {
+     G_TYPE_BOOLEAN, "vertical-lookup-table", PAGE_SELECTING,
+     N_("Vertical Lookup Table"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION,
+     "0", NULL, NULL, 0, 1,
+     verticalLookupTable_apply_callback, 0,
+     "Use vertical lookup table.",
+     NULL}
+    ,
+    {
      G_TYPE_INVALID, "", "", "",
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL, NULL, 0, 0,
      NULL, 0, NULL, NULL}

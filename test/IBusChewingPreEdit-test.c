@@ -739,6 +739,9 @@ void test_arrow_keys_buffer_empty()
 /* GitHub #50: Cannot use Up, Down, PgUp, Ese ... etc. within "`" menu */
 
     TEST_CASE_INIT();
+    ibus_chewing_pre_edit_set_apply_property_boolean(self,
+                                                     "vertical-lookup-table",
+                                                     TRUE);
 
     key_press_from_string("`");
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
@@ -751,17 +754,12 @@ void test_arrow_keys_buffer_empty()
     g_assert(chewing_cand_CurrentPage(self->context) == 1);
     key_press_from_key_sym(IBUS_KEY_Page_Up, 0);
     g_assert(chewing_cand_CurrentPage(self->context) == 0);
-    key_press_from_key_sym(IBUS_KEY_Up, 0);
+    key_press_from_key_sym(IBUS_KEY_Escape, 0);
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
     key_press_from_string("`");
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
     key_press_from_key_sym(IBUS_KEY_BackSpace, 0);
-    g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
-
-    key_press_from_string("`");
-    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
-    key_press_from_key_sym(IBUS_KEY_Escape, 0);
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 }
 

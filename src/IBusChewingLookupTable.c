@@ -1,5 +1,6 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingLookupTable.h"
+#include "MakerDialogProperty.h"
 
 IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
                                                iProperties,
@@ -12,6 +13,7 @@ IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
         (size, 0, cursorShow, wrapAround);
 
     ibus_chewing_lookup_table_resize(iTable, iProperties, context);
+
     return iTable;
 }
 
@@ -46,6 +48,12 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
     }
     chewing_set_candPerPage(context, len);
     chewing_set_selKey(context, selKSym, len);
+
+    gboolean verticalLookupTable =
+        mkdg_properties_get_boolean_by_key(iProperties->properties,
+                                                   "vertical-lookup-table");
+
+    ibus_lookup_table_set_orientation(iTable, verticalLookupTable);
 }
 
 guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
