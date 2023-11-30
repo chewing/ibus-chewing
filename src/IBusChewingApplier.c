@@ -134,17 +134,6 @@ gboolean syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData)
     return TRUE;
 }
 
-gboolean
-shiftToggleChinese_apply_callback(PropertyContext * ctx, gpointer userData)
-{
-    GValue *value = &(ctx->value);
-    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
-
-    ibus_chewing_pre_edit_set_property_boolean
-        (icPreEdit, "shift-toggle-chinese", g_value_get_boolean(value));
-    return TRUE;
-}
-
 gboolean candPerPage_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *) ctx->parent;
@@ -152,13 +141,6 @@ gboolean candPerPage_apply_callback(PropertyContext * ctx, gpointer userData)
     ibus_chewing_lookup_table_resize(icPreEdit->iTable,
                                      icPreEdit->iProperties,
                                      icPreEdit->context);
-    return TRUE;
-}
-
-gboolean
-    capslockToggleChinese_apply_callback
-    (PropertyContext * ctx, gpointer userData) {
-    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
@@ -197,6 +179,12 @@ gboolean plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData)
 }
 
 gboolean verticalLookupTable_apply_callback(PropertyContext * ctx, gpointer userData)
+{
+    /* Use MkdgProperty directly, no need to call IBusChewingEngine */
+    return TRUE;
+}
+
+gboolean chiEngToggle_apply_callback(PropertyContext * ctx, gpointer userData)
 {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;

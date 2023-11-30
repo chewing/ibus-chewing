@@ -252,10 +252,11 @@ KSym self_key_sym_fix(IBusChewingPreEdit * self, KSym kSym,
                       KeyModifiers unmaskedMod)
 {
     gchar caseConversionMode = default_english_case_short;
+    gchar toggleChinese = chi_eng_toggle_key;
 
-    if (!ibus_chewing_pre_edit_get_property_boolean(self,
-                                                    "capslock-toggle-chinese"))
-    {
+
+    if (toggleChinese != 'c') {
+
         caseConversionMode = 'n';
     }
     if (is_chinese) {
@@ -414,15 +415,14 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
                                     KeyModifiers unmaskedMod)
 {
     filter_modifiers(0);
+    gchar toggleChinese = chi_eng_toggle_key;
 
-    if (!ibus_chewing_pre_edit_get_property_boolean(self,
-                                                    "capslock-toggle-chinese"))
-    {
+    if (toggleChinese != 'c') {
         /* Ignore the Caps Lock event when it does not toggle Chinese */
         return EVENT_RESPONSE_IGNORE;
     }
 
-    ignore_when_release;
+    absorb_when_release;
     handle_log("caps_lock");
 
     /* Clear bopomofo when toggling Chi-Eng Mode */
@@ -433,17 +433,42 @@ EventResponse self_handle_caps_lock(IBusChewingPreEdit * self, KSym kSym,
     return event_process_or_ignore(!chewing_handle_Capslock(self->context));
 }
 
-EventResponse self_handle_shift(IBusChewingPreEdit * self, KSym kSym,
+EventResponse self_handle_shift_left(IBusChewingPreEdit * self, KSym kSym,
                                 KeyModifiers unmaskedMod)
 {
     filter_modifiers(IBUS_SHIFT_MASK);
-    handle_log("shift");
+    handle_log("shift_left");
 
-    gboolean shiftIsToggleChinese =
-        ibus_chewing_pre_edit_get_property_boolean(self,
-                                                   "shift-toggle-chinese");
+    gchar toggleChinese = chi_eng_toggle_key;
 
-    if (!shiftIsToggleChinese) {
+    if (toggleChinese != 's' && toggleChinese != 'l' ) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
+    if (!event_is_released(unmaskedMod)) {
+        return EVENT_RESPONSE_ABSORB;
+    }
+
+    /* keyLast != Shift means Shift is just part of combination,
+     * thus should not be recognized as single Shift key
+     */
+    if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R) {
+        return EVENT_RESPONSE_ABSORB;
+    }
+
+    ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    return EVENT_RESPONSE_ABSORB;
+}
+
+EventResponse self_handle_shift_right(IBusChewingPreEdit * self, KSym kSym,
+                                KeyModifiers unmaskedMod)
+{
+    filter_modifiers(IBUS_SHIFT_MASK);
+    handle_log("shift_right");
+
+    gchar toggleChinese = chi_eng_toggle_key;
+
+    if (toggleChinese != 's' && toggleChinese != 'r' ) {
         return EVENT_RESPONSE_IGNORE;
     }
 
@@ -778,7 +803,10 @@ KeyHandlingRule keyHandlingRules[] = {
     {IBUS_KEY_Caps_Lock, IBUS_KEY_Caps_Lock, self_handle_caps_lock}
     ,
 
-    {IBUS_KEY_Shift_L, IBUS_KEY_Shift_R, self_handle_shift}
+    {IBUS_KEY_Shift_L, IBUS_KEY_Shift_L, self_handle_shift_left}
+    ,
+
+    {IBUS_KEY_Shift_R, IBUS_KEY_Shift_R, self_handle_shift_right}
     ,
 
     {IBUS_KEY_space, IBUS_KEY_space, self_handle_space}

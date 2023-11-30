@@ -27,11 +27,13 @@
 #    define _IBUS_CHEWING_PRE_EDIT_PRIVATE_H_
 
 /*== Frequent used shortcut ==*/
-#    define cursor_current chewing_cursor_Current(self->context)
-#    define total_choice chewing_cand_TotalChoice(self->context)
-#    define default_english_case_short \
-        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "default-english-case"), "lowercase")) ? 'l' : \
-        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "default-english-case"), "uppercase") ? 'u' : 'n')
+#    define cursor_current              chewing_cursor_Current(self->context)
+#    define total_choice                chewing_cand_TotalChoice(self->context)
+#    define default_english_case_short  (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "default-english-case"), "lowercase")) ? 'l' : \
+                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "default-english-case"), "uppercase") ? 'u' : 'n')
+#    define chi_eng_toggle_key          (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "caps_lock")) ? 'c' : \
+                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift")) ? 's' : \
+                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift_l") ? 'l' : 'n')
 
 /*== Conditional Expression Shortcut ==*/
 #    define is_plain_zhuyin ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin")

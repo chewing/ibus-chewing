@@ -175,8 +175,9 @@ void self_key_sym_fix_test()
 {
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
 
-    ibus_chewing_pre_edit_set_property_boolean(self,
-                                               "capslock-toggle-chinese", TRUE);
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "caps_lock");
+
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
                                               "no control");
     g_assert(self_key_sym_fix(self, '1', 0) == '1');
@@ -220,9 +221,9 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'C', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
              == 'c');
 
-    ibus_chewing_pre_edit_set_property_boolean(self,
-                                               "capslock-toggle-chinese",
-                                               FALSE);
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "shift");
+
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
                                               "no control");
     g_assert(self_key_sym_fix(self, 'd', 0) == 'd');
@@ -272,8 +273,10 @@ void self_key_sym_fix_test()
      * Chinese properly.
      */
     ibus_chewing_pre_edit_set_chi_eng_mode(self, TRUE);
-    ibus_chewing_pre_edit_set_property_boolean(self,
-                                               "capslock-toggle-chinese", TRUE);
+
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "caps_lock");
+
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
                                               "no control");
     g_assert(self_key_sym_fix(self, 'e', 0) == 'e');
@@ -315,9 +318,9 @@ void self_key_sym_fix_test()
     g_assert(self_key_sym_fix(self, 'G', IBUS_SHIFT_MASK | IBUS_LOCK_MASK)
              == 'G');
 
-    ibus_chewing_pre_edit_set_property_boolean(self,
-                                               "capslock-toggle-chinese",
-                                               FALSE);
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "shift");
+
     ibus_chewing_pre_edit_set_property_string(self, "default-english-case",
                                               "no control");
     g_assert(self_key_sym_fix(self, 'h', 0) == 'h');
@@ -458,6 +461,10 @@ void process_key_text_with_symbol_test()
 void process_key_mix_test()
 {
     TEST_CASE_INIT();
+
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "shift");
+
     key_press_from_string("5k4g4");
     key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
     key_press_from_string("ibus-chewing ");
@@ -523,8 +530,11 @@ void process_key_down_arrow_test()
 /* Test shift then caps then caps then shift */
 /* String: 我要去 Brisbane 了。Daddy 好嗎 */
 /* Bug before 1.5.0 */
+/* Should be okay to remove this since we force users to choose between caps and shift */
 void process_key_shift_and_caps_test()
 {
+#if 0
+
     TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
                                                      "plain-zhuyin", FALSE);
@@ -572,6 +582,7 @@ void process_key_shift_and_caps_test()
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
+#endif
 }
 
 void full_half_shape_test()
@@ -626,9 +637,9 @@ void plain_zhuyin_shift_symbol_test()
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
                                                      "plain-zhuyin", TRUE);
     g_assert(ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin"));
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-                                                     "shift-toggle-chinese",
-                                                     TRUE);
+
+    ibus_chewing_pre_edit_set_property_string(self, "chi-eng-mode-toggle",
+                                              "shift");
 
     key_press_from_string("su31cl31");
 
