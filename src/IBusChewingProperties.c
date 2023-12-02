@@ -66,6 +66,14 @@ const gchar *outputCharsets[] = {
     NULL
 };
 
+const gchar *chiEngToggle[] = {
+    N_("caps_lock"),
+    N_("shift"),
+    N_("shift_l"),
+    N_("shift_r"),
+    NULL
+};
+
 MkdgPropertySpec propSpecs[] = {
     {G_TYPE_STRING, "kb-type", PAGE_KEYBOARD, N_("Keyboard Type"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "default", kbType_ids, NULL, 0, 0,
@@ -96,13 +104,13 @@ MkdgPropertySpec propSpecs[] = {
      N_("Auto move cursor"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      autoShiftCur_apply_callback, 0,
-     N_("Automatically move cursor to next character"), NULL}
+     N_("Automatically move the cursor to the next character after selection"), NULL}
     ,
     {G_TYPE_BOOLEAN, "add-phrase-direction", PAGE_EDITING,
-     N_("Add phrases to the front"),
+     N_("Add phrase before the cursor"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      addPhraseDirection_apply_callback, 0,
-     N_("Add phrases to the front"), NULL}
+     N_("Use Ctrl + Numbers (2-9) to add new phrase before the cursor"), NULL}
     ,
     {G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
      N_("Clean pre-edit buffer when focus out"),
@@ -132,37 +140,27 @@ MkdgPropertySpec propSpecs[] = {
      ("Maximum Chinese characters in pre-edit buffer, not including inputing Zhuyin symbols."),
      NULL}
     ,
-    /* Sync between CapsLock and IM */
-    {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
-     N_("Sync between CapsLock and IM"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "disable", syncCapsLock_strs,
-     "Sync",
-     0, 1,
-     syncCapsLock_apply_callback,
+    {
+     G_TYPE_STRING, 
+     "chi-eng-mode-toggle", 
+     PAGE_EDITING,
+     N_("Chinese/Alphanumeric Mode Toggle Key"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, 
+     "caps_lock",
+     chiEngToggle, 
+     NULL, 
+     0, 
+     0,
+     chiEngToggle_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
-     N_
-     ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n"
-      "\"disable\": Do nothing\n"
-      "\"keyboard\": IM status follows keyboard status\n"
-      "\"IM\": Keyboard status follows IM status"), NULL}
-    ,
-    {G_TYPE_BOOLEAN, "shift-toggle-chinese", PAGE_EDITING,
-     N_("Shift toggle Chinese Mode"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     shiftToggleChinese_apply_callback, 0,
-     N_("Shift key to toggle Chinese Mode"), NULL}
-    ,
-    {G_TYPE_BOOLEAN, "capslock-toggle-chinese", PAGE_EDITING,
-     N_("Caps Lock toggles Chinese Mode"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
-     capslockToggleChinese_apply_callback, 0,
-     N_("On: Caps Lock toggle Chinese/English\n"
-        "Off: Caps Lock only affect English letter case"), NULL}
+     NULL,
+     NULL
+     }
     ,
     {
      G_TYPE_STRING, "default-english-case", PAGE_EDITING,
      N_("Default English letter case\n"
-        "  (Only effective when Caps Lock toggles Chinese is ON)"),
+        "(Only effective when Caps Lock is the toggle key)"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "lowercase",
      propDefaultEnglishLettercase_array, NULL, 0, 1,
      defaultEnglishLetterCase_apply_callback,
@@ -172,6 +170,20 @@ MkdgPropertySpec propSpecs[] = {
       "lowercase: Default to lowercase, press shift for uppercase.\n"
       "uppercase: Default to uppercase, press shift for lowercase."),
      NULL}
+    ,
+    /* Sync between CapsLock and IM */
+    {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
+     N_("Sync between CapsLock and IM"),
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "keyboard", syncCapsLock_strs,
+     "Sync",
+     0, 1,
+     syncCapsLock_apply_callback,
+     MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
+     N_
+     ("Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:\n"
+      "\"disable\": Do nothing\n"
+      "\"keyboard\": IM status follows keyboard status\n"
+      "\"IM\": Keyboard status follows IM status"), NULL}
     ,
     {
      G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING,
@@ -203,7 +215,7 @@ MkdgPropertySpec propSpecs[] = {
      N_("Choose phrases from backward"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      phraseChoiceRearward_apply_callback, 0,
-     N_("Choose phrases from the back, without moving cursor."),
+     N_("Open candidate list from the back of a phrase, without moving the cursor to the front."),
      NULL}
     ,
     {

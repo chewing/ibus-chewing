@@ -66,13 +66,7 @@ gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
 
 gboolean syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData);
 
-gboolean shiftToggleChinese_apply_callback(PropertyContext * ctx,
-                                           gpointer userData);
-
 gboolean candPerPage_apply_callback(PropertyContext * ctx, gpointer userData);
-
-gboolean capslockToggleChinese_apply_callback(PropertyContext * ctx,
-                                              gpointer userData);
 
 gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
                                              gpointer userData);
@@ -89,6 +83,8 @@ gboolean defaultEnglishLetterCase_apply_callback(PropertyContext * ctx,
 gboolean plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData);
 
 gboolean verticalLookupTable_apply_callback(PropertyContext * ctx, gpointer userData);
+
+gboolean chiEngToggle_apply_callback(PropertyContext * ctx, gpointer userData);
 
 extern MkdgPropertySpec propSpecs[];
 
