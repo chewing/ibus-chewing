@@ -1,7 +1,19 @@
-PRJ_VER=1.6.1
-SUMMARY=Fixed RHBZ#1411189
-REDHAT_BUGZILLA=1411189
+PRJ_VER=1.6.2
+SUMMARY=Port to GTK+-3 and support selecting candidate by cursor
+REDHAT_BUGZILLA=
 [Changes]
-- Fixed RHBZ#1411189 - ibus-engine-chewing killed by SIGSEGV when receiving KP_Insert
-- Update cmake-fedora to 2.9.3
-- Fixed pre-commit so it does not chop directory
+- Enhancement:
+    + GitHub Issue: #119 Refresh property list (language bar) only when needed
+    + GitHub Issue: #122 Add a setup button to the ibus indicator (and the language bar)
+    + GitHub Issue: #131 Port to GTK+-3
+    + GitHub Issue: #147 Use arrow keys to choose candidate
+    + GitHub Issue: #148 Display page number of the lookup table
+    + GitHub Issue: #152 Show cursor on lookup table
+    + GitHub Issue: #165 Support vertical lookup table and optimize turn page keys
+    + GitHub Issue: #166 Tweak ibus-setup dialog window and replace some deprecated APIs
+    + GitHub Issue: #167 Add dropdown menu for Chi-Eng-Mode toggle key
+
+- Fix: 
+    + GitHub Issue: #130 Destroy *preEditText, *auxText and *outgoingText when disable to prevent leak
+    + GitHub Issue: #144, 149 Ignore keystrokes in English mode
+

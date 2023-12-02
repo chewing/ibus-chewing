@@ -1,3 +1,21 @@
+* Sun Dec 03 2023 Hiunnhue <hiunnhue108 at ymail.com> - 1.6.2
+- Enhancement:
+    + GitHub Issue: #119 Refresh property list (language bar) only when needed
+    + GitHub Issue: #122 Add a setup button to the ibus indicator (and the language bar)
+    + GitHub Issue: #131 Port to GTK+-3
+      Thank for contribution from cosimoc
+    + GitHub Issue: #147 Use arrow keys to choose candidate
+    + GitHub Issue: #148 Display page number of the lookup table
+    + GitHub Issue: #152 Show cursor on lookup table
+    + GitHub Issue: #165 Support vertical lookup table and optimize turn page keys
+    + GitHub Issue: #166 Tweak ibus-setup dialog window and replace some deprecated APIs
+    + GitHub Issue: #167 Add dropdown menu for Chi-Eng-Mode toggle key
+- Fix: 
+    + GitHub Issue: #130 Destroy *preEditText, *auxText and *outgoingText when disable to prevent leak
+    + GitHub Issue: #144, 149 Ignore keystrokes in English mode
+- Acknowledge:
+    + Cosimo Cecchi contributed pull request #131
+
 * Mon Aug 07 2017 Ding-Yi Chen <dchen at redhat.com> - 1.6.1
 - Fixed RHBZ#1411189 - ibus-engine-chewing killed by SIGSEGV when receiving KP_Insert
 - Update cmake-fedora to 2.9.3
