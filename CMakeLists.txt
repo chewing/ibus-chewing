@@ -186,7 +186,7 @@ ENDIF()
 M_MSG(${M_INFO1} "CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}")
 SET_COMPILE_ENV(CHEWING_DATADIR_REAL)
 
-### Glib, Gtk and GOB
+### Glib, Gtk
 ## Glib2 is not explicit list as Requires, as it should be pick up by rpm
 SET(GLIB2_PKG_CONFIG "gio-2.0;glib-2.0;gmodule-2.0;gobject-2.0;gthread-2.0"
     CACHE STRING "glib2 pkg-config name")
@@ -198,10 +198,6 @@ MANAGE_DEPENDENCY(REQUIRES GTK3  REQUIRED)
 SET(GTK3_PKG_CONFIG "gtk+-3.0" CACHE STRING "gtk pkg-config name")
 MANAGE_DEPENDENCY(BUILD_REQUIRES GTK3 REQUIRED
     PKG_CONFIG ${GTK3_PKG_CONFIG} DEVEL
-    )
-
-MANAGE_DEPENDENCY(BUILD_REQUIRES GOB2 VER "2.0.16" REQUIRED
-    PROGRAM_NAMES "gob2"
     )
 
 ### X11

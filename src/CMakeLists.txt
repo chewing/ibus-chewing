@@ -10,6 +10,7 @@ SET_COMPILE_ENV(LIB_INSTALL_DIR  "${LIB_INSTALL_DIR}"
 ##== Location of library include files
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/bin
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
@@ -55,6 +56,7 @@ SET(IBUS_CHEWING_ENGINE_SOURCE_INCLUDED_C_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine-input-events.c
     )
 
+SET(GOB2_INPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
 SET(GOB2_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 MACRO(GOB_GENERATE name gobFile)
     SET(GOB_GENERATED_C_${name}
@@ -66,32 +68,8 @@ MACRO(GOB_GENERATE name gobFile)
 	CACHE INTERNAL "GOB_GENERATED_${name}"
 	)
 
-    ADD_CUSTOM_COMMAND(OUTPUT ${GOB_GENERATED_${name}}
-	COMMAND ${GOB2_EXECUTABLE} "${gobFile}"
-	-o "${GOB2_OUTPUT_DIR}/"
-	DEPENDS ${gobFile} ${ARGN}
-	)
 ENDMACRO(GOB_GENERATE name gobFile)
 
-
-GOB_GENERATE(ibus-chewing-engine
-    ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingEngine.gob
-    ${IBUS_CHEWING_ENGINE_SOURCE_INCLUDED_C_FILES}
-    )
-GOB_GENERATE(maker-dialog
-    ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialog.gob
-    )
-
-ADD_CUSTOM_TARGET(gob2
-    DEPENDS ${GOB_GENERATED_ibus-chewing-engine}
-    ${GOB_GENERATED_maker-dialog}
-    COMMENT "Preprocess with gob2."
-    )
-
-
-SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED_ibus-chewing-engine}
-    ${GOB_GENERATED_maker-dialog} PROPERTIES GENERATED true
-    )
 
 SET(COMMON_SOURCE_C_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingApplier.c
@@ -112,7 +90,7 @@ SET(COMMON_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogProperty.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogPropertySpec.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogUtil.h
-    ${GOB2_OUTPUT_DIR}/ibus-chewing-engine.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.h
     CACHE INTERNAL "COMMON_SOURCE_FILES"
     )
 
@@ -242,7 +220,9 @@ SET(BACKEND_LIBRARIES "${BACKEND_LIBRARIES}" CACHE INTERNAL "Backend Libraries")
 
 SET(GUI_CORE_SOURCE_FILES ${COMMON_SOURCE_FILES}
     ${BACKEND_SOURCE_FILES}
-    ${GOB_GENERATED_maker-dialog}
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/maker-dialog-private.h
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.c
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusConfigBackend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MakerDialogWidget.c
@@ -290,7 +270,8 @@ SET(IBUS_ENGINE_CHEWING_LIBRARIES ${COMMON_LIBRARIES}
 
 ADD_EXECUTABLE(${IBUS_ENGINE_CHEWING}
     ${GUI_CORE_SOURCE_FILES}
-    ${GOB_GENERATED_ibus-chewing-engine}
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ibus-chewing-engine.h
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingLookupTable.c
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingLookupTable.h
     ${CMAKE_CURRENT_SOURCE_DIR}/IBusChewingPreEdit.c

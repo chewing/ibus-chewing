@@ -49,8 +49,6 @@ ltmain.sh
 missing
 po/locale/
 py-compile
-src/ibus-chewing-engine*.[ch]
-src/maker-dialog*.[ch]
 stamp-h1
 tags
 test-bin/

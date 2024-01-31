@@ -6,6 +6,7 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/bin
     ${CMAKE_BINARY_DIR}/bin
     )
 
@@ -16,10 +17,6 @@ ELSE()
 ENDIF()
 
 ADD_DEFINITIONS("-DUNIT_TEST=1")
-
-SET_SOURCE_FILES_PROPERTIES(${GOB_GENERATED_ibus-chewing-engine}
-    ${GOB_GENERATED_maker-dialog} PROPERTIES GENERATED true
-    )
 
 #==================================================================
 # Dependencies
@@ -108,7 +105,9 @@ ADD_SOURCE_TEST(IBusChewingPreEdit
     )
 
 ADD_SOURCE_TEST(ibus-chewing-engine NO_DEFAULT_SOURCE
-    SOURCES ${GUI_CORE_SOURCE_FILES} ${GOB_GENERATED_ibus-chewing-engine}
+    SOURCES ${GUI_CORE_SOURCE_FILES}
+    ${CMAKE_SOURCE_DIR}/src/ibus-chewing-engine.c
+    ${CMAKE_SOURCE_DIR}/src/ibus-chewing-engine.h
     ${CMAKE_SOURCE_DIR}/src/IBusChewingLookupTable.c
     ${CMAKE_SOURCE_DIR}/src/IBusChewingLookupTable.h
     ${CMAKE_SOURCE_DIR}/src/IBusChewingPreEdit.c
