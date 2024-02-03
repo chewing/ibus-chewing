@@ -24,7 +24,6 @@
 *.sw[op]
 *NO_PACK*
 *~
-.*
 CMakeCache.txt
 CPack*Config.cmake
 CTestTestfile.cmake
@@ -53,5 +52,6 @@ stamp-h1
 tags
 test-bin/
 
+/.cache
 /out
 /build
