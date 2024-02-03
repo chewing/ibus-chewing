@@ -52,3 +52,6 @@ py-compile
 stamp-h1
 tags
 test-bin/
+
+/out
+/build

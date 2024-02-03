@@ -4,11 +4,14 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
                                                KSym keySym, guint keycode,
                                                KeyModifiers unmaskedMod)
 {
-    IBUS_CHEWING_LOG(INFO, "******** process_key_event(-,%x(%s),%x,%x) %s",
+    IBUS_CHEWING_LOG(MSG, "******** process_key_event(-,%x(%s),%x,%x) %s",
                      keySym, key_sym_get_name(keySym), keycode,
                      unmaskedMod, modifiers_to_string(unmaskedMod));
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
+
+    if (unmaskedMod & IBUS_MOD4_MASK)
+        return FALSE;
 
     if (is_password(self))
         return FALSE;

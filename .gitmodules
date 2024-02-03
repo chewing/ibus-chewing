@@ -1,3 +1,0 @@
-[submodule "cmake-fedora"]
-	path = cmake-fedora
-	url = https://pagure.io/cmake-fedora.git
