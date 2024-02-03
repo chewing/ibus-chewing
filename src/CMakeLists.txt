@@ -41,6 +41,7 @@ target_link_libraries(gui-core PUBLIC
     common
     PkgConfig::GLIB2
     PkgConfig::GTK4
+    PkgConfig::LIBADWAITA
     PkgConfig::X11
     PkgConfig::IBUS
     PkgConfig::CHEWING

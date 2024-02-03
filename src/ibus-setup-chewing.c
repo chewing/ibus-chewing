@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <chewing.h>
+#include <adwaita.h>
 #include <glib/gi18n.h>
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
@@ -102,7 +103,7 @@ gint main(gint argc, gchar * argv[])
     GError *error = NULL;
     GOptionContext *context;
 
-    gtk_init();
+    adw_init();
 
     /* Init i18n messages */
     setlocale(LC_ALL, "");
