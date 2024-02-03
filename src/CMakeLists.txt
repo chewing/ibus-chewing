@@ -40,7 +40,7 @@ endif()
 target_link_libraries(gui-core PUBLIC
     common
     PkgConfig::GLIB2
-    PkgConfig::GTK3
+    PkgConfig::GTK4
     PkgConfig::X11
     PkgConfig::IBUS
     PkgConfig::CHEWING

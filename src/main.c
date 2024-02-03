@@ -166,7 +166,7 @@ int main(gint argc, gchar * argv[])
     GError *error = NULL;
     GOptionContext *context;
 
-    gtk_init(&argc, &argv);
+    gtk_init();
 
     /* Init i18n messages */
     setlocale(LC_ALL, "");

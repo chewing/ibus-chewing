@@ -52,6 +52,15 @@ static const GOptionEntry entries[] = {
     {NULL},
 };
 
+
+void save_values(GtkDialog *sDialog, gint response_id, gpointer mDialog)
+{
+    if (response_id != GTK_RESPONSE_OK) {
+        return;
+    }
+    maker_dialog_save_all_widgets_values(mDialog, NULL);
+}
+
 gint start_dialog()
 {
 #ifdef USE_GSETTINGS
@@ -76,14 +85,15 @@ gint start_dialog()
                               MKDG_BUTTON_FLAG_OK | MKDG_BUTTON_FLAG_CANCEL);
     GtkWidget *sDialog = GTK_WIDGET(mDialog);
 
-    gtk_widget_show_all(sDialog);
-    gint result = gtk_dialog_run(GTK_DIALOG(sDialog));
+    gtk_window_present(GTK_WINDOW(mDialog));
+    g_signal_connect(sDialog, "response", G_CALLBACK(save_values), mDialog);
+    // gint result = gtk_dialog_run(GTK_DIALOG(sDialog));
 
-    gtk_widget_hide(sDialog);
-    if (result != GTK_RESPONSE_OK) {
-        return 3;
-    }
-    maker_dialog_save_all_widgets_values(mDialog, NULL);
+    // gtk_widget_hide(sDialog);
+    // if (result != GTK_RESPONSE_OK) {
+    //     return 3;
+    // }
+    // maker_dialog_save_all_widgets_values(mDialog, NULL);
     return 0;
 }
 
@@ -92,7 +102,7 @@ gint main(gint argc, gchar * argv[])
     GError *error = NULL;
     GOptionContext *context;
 
-    gtk_init(&argc, &argv);
+    gtk_init();
 
     /* Init i18n messages */
     setlocale(LC_ALL, "");
@@ -117,7 +127,10 @@ gint main(gint argc, gchar * argv[])
         return 0;
     }
     mkdg_log_set_level(verbose);
-    return start_dialog();
+    start_dialog();
+    while (true)
+        g_main_context_iteration (NULL, TRUE);
+    return 0;
 }
 
 /* vim:set et sts=4: */

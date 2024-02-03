@@ -49,7 +49,7 @@ add_compile_definitions(
 )
 
 pkg_check_modules(GLIB2 REQUIRED IMPORTED_TARGET glib-2.0)
-pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
+pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
 pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
 
 set(CMAKE_C_STANDARD 99)

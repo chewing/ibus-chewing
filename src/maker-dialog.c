@@ -125,7 +125,7 @@ ___finalize(GObject *obj_self)
 #define __GOB_FUNCTION__ "Maker:Dialog::finalize"
 	MakerDialog *self G_GNUC_UNUSED = MAKER_DIALOG (obj_self);
 	gpointer priv G_GNUC_UNUSED = self->_priv;
-	if(self->notebookWgt) { mkdg_wgt_destroy ((gpointer) self->notebookWgt); self->notebookWgt = NULL; }
+	if(self->notebookWgt) { g_object_unref ((gpointer) self->notebookWgt); self->notebookWgt = NULL; }
 	if(self->_priv->containerTable) { g_hash_table_destroy ((gpointer) self->_priv->containerTable); self->_priv->containerTable = NULL; }
 	if(self->_priv->widgetTable) { g_hash_table_destroy ((gpointer) self->_priv->widgetTable); self->_priv->widgetTable = NULL; }
 	if(self->_priv->notebookContentTable) { g_hash_table_destroy ((gpointer) self->_priv->notebookContentTable); self->_priv->notebookContentTable = NULL; }
@@ -213,7 +213,7 @@ maker_dialog_new_full (MkdgProperties * properties, const gchar * title, MkdgWid
         GtkDialog * dialog = GTK_DIALOG(self);
         gtk_window_set_title(GTK_WINDOW(dialog), title);
         gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
-        gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
+        // gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
         self->wFlags = wFlags;
         self->_priv->properties = properties;
 
@@ -231,11 +231,11 @@ maker_dialog_new_full (MkdgProperties * properties, const gchar * title, MkdgWid
 
         /* Create Notebook */
         self->notebookWgt = gtk_notebook_new();
-        gtk_container_set_border_width(GTK_CONTAINER(self->notebookWgt), 5);
-        mkdg_wgt_show(self->notebookWgt);
+        // gtk_container_set_border_width(GTK_CONTAINER(self->notebookWgt), 5);
+        // mkdg_wgt_show(self->notebookWgt);
         GtkWidget *dialogVboxWgt = gtk_dialog_get_content_area(GTK_DIALOG(self));
-        mkdg_wgt_show(dialogVboxWgt);
-        gtk_box_pack_start(GTK_BOX(dialogVboxWgt), self->notebookWgt, TRUE, TRUE, 0);
+        // mkdg_wgt_show(dialogVboxWgt);
+        gtk_box_prepend(GTK_BOX(dialogVboxWgt), self->notebookWgt);
 
         self_prepare(self);
         return self;
@@ -280,15 +280,15 @@ maker_dialog_add_property (MakerDialog * self, PropertyContext * ctx)
         /* Do we need a new container/page? */
         if (container == NULL) {
             MkdgWgt * vboxWgt = gtk_box_new(GTK_ORIENTATION_VERTICAL, MKDG_VBOX_SPACING_DEFAULT);
-            gtk_container_set_border_width(GTK_CONTAINER (vboxWgt), 10);
-            mkdg_wgt_show(vboxWgt);
+            // gtk_container_set_border_width(GTK_CONTAINER (vboxWgt), 10);
+            // mkdg_wgt_show(vboxWgt);
             container = mkdg_widget_container_new(vboxWgt);
             g_hash_table_insert(self->_priv->containerTable, (gpointer) pageName,
                                 (gpointer) container);
 
             /* new notebook page */
             MkdgWgt * pageLabelWgt = gtk_label_new(_(pageName));
-            mkdg_wgt_show(pageLabelWgt);
+            // mkdg_wgt_show(pageLabelWgt);
             gtk_notebook_append_page(GTK_NOTEBOOK(self->notebookWgt), vboxWgt,
                                      pageLabelWgt);
         }
@@ -496,22 +496,22 @@ maker_dialog_set_widget_value (MakerDialog * self, const gchar * key, GValue * v
     }}
 #undef __GOB_FUNCTION__
 
-/**
- * maker_dialog_show:
- * @self: A MakerDialog.
- *
- **/
-void 
-maker_dialog_show (MakerDialog * self)
-{
-#define __GOB_FUNCTION__ "Maker:Dialog::show"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (MAKER_IS_DIALOG (self));
-{
+// /**
+//  * maker_dialog_show:
+//  * @self: A MakerDialog.
+//  *
+//  **/
+// void 
+// maker_dialog_show (MakerDialog * self)
+// {
+// #define __GOB_FUNCTION__ "Maker:Dialog::show"
+// 	g_return_if_fail (self != NULL);
+// 	g_return_if_fail (MAKER_IS_DIALOG (self));
+// {
 	
-        mkdg_wgt_show_all(GTK_WIDGET(self));
-    }}
-#undef __GOB_FUNCTION__
+//         mkdg_wgt_show_all(GTK_WIDGET(self));
+//     }}
+// #undef __GOB_FUNCTION__
 
 MkdgWidget * 
 maker_dialog_get_widget_by_key (MakerDialog * self, const gchar * key)

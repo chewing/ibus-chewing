@@ -179,7 +179,7 @@ static void on_entry_activate_wrap(GtkEntry * entry, gpointer userData)
     MkdgWidget *mWidget = (MkdgWidget *) userData;
     GValue gValue = { 0 };
     g_value_init(&gValue, mWidget->ctx->spec->valueType);
-    g_value_set_string(&gValue, gtk_entry_get_text(entry));
+    g_value_set_string(&gValue, gtk_editable_get_text(GTK_EDITABLE(entry)));
     mkdg_log(INFO, "on_entry_activate_wrap(), key=%s value=%s",
              mWidget->ctx->spec->key, g_value_get_string(&gValue));
     on_value_change(mWidget, &gValue);
@@ -234,10 +234,11 @@ static void on_toggleButton_toggled_wrap(GtkToggleButton * button,
 
 gint mkdg_wgt_get_width(MkdgWgt * wgt)
 {
-    GtkRequisition requisition;
+    GtkRequisition min_size;
+    GtkRequisition natural_size;
 
-    gtk_widget_size_request(wgt, &requisition);
-    return requisition.width;
+    gtk_widget_get_preferred_size(wgt, &min_size, &natural_size);
+    return natural_size.width;
 }
 
 void mkdg_wgt_set_width(MkdgWgt * wgt, gint width)
@@ -247,7 +248,8 @@ void mkdg_wgt_set_width(MkdgWgt * wgt, gint width)
 
 void mkdg_wgt_set_alignment(MkdgWgt * wgt, gfloat xAlign, gfloat yAlign)
 {
-    gtk_misc_set_alignment(GTK_MISC(wgt), xAlign, yAlign);
+    gtk_widget_set_halign(wgt, xAlign);
+    gtk_widget_set_valign(wgt, yAlign);
     if (GTK_IS_LABEL(wgt)) {
         /* gtk_label_set_justify takes no effect on single line label,
          * but multi-lined label need this
@@ -255,22 +257,6 @@ void mkdg_wgt_set_alignment(MkdgWgt * wgt, gfloat xAlign, gfloat yAlign)
         gtk_label_set_justify(GTK_LABEL(wgt), GTK_JUSTIFY_RIGHT);
     }
 }
-
-void mkdg_wgt_show(MkdgWgt * wgt)
-{
-    gtk_widget_show(wgt);
-}
-
-void mkdg_wgt_show_all(MkdgWgt * wgt)
-{
-    gtk_widget_show_all(wgt);
-}
-
-void mkdg_wgt_destroy(MkdgWgt * wgt)
-{
-    gtk_widget_destroy(wgt);
-}
-
 
 /*=====================================
  * MkdgWidgetContainer subroutines
@@ -302,10 +288,10 @@ void mkdg_widget_container_add_widget(MkdgWidgetContainer * container,
     MkdgWgt *labelWgt = MKDG_WGT(mWidget->label);
     MkdgWgt *wgt = mWidget->wgt;
 
-    gtk_box_pack_start(GTK_BOX(hbox), labelWgt, FALSE, FALSE, 0);
-    mkdg_wgt_show(labelWgt);
-    gtk_box_pack_start(GTK_BOX(hbox), wgt, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+    gtk_box_prepend(GTK_BOX(hbox), labelWgt);
+    // mkdg_wgt_show(labelWgt);
+    gtk_box_prepend(GTK_BOX(hbox), wgt);
+    gtk_box_prepend(GTK_BOX(vbox), hbox);
 
     g_ptr_array_add(container->children, mWidget);
     container->childrenLabelWidth =
@@ -375,7 +361,7 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx, MkdgWidgetFlag widgetFlags)
     switch (ctx->spec->valueType) {
     case G_TYPE_BOOLEAN:
         bValue = g_value_get_boolean(property_context_get(ctx));
-        wgt = gtk_check_button_new();
+        wgt = gtk_toggle_button_new();
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), bValue);
         g_signal_connect(wgt, "toggled",
                          G_CALLBACK(on_toggleButton_toggled_wrap), mWidget);
@@ -452,7 +438,7 @@ MkdgWidget *mkdg_widget_new(PropertyContext * ctx, MkdgWidgetFlag widgetFlags)
             if (ctx->spec->max >= 0) {
                 gtk_entry_set_max_length(GTK_ENTRY(wgt), ctx->spec->max);
             }
-            gtk_entry_set_text(GTK_ENTRY(wgt), strValue);
+            gtk_editable_set_text(GTK_EDITABLE(wgt), strValue);
             gtk_editable_set_editable(GTK_EDITABLE(wgt),
                                       !(ctx->spec->propertyFlags &
                                         MKDG_PROPERTY_FLAG_NO_NEW));
@@ -525,7 +511,7 @@ GValue *mkdg_widget_get_widget_value(MkdgWidget * mWidget, GValue * value)
             g_value_unset(strValue);
         } else {
             g_value_set_string(value,
-                               gtk_entry_get_text(GTK_ENTRY(mWidget->wgt)));
+                               gtk_editable_get_text(GTK_EDITABLE(mWidget->wgt)));
         }
         break;
     default:
@@ -571,7 +557,7 @@ gboolean mkdg_widget_set_widget_value(MkdgWidget * mWidget, GValue * value)
             gtk_combo_box_set_active(GTK_COMBO_BOX(mWidget->wgt), index);
         } else {
             g_value_set_string(value,
-                               gtk_entry_get_text(GTK_ENTRY(mWidget->wgt)));
+                               gtk_editable_get_text(GTK_EDITABLE(mWidget->wgt)));
         }
         break;
     default:
