@@ -1,0 +1,69 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default (Release)",
+            "description": "Default preset for release build",
+            "inherits": [
+                "c99-release"
+            ]
+        },
+        {
+            "name": "coverage-base",
+            "displayName": "Enable Coverage",
+            "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-fprofile-instr-generate -fcoverage-mapping"
+            }
+        },
+        {
+            "name": "c99",
+            "displayName": "C99 (Debug)",
+            "description": "Build with only C dependencies",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "c99-release",
+            "displayName": "C99 (Release)",
+            "description": "Build with only C dependencies",
+            "inherits": [
+                "c99"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "c99-coverage",
+            "displayName": "C99 (Debug Coverage)",
+            "description": "Build with only C dependencies",
+            "inherits": [
+                "c99",
+                "coverage-base"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "c99-coverage",
+            "configurePreset": "c99-coverage"
+        }
+    ]
+}

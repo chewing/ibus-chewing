@@ -24,7 +24,6 @@
 *.sw[op]
 *NO_PACK*
 *~
-.*
 CMakeCache.txt
 CPack*Config.cmake
 CTestTestfile.cmake
@@ -49,8 +48,10 @@ ltmain.sh
 missing
 po/locale/
 py-compile
-src/ibus-chewing-engine*.[ch]
-src/maker-dialog*.[ch]
 stamp-h1
 tags
 test-bin/
+
+/.cache
+/out
+/build

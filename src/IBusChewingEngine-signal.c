@@ -1,6 +1,5 @@
-/*================================================= Signal process routines
- *
- */
+#include "ibus-chewing-engine-private.h"
+#include "ibus-chewing-engine.h"
 
 /**
  * ibus_chewing_engine_start:
@@ -50,7 +49,7 @@ void ibus_chewing_engine_reset(IBusChewingEngine * self)
     ibus_engine_hide_auxiliary_text(engine);
     ibus_engine_hide_lookup_table(engine);
     ibus_engine_update_preedit_text(engine,
-                                    SELF_GET_CLASS(self)->emptyText, 0, FALSE);
+                                    IBUS_CHEWING_ENGINE_GET_CLASS(self)->emptyText, 0, FALSE);
 
 #endif
 }
@@ -115,7 +114,7 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)",
                      purpose, hints);
 
-    Self *self = SELF(engine);
+    IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
     if (purpose == IBUS_INPUT_PURPOSE_PASSWORD ||
         purpose == IBUS_INPUT_PURPOSE_PIN) {

@@ -115,7 +115,7 @@ void ibus_chewing_systray_icon_set_visible(IBusChewingSystrayIcon *
 void ibus_chewing_systray_icon_update(IBusChewingSystrayIcon * self);
 
 
-#    include "ibus-chewing-engine.h"
+typedef struct _IBusChewingEngine IBusChewingEngine;
 
 IBusChewingSystrayIcon
     * ibus_chewing_systray_chi_eng_icon_new(IBusChewingEngine * iEngine);

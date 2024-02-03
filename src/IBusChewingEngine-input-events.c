@@ -1,14 +1,19 @@
+#include "ibus-chewing-engine-private.h"
+#include "ibus-chewing-engine.h"
 #include "IBusChewingProperties.h"
 
 gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
                                                KSym keySym, guint keycode,
                                                KeyModifiers unmaskedMod)
 {
-    IBUS_CHEWING_LOG(INFO, "******** process_key_event(-,%x(%s),%x,%x) %s",
+    IBUS_CHEWING_LOG(MSG, "******** process_key_event(-,%x(%s),%x,%x) %s",
                      keySym, key_sym_get_name(keySym), keycode,
                      unmaskedMod, modifiers_to_string(unmaskedMod));
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
+
+    if (unmaskedMod & IBUS_MOD4_MASK)
+        return FALSE;
 
     if (is_password(self))
         return FALSE;
@@ -22,7 +27,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
                                                         unmaskedMod);
 
     IBUS_CHEWING_LOG(MSG, "process_key_event() result=%d", result);
-    self_update(self);
+    ibus_chewing_engine_update(self);
 
     if (kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R || 
         kSym == IBUS_KEY_Caps_Lock) {
@@ -30,7 +35,7 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
          * Chi-Eng Mode or Shape Mode with Shift or Caps Lock, otherwise
          * the bar will stick to the cursor and block the candidats list.
          */
-        self_refresh_property_list(self);
+        ibus_chewing_engine_refresh_property_list(self);
     }
 
     return result;
@@ -60,7 +65,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
 
         ibus_chewing_pre_edit_process_key(self->icPreEdit, k, 0);
         g_free(selKeys);
-        self_update(self);
+        ibus_chewing_engine_update(self);
     } else {
         IBUS_CHEWING_LOG(DEBUG,
                          "candidate_clicked() ... candidates are not showing");
@@ -73,7 +78,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
 {
     IBUS_CHEWING_LOG(INFO, "property_activate(-, %s, %u)", prop_name,
                      prop_state);
-    Self *self = SELF(engine);
+    IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
     if (STRING_EQUALS(prop_name, "InputMode")) {
         /* Toggle Chinese <-> English */
@@ -91,12 +96,12 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
                              self->_priv->pDisplay);
             }
         }
-        self_refresh_property(self, prop_name);
+        ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
         /* Toggle Full <-> Half */
         chewing_set_ShapeMode(self->icPreEdit->context,
                               !chewing_get_ShapeMode(self->icPreEdit->context));
-        self_refresh_property(self, prop_name);
+        ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "setup_prop")) {
         /* open preferences window */
         system(QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing");

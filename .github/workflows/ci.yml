@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install build dependencies
+        run: sudo apt install -y libgtk-3-dev libibus-1.0-dev libx11-dev libchewing3-dev ibus gettext xvfb
+
+      - name: Build
+        run: |
+          cmake --preset default
+          cmake --build --preset default --verbose
+          cmake --build --preset default -t install --verbose
+
+      - name: Test
+        run: |
+          xvfb-run -a ctest --test-dir out/build/default --output-on-failure --verbose
+
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install build dependencies
+        run: sudo apt install -y libgtk-3-dev libibus-1.0-dev libx11-dev libchewing3-dev ibus gettext xvfb
+
+      - name: Install llvm
+        run: |
+          sudo apt install -y llvm
+          rustup component add llvm-tools
+
+      - name: Setup grcov
+        run: |
+          curl -LO https://github.com/mozilla/grcov/releases/download/v0.8.19/grcov-x86_64-unknown-linux-gnu.tar.bz2
+          echo 098be4d60b8016913542d58456fea6e771890096d1bf86e7f83dac650ba4b58a grcov-x86_64-unknown-linux-gnu.tar.bz2 | sha256sum -c -
+          tar xf grcov-x86_64-unknown-linux-gnu.tar.bz2
+
+      - name: Build
+        run: |
+          cmake --preset c99-coverage
+          cmake --build --preset c99-coverage --verbose
+
+      - name: Test
+        run: |
+          xvfb-run -a ctest --test-dir out/build/c99-coverage --output-on-failure --verbose
+          ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # https://github.com/orgs/community/discussions/26822
+  results:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Final Results
+    needs: [build]
+    steps:
+      - run: exit 1
+        # see https://stackoverflow.com/a/67532120/4907315
+        if: >-
+          ${{
+               contains(needs.*.result, 'failure')
+            || contains(needs.*.result, 'cancelled')
+          }}
