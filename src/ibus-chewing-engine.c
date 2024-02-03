@@ -827,8 +827,3 @@ ___16_ibus_chewing_engine_property_hide (IBusEngine * engine G_GNUC_UNUSED, cons
     }}
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
-
-
-#include "IBusChewingEngine-signal.c"
-#include "IBusChewingEngine-input-events.c"
-

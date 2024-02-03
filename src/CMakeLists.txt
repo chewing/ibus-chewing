@@ -57,6 +57,8 @@ target_link_libraries(ibus-setup-chewing gui-core)
 add_executable(ibus-engine-chewing
     ibus-chewing-engine.c
     ibus-chewing-engine.h
+    IBusChewingEngine-signal.c
+    IBusChewingEngine-input-events.c
     IBusChewingLookupTable.c
     IBusChewingLookupTable.h
     IBusChewingPreEdit.c

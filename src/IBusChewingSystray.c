@@ -1,4 +1,5 @@
 #include "IBusChewingSystray.h"
+#include "ibus-chewing-engine.h"
 
 /*=== Internal functions start ===*/
 
