@@ -32,7 +32,6 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingSystray.h"
 #ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif

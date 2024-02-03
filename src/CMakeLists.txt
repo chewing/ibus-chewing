@@ -1,8 +1,3 @@
-set(IBUS_CHEWING_ENGINE_SOURCE_INCLUDED_C_FILES
-    IBusChewingEngine-signal.c
-    IBusChewingEngine-input-events.c
-)
-
 add_library(common STATIC
     IBusChewingApplier.c
     IBusChewingProperties.c
@@ -63,8 +58,6 @@ add_executable(ibus-engine-chewing
     IBusChewingLookupTable.h
     IBusChewingPreEdit.c
     IBusChewingPreEdit.h
-    IBusChewingSystray.c
-    IBusChewingSystray.h
     IBusChewingUtil.c
     IBusChewingUtil.h
     main.c

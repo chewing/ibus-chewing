@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk30"
+#include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
@@ -32,7 +33,6 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingSystray.h"
 #ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif
@@ -126,7 +126,6 @@ struct _IBusChewingEngine {
 	IBusProperty * setup_prop;
 	IBusPropList * prop_list;
 	/*< private >*/
-	IBusChewingSystrayIcon * iChiEngSystrayIcon; /* protected */
 	FILE * logFile; /* protected */
 	IBusKeymap * keymap_us; /* protected */
 	IBusChewingEnginePrivate *_priv;

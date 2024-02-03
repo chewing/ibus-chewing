@@ -45,8 +45,6 @@ add_executable(ibus-chewing-engine-test ibus-chewing-engine-test.c
     ../src/IBusChewingLookupTable.h
     ../src/IBusChewingPreEdit.c
     ../src/IBusChewingPreEdit.h
-    ../src/IBusChewingSystray.c
-    ../src/IBusChewingSystray.h
     ../src/IBusChewingUtil.c
     ../src/IBusChewingUtil.h
 )

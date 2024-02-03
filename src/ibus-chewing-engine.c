@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk30"
+#include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
@@ -32,7 +33,6 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingSystray.h"
 #ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
 #endif
@@ -208,7 +208,6 @@ ___finalize(GObject *obj_self)
 	if(self->preEditText) { g_object_unref ((gpointer) self->preEditText); self->preEditText = NULL; }
 	if(self->auxText) { g_object_unref ((gpointer) self->auxText); self->auxText = NULL; }
 	if(self->outgoingText) { g_object_unref ((gpointer) self->outgoingText); self->outgoingText = NULL; }
-	if(self->iChiEngSystrayIcon) { ibus_chewing_systray_icon_free ((gpointer) self->iChiEngSystrayIcon); self->iChiEngSystrayIcon = NULL; }
 	if(self->InputMode) { g_object_unref ((gpointer) self->InputMode); self->InputMode = NULL; }
 	if(self->AlnumSize) { g_object_unref ((gpointer) self->AlnumSize); self->AlnumSize = NULL; }
 	if(self->setup_prop) { g_object_unref ((gpointer) self->setup_prop); self->setup_prop = NULL; }
@@ -229,7 +228,6 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
 	self->preEditText = NULL;
 	self->auxText = NULL;
 	self->outgoingText = NULL;
-	self->iChiEngSystrayIcon = NULL;
 	self->logFile = NULL;
 	self->_priv->statusFlags = 0;
 	self->_priv->capabilite = 0;
@@ -518,10 +516,6 @@ ibus_chewing_engine_refresh_property (IBusChewingEngine * self, const gchar * pr
 #ifndef UNIT_TEST
         IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
                          prop_name, self->_priv->statusFlags);
-
-        if (ibus_chewing_systray_chi_eng_icon_create_or_hide(self)) {
-            ibus_chewing_systray_chi_eng_icon_refresh_value(self);
-        }
 
         if (STRING_EQUALS(prop_name, "InputMode")) {
 
