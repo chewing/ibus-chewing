@@ -42,7 +42,7 @@ jobs:
 
       - name: Install llvm
         run: |
-          sudo dnf -y install llvm rustup bzip2
+          sudo dnf -y install llvm rustup bzip2 git
           rustup-init -y
           source "$HOME/.cargo/env"
           rustup component add llvm-tools
