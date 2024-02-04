@@ -32,6 +32,9 @@ int main(int argc, char *argv[]) {
 
     app = ibus_setup_chewing_application_new(
         "org.freedesktop.IBus.Chewing.Setup", G_APPLICATION_DEFAULT_FLAGS);
+#ifdef UNIT_TEST
+    g_idle_add(G_SOURCE_FUNC(g_application_quit), G_APPLICATION(app));
+#endif
     ret = g_application_run(G_APPLICATION(app), argc, argv);
 
     return ret;

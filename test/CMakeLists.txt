@@ -53,3 +53,23 @@ add_test(NAME ibus-chewing-engine
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-engine-test)
 set_tests_properties(ibus-chewing-engine PROPERTIES
     ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+
+# ==================
+add_executable(ibus-setup-chewing-test
+    ../src/setup/ibus-setup-chewing-application.c
+    ../src/setup/ibus-setup-chewing-application.h
+    ../src/setup/ibus-setup-chewing-window.c
+    ../src/setup/ibus-setup-chewing-window.h
+    ../src/setup/main.c
+    ${CMAKE_CURRENT_BINARY_DIR}/../bin/ibus-setup-chewing-window-ui.c
+)
+target_compile_definitions(ibus-setup-chewing-test PRIVATE
+    GETTEXT_PACKAGE="ibus-setup-chewing"
+    LOCALEDIR="${CMAKE_INSTALL_LOCALEDIR}"
+)
+target_include_directories(ibus-setup-chewing-test PRIVATE ../src/setup)
+target_link_libraries(ibus-setup-chewing-test PkgConfig::LIBADWAITA)
+add_test(NAME ibus-setup-chewing
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/ibus-setup-chewing-test)
+set_tests_properties(ibus-setup-chewing PROPERTIES
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
