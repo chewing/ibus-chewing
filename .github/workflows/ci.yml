@@ -60,6 +60,7 @@ jobs:
 
       - name: Test
         run: |
+          source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
           xvfb-run -a ctest --test-dir out/build/c99-coverage --output-on-failure --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
