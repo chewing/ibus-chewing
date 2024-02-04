@@ -22,9 +22,34 @@
 
 #include "ibus-setup-chewing-application.h"
 
+static gboolean quit = FALSE;
+
+static GOptionEntry entries[] = {
+    {"quit", 'q', 0, G_OPTION_ARG_NONE, &quit,
+     "Cause the application to quit immediately after launch", NULL},
+    G_OPTION_ENTRY_NULL};
+
+static void application_quit(gpointer user_data) {
+    IbusSetupChewingApplication *self = user_data;
+    GAction *quit_action;
+
+    quit_action = g_action_map_lookup_action(G_ACTION_MAP(self), "quit");
+    g_action_activate(G_ACTION(quit_action), NULL);
+}
+
 int main(int argc, char *argv[]) {
+    GError *error = NULL;
+    GOptionContext *context;
     g_autoptr(IbusSetupChewingApplication) app = NULL;
     int ret;
+
+    context = g_option_context_new("- chewing settings");
+    g_option_context_add_main_entries(context, entries, GETTEXT_PACKAGE);
+
+    if (!g_option_context_parse(context, &argc, &argv, &error)) {
+        g_print("option parsing failed: %s\n", error->message);
+        exit(1);
+    }
 
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
@@ -32,9 +57,9 @@ int main(int argc, char *argv[]) {
 
     app = ibus_setup_chewing_application_new(
         "org.freedesktop.IBus.Chewing.Setup", G_APPLICATION_DEFAULT_FLAGS);
-#ifdef UNIT_TEST
-    g_idle_add(G_SOURCE_FUNC(g_application_quit), G_APPLICATION(app));
-#endif
+    if (quit) {
+        g_idle_add(G_SOURCE_FUNC(application_quit), app);
+    }
     ret = g_application_run(G_APPLICATION(app), argc, argv);
 
     return ret;
