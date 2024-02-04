@@ -27,9 +27,7 @@
 #include <glib/gi18n.h>
 #include "ibus-chewing-engine.h"
 #include "IBusChewingUtil.h"
-#include "maker-dialog.h"
 
-MakerDialog *makerDialog = NULL;
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
 

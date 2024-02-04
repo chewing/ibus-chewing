@@ -6,9 +6,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusConfigBackend.h"
-#ifdef USE_GSETTINGS
-#    include "GSettingsBackend.h"
-#endif
+#include "GSettingsBackend.h"
 
 #define PAGE_EDITING  N_("Editing")
 #define PAGE_SELECTING  N_("Selecting")
@@ -257,15 +255,10 @@ IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
         mkdg_properties_from_spec_array(propSpecs, backend, parent, auxData);
 
     /* In schema generation, backend is NULL */
-#ifdef USE_GSETTINGS
     self->confObjTable = g_hash_table_new(g_str_hash, g_str_equal);
-#else
-    self->confObjTable = NULL;
-#endif
     return self;
 }
 
-#ifdef USE_GSETTINGS
 static GString *ibus_section_to_schema(const gchar * section)
 {
     GString *result = g_string_new("org.freedesktop");
@@ -278,7 +271,6 @@ static GString *ibus_section_to_schema(const gchar * section)
     g_strfreev(strArr);
     return result;
 }
-#endif                          /* USE_GSETTINGS */
 
 GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
                                              GValue * value,
@@ -288,7 +280,6 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
 {
     g_assert(self);
     g_assert(value);
-#ifdef USE_GSETTINGS
     if (STRING_EQUALS(self->properties->backend->id, GSETTINGS_BACKEND_ID)) {
         GSettings *confObj;
 
@@ -307,7 +298,6 @@ GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
         g_assert(confObj);
         return mkdg_g_settings_read_value(confObj, value, key);
     }
-#endif                          /* USE_GSETTINGS */
     return mkdg_backend_read(self->properties->backend, value, section,
                              key, userData);
 }

@@ -32,12 +32,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#endif
-#ifdef USE_GCONF2
-#include "GConf2Backend.h"
-#endif
 
 #ifndef __IBUS_CHEWING_ENGINE_PRIVATE_H__
 #define __IBUS_CHEWING_ENGINE_PRIVATE_H__
@@ -50,7 +45,6 @@ extern "C" {
 
 
 
-#include "maker-dialog.h"
 void ibus_chewing_engine_handle_Default(IBusChewingEngine * self,
                                         guint keyval,
                                         gboolean shiftPressed);

@@ -23,20 +23,9 @@ target_link_libraries(common PUBLIC
 )
 
 add_library(gui-core STATIC
-    maker-dialog.c
-    maker-dialog.h
-    maker-dialog-private.h
-    IBusConfigBackend.c
-    IBusConfigBackend.h
-    MakerDialogWidget.c
-    MakerDialogWidget.h
+    GSettingsBackend.c
+    GSettingsBackend.h
 )
-if(GSETTINGS_SUPPORT)
-    target_sources(gui-core PRIVATE
-        GSettingsBackend.c
-        GSettingsBackend.h
-	)
-endif()
 target_link_libraries(gui-core PUBLIC
     common
     PkgConfig::GLIB2
@@ -47,8 +36,37 @@ target_link_libraries(gui-core PUBLIC
     PkgConfig::CHEWING
 )
 
-add_executable(ibus-setup-chewing ibus-setup-chewing.c)
-target_link_libraries(ibus-setup-chewing gui-core)
+add_custom_command(
+    OUTPUT ibus-setup-chewing-window-ui.c
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/setup
+    COMMAND ${GLIB_COMPILE_RESOURCES}
+    ARGS
+        --generate
+        --target=${CMAKE_CURRENT_BINARY_DIR}/ibus-setup-chewing-window-ui.c
+        ibus-setup-chewing.gresource.xml
+    VERBATIM
+    MAIN_DEPENDENCY setup/ibus-setup-chewing.gresource.xml
+    DEPENDS
+        setup/ibus-setup-chewing-window.ui
+)
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/ibus-setup-chewing-window-ui.c
+    PROPERTIES GENERATED TRUE
+)
+add_executable(ibus-setup-chewing
+    setup/ibus-setup-chewing-application.c
+    setup/ibus-setup-chewing-application.h
+    setup/ibus-setup-chewing-window.c
+    setup/ibus-setup-chewing-window.h
+    setup/main.c
+    ${CMAKE_CURRENT_BINARY_DIR}/ibus-setup-chewing-window-ui.c
+)
+target_compile_definitions(ibus-setup-chewing PRIVATE
+    GETTEXT_PACKAGE="ibus-setup-chewing"
+    LOCALEDIR="${CMAKE_INSTALL_LOCALEDIR}"
+)
+target_include_directories(ibus-setup-chewing PRIVATE setup)
+target_link_libraries(ibus-setup-chewing PkgConfig::LIBADWAITA)
 
 add_executable(ibus-engine-chewing
     ibus-chewing-engine.c
@@ -70,30 +88,12 @@ target_include_directories(ibus-engine-chewing
 
 target_link_libraries(ibus-engine-chewing gui-core)
 
-if(GSETTINGS_SUPPORT)
-    set(PROJECT_GSCHEMA_XML ${PROJECT_SCHEMA_ID}.gschema.xml)
-    set(GSETTINGS_SCHEMAS_DIR ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas)
+set(PROJECT_GSCHEMA_XML ${PROJECT_SCHEMA_ID}.gschema.xml)
+set(GSETTINGS_SCHEMAS_DIR ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas)
 
-    add_executable(generate-gsettings-schemas
-        GSettingsBackend.c
-        GSettingsBackend.h
-        generate-gsettings-schemas.c
-	)
-    target_link_libraries(generate-gsettings-schemas common)
-
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_GSCHEMA_XML}
-	    DESTINATION ${GSETTINGS_SCHEMAS_DIR}
-	)
-
-    add_custom_target(schemas_gsettings ALL
-        COMMAND G_MESSAGES_DEBUG=all "${CMAKE_CURRENT_BINARY_DIR}/generate-gsettings-schemas" -v 5 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_GSCHEMA_XML}"
-        COMMAND G_MESSAGES_DEBUG=all glib-compile-schemas "${CMAKE_CURRENT_BINARY_DIR}"
-        COMMENT "Generating gsettings schemas ${PROJECT_GSCHEMA_XML}"
-        VERBATIM
-	)
-
-    add_dependencies(schemas_gsettings generate-gsettings-schemas)
-endif()
+install(FILES setup/${PROJECT_GSCHEMA_XML}
+    DESTINATION ${GSETTINGS_SCHEMAS_DIR}
+)
 
 install(TARGETS ibus-engine-chewing ibus-setup-chewing
     DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})

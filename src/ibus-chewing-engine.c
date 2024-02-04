@@ -33,12 +33,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#endif
-#ifdef USE_GCONF2
-#include "GConf2Backend.h"
-#endif
 
 #define GOB_VERSION_MAJOR 2
 #define GOB_VERSION_MINOR 0
@@ -300,18 +295,9 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
 
         if (self->icPreEdit == NULL) {
 
-#ifdef USE_GSETTINGS
             MkdgBackend *backend =
                 mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
                 QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif defined USE_GCONF2
-            MkdgBackend *backend =
-                gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
-#else
-            MkdgBackend *backend = NULL;
-            g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
-            return;
-#endif          /* USE_GSETTINGS */
 
             self->icPreEdit = ibus_chewing_pre_edit_new(backend);
         }

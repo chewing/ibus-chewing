@@ -34,8 +34,6 @@ enable_testing()
 include(GNUInstallDirs)
 
 option(GNOME_SHELL "Enable GNOME Shell support" ON)
-option(GCONF2_SUPPORT "Enable GConf2 support" OFF)
-option(GSETTINGS_SUPPORT "Enable GSettings support" ON)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(IBUS REQUIRED IMPORTED_TARGET ibus-1.0>=1.3)
@@ -53,14 +51,10 @@ pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
 pkg_check_modules(LIBADWAITA REQUIRED IMPORTED_TARGET libadwaita-1)
 pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
 
+find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
+
 set(CMAKE_C_STANDARD 99)
 add_compile_definitions(_XOPEN_SOURCE)
-if(GSETTINGS_SUPPORT)
-    add_compile_definitions(USE_GSETTINGS)
-endif()
-if(GCONF2_SUPPORT)
-    add_compile_definitions(USE_GCONF2)
-endif()
 
 # Directory that store ibus-chewing icons
 add_compile_definitions(PRJ_ICON_DIR="${CMAKE_INSTALL_DATADIR}/ibus-chewing/icons")
@@ -73,8 +67,6 @@ add_compile_definitions(
     PROJECT_SCHEMA_BASE=/desktop/ibus/engine
     PROJECT_SCHEMA_SECTION=chewing
     PROJECT_SCHEMA_DIR=/desktop/ibus/engine/chewing
-    PROJECT_GCONF2_SCHEMA_SECTION=Chewing
-    PROJECT_GCONF2_SCHEMA_DIR=/desktop/ibus/engine/Chewing
     PROJECT_SCHEMA_PATH=/desktop/ibus/engine/chewing/
 )
 

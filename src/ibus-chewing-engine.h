@@ -33,12 +33,7 @@
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#endif
-#ifdef USE_GCONF2
-#include "GConf2Backend.h"
-#endif
 
 #include <glib.h>
 #include <glib-object.h>
