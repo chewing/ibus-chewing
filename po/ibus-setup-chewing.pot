@@ -1,0 +1,258 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ibus-setup-chewing package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ibus-setup-chewing\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-04 22:11+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/org.freedesktop.IBus.Chewing.Setup.desktop.in:3
+msgid "ibus-setup-chewing"
+msgstr ""
+
+#: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
+msgid "No description"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:13
+msgid "Configure the input method"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:14
+msgid "Input Method"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:20
+msgid "Standard"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:21
+msgid "Hsu"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:22
+msgid "IBM"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:23
+msgid "Gin-Yieh"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:24
+msgid "Eten"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:25
+msgid "Eten 26"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:26
+msgid "Dvorak"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:27
+msgid "Dvorak-Hsu"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:28
+msgid "DaChen 26"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:29
+msgid "Hanyu Pinyin"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:30
+msgid "THL Pinyin"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:31
+msgid "MPS2 Pinyin"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:35
+msgid "Keyboard Type"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:54
+msgid "Selection Keys"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:55
+msgid "Keys used to select candidate"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:61
+msgid "Intelligent Phrasing"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:62
+msgid "Enable or disable automatic candidate selection"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:67
+msgid "Show Systray Icon"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:68
+msgid "Whether to show the systray icon"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:69
+msgid "This feature is currently not implemented."
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:77
+msgid "Editing"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:78
+msgid "Configure the input method behavior"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:82
+msgid "Auto Move Cursor"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:83
+msgid "Automatically move the cursor to the next character after selection"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:89
+msgid "Add Phrase Before Cursor"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:90
+msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:96
+msgid "Clear Pre-Edit Buffer When Focus Out"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:102
+msgid "Easy Symbol Input"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:103
+msgid "Press Shift + keys to input Chinese punctuation symbols"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:108
+msgid "Esc Clean All Buffer"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:109
+msgid "Escape key discards all uncommitted texts"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:122
+msgid "Maximum Chinese Characters"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:123
+msgid "Until how many characters should trigger auto-commit"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:128
+msgid "Chinese/Alphanumeric Mode Toggle Key"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:132
+msgid "Caps Lock"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:133
+msgid "Shift"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:134
+msgid "Shift_L"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:135
+msgid "Shift_R"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:146
+msgid "Disable Syncing"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:147
+msgid "Sync with Keyboard State"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:148
+msgid "Sync with IM State"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:152
+msgid "Sync Caps Lock and IM"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:160
+msgid "No Default"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:161
+msgid "Lower Case"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:162
+msgid "Upper Case"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:166
+msgid "Default English Letter Case"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:167
+msgid "The letter case without pressing the Shift key"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:174
+msgid "Selecting"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:175
+msgid "Configure the candidate selection behavior"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:186
+msgid "Candidates Per Page"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:192
+msgid "Show Page Number"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:198
+msgid "Choose Phrases Backwards"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:199
+msgid "Open candidate list from the last character of a phrase"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:205
+msgid "Use Space Key as Selection Key"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:211
+msgid "Use Vertical Candidate Panel"
+msgstr ""
+
+#: src/ibus-setup-chewing-window.ui:212
+msgid "Choose from vertical or horizontal panel"
+msgstr ""
