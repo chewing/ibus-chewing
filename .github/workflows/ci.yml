@@ -11,12 +11,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: fedora:latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install build dependencies
-        run: sudo apt install -y libgtk-4-dev libibus-1.0-dev libadwaita-1-dev libx11-dev libchewing3-dev ibus gettext xvfb
+        run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libX11-devel libchewing-devel ibus gettext xorg-x11-server-Xvfb dbus-x11 util-linux
 
       - name: Build
         run: |
@@ -26,20 +27,24 @@ jobs:
 
       - name: Test
         run: |
+          glib-compile-schemas src/setup --targetdir=out/build/default/bin
           xvfb-run -a ctest --test-dir out/build/default --output-on-failure --verbose
 
   coverage:
     runs-on: ubuntu-latest
+    container: fedora:latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install build dependencies
-        run: sudo apt install -y libgtk-4-dev libibus-1.0-dev libadwaita-1-dev libx11-dev libchewing3-dev ibus gettext xvfb
+        run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libX11-devel libchewing-devel ibus gettext xorg-x11-server-Xvfb dbus-x11 util-linux
 
       - name: Install llvm
         run: |
-          sudo apt install -y llvm
+          sudo dnf -y install llvm rustup bzip2
+          rustup-init -y
+          source "$HOME/.cargo/env"
           rustup component add llvm-tools
 
       - name: Setup grcov
@@ -55,6 +60,7 @@ jobs:
 
       - name: Test
         run: |
+          glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
           xvfb-run -a ctest --test-dir out/build/c99-coverage --output-on-failure --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
