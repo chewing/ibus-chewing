@@ -33,7 +33,8 @@
                                         (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "default-english-case"), "uppercase") ? 'u' : 'n')
 #    define chi_eng_toggle_key          (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "caps_lock")) ? 'c' : \
                                         (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift")) ? 's' : \
-                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift_l") ? 'l' : 'n')
+                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift_l")) ? 'l' : \
+                                        (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(self, "chi-eng-mode-toggle"), "shift_r") ? 'r' : 'n')
 
 /*== Conditional Expression Shortcut ==*/
 #    define is_plain_zhuyin ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin")
