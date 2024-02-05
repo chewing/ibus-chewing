@@ -26,6 +26,8 @@ jobs:
           cmake --build --preset default -t install --verbose
 
       - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
         run: |
           glib-compile-schemas src/setup --targetdir=out/build/default/bin
           weston --no-config --socket=wl-headless --backend=headless &
@@ -60,6 +62,8 @@ jobs:
           cmake --build --preset c99-coverage --verbose
 
       - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
         run: |
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
