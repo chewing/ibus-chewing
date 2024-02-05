@@ -14,7 +14,7 @@ jobs:
     container: fedora:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libX11-devel libchewing-devel ibus gettext xorg-x11-server-Xvfb dbus-x11 util-linux
@@ -35,7 +35,7 @@ jobs:
     container: fedora:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libX11-devel libchewing-devel ibus gettext xorg-x11-server-Xvfb dbus-x11 util-linux
