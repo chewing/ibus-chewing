@@ -28,7 +28,7 @@ jobs:
       - name: Test
         run: |
           glib-compile-schemas src/setup --targetdir=out/build/default/bin
-          xvfb-run -a ctest --test-dir out/build/default --output-on-failure --verbose
+          xvfb-run -a cmake --build --preset default -t test --verbose
 
   coverage:
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
         run: |
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
-          xvfb-run -a ctest --test-dir out/build/c99-coverage --output-on-failure --verbose
+          xvfb-run -a cmake --build --preset c99-coverage -t test --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov
