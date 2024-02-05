@@ -17,8 +17,6 @@ static gboolean property_context_from_string(PropertyContext * ctx, const gchar 
 
 void property_context_default(PropertyContext * ctx)
 {
-    if (ctx->spec->defaultValue == NULL)
-        return;
     mkdg_log(DEBUG, "property_context_default(%s)", ctx->spec->key);
     gboolean ret = property_context_from_string(ctx, ctx->spec->defaultValue);
 

@@ -39,8 +39,6 @@ add_test(NAME IBusChewingPreEdit
 add_executable(ibus-chewing-engine-test ibus-chewing-engine-test.c
     ../src/ibus-chewing-engine.c
     ../src/ibus-chewing-engine.h
-    ../src/IBusChewingEngine-signal.c
-    ../src/IBusChewingEngine-input-events.c
     ../src/IBusChewingLookupTable.c
     ../src/IBusChewingLookupTable.h
     ../src/IBusChewingPreEdit.c

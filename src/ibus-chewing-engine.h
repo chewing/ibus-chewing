@@ -70,20 +70,6 @@ extern const gchar *page_labels[];
 extern const gchar *button_labels[];
 extern GtkResponseType button_responses[];
 
-#define ibus_chewing_engine_has_status_flag(self, f) mkdg_has_flag(self->_priv->statusFlags, f)
-#define ibus_chewing_engine_set_status_flag(self, f) mkdg_set_flag(self->_priv->statusFlags, f)
-#define ibus_chewing_engine_clear_status_flag(self, f) mkdg_clear_flag(self->_priv->statusFlags, f)
-
-#define ibus_chewing_engine_has_capabilite(self, f) mkdg_has_flag(self->_priv->capabilite, f)
-#define ibus_chewing_engine_set_capabilite(self, f) mkdg_set_flag(self->_priv->capabilite, f)
-#define ibus_chewing_engine_clear_capabilite(self, f) mkdg_clear_flag(self->_priv->capabilite, f)
-
-#define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
-#define ibus_chewing_engine_is_chinese_mode(self) ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
-#define is_caps_lock(self) (is_caps_led_on(self->_priv->pDisplay))
-
-#define ibus_text_is_empty(iText) ((iText == NULL) || STRING_IS_EMPTY(iText->text))
-#define is_plain_chewing ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit, "plain-zhuyin")
 #define cursor_current chewing_cursor_Current(self->icPreEdit->context)
 
 
@@ -123,7 +109,6 @@ struct _IBusChewingEngine {
 	/*< private >*/
 	FILE * logFile; /* protected */
 	IBusKeymap * keymap_us; /* protected */
-	IBusChewingEnginePrivate *_priv;
 };
 
 /*
