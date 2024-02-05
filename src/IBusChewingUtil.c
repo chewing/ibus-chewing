@@ -194,29 +194,6 @@ const char *key_sym_get_name(KSym k)
  * Modifiers
  */
 
-#define CAPS_LOCK_MASK 2
-gboolean is_caps_led_on(Display * pDisplay)
-{
-    XKeyboardState retState;
-
-    XGetKeyboardControl(pDisplay, &retState);
-    XFlush(pDisplay);
-    return (retState.led_mask & 1) ? TRUE : FALSE;
-}
-
-void set_caps_led(gboolean on, Display * pDisplay)
-{
-    XKeyboardControl control;
-
-    control.led_mode = (on) ? LedModeOn : LedModeOff;
-    control.led = CAPS_LOCK_MASK;
-    guint flags = (on) ? CAPS_LOCK_MASK : 0;
-
-    XChangeKeyboardControl(pDisplay, KBLedMode, &control);
-    XkbLockModifiers(pDisplay, XkbUseCoreKbd, control.led, flags);
-    XFlush(pDisplay);
-}
-
 const gchar *modifier_get_string(guint modifier)
 {
     switch (modifier) {

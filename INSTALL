@@ -7,7 +7,6 @@ Installation Instructions
     gob        >= 2.0.16
     gtk        >= 3
     libchewing >= 0.5.1
-    libX11
    
 1. Remove the old build cache:
   

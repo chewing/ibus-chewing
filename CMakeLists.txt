@@ -49,7 +49,6 @@ add_compile_definitions(
 pkg_check_modules(GLIB2 REQUIRED IMPORTED_TARGET glib-2.0)
 pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
 pkg_check_modules(LIBADWAITA REQUIRED IMPORTED_TARGET libadwaita-1)
-pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
 
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
 

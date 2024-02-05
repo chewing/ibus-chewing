@@ -26,8 +26,6 @@
 #    include <glib.h>
 #    include <ibus.h>
 #    include <chewing.h>
-#    include <X11/Xlib.h>
-#    include <X11/XKBlib.h>
 
 #    define ZHUYIN_BUFFER_SIZE 12
 
@@ -69,10 +67,6 @@ typedef enum {
 KSym key_sym_KP_to_normal(KSym k);
 
 const char *key_sym_get_name(KSym k);
-
-gboolean is_caps_led_on(Display * pDisplay);
-
-void set_caps_led(gboolean on, Display * pDisplay);
 
 const gchar *modifier_get_string(guint modifier);
 

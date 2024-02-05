@@ -27,8 +27,6 @@
 #define GETTEXT_PACKAGE "gtk30"
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <X11/Xlib.h>
-#include <X11/XKBlib.h>
 #include <ctype.h>
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"

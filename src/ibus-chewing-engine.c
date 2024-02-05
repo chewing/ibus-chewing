@@ -27,8 +27,6 @@
 #define GETTEXT_PACKAGE "gtk30"
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <X11/Xlib.h>
-#include <X11/XKBlib.h>
 #include <ctype.h>
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
@@ -144,7 +142,6 @@ static IBusEngineClass *parent_class = NULL;
 
 #define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
 #define ibus_chewing_engine_is_chinese_mode(self) ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
-#define is_caps_lock(self) (is_caps_led_on(((IBusChewingEnginePrivate*)ibus_chewing_engine_get_instance_private(self))->pDisplay))
 
 #define ibus_text_is_empty(iText) ((iText == NULL) || STRING_IS_EMPTY(iText->text))
 
@@ -194,7 +191,6 @@ ___finalize(GObject *obj_self)
 	if(self->AlnumSize) { g_object_unref ((gpointer) self->AlnumSize); self->AlnumSize = NULL; }
 	if(self->setup_prop) { g_object_unref ((gpointer) self->setup_prop); self->setup_prop = NULL; }
 	if(self->prop_list) { g_object_unref ((gpointer) self->prop_list); self->prop_list = NULL; }
-	if(selfp->pDisplay) { XCloseDisplay ((gpointer) selfp->pDisplay); selfp->pDisplay = NULL; }
 	if(G_OBJECT_CLASS(parent_class)->finalize) \
 		(* G_OBJECT_CLASS(parent_class)->finalize)(obj_self);
 }
@@ -253,9 +249,6 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
         g_object_ref_sink(ibus_prop_list_new())
     ;
 	self->keymap_us =  ibus_keymap_get("us") ;
-	selfp->pDisplay = 
-        XOpenDisplay(NULL)
-    ;
  {
 
         /* initialize the object here */
@@ -299,11 +292,6 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
         ibus_prop_list_append(self->prop_list, self->setup_prop);
 
         ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_INITIALIZED);
-
-        /* In case we cannot open X display */
-        if (selfp->pDisplay == NULL) {
-            IBUS_CHEWING_LOG(WARN, "init() XOpenDisplay return NULL");
-        }
 
         IBUS_CHEWING_LOG(DEBUG, "init() Done");
     
@@ -440,17 +428,17 @@ ibus_chewing_engine_restore_mode (IBusChewingEngine * self)
 {
 	
         IBUS_CHEWING_LOG(DEBUG, "restore_mode() statusFlags=%x", selfp->statusFlags);
-        if (selfp->pDisplay != NULL) {
-            /* Restore Led Mode only make sense if pDisplay is available */
+        GdkDisplay *display = gdk_display_get_default();
+        if (display != NULL) {
+            GdkSeat *seat = gdk_display_get_default_seat(display);
+            GdkDevice *keyboard = gdk_seat_get_keyboard(seat);
+            /* Restore Led Mode only make sense if display is available */
             if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)) {
-                IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_IM");
-                if (ibus_chewing_engine_is_chinese_mode(self) == is_caps_lock(self)) {
-                    /* ChiEng mode does not agree each other */
-                    set_caps_led(!ibus_chewing_engine_is_chinese_mode(self), selfp->pDisplay);
-                }
+                IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_IM (deprecated)");
             } else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)) {
                 IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
-                chewing_set_ChiEngMode(self->icPreEdit->context, (is_caps_lock(self)) ? 0 : CHINESE_MODE);
+                gboolean caps_lock_on = gdk_device_get_caps_lock_state(keyboard);
+                chewing_set_ChiEngMode(self->icPreEdit->context, caps_lock_on ? 0 : CHINESE_MODE);
             }
             self_refresh_property(self, "InputMode");
         }
@@ -1220,18 +1208,8 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
         /* Toggle Chinese <-> English */
         ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
         IBUS_CHEWING_LOG(INFO,
-                         "property_activate chinese=%d caps_lock=%d",
-                         ibus_chewing_engine_is_chinese_mode(self),
-                         is_caps_lock(self));
-
-        if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)
-            || ibus_chewing_pre_edit_has_flag(self->icPreEdit,
-                                              FLAG_SYNC_FROM_KEYBOARD)) {
-            if (ibus_chewing_engine_is_chinese_mode(self) == is_caps_lock(self)) {
-                set_caps_led(!ibus_chewing_engine_is_chinese_mode(self),
-                             selfp->pDisplay);
-            }
-        }
+                         "property_activate chinese=%d",
+                         ibus_chewing_engine_is_chinese_mode(self));
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
         /* Toggle Full <-> Half */

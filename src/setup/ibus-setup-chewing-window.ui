@@ -59,16 +59,14 @@
               <object class="AdwSwitchRow" id="plain_zhuyin">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Intelligent Phrasing</property>
-                <property name="subtitle" translatable="yes">Enable or disable automatic candidate
-                  selection</property>
+                <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection</property>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="show_systray">
                 <property name="title" translatable="yes">Show Systray Icon</property>
                 <property name="subtitle" translatable="yes">Whether to show the systray icon</property>
-                <property name="tooltip-text" translatable="yes">This feature is currently not
-                  implemented.</property>
+                <property name="tooltip-text" translatable="yes">This feature is currently not implemented.</property>
                 <property name="sensitive">False</property>
               </object>
             </child>
@@ -82,16 +80,14 @@
               <object class="AdwSwitchRow" id="auto_shift_cur">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Auto Move Cursor</property>
-                <property name="subtitle" translatable="yes">Automatically move the cursor to the
-                  next character after selection</property>
+                <property name="subtitle" translatable="yes">Automatically move the cursor to the next character after selection</property>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="add_phrase_direction">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Add Phrase Before Cursor</property>
-                <property name="subtitle" translatable="yes">Use Ctrl + Numbers (2-9) to save new
-                  phrase before or after the cursor</property>
+                <property name="subtitle" translatable="yes">Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor</property>
               </object>
             </child>
             <child>
@@ -104,15 +100,13 @@
               <object class="AdwSwitchRow" id="easy_symbol_input">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Easy Symbol Input</property>
-                <property name="subtitle" translatable="yes">Press Shift + keys to input Chinese
-                  punctuation symbols</property>
+                <property name="subtitle" translatable="yes">Press Shift + keys to input Chinese punctuation symbols</property>
               </object>
             </child>
             <child>
               <object class="AdwSwitchRow" id="esc_clean_all_buf">
                 <property name="title" translatable="yes">Esc Clean All Buffer</property>
-                <property name="subtitle" translatable="yes">Escape key discards all uncommitted
-                  texts</property>
+                <property name="subtitle" translatable="yes">Escape key discards all uncommitted texts</property>
               </object>
             </child>
             <child>
@@ -126,8 +120,7 @@
                   </object>
                 </property>
                 <property name="title" translatable="yes">Maximum Chinese Characters</property>
-                <property name="subtitle" translatable="yes">Until how many characters should
-                  trigger auto-commit</property>
+                <property name="subtitle" translatable="yes">Until how many characters should trigger auto-commit</property>
               </object>
             </child>
             <child>
@@ -152,7 +145,6 @@
                     <items>
                       <item translatable="yes">Disable Syncing</item>
                       <item translatable="yes">Sync with Keyboard State</item>
-                      <item translatable="yes">Sync with IM State</item>
                     </items>
                   </object>
                 </property>
@@ -171,8 +163,7 @@
                   </object>
                 </property>
                 <property name="title" translatable="yes">Default English Letter Case</property>
-                <property name="subtitle" translatable="yes">The letter case without pressing the
-                  Shift key</property>
+                <property name="subtitle" translatable="yes">The letter case without pressing the Shift key</property>
               </object>
             </child>
           </object>
@@ -180,8 +171,7 @@
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Selecting</property>
-            <property name="description" translatable="yes">Configure the candidate selection
-              behavior</property>
+            <property name="description" translatable="yes">Configure the candidate selection behavior</property>
             <child>
               <object class="AdwSpinRow" id="cand_per_page">
                 <property name="adjustment">
@@ -205,8 +195,7 @@
               <object class="AdwSwitchRow" id="phrase_choice_from_last">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Choose Phrases Backwards</property>
-                <property name="subtitle" translatable="yes">Open candidate list from the last
-                  character of a phrase</property>
+                <property name="subtitle" translatable="yes">Open candidate list from the last character of a phrase</property>
               </object>
             </child>
             <child>
@@ -219,8 +208,7 @@
               <object class="AdwSwitchRow" id="vertical_lookup_table">
                 <property name="active">True</property>
                 <property name="title" translatable="yes">Use Vertical Candidate Panel</property>
-                <property name="subtitle" translatable="yes">Choose from vertical or horizontal
-                  panel</property>
+                <property name="subtitle" translatable="yes">Choose from vertical or horizontal panel</property>
               </object>
             </child>
           </object>
