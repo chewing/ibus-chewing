@@ -119,25 +119,6 @@ void STRING_EQUALS_test()
     g_assert(STRING_EQUALS("YO\"", "YO\""));
 }
 
-void mkdg_xml_attr_append_test()
-{
-#define BUFFER_SIZE 200
-    gchar buf[BUFFER_SIZE];
-
-    buf[0] = '\0';
-    mkdg_xml_attr_append(buf, BUFFER_SIZE, "", NULL);
-    g_assert_cmpstr("", ==, buf);
-
-    mkdg_xml_attr_append(buf, BUFFER_SIZE, "foo", NULL);
-    g_assert_cmpstr("foo", ==, buf);
-
-    mkdg_xml_attr_append(buf, BUFFER_SIZE, "animal", "sheep");
-    g_assert_cmpstr("foo animal=\"sheep\"", ==, buf);
-
-    mkdg_xml_attr_append(buf, BUFFER_SIZE, "lang", "zh_TW");
-    g_assert_cmpstr("foo animal=\"sheep\" lang=\"zh_TW\"", ==, buf);
-}
-
 
 gint main(gint argc, gchar ** argv)
 {
@@ -149,6 +130,5 @@ gint main(gint argc, gchar ** argv)
 #if 0
     TEST_RUN_THIS(STRING_EQUALS_test);
 #endif
-    TEST_RUN_THIS(mkdg_xml_attr_append_test);
     return g_test_run();
 }

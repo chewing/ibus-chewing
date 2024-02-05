@@ -22,40 +22,6 @@ const gchar *toneKeys[] = {
     NULL
 };
 
-gint get_tone(ChewingKbType kbType, KSym kSym)
-{
-    int i = 0;
-
-    if (kSym == ' ')
-        return 1;
-    for (i = 0; i < 4; i++) {
-        if (toneKeys[kbType][i] == kSym) {
-            return i + 2;
-        }
-    }
-    return -1;
-}
-
-void add_tone(char *str, gint tone)
-{
-    switch (tone) {
-    case 2:
-        g_strlcat(str, "ˊ", ZHUYIN_BUFFER_SIZE);
-        break;
-    case 3:
-        g_strlcat(str, "ˇ", ZHUYIN_BUFFER_SIZE);
-        break;
-    case 4:
-        g_strlcat(str, "ˋ", ZHUYIN_BUFFER_SIZE);
-        break;
-    case 5:
-        g_strlcat(str, "˙", ZHUYIN_BUFFER_SIZE);
-        break;
-    default:
-        break;
-    }
-}
-
 /*=====================================
  * Key
  */
@@ -314,17 +280,4 @@ const gchar *modifiers_to_string(guint modifier)
         }
     }
     return modifierBuf;
-}
-
-/*=====================================
- * Misc
- */
-
-gboolean ibus_chewing_property_get_state(IBusProperty * prop)
-{
-#if IBUS_CHECK_VERSION(1, 4, 0)
-    return ibus_property_get_state(prop);
-#else
-    return prop->state;
-#endif
 }

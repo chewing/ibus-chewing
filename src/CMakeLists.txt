@@ -2,14 +2,12 @@ add_library(common STATIC
     IBusChewingApplier.c
     IBusChewingProperties.c
     IBusChewingLookupTable.c
-    IBusConfigBackend.c
     MakerDialogBackend.c
     MakerDialogProperty.c
     MakerDialogUtil.c
 
     IBusChewingLookupTable.h
     IBusChewingProperties.h
-    IBusConfigBackend.h
     MakerDialogBackend.h
     MakerDialogProperty.h
     MakerDialogPropertySpec.h

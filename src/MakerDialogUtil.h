@@ -58,8 +58,6 @@ typedef enum {
 
 void mkdg_log_set_level(MkdgLogLevel level);
 
-void mkdg_log_set_domain(const gchar * domain);
-
 void mkdg_log_set_file(FILE * file);
 
 void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
@@ -105,8 +103,6 @@ GVariant *mkdg_g_value_to_g_variant(GValue * value);
      ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
     )
 
-gchar *mkdg_str_dash_to_camel(const gchar * argStr);
-
 /**************************************
  * Flag Utility Macros
  */
@@ -114,26 +110,5 @@ gchar *mkdg_str_dash_to_camel(const gchar * argStr);
 #    define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
 #    define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
 #    define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
-
-/**************************************
- * XML data structure and functions
- */
-
-typedef enum {
-    MKDG_XML_TAG_TYPE_NO_TAG,
-    MKDG_XML_TAG_TYPE_EMPTY,
-    MKDG_XML_TAG_TYPE_SHORT,
-    MKDG_XML_TAG_TYPE_LONG,
-    MKDG_XML_TAG_TYPE_BEGIN_ONLY,
-    MKDG_XML_TAG_TYPE_END_ONLY,
-} MkdgXmlTagType;
-
-gchar *mkdg_xml_attr_append(gchar * buf, gint bufferSize,
-                            const gchar * attr, const gchar * value);
-
-gboolean mkdg_xml_tags_write(FILE * outF, const gchar * tagName,
-                             MkdgXmlTagType type, const gchar * attribute,
-                             const gchar * value);
-
 #    define MAKER_DIALOG_VALUE_LENGTH 200
 #endif                          /* _MAKER_DIALOG_UTIL_H_ */

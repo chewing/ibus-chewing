@@ -5,7 +5,6 @@
 #include "MakerDialogProperty.h"
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
-#include "IBusConfigBackend.h"
 #include "GSettingsBackend.h"
 
 #define PAGE_EDITING  N_("Editing")
@@ -314,20 +313,6 @@ ibus_chewing_properties_read_boolean_general(IBusChewingProperties
     g_value_init(&gValue, G_TYPE_BOOLEAN);
     ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
     gboolean result = g_value_get_boolean(&gValue);
-
-    g_value_unset(&gValue);
-    return result;
-}
-
-gint
-ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-                                         const gchar * section,
-                                         const gchar * key, gpointer userData)
-{
-    GValue gValue = { 0 };
-    g_value_init(&gValue, G_TYPE_INT);
-    ibus_chewing_properties_read_general(self, &gValue, section, key, userData);
-    gint result = g_value_get_int(&gValue);
 
     g_value_unset(&gValue);
     return result;

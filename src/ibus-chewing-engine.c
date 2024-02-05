@@ -92,7 +92,6 @@ engine_flag_get_type (void)
 extern gint ibus_chewing_verbose;
 
 #define IBUS_CHEWING_MAIN
-#include "IBusConfigBackend.h"
 
 /* self casting macros */
 #define SELF(x) IBUS_CHEWING_ENGINE(x)
