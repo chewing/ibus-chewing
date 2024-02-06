@@ -17,16 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
-#include <ibus.h>
-#include <stdlib.h>
-#include <locale.h>
+#include "IBusChewingUtil.h"
+#include "ibus-chewing-engine.h"
 #include <chewing.h>
 #include <glib/gi18n.h>
-#include "ibus-chewing-engine.h"
-#include "IBusChewingUtil.h"
+#include <ibus.h>
+#include <locale.h>
+#include <stdlib.h>
 
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
@@ -37,12 +38,11 @@ static gboolean ibus = FALSE;
 static gboolean xml = FALSE;
 gint ibus_chewing_verbose = VERBOSE_LEVEL;
 
-
 static const GOptionEntry entries[] = {
     {"show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags,
      "Show compile flag only", NULL},
-    {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus,
-     "component is executed by ibus", NULL},
+    {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus",
+     NULL},
     {"verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
      "Verbose level. The higher the level, the more the debug messages.",
      "[integer]"},
@@ -51,15 +51,12 @@ static const GOptionEntry entries[] = {
     {NULL},
 };
 
-
-static void ibus_disconnected_cb(IBusBus * bus, gpointer user_data)
-{
+static void ibus_disconnected_cb(IBusBus *bus, gpointer user_data) {
     g_debug("bus disconnected");
     ibus_quit();
 }
 
-static void start_component(void)
-{
+static void start_component(void) {
     IBUS_CHEWING_LOG(INFO, "start_component");
     ibus_init();
     bus = ibus_bus_new();
@@ -74,33 +71,25 @@ static void start_component(void)
     IBusComponent *component = NULL;
 
     if (xml) {
-        component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR)
-                                                 "/ibus/component/chewing.xml");
+        component = ibus_component_new_from_file(
+            QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
     } else {
-        component = ibus_component_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-                                       _("Chewing component"),
-                                       QUOTE_ME(PRJ_VER), "GPLv2+",
-                                       _("Peng Huang, Ding-Yi Chen"),
-                                       "http://code.google.com/p/ibus",
-                                       QUOTE_ME(LIBEXEC_DIR)
-                                       "/ibus-engine-chewing --ibus",
-                                       QUOTE_ME(PROJECT_NAME));
+        component = ibus_component_new(
+            QUOTE_ME(PROJECT_SCHEMA_ID), _("Chewing component"),
+            QUOTE_ME(PRJ_VER), "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
+            "http://code.google.com/p/ibus",
+            QUOTE_ME(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
+            QUOTE_ME(PROJECT_NAME));
     }
 
-    IBusEngineDesc *engineDesc =
-        ibus_engine_desc_new_varargs
-            ("name", "chewing",
-             "longname", _("Chewing"),
-             "description", _("Chinese chewing input method"),
-             "language", "zh_TW",
-             "license", "GPLv2+",
-             "author", _("Peng Huang, Ding-Yi Chen"),
-             "icon", QUOTE_ME(PRJ_DATA_DIR)"/icons/"QUOTE_ME(PROJECT_NAME)".png",
-             "layout", "us",
-             "setup", QUOTE_ME(LIBEXEC_DIR)"/ibus-setup-chewing",
-             "version", QUOTE_ME(PRJ_VER),
-             "textdomain", QUOTE_ME(PROJECT_NAME),
-             NULL);
+    IBusEngineDesc *engineDesc = ibus_engine_desc_new_varargs(
+        "name", "chewing", "longname", _("Chewing"), "description",
+        _("Chinese chewing input method"), "language", "zh_TW", "license",
+        "GPLv2+", "author", _("Peng Huang, Ding-Yi Chen"), "icon",
+        QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
+        "layout", "us", "setup", QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing",
+        "version", QUOTE_ME(PRJ_VER), "textdomain", QUOTE_ME(PROJECT_NAME),
+        NULL);
 
     ibus_component_add_engine(component, engineDesc);
 
@@ -119,18 +108,12 @@ static void start_component(void)
     ibus_main();
 }
 
-const char *locale_env_strings[] = {
-    "LC_ALL",
-    "LANG",
-    "LANGUAGE",
-    "GDM_LANG",
-    NULL
-};
+const char *locale_env_strings[] = {"LC_ALL", "LANG", "LANGUAGE", "GDM_LANG",
+                                    NULL};
 
-void determine_locale()
-{
+void determine_locale() {
 #ifndef STRING_BUFFER_SIZE
-#    define STRING_BUFFER_SIZE 100
+#define STRING_BUFFER_SIZE 100
 #endif
     gchar *localePtr = NULL;
     gchar localeStr[STRING_BUFFER_SIZE];
@@ -158,9 +141,7 @@ void determine_locale()
     IBUS_CHEWING_LOG(INFO, "determine_locale %s", localeStr);
 }
 
-
-int main(gint argc, gchar * argv[])
-{
+int main(gint argc, gchar *argv[]) {
     GError *error = NULL;
     GOptionContext *context;
 
@@ -187,8 +168,7 @@ int main(gint argc, gchar * argv[])
     if (showFlags) {
         printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");
         printf("DATA_DIR=" QUOTE_ME(DATA_DIR) "\n");
-        printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL)
-               "\n");
+        printf("CHEWING_DATADIR_REAL=" QUOTE_ME(CHEWING_DATADIR_REAL) "\n");
     } else {
         start_component();
     }

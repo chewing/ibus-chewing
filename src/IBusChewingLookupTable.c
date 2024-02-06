@@ -1,26 +1,24 @@
-#include "IBusChewingUtil.h"
 #include "IBusChewingLookupTable.h"
+#include "IBusChewingUtil.h"
 #include "MakerDialogProperty.h"
 
-IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
-                                               iProperties,
-                                               ChewingContext * context)
-{
+IBusLookupTable *
+ibus_chewing_lookup_table_new(IBusChewingProperties *iProperties,
+                              ChewingContext *context) {
     guint size = 10;
     gboolean cursorShow = TRUE;
     gboolean wrapAround = TRUE;
-    IBusLookupTable *iTable = ibus_lookup_table_new
-        (size, 0, cursorShow, wrapAround);
+    IBusLookupTable *iTable =
+        ibus_lookup_table_new(size, 0, cursorShow, wrapAround);
 
     ibus_chewing_lookup_table_resize(iTable, iProperties, context);
 
     return iTable;
 }
 
-void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
-                                      IBusChewingProperties * iProperties,
-                                      ChewingContext * context)
-{
+void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable,
+                                      IBusChewingProperties *iProperties,
+                                      ChewingContext *context) {
     gint selKSym[MAX_SELKEY];
     const gchar *selKeyStr =
         mkdg_properties_get_string_by_key(iProperties->properties, "sel-keys");
@@ -38,10 +36,10 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
         ibus_lookup_table_set_page_size(iTable, len);
 
         for (i = 0; i < len; i++) {
-            selKSym[i] = (gint) selKeyStr[i];
+            selKSym[i] = (gint)selKeyStr[i];
 
-            iText = g_object_ref_sink(ibus_text_new_from_printf
-                                      ("%c.", toupper(selKeyStr[i])));
+            iText = g_object_ref_sink(
+                ibus_text_new_from_printf("%c.", toupper(selKeyStr[i])));
             ibus_lookup_table_set_label(iTable, i, iText);
             g_object_unref(iText);
         }
@@ -49,17 +47,15 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
     chewing_set_candPerPage(context, len);
     chewing_set_selKey(context, selKSym, len);
 
-    gboolean verticalLookupTable =
-        mkdg_properties_get_boolean_by_key(iProperties->properties,
-                                                   "vertical-lookup-table");
+    gboolean verticalLookupTable = mkdg_properties_get_boolean_by_key(
+        iProperties->properties, "vertical-lookup-table");
 
     ibus_lookup_table_set_orientation(iTable, verticalLookupTable);
 }
 
-guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
-                                       IBusChewingProperties * iProperties,
-                                       ChewingContext * context)
-{
+guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable,
+                                       IBusChewingProperties *iProperties,
+                                       ChewingContext *context) {
     IBusText *iText = NULL;
     guint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);
@@ -67,7 +63,8 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
     gint currentPage = chewing_cand_CurrentPage(context);
 
     IBUS_CHEWING_LOG(INFO,
-                     "***** ibus_chewing_lookup_table_update(): choicePerPage=%d, totalChoice=%d, currentPage=%d",
+                     "***** ibus_chewing_lookup_table_update(): "
+                     "choicePerPage=%d, totalChoice=%d, currentPage=%d",
                      choicePerPage, totalChoice, currentPage);
 
     ibus_lookup_table_clear(iTable);

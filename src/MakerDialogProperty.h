@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
@@ -30,18 +31,19 @@
  */
 
 #ifndef _MAKER_DIALOG_PROPERTY_H_
-#    define _MAKER_DIALOG_PROPERTY_H_
-#    include <glib.h>
-#    include <glib-object.h>
-#    include "MakerDialogUtil.h"
-#    include "MakerDialogPropertySpec.h"
-#    include "MakerDialogBackend.h"
+#define _MAKER_DIALOG_PROPERTY_H_
+#include "MakerDialogBackend.h"
+#include "MakerDialogPropertySpec.h"
+#include "MakerDialogUtil.h"
+#include <glib-object.h>
+#include <glib.h>
 
 struct _PropertyContext {
     MkdgPropertySpec *spec;
-    GValue value;               //<! Property Value
-    MkdgBackend *backend;       //<! Backend.
-    gpointer parent;            //<! The object that this property belongs to. parent need to handle apply
+    GValue value;         //<! Property Value
+    MkdgBackend *backend; //<! Backend.
+    gpointer parent; //<! The object that this property belongs to. parent need
+    // to handle apply
     gpointer auxData;
 };
 
@@ -74,103 +76,105 @@ typedef struct {
  * This subroutine create a new PropertyContext.
  * It also read the value from backend, if backend is not available.
  */
-PropertyContext *property_context_new(MkdgPropertySpec * spec,
-                                      MkdgBackend * backend,
-                                      gpointer parent, gpointer auxData);
+PropertyContext *property_context_new(MkdgPropertySpec *spec,
+                                      MkdgBackend *backend, gpointer parent,
+                                      gpointer auxData);
 
 /**
  * property_context_default:
  * @ctx: PropertyContex
- * 
+ *
  * Set the PropertyContext with default value.
  */
-void property_context_default(PropertyContext * ctx);
+void property_context_default(PropertyContext *ctx);
 
-GValue *property_context_read(PropertyContext * ctx, gpointer userData);
+GValue *property_context_read(PropertyContext *ctx, gpointer userData);
 
-gboolean property_context_write(PropertyContext * ctx, gpointer userData);
+gboolean property_context_write(PropertyContext *ctx, gpointer userData);
 
-GValue *property_context_get(PropertyContext * ctx);
+GValue *property_context_get(PropertyContext *ctx);
 
-gboolean property_context_set(PropertyContext * ctx, GValue * value);
+gboolean property_context_set(PropertyContext *ctx, GValue *value);
 
-GValue *property_context_load(PropertyContext * ctx, gpointer userData);
+GValue *property_context_load(PropertyContext *ctx, gpointer userData);
 
-gboolean property_context_save(PropertyContext * ctx, GValue * value,
+gboolean property_context_save(PropertyContext *ctx, GValue *value,
                                gpointer userData);
 
-gboolean property_context_apply(PropertyContext * ctx, gpointer userData);
+gboolean property_context_apply(PropertyContext *ctx, gpointer userData);
 
-gboolean property_context_use(PropertyContext * ctx, gpointer userData);
+gboolean property_context_use(PropertyContext *ctx, gpointer userData);
 
-void property_context_free(PropertyContext * ctx);
+void property_context_free(PropertyContext *ctx);
 
 MkdgProperties *mkdg_properties_from_spec_array(MkdgPropertySpec specs[],
-                                                MkdgBackend * backend,
+                                                MkdgBackend *backend,
                                                 gpointer parent,
                                                 gpointer auxData);
 
-PropertyContext *mkdg_properties_find_by_key(MkdgProperties * properties,
-                                             const gchar * key);
+PropertyContext *mkdg_properties_find_by_key(MkdgProperties *properties,
+                                             const gchar *key);
 
+PropertyContext *mkdg_properties_index(MkdgProperties *array, guint index);
 
-PropertyContext *mkdg_properties_index(MkdgProperties * array, guint index);
+PropertyContext *mkdg_properties_index(MkdgProperties *array, guint index);
 
-PropertyContext *mkdg_properties_index(MkdgProperties * array, guint index);
+GValue *mkdg_properties_get_by_key(MkdgProperties *properties,
+                                   const gchar *key);
 
-GValue *mkdg_properties_get_by_key(MkdgProperties * properties,
-                                   const gchar * key);
+#define mkdg_properties_get_boolean_by_key(properties, key)                    \
+    g_value_get_boolean(mkdg_properties_get_by_key(properties, key))
 
-#    define mkdg_properties_get_boolean_by_key(properties, key) g_value_get_boolean(mkdg_properties_get_by_key(properties, key))
+#define mkdg_properties_get_int_by_key(properties, key)                        \
+    g_value_get_int(mkdg_properties_get_by_key(properties, key))
 
-#    define mkdg_properties_get_int_by_key(properties, key) g_value_get_int(mkdg_properties_get_by_key(properties, key))
+#define mkdg_properties_get_uint_by_key(properties, key)                       \
+    g_value_get_uint(mkdg_properties_get_by_key(properties, key))
 
-#    define mkdg_properties_get_uint_by_key(properties, key) g_value_get_uint(mkdg_properties_get_by_key(properties, key))
+#define mkdg_properties_get_string_by_key(properties, key)                     \
+    g_value_get_string(mkdg_properties_get_by_key(properties, key))
 
-#    define mkdg_properties_get_string_by_key(properties, key) g_value_get_string(mkdg_properties_get_by_key(properties, key))
+gboolean mkdg_properties_set_by_key(MkdgProperties *properties,
+                                    const gchar *key, GValue *value);
 
-gboolean mkdg_properties_set_by_key(MkdgProperties * properties,
-                                    const gchar * key, GValue * value);
-
-gboolean mkdg_properties_set_boolean_by_key(MkdgProperties * properties,
-                                            const gchar * key,
+gboolean mkdg_properties_set_boolean_by_key(MkdgProperties *properties,
+                                            const gchar *key,
                                             gboolean boolValue);
 
-gboolean mkdg_properties_set_int_by_key(MkdgProperties * properties,
-                                        const gchar * key, gint intValue);
+gboolean mkdg_properties_set_int_by_key(MkdgProperties *properties,
+                                        const gchar *key, gint intValue);
 
-gboolean mkdg_properties_set_string_by_key(MkdgProperties * properties,
-                                           const gchar * key,
-                                           const gchar * stringValue);
+gboolean mkdg_properties_set_string_by_key(MkdgProperties *properties,
+                                           const gchar *key,
+                                           const gchar *stringValue);
 
-GValue *mkdg_properties_load_by_key(MkdgProperties * properties,
-                                    const gchar * key, gpointer userData);
+GValue *mkdg_properties_load_by_key(MkdgProperties *properties,
+                                    const gchar *key, gpointer userData);
 
-gboolean mkdg_properties_save_by_key(MkdgProperties * properties,
-                                     const gchar * key, GValue * value,
+gboolean mkdg_properties_save_by_key(MkdgProperties *properties,
+                                     const gchar *key, GValue *value,
                                      gpointer userData);
 
-gboolean mkdg_properties_save_boolean_by_key(MkdgProperties * properties,
-                                             const gchar * key,
+gboolean mkdg_properties_save_boolean_by_key(MkdgProperties *properties,
+                                             const gchar *key,
                                              gboolean boolValue,
                                              gpointer userData);
 
-gboolean mkdg_properties_save_int_by_key(MkdgProperties * properties,
-                                         const gchar * key, gint intValue,
+gboolean mkdg_properties_save_int_by_key(MkdgProperties *properties,
+                                         const gchar *key, gint intValue,
                                          gpointer userData);
 
-gboolean mkdg_properties_save_string_by_key(MkdgProperties * properties,
-                                            const gchar * key,
-                                            const gchar * stringValue,
+gboolean mkdg_properties_save_string_by_key(MkdgProperties *properties,
+                                            const gchar *key,
+                                            const gchar *stringValue,
                                             gpointer userData);
 
-gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
-                                      const gchar * key, gpointer userData);
+gboolean mkdg_properties_apply_by_key(MkdgProperties *properties,
+                                      const gchar *key, gpointer userData);
 
-gsize mkdg_properties_size(MkdgProperties * properties);
+gsize mkdg_properties_size(MkdgProperties *properties);
 
-gboolean mkdg_properties_use_all(MkdgProperties * properties,
-                                 gpointer userData);
+gboolean mkdg_properties_use_all(MkdgProperties *properties, gpointer userData);
 
-void mkdg_properties_free(MkdgProperties * properties);
+void mkdg_properties_free(MkdgProperties *properties);
 #endif

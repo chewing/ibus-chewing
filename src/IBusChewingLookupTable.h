@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
@@ -31,21 +32,21 @@
  */
 
 #ifndef _IBUS_CHEWING_LOOKUP_TABLE_H_
-#    define _IBUS_CHEWING_LOOKUP_TABLE_H_
-#    include <ibus.h>
-#    include <chewing.h>
-#    include "IBusChewingProperties.h"
+#define _IBUS_CHEWING_LOOKUP_TABLE_H_
+#include "IBusChewingProperties.h"
+#include <chewing.h>
+#include <ibus.h>
 
-IBusLookupTable *ibus_chewing_lookup_table_new(IBusChewingProperties *
-                                               iProperties,
-                                               ChewingContext * context);
+IBusLookupTable *
+ibus_chewing_lookup_table_new(IBusChewingProperties *iProperties,
+                              ChewingContext *context);
 
-void ibus_chewing_lookup_table_resize(IBusLookupTable * iTable,
-                                      IBusChewingProperties * iProperties,
-                                      ChewingContext * context);
+void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable,
+                                      IBusChewingProperties *iProperties,
+                                      ChewingContext *context);
 
-guint ibus_chewing_lookup_table_update(IBusLookupTable * iTable,
-                                       IBusChewingProperties * iProperties,
-                                       ChewingContext * context);
+guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable,
+                                       IBusChewingProperties *iProperties,
+                                       ChewingContext *context);
 
-#endif                          /* _IBUS_CHEWING_LOOKUP_TABLE_H_ */
+#endif /* _IBUS_CHEWING_LOOKUP_TABLE_H_ */

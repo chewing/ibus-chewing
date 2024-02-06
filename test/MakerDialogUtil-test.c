@@ -1,12 +1,11 @@
-#include <glib.h>
-#include "test-util.h"
 #include "MakerDialogUtil.h"
+#include "test-util.h"
+#include <glib.h>
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogUtil", f)
 
-void mkdg_g_value_to_string_test()
-{
+void mkdg_g_value_to_string_test() {
     /* Test int */
-    GValue intValue = { 0 };
+    GValue intValue = {0};
     g_value_init(&intValue, G_TYPE_INT);
     g_value_set_int(&intValue, 0);
     g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&intValue));
@@ -16,7 +15,7 @@ void mkdg_g_value_to_string_test()
     g_value_unset(&intValue);
 
     /* Test uint */
-    GValue uintValue = { 0 };
+    GValue uintValue = {0};
     g_value_init(&uintValue, G_TYPE_UINT);
     g_value_set_uint(&uintValue, 0);
     g_assert_cmpstr("0", ==, mkdg_g_value_to_string(&uintValue));
@@ -26,7 +25,7 @@ void mkdg_g_value_to_string_test()
     g_value_unset(&uintValue);
 
     /* Test boolean */
-    GValue booleanValue = { 0 };
+    GValue booleanValue = {0};
     g_value_init(&booleanValue, G_TYPE_BOOLEAN);
     g_value_set_boolean(&booleanValue, TRUE);
     g_assert_cmpstr("1", ==, mkdg_g_value_to_string(&booleanValue));
@@ -36,10 +35,9 @@ void mkdg_g_value_to_string_test()
     g_value_unset(&booleanValue);
 }
 
-void mkdg_g_value_from_string_test()
-{
+void mkdg_g_value_from_string_test() {
     /* Test int */
-    GValue intValue = { 0 };
+    GValue intValue = {0};
     g_value_init(&intValue, G_TYPE_INT);
 
     mkdg_g_value_from_string(&intValue, "0");
@@ -51,7 +49,7 @@ void mkdg_g_value_from_string_test()
     g_value_unset(&intValue);
 
     /* Test uint */
-    GValue uintValue = { 0 };
+    GValue uintValue = {0};
     g_value_init(&uintValue, G_TYPE_UINT);
 
     mkdg_g_value_from_string(&uintValue, "0");
@@ -63,7 +61,7 @@ void mkdg_g_value_from_string_test()
     g_value_unset(&uintValue);
 
     /* Test boolean */
-    GValue booleanValue = { 0 };
+    GValue booleanValue = {0};
     g_value_init(&booleanValue, G_TYPE_BOOLEAN);
 
     mkdg_g_value_from_string(&booleanValue, "1");
@@ -87,20 +85,17 @@ void mkdg_g_value_from_string_test()
     g_value_unset(&booleanValue);
 }
 
-
 /**************************************
  * String Utility Macros
  */
 
-void QUOTE_ME_test()
-{
-#define PRJ_TEST  MKDG
+void QUOTE_ME_test() {
+#define PRJ_TEST MKDG
     g_assert_cmpstr("MKDG", ==, QUOTE_ME(PRJ_TEST));
 #undef PRJ_TEST
 }
 
-void STRING_IS_EMPTY_test()
-{
+void STRING_IS_EMPTY_test() {
     gchar *nulStr = NULL;
 
     g_assert(STRING_IS_EMPTY(nulStr));
@@ -108,8 +103,7 @@ void STRING_IS_EMPTY_test()
     g_assert(!STRING_IS_EMPTY("NULL"));
 }
 
-void STRING_EQUALS_test()
-{
+void STRING_EQUALS_test() {
     gchar *nulStr = NULL;
 
     g_assert(STRING_EQUALS("", ""));
@@ -119,9 +113,7 @@ void STRING_EQUALS_test()
     g_assert(STRING_EQUALS("YO\"", "YO\""));
 }
 
-
-gint main(gint argc, gchar ** argv)
-{
+gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
     TEST_RUN_THIS(mkdg_g_value_to_string_test);
     TEST_RUN_THIS(mkdg_g_value_from_string_test);

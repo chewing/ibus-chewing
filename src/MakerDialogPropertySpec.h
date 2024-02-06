@@ -16,32 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
  * SECTION:MakerDialogPropertySpec
- * @short_description: A MakerDialog property spec defines the characteristics of a property.
+ * @short_description: A MakerDialog property spec defines the characteristics
+ * of a property.
  * @title: MakerDialog Property
  * @stability: Stable
  * @include: MakerDailogPropertySpec.h
  *
- * A MakerDialog property spec defines the characteristics of a property, 
+ * A MakerDialog property spec defines the characteristics of a property,
  * including value type, display names, default value, and valid values.
  */
 
 #ifndef _MAKER_DIALOG_PROPERTY_SPEC_H_
-#    define _MAKER_DIALOG_PROPERTY_SPEC_H_
-#    include <glib.h>
-#    include <glib-object.h>
+#define _MAKER_DIALOG_PROPERTY_SPEC_H_
+#include <glib-object.h>
+#include <glib.h>
 
 /**
  * MkdgPropertyFlags:
  * @MKDG_PROPERTY_FLAG_INVISIBLE:       The property is not visible in UI.
- * @MKDG_PROPERTY_FLAG_INSENSITIVE:     The property is gray-out and not editable.
+ * @MKDG_PROPERTY_FLAG_INSENSITIVE:     The property is gray-out and not
+ * editable.
  * @MKDG_PROPERTY_FLAG_NO_NEW:          The property does not accept new values.
- * @MKDG_PROPERTY_FLAG_HAS_TRANSLATION: The property should show translated value.
- * @MKDG_PROPERTY_FLAG_NO_BACKEND:      The property has no backend, thus will not be saved.
+ * @MKDG_PROPERTY_FLAG_HAS_TRANSLATION: The property should show translated
+ * value.
+ * @MKDG_PROPERTY_FLAG_NO_BACKEND:      The property has no backend, thus will
+ * not be saved.
  *
  * MakerDialog flag controls how the property displayed in UI.
  */
@@ -55,7 +60,7 @@ typedef enum {
 
 typedef struct _PropertyContext PropertyContext;
 
-typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, gpointer userData);
+typedef gboolean (*MkdgApplyFunc)(PropertyContext *ctx, gpointer userData);
 
 /**
  * MkdgPropertySpec:
@@ -71,7 +76,7 @@ typedef gboolean(*MkdgApplyFunc) (PropertyContext * ctx, gpointer userData);
  * @applyFunc:    Callback function for apply the value.
  * @propertyFlags: Property Flags.
  * @tooltip:      Tooltip of this property (Translatable).
- * @auxData:      Auxiliary data that might be needed somewhere. 
+ * @auxData:      Auxiliary data that might be needed somewhere.
  *
  * A Property Spec describe the characteristic of a property.
  */
@@ -96,4 +101,4 @@ typedef struct {
     gpointer auxData;
 } MkdgPropertySpec;
 
-#endif                          /* _MAKER_DIALOG_PROPERTY_SPEC_H_ */
+#endif /* _MAKER_DIALOG_PROPERTY_SPEC_H_ */

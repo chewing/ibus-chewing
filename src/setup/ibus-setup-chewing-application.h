@@ -23,14 +23,11 @@
 #include <adwaita.h>
 
 G_BEGIN_DECLS
-
 #define IBUS_SETUP_CHEWING_TYPE_APPLICATION                                    \
     (ibus_setup_chewing_application_get_type())
-
 G_DECLARE_FINAL_TYPE(IbusSetupChewingApplication,
                      ibus_setup_chewing_application, IBUS_SETUP_CHEWING,
                      APPLICATION, AdwApplication)
-
 IbusSetupChewingApplication *
 ibus_setup_chewing_application_new(const char *application_id,
                                    GApplicationFlags flags);

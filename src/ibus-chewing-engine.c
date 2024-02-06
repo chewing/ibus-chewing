@@ -16,28 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
-#include <stdlib.h>
-#include <libintl.h>
-#include <ibus.h>
 #include <chewing.h>
-#include <string.h>
+#include <ibus.h>
+#include <libintl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #define GETTEXT_PACKAGE "gtk30"
-#include <gtk/gtk.h>
-#include <glib/gi18n.h>
-#include <ctype.h>
-#include "IBusChewingUtil.h"
-#include "IBusChewingProperties.h"
-#include "IBusChewingPreEdit.h"
 #include "GSettingsBackend.h"
+#include "IBusChewingPreEdit.h"
+#include "IBusChewingProperties.h"
+#include "IBusChewingUtil.h"
+#include <ctype.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #define GOB_VERSION_MAJOR 2
 #define GOB_VERSION_MINOR 0
 #define GOB_VERSION_PATCHLEVEL 20
 
-#define selfp ((IBusChewingEnginePrivate*)ibus_chewing_engine_get_instance_private (self))
+#define selfp                                                                  \
+    ((IBusChewingEnginePrivate *)ibus_chewing_engine_get_instance_private(self))
 
 #include <string.h> /* memset() */
 
@@ -53,39 +55,40 @@
 #define ___GOB_UNLIKELY(expr) (expr)
 #endif /* G_LIKELY */
 static const GEnumValue _chewing_input_style_values[] = {
-	{ CHEWING_INPUT_STYLE_IN_APPLICATION, (char *)"CHEWING_INPUT_STYLE_IN_APPLICATION", (char *)"in-application" },
-	{ CHEWING_INPUT_STYLE_IN_CANDIDATE, (char *)"CHEWING_INPUT_STYLE_IN_CANDIDATE", (char *)"in-candidate" },
-	{ 0, NULL, NULL }
-};
+    {CHEWING_INPUT_STYLE_IN_APPLICATION,
+     (char *)"CHEWING_INPUT_STYLE_IN_APPLICATION", (char *)"in-application"},
+    {CHEWING_INPUT_STYLE_IN_CANDIDATE,
+     (char *)"CHEWING_INPUT_STYLE_IN_CANDIDATE", (char *)"in-candidate"},
+    {0, NULL, NULL}};
 
-GType
-chewing_input_style_get_type (void)
-{
-	static GType type = 0;
-	if ___GOB_UNLIKELY(type == 0)
-		type = g_enum_register_static ("ChewingInputStyle", _chewing_input_style_values);
-	return type;
+GType chewing_input_style_get_type(void) {
+    static GType type = 0;
+
+    if ___GOB_UNLIKELY (type == 0)
+        type = g_enum_register_static("ChewingInputStyle",
+                                      _chewing_input_style_values);
+    return type;
 }
 
 static const GEnumValue _engine_flag_values[] = {
-	{ ENGINE_FLAG_INITIALIZED, (char *)"ENGINE_FLAG_INITIALIZED", (char *)"initialized" },
-	{ ENGINE_FLAG_ENABLED, (char *)"ENGINE_FLAG_ENABLED", (char *)"enabled" },
-	{ ENGINE_FLAG_FOCUS_IN, (char *)"ENGINE_FLAG_FOCUS_IN", (char *)"focus-in" },
-	{ ENGINE_FLAG_IS_PASSWORD, (char *)"ENGINE_FLAG_IS_PASSWORD", (char *)"is-password" },
-	{ ENGINE_FLAG_PROPERTIES_REGISTERED, (char *)"ENGINE_FLAG_PROPERTIES_REGISTERED", (char *)"properties-registered" },
-	{ 0, NULL, NULL }
-};
+    {ENGINE_FLAG_INITIALIZED, (char *)"ENGINE_FLAG_INITIALIZED",
+     (char *)"initialized"},
+    {ENGINE_FLAG_ENABLED, (char *)"ENGINE_FLAG_ENABLED", (char *)"enabled"},
+    {ENGINE_FLAG_FOCUS_IN, (char *)"ENGINE_FLAG_FOCUS_IN", (char *)"focus-in"},
+    {ENGINE_FLAG_IS_PASSWORD, (char *)"ENGINE_FLAG_IS_PASSWORD",
+     (char *)"is-password"},
+    {ENGINE_FLAG_PROPERTIES_REGISTERED,
+     (char *)"ENGINE_FLAG_PROPERTIES_REGISTERED",
+     (char *)"properties-registered"},
+    {0, NULL, NULL}};
 
-GType
-engine_flag_get_type (void)
-{
-	static GType type = 0;
-	if ___GOB_UNLIKELY(type == 0)
-		type = g_enum_register_static ("EngineFlag", _engine_flag_values);
-	return type;
+GType engine_flag_get_type(void) {
+    static GType type = 0;
+
+    if ___GOB_UNLIKELY (type == 0)
+        type = g_enum_register_static("EngineFlag", _engine_flag_values);
+    return type;
 }
-
-
 
 extern gint ibus_chewing_verbose;
 
@@ -104,23 +107,37 @@ extern gint ibus_chewing_verbose;
 typedef IBusChewingEngine Self;
 typedef IBusChewingEngineClass SelfClass;
 
-G_DEFINE_TYPE_WITH_CODE(IBusChewingEngine, ibus_chewing_engine, IBUS_TYPE_ENGINE, G_ADD_PRIVATE(IBusChewingEngine));
+G_DEFINE_TYPE_WITH_CODE(IBusChewingEngine, ibus_chewing_engine,
+                        IBUS_TYPE_ENGINE, G_ADD_PRIVATE(IBusChewingEngine));
 
 /* here are local prototypes */
-static void ibus_chewing_engine_constructor (IBusChewingEngine * self) G_GNUC_UNUSED;
-static IBusProperty * ibus_chewing_engine_get_ibus_property_by_name (IBusChewingEngine * self, const gchar * prop_name) G_GNUC_UNUSED;
-static void ___b_ibus_chewing_engine_reset (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___c_ibus_chewing_engine_page_up (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___d_ibus_chewing_engine_page_down (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___e_ibus_chewing_engine_cursor_up (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___f_ibus_chewing_engine_cursor_down (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___10_ibus_chewing_engine_enable (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___11_ibus_chewing_engine_disable (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___12_ibus_chewing_engine_focus_in (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___13_ibus_chewing_engine_focus_out (IBusEngine * engine) G_GNUC_UNUSED;
-static void ___14_ibus_chewing_engine_set_capabilities (IBusEngine * engine, guint caps) G_GNUC_UNUSED;
-static void ___15_ibus_chewing_engine_property_show (IBusEngine * engine, const gchar * prop_name) G_GNUC_UNUSED;
-static void ___16_ibus_chewing_engine_property_hide (IBusEngine * engine, const gchar * prop_name) G_GNUC_UNUSED;
+static void
+ibus_chewing_engine_constructor(IBusChewingEngine *self) G_GNUC_UNUSED;
+static IBusProperty *ibus_chewing_engine_get_ibus_property_by_name(
+    IBusChewingEngine *self, const gchar *prop_name) G_GNUC_UNUSED;
+static void ___b_ibus_chewing_engine_reset(IBusEngine *engine) G_GNUC_UNUSED;
+static void ___c_ibus_chewing_engine_page_up(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___d_ibus_chewing_engine_page_down(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___e_ibus_chewing_engine_cursor_up(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___f_ibus_chewing_engine_cursor_down(IBusEngine *engine) G_GNUC_UNUSED;
+static void ___10_ibus_chewing_engine_enable(IBusEngine *engine) G_GNUC_UNUSED;
+static void ___11_ibus_chewing_engine_disable(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___12_ibus_chewing_engine_focus_in(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___13_ibus_chewing_engine_focus_out(IBusEngine *engine) G_GNUC_UNUSED;
+static void
+___14_ibus_chewing_engine_set_capabilities(IBusEngine *engine,
+                                           guint caps) G_GNUC_UNUSED;
+static void
+___15_ibus_chewing_engine_property_show(IBusEngine *engine,
+                                        const gchar *prop_name) G_GNUC_UNUSED;
+static void
+___16_ibus_chewing_engine_property_hide(IBusEngine *engine,
+                                        const gchar *prop_name) G_GNUC_UNUSED;
 
 /* pointer to the class of our parent */
 static IBusEngineClass *parent_class = NULL;
@@ -132,125 +149,142 @@ static IBusEngineClass *parent_class = NULL;
 #define self_refresh_property ibus_chewing_engine_refresh_property
 #define self_refresh_property_list ibus_chewing_engine_refresh_property_list
 #define self_hide_property_list ibus_chewing_engine_hide_property_list
-#define self_get_ibus_property_by_name ibus_chewing_engine_get_ibus_property_by_name
+#define self_get_ibus_property_by_name                                         \
+    ibus_chewing_engine_get_ibus_property_by_name
 
-#define ibus_chewing_engine_has_status_flag(self, f) mkdg_has_flag(((IBusChewingEnginePrivate*)ibus_chewing_engine_get_instance_private(self))->statusFlags, f)
-#define ibus_chewing_engine_set_status_flag(self, f) mkdg_set_flag(((IBusChewingEnginePrivate*)ibus_chewing_engine_get_instance_private(self))->statusFlags, f)
-#define ibus_chewing_engine_clear_status_flag(self, f) mkdg_clear_flag(((IBusChewingEnginePrivate*)ibus_chewing_engine_get_instance_private(self))->statusFlags, f)
+#define ibus_chewing_engine_has_status_flag(self, f)                           \
+    mkdg_has_flag(((IBusChewingEnginePrivate *)                                \
+                       ibus_chewing_engine_get_instance_private(self))         \
+                      ->statusFlags,                                           \
+                  f)
+#define ibus_chewing_engine_set_status_flag(self, f)                           \
+    mkdg_set_flag(((IBusChewingEnginePrivate *)                                \
+                       ibus_chewing_engine_get_instance_private(self))         \
+                      ->statusFlags,                                           \
+                  f)
+#define ibus_chewing_engine_clear_status_flag(self, f)                         \
+    mkdg_clear_flag(((IBusChewingEnginePrivate *)                              \
+                         ibus_chewing_engine_get_instance_private(self))       \
+                        ->statusFlags,                                         \
+                    f)
 
-#define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
-#define ibus_chewing_engine_is_chinese_mode(self) ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
+#define is_password(self)                                                      \
+    ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
+#define ibus_chewing_engine_is_chinese_mode(self)                              \
+    ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
 
-#define ibus_text_is_empty(iText) ((iText == NULL) || STRING_IS_EMPTY(iText->text))
+#define ibus_text_is_empty(iText)                                              \
+    ((iText == NULL) || STRING_IS_EMPTY(iText->text))
 
 /* a macro for creating a new object of our type */
-#define GET_NEW ((IBusChewingEngine *)g_object_new(ibus_chewing_engine_get_type(), NULL))
+#define GET_NEW                                                                \
+    ((IBusChewingEngine *)g_object_new(ibus_chewing_engine_get_type(), NULL))
 
 /* a function for creating a new object of our type */
 #include <stdarg.h>
-static IBusChewingEngine * GET_NEW_VARG (const char *first, ...) G_GNUC_UNUSED;
-static IBusChewingEngine *
-GET_NEW_VARG (const char *first, ...)
-{
-	IBusChewingEngine *ret;
-	va_list ap;
-	va_start (ap, first);
-	ret = (IBusChewingEngine *)g_object_new_valist (ibus_chewing_engine_get_type (), first, ap);
-	va_end (ap);
-	return ret;
+static IBusChewingEngine *GET_NEW_VARG(const char *first, ...) G_GNUC_UNUSED;
+static IBusChewingEngine *GET_NEW_VARG(const char *first, ...) {
+    IBusChewingEngine *ret;
+    va_list ap;
+
+    va_start(ap, first);
+    ret = (IBusChewingEngine *)g_object_new_valist(
+        ibus_chewing_engine_get_type(), first, ap);
+    va_end(ap);
+    return ret;
 }
 
-
-static GObject *
-___constructor (GType type, guint n_construct_properties, GObjectConstructParam *construct_properties)
-{
+static GObject *___constructor(GType type, guint n_construct_properties,
+                               GObjectConstructParam *construct_properties) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::constructor"
-	GObject *obj_self;
-	IBusChewingEngine *self;
-	obj_self = G_OBJECT_CLASS (parent_class)->constructor (type, n_construct_properties, construct_properties);
-	self = IBUS_CHEWING_ENGINE (obj_self);
-	ibus_chewing_engine_constructor (self);
-	return obj_self;
+    GObject *obj_self;
+    IBusChewingEngine *self;
+
+    obj_self =
+        G_OBJECT_CLASS(parent_class)
+            ->constructor(type, n_construct_properties, construct_properties);
+    self = IBUS_CHEWING_ENGINE(obj_self);
+    ibus_chewing_engine_constructor(self);
+    return obj_self;
 }
+
 #undef __GOB_FUNCTION__
 
-
-static void
-___finalize(GObject *obj_self)
-{
+static void ___finalize(GObject *obj_self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::finalize"
-	IBusChewingEngine *self G_GNUC_UNUSED = IBUS_CHEWING_ENGINE (obj_self);
-	gpointer priv G_GNUC_UNUSED = selfp;
-	if(self->icPreEdit) { ibus_chewing_pre_edit_free ((gpointer) self->icPreEdit); self->icPreEdit = NULL; }
-	if(self->preEditText) { g_object_unref ((gpointer) self->preEditText); self->preEditText = NULL; }
-	if(self->auxText) { g_object_unref ((gpointer) self->auxText); self->auxText = NULL; }
-	if(self->outgoingText) { g_object_unref ((gpointer) self->outgoingText); self->outgoingText = NULL; }
-	if(self->InputMode) { g_object_unref ((gpointer) self->InputMode); self->InputMode = NULL; }
-	if(self->AlnumSize) { g_object_unref ((gpointer) self->AlnumSize); self->AlnumSize = NULL; }
-	if(self->setup_prop) { g_object_unref ((gpointer) self->setup_prop); self->setup_prop = NULL; }
-	if(self->prop_list) { g_object_unref ((gpointer) self->prop_list); self->prop_list = NULL; }
-	if(G_OBJECT_CLASS(parent_class)->finalize) \
-		(* G_OBJECT_CLASS(parent_class)->finalize)(obj_self);
+    IBusChewingEngine *self G_GNUC_UNUSED = IBUS_CHEWING_ENGINE(obj_self);
+    gpointer priv G_GNUC_UNUSED = selfp;
+
+    if (self->icPreEdit) {
+        ibus_chewing_pre_edit_free((gpointer)self->icPreEdit);
+        self->icPreEdit = NULL;
+    }
+    if (self->preEditText) {
+        g_object_unref((gpointer)self->preEditText);
+        self->preEditText = NULL;
+    }
+    if (self->auxText) {
+        g_object_unref((gpointer)self->auxText);
+        self->auxText = NULL;
+    }
+    if (self->outgoingText) {
+        g_object_unref((gpointer)self->outgoingText);
+        self->outgoingText = NULL;
+    }
+    if (self->InputMode) {
+        g_object_unref((gpointer)self->InputMode);
+        self->InputMode = NULL;
+    }
+    if (self->AlnumSize) {
+        g_object_unref((gpointer)self->AlnumSize);
+        self->AlnumSize = NULL;
+    }
+    if (self->setup_prop) {
+        g_object_unref((gpointer)self->setup_prop);
+        self->setup_prop = NULL;
+    }
+    if (self->prop_list) {
+        g_object_unref((gpointer)self->prop_list);
+        self->prop_list = NULL;
+    }
+    if (G_OBJECT_CLASS(parent_class)->finalize)
+        (*G_OBJECT_CLASS(parent_class)->finalize)(obj_self);
 }
+
 #undef __GOB_FUNCTION__
 
-static void 
-ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
-{
+static void ibus_chewing_engine_init(IBusChewingEngine *self G_GNUC_UNUSED) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::init"
-	self->icPreEdit = NULL;
-	self->sDialog = NULL;
-	self->preEditText = NULL;
-	self->auxText = NULL;
-	self->outgoingText = NULL;
-	self->logFile = NULL;
-	selfp->statusFlags = 0;
-	selfp->capabilite = 0;
-	self->InputMode = 
-        g_object_ref_sink(ibus_property_new
-            ("InputMode",
-             PROP_TYPE_NORMAL,
-             SELF_GET_CLASS(self)->InputMode_label_chi,
-             NULL,
-             SELF_GET_CLASS(self)->InputMode_tooltip,
-             TRUE,
-             TRUE,
-             PROP_STATE_UNCHECKED,
-             NULL))
-    ;
-	self->AlnumSize = 
-        g_object_ref_sink(ibus_property_new
-            ("AlnumSize",
-             PROP_TYPE_NORMAL,
-             SELF_GET_CLASS(self)->AlnumSize_label_half,
-             NULL,
-             SELF_GET_CLASS(self)->AlnumSize_tooltip,
-             TRUE,
-             TRUE,
-             PROP_STATE_UNCHECKED,
-             NULL))
-    ;
-	self->setup_prop = 
-        g_object_ref_sink(ibus_property_new
-            ("setup_prop",
-             PROP_TYPE_NORMAL,
-             SELF_GET_CLASS(self)->setup_prop_label,
-             NULL,
-             SELF_GET_CLASS(self)->setup_prop_tooltip,
-             TRUE,
-             TRUE,
-             PROP_STATE_UNCHECKED,
-             NULL))
-    ;
-	self->prop_list = 
-        g_object_ref_sink(ibus_prop_list_new())
-    ;
-	self->keymap_us =  ibus_keymap_get("us") ;
- {
+    self->icPreEdit = NULL;
+    self->sDialog = NULL;
+    self->preEditText = NULL;
+    self->auxText = NULL;
+    self->outgoingText = NULL;
+    self->logFile = NULL;
+    selfp->statusFlags = 0;
+    selfp->capabilite = 0;
+    self->InputMode = g_object_ref_sink(
+        ibus_property_new("InputMode", PROP_TYPE_NORMAL,
+                          SELF_GET_CLASS(self)->InputMode_label_chi, NULL,
+                          SELF_GET_CLASS(self)->InputMode_tooltip, TRUE, TRUE,
+                          PROP_STATE_UNCHECKED, NULL));
+    self->AlnumSize = g_object_ref_sink(
+        ibus_property_new("AlnumSize", PROP_TYPE_NORMAL,
+                          SELF_GET_CLASS(self)->AlnumSize_label_half, NULL,
+                          SELF_GET_CLASS(self)->AlnumSize_tooltip, TRUE, TRUE,
+                          PROP_STATE_UNCHECKED, NULL));
+    self->setup_prop = g_object_ref_sink(ibus_property_new(
+        "setup_prop", PROP_TYPE_NORMAL, SELF_GET_CLASS(self)->setup_prop_label,
+        NULL, SELF_GET_CLASS(self)->setup_prop_tooltip, TRUE, TRUE,
+        PROP_STATE_UNCHECKED, NULL));
+    self->prop_list = g_object_ref_sink(ibus_prop_list_new());
+    self->keymap_us = ibus_keymap_get("us");
+    {
 
         /* initialize the object here */
         IBUS_CHEWING_LOG(INFO, "init() %sinitialized",
-            (selfp->statusFlags & ENGINE_FLAG_INITIALIZED) ? "" : "un");
+                         (selfp->statusFlags & ENGINE_FLAG_INITIALIZED) ? ""
+                                                                        : "un");
         if (selfp->statusFlags & ENGINE_FLAG_INITIALIZED) {
             return;
         }
@@ -263,7 +297,8 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
         if (logFilename != NULL) {
             self->logFile = fopen(logFilename, "w+");
             if (self->logFile == NULL) {
-                IBUS_CHEWING_LOG(WARN, "init() Cannot write to logfile %s, ignored",
+                IBUS_CHEWING_LOG(WARN,
+                                 "init() Cannot write to logfile %s, ignored",
                                  logFilename);
             } else {
                 mkdg_log_set_file(self->logFile);
@@ -274,7 +309,7 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
 
             MkdgBackend *backend =
                 mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
-                QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
+                                            QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
 
             self->icPreEdit = ibus_chewing_pre_edit_new(backend);
         }
@@ -291,80 +326,64 @@ ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
         ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_INITIALIZED);
 
         IBUS_CHEWING_LOG(DEBUG, "init() Done");
-    
- }
+    }
 }
+
 #undef __GOB_FUNCTION__
-static void 
-ibus_chewing_engine_class_init (IBusChewingEngineClass * klass G_GNUC_UNUSED)
-{
+static void
+ibus_chewing_engine_class_init(IBusChewingEngineClass *klass G_GNUC_UNUSED) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::class_init"
-	GObjectClass *g_object_class G_GNUC_UNUSED = (GObjectClass*) klass;
-	IBusEngineClass *ibus_engine_class = (IBusEngineClass *)klass;
+    GObjectClass *g_object_class G_GNUC_UNUSED = (GObjectClass *)klass;
+    IBusEngineClass *ibus_engine_class = (IBusEngineClass *)klass;
 
-	klass->InputMode_label_chi = 
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Chinese Mode")))
-    ;
-	klass->InputMode_label_eng = 
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Alphanumeric Mode")))
-    ;
-	klass->InputMode_tooltip = 
-        g_object_ref_sink(ibus_text_new_from_static_string
-                          (_("Click to toggle Chinese/Alphanumeric Mode")))
-    ;
-	klass->InputMode_symbol_chi = 
-        g_object_ref_sink(ibus_text_new_from_static_string("中"))
-    ;
-	klass->InputMode_symbol_eng = 
-        g_object_ref_sink(ibus_text_new_from_static_string("英"))
-    ;
-	klass->AlnumSize_label_full = 
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Fullwidth Form")))
-    ;
-	klass->AlnumSize_label_half = 
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Halfwidth Form")))
-    ;
-	klass->AlnumSize_tooltip = 
-        g_object_ref_sink(ibus_text_new_from_static_string
-                          (_("Click to toggle Halfwidth/Fullwidth Form")))
-    ;
-	klass->AlnumSize_symbol_full = 
-        g_object_ref_sink(ibus_text_new_from_static_string("全"))
-    ;
-	klass->AlnumSize_symbol_half = 
-        g_object_ref_sink(ibus_text_new_from_static_string("半"))
-    ;
-	klass->setup_prop_label = 
-        g_object_ref_sink(ibus_text_new_from_static_string(_("IBus-Chewing Preferences")))
-    ;
-	klass->setup_prop_tooltip = 
-        g_object_ref_sink(ibus_text_new_from_static_string
-                          (_("Click to configure IBus-Chewing")))
-    ;
-	klass->setup_prop_symbol = 
-        g_object_ref_sink(ibus_text_new_from_static_string("訂"))
-    ;
-	klass->emptyText = 
-        g_object_ref_sink(ibus_text_new_from_static_string(""))
-    ;
+    klass->InputMode_label_chi =
+        g_object_ref_sink(ibus_text_new_from_static_string(_("Chinese Mode")));
+    klass->InputMode_label_eng = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("Alphanumeric Mode")));
+    klass->InputMode_tooltip =
+        g_object_ref_sink(ibus_text_new_from_static_string(
+            _("Click to toggle Chinese/Alphanumeric Mode")));
+    klass->InputMode_symbol_chi =
+        g_object_ref_sink(ibus_text_new_from_static_string("中"));
+    klass->InputMode_symbol_eng =
+        g_object_ref_sink(ibus_text_new_from_static_string("英"));
+    klass->AlnumSize_label_full = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("Fullwidth Form")));
+    klass->AlnumSize_label_half = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("Halfwidth Form")));
+    klass->AlnumSize_tooltip =
+        g_object_ref_sink(ibus_text_new_from_static_string(
+            _("Click to toggle Halfwidth/Fullwidth Form")));
+    klass->AlnumSize_symbol_full =
+        g_object_ref_sink(ibus_text_new_from_static_string("全"));
+    klass->AlnumSize_symbol_half =
+        g_object_ref_sink(ibus_text_new_from_static_string("半"));
+    klass->setup_prop_label = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("IBus-Chewing Preferences")));
+    klass->setup_prop_tooltip = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("Click to configure IBus-Chewing")));
+    klass->setup_prop_symbol =
+        g_object_ref_sink(ibus_text_new_from_static_string("訂"));
+    klass->emptyText = g_object_ref_sink(ibus_text_new_from_static_string(""));
 
-	parent_class = g_type_class_ref (IBUS_TYPE_ENGINE);
+    parent_class = g_type_class_ref(IBUS_TYPE_ENGINE);
 
-	ibus_engine_class->reset = ___b_ibus_chewing_engine_reset;
-	ibus_engine_class->page_up = ___c_ibus_chewing_engine_page_up;
-	ibus_engine_class->page_down = ___d_ibus_chewing_engine_page_down;
-	ibus_engine_class->cursor_up = ___e_ibus_chewing_engine_cursor_up;
-	ibus_engine_class->cursor_down = ___f_ibus_chewing_engine_cursor_down;
-	ibus_engine_class->enable = ___10_ibus_chewing_engine_enable;
-	ibus_engine_class->disable = ___11_ibus_chewing_engine_disable;
-	ibus_engine_class->focus_in = ___12_ibus_chewing_engine_focus_in;
-	ibus_engine_class->focus_out = ___13_ibus_chewing_engine_focus_out;
-	ibus_engine_class->set_capabilities = ___14_ibus_chewing_engine_set_capabilities;
-	ibus_engine_class->property_show = ___15_ibus_chewing_engine_property_show;
-	ibus_engine_class->property_hide = ___16_ibus_chewing_engine_property_hide;
-	g_object_class->constructor = ___constructor;
-	g_object_class->finalize = ___finalize;
- {
+    ibus_engine_class->reset = ___b_ibus_chewing_engine_reset;
+    ibus_engine_class->page_up = ___c_ibus_chewing_engine_page_up;
+    ibus_engine_class->page_down = ___d_ibus_chewing_engine_page_down;
+    ibus_engine_class->cursor_up = ___e_ibus_chewing_engine_cursor_up;
+    ibus_engine_class->cursor_down = ___f_ibus_chewing_engine_cursor_down;
+    ibus_engine_class->enable = ___10_ibus_chewing_engine_enable;
+    ibus_engine_class->disable = ___11_ibus_chewing_engine_disable;
+    ibus_engine_class->focus_in = ___12_ibus_chewing_engine_focus_in;
+    ibus_engine_class->focus_out = ___13_ibus_chewing_engine_focus_out;
+    ibus_engine_class->set_capabilities =
+        ___14_ibus_chewing_engine_set_capabilities;
+    ibus_engine_class->property_show = ___15_ibus_chewing_engine_property_show;
+    ibus_engine_class->property_hide = ___16_ibus_chewing_engine_property_hide;
+    g_object_class->constructor = ___constructor;
+    g_object_class->finalize = ___finalize;
+    {
 
         ibus_engine_class->property_activate =
             ibus_chewing_engine_property_activate;
@@ -376,134 +395,145 @@ ibus_chewing_engine_class_init (IBusChewingEngineClass * klass G_GNUC_UNUSED)
         ibus_engine_class->set_content_type =
             ibus_chewing_engine_set_content_type;
 #endif
-    
- }
+    }
 }
+
 #undef __GOB_FUNCTION__
 
-
-
-static void 
-ibus_chewing_engine_constructor (IBusChewingEngine * self G_GNUC_UNUSED)
-{
+static void
+ibus_chewing_engine_constructor(IBusChewingEngine *self G_GNUC_UNUSED) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::constructor"
-{
-	
-        /* GOB need this for generating constructor */
-    }}
+    { /* GOB need this for generating constructor */
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-void 
-ibus_chewing_engine_use_setting (IBusChewingEngine * self)
-{
+void ibus_chewing_engine_use_setting(IBusChewingEngine *self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::use_setting"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
         IBUS_CHEWING_LOG(INFO, "use_setting()");
 
         ibus_chewing_pre_edit_use_all_configure(self->icPreEdit);
 
         /* Input style */
-        if (ibus_chewing_properties_read_boolean_general(self->icPreEdit->iProperties,
-            "ibus/general", "embed-preedit-text", NULL)) {
+        if (ibus_chewing_properties_read_boolean_general(
+                self->icPreEdit->iProperties, "ibus/general",
+                "embed-preedit-text", NULL)) {
             selfp->inputStyle = CHEWING_INPUT_STYLE_IN_APPLICATION;
         } else {
             selfp->inputStyle = CHEWING_INPUT_STYLE_IN_CANDIDATE;
         }
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-void 
-ibus_chewing_engine_restore_mode (IBusChewingEngine * self)
-{
+void ibus_chewing_engine_restore_mode(IBusChewingEngine *self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::restore_mode"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
-        IBUS_CHEWING_LOG(DEBUG, "restore_mode() statusFlags=%x", selfp->statusFlags);
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
+        IBUS_CHEWING_LOG(DEBUG, "restore_mode() statusFlags=%x",
+                         selfp->statusFlags);
         GdkDisplay *display = gdk_display_get_default();
+
         if (display != NULL) {
             GdkSeat *seat = gdk_display_get_default_seat(display);
+
             if (seat != NULL) {
                 GdkDevice *keyboard = gdk_seat_get_keyboard(seat);
+
                 /* Restore Led Mode only make sense if display is available */
-                if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)) {
-                    IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_IM (deprecated)");
-                } else if (keyboard != NULL && ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)) {
-                    IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
-                    gboolean caps_lock_on = gdk_device_get_caps_lock_state(keyboard);
-                    chewing_set_ChiEngMode(self->icPreEdit->context, caps_lock_on ? 0 : CHINESE_MODE);
+                if (ibus_chewing_pre_edit_has_flag(self->icPreEdit,
+                                                   FLAG_SYNC_FROM_IM)) {
+                    IBUS_CHEWING_LOG(
+                        DEBUG, "restore_mode() FLAG_SYNC_FROM_IM (deprecated)");
+                } else if (keyboard != NULL &&
+                           ibus_chewing_pre_edit_has_flag(
+                               self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)) {
+                    IBUS_CHEWING_LOG(DEBUG,
+                                     "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
+                    gboolean caps_lock_on =
+                        gdk_device_get_caps_lock_state(keyboard);
+                    chewing_set_ChiEngMode(self->icPreEdit->context,
+                                           caps_lock_on ? 0 : CHINESE_MODE);
                 }
             }
             self_refresh_property(self, "InputMode");
         }
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-void 
-ibus_chewing_engine_update (IBusChewingEngine * self)
-{
+void ibus_chewing_engine_update(IBusChewingEngine *self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::update"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
         IBUS_CHEWING_LOG(DEBUG, "update() statusFlags=%x", selfp->statusFlags);
         commit_text(self);
         update_pre_edit_text(self);
         update_aux_text(self);
 
-        IBUS_CHEWING_LOG(DEBUG,
-                         "update() nPhoneSeq=%d statusFlags=%x",
+        IBUS_CHEWING_LOG(DEBUG, "update() nPhoneSeq=%d statusFlags=%x",
                          chewing_get_phoneSeqLen(self->icPreEdit->context),
                          selfp->statusFlags);
         update_lookup_table(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-void 
-ibus_chewing_engine_refresh_property (IBusChewingEngine * self, const gchar * prop_name)
-{
+void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
+                                          const gchar *prop_name) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::refresh_property"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
 #ifndef UNIT_TEST
-        IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x",
-                         prop_name, selfp->statusFlags);
+        IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x", prop_name,
+                         selfp->statusFlags);
 
         if (STRING_EQUALS(prop_name, "InputMode")) {
 
-            ibus_property_set_label(self->InputMode,
-                ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit) ?
-                SELF_GET_CLASS(self)->InputMode_label_chi :
-                SELF_GET_CLASS(self)->InputMode_label_eng);
+            ibus_property_set_label(
+                self->InputMode,
+                ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
+                    ? SELF_GET_CLASS(self)->InputMode_label_chi
+                    : SELF_GET_CLASS(self)->InputMode_label_eng);
 
 #if IBUS_CHECK_VERSION(1, 5, 0)
-            ibus_property_set_symbol(self->InputMode,
-                ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit) ?
-                SELF_GET_CLASS(self)->InputMode_symbol_chi :
-                SELF_GET_CLASS(self)->InputMode_symbol_eng);
+            ibus_property_set_symbol(
+                self->InputMode,
+                ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
+                    ? SELF_GET_CLASS(self)->InputMode_symbol_chi
+                    : SELF_GET_CLASS(self)->InputMode_symbol_eng);
 #endif
 
             ibus_engine_update_property(IBUS_ENGINE(self), self->InputMode);
 
         } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
 
-            ibus_property_set_label(self->AlnumSize,
-                chewing_get_ShapeMode(self->icPreEdit->context) ?
-                SELF_GET_CLASS(self)->AlnumSize_label_full :
-                SELF_GET_CLASS(self)->AlnumSize_label_half);
+            ibus_property_set_label(
+                self->AlnumSize,
+                chewing_get_ShapeMode(self->icPreEdit->context)
+                    ? SELF_GET_CLASS(self)->AlnumSize_label_full
+                    : SELF_GET_CLASS(self)->AlnumSize_label_half);
 
 #if IBUS_CHECK_VERSION(1, 5, 0)
-            ibus_property_set_symbol(self->AlnumSize,
-                chewing_get_ShapeMode(self->icPreEdit->context) ?
-                SELF_GET_CLASS(self)->AlnumSize_symbol_full :
-                SELF_GET_CLASS(self)->AlnumSize_symbol_half);
+            ibus_property_set_symbol(
+                self->AlnumSize,
+                chewing_get_ShapeMode(self->icPreEdit->context)
+                    ? SELF_GET_CLASS(self)->AlnumSize_symbol_full
+                    : SELF_GET_CLASS(self)->AlnumSize_symbol_half);
 #endif
 
             if (selfp->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
@@ -512,12 +542,14 @@ ibus_chewing_engine_refresh_property (IBusChewingEngine * self, const gchar * pr
         } else if (STRING_EQUALS(prop_name, "setup_prop")) {
 #if IBUS_CHECK_VERSION(1, 5, 0)
             ibus_property_set_symbol(self->setup_prop,
-                                      SELF_GET_CLASS(self)->setup_prop_symbol);
+                                     SELF_GET_CLASS(self)->setup_prop_symbol);
 #endif
             ibus_engine_update_property(IBUS_ENGINE(self), self->setup_prop);
         }
 #endif
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
 /**
@@ -526,20 +558,20 @@ ibus_chewing_engine_refresh_property (IBusChewingEngine * self, const gchar * pr
  *
  * Refresh the property list (language bar).
  **/
-void 
-ibus_chewing_engine_refresh_property_list (IBusChewingEngine * self)
-{
+void ibus_chewing_engine_refresh_property_list(IBusChewingEngine *self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::refresh_property_list"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
 #ifndef UNIT_TEST
         self_refresh_property(self, "InputMode");
         self_refresh_property(self, "AlnumSize");
         self_refresh_property(self, "setup_prop");
 #endif
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
 /**
@@ -548,29 +580,29 @@ ibus_chewing_engine_refresh_property_list (IBusChewingEngine * self)
  *
  * Hide the property list (language bar).
  **/
-void 
-ibus_chewing_engine_hide_property_list (IBusChewingEngine * self)
-{
+void ibus_chewing_engine_hide_property_list(IBusChewingEngine *self) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::hide_property_list"
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (IBUS_IS_CHEWING_ENGINE (self));
-{
-	
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
+    {
+
 #ifndef UNIT_TEST
         IBUS_ENGINE_GET_CLASS(self)->property_hide(IBUS_ENGINE(self),
                                                    "AlnumSize");
 #endif
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-static IBusProperty * 
-ibus_chewing_engine_get_ibus_property_by_name (IBusChewingEngine * self, const gchar * prop_name)
-{
+static IBusProperty *
+ibus_chewing_engine_get_ibus_property_by_name(IBusChewingEngine *self,
+                                              const gchar *prop_name) {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::get_ibus_property_by_name"
-	g_return_val_if_fail (self != NULL, (IBusProperty * )0);
-	g_return_val_if_fail (IBUS_IS_CHEWING_ENGINE (self), (IBusProperty * )0);
-{
-	
+    g_return_val_if_fail(self != NULL, (IBusProperty *)0);
+    g_return_val_if_fail(IBUS_IS_CHEWING_ENGINE(self), (IBusProperty *)0);
+    {
+
         if (STRING_EQUALS(prop_name, "InputMode")) {
             return self->InputMode;
         } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
@@ -578,206 +610,269 @@ ibus_chewing_engine_get_ibus_property_by_name (IBusChewingEngine * self, const g
         } else if (STRING_EQUALS(prop_name, "setup_prop")) {
             return self->setup_prop;
         }
-        IBUS_CHEWING_LOG(MSG, "get_ibus_property_by_name(%s): NULL is returned", prop_name);
+        IBUS_CHEWING_LOG(MSG, "get_ibus_property_by_name(%s): NULL is returned",
+                         prop_name);
         return NULL;
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 
-static void 
-___b_ibus_chewing_engine_reset (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->reset) \
-		(* IBUS_ENGINE_CLASS(parent_class)->reset)(___engine); }
+static void ___b_ibus_chewing_engine_reset(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->reset)                            \
+            (*IBUS_ENGINE_CLASS(parent_class)->reset)(___engine);              \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::reset"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         ibus_chewing_engine_reset(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___c_ibus_chewing_engine_page_up (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->page_up) \
-		(* IBUS_ENGINE_CLASS(parent_class)->page_up)(___engine); }
+static void ___c_ibus_chewing_engine_page_up(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->page_up)                          \
+            (*IBUS_ENGINE_CLASS(parent_class)->page_up)(___engine);            \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::page_up"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         if (is_password(self))
             return;
         ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Page_Up, 0);
         self_update(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___d_ibus_chewing_engine_page_down (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->page_down) \
-		(* IBUS_ENGINE_CLASS(parent_class)->page_down)(___engine); }
+static void ___d_ibus_chewing_engine_page_down(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->page_down)                        \
+            (*IBUS_ENGINE_CLASS(parent_class)->page_down)(___engine);          \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::page_down"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         if (is_password(self))
             return;
-        ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Page_Down, 0);
+        ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Page_Down,
+                                          0);
         self_update(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___e_ibus_chewing_engine_cursor_up (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->cursor_up) \
-		(* IBUS_ENGINE_CLASS(parent_class)->cursor_up)(___engine); }
+static void ___e_ibus_chewing_engine_cursor_up(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->cursor_up)                        \
+            (*IBUS_ENGINE_CLASS(parent_class)->cursor_up)(___engine);          \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::cursor_up"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         if (is_password(self))
             return;
         ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Up, 0);
         self_update(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___f_ibus_chewing_engine_cursor_down (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->cursor_down) \
-		(* IBUS_ENGINE_CLASS(parent_class)->cursor_down)(___engine); }
+static void
+___f_ibus_chewing_engine_cursor_down(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->cursor_down)                      \
+            (*IBUS_ENGINE_CLASS(parent_class)->cursor_down)(___engine);        \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::cursor_down"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         if (is_password(self))
             return;
         ibus_chewing_pre_edit_process_key(self->icPreEdit, IBUS_KEY_Down, 0);
         self_update(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___10_ibus_chewing_engine_enable (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->enable) \
-		(* IBUS_ENGINE_CLASS(parent_class)->enable)(___engine); }
+static void ___10_ibus_chewing_engine_enable(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->enable)                           \
+            (*IBUS_ENGINE_CLASS(parent_class)->enable)(___engine);             \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::enable"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         ibus_chewing_engine_enable(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___11_ibus_chewing_engine_disable (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->disable) \
-		(* IBUS_ENGINE_CLASS(parent_class)->disable)(___engine); }
+static void ___11_ibus_chewing_engine_disable(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->disable)                          \
+            (*IBUS_ENGINE_CLASS(parent_class)->disable)(___engine);            \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::disable"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         ibus_chewing_engine_disable(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___12_ibus_chewing_engine_focus_in (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->focus_in) \
-		(* IBUS_ENGINE_CLASS(parent_class)->focus_in)(___engine); }
+static void ___12_ibus_chewing_engine_focus_in(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->focus_in)                         \
+            (*IBUS_ENGINE_CLASS(parent_class)->focus_in)(___engine);           \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::focus_in"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         ibus_chewing_engine_focus_in(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___13_ibus_chewing_engine_focus_out (IBusEngine * engine G_GNUC_UNUSED)
-#define PARENT_HANDLER(___engine) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->focus_out) \
-		(* IBUS_ENGINE_CLASS(parent_class)->focus_out)(___engine); }
+static void
+___13_ibus_chewing_engine_focus_out(IBusEngine *engine G_GNUC_UNUSED)
+#define PARENT_HANDLER(___engine)                                              \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->focus_out)                        \
+            (*IBUS_ENGINE_CLASS(parent_class)->focus_out)(___engine);          \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::focus_out"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         ibus_chewing_engine_focus_out(self);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___14_ibus_chewing_engine_set_capabilities (IBusEngine * engine G_GNUC_UNUSED, guint caps)
-#define PARENT_HANDLER(___engine,___caps) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->set_capabilities) \
-		(* IBUS_ENGINE_CLASS(parent_class)->set_capabilities)(___engine,___caps); }
+static void
+___14_ibus_chewing_engine_set_capabilities(IBusEngine *engine G_GNUC_UNUSED,
+                                           guint caps)
+#define PARENT_HANDLER(___engine, ___caps)                                     \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->set_capabilities)                 \
+            (*IBUS_ENGINE_CLASS(parent_class)->set_capabilities)(___engine,    \
+                                                                 ___caps);     \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::set_capabilities"
-{
-	
+    {
+
         Self *self = SELF(engine);
+
         selfp->capabilite = caps;
         IBUS_CHEWING_LOG(MSG, "***** set_capabilities(%x): statusFlags=%x",
                          caps, selfp->statusFlags);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___15_ibus_chewing_engine_property_show (IBusEngine * engine G_GNUC_UNUSED, const gchar * prop_name)
-#define PARENT_HANDLER(___engine,___prop_name) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->property_show) \
-		(* IBUS_ENGINE_CLASS(parent_class)->property_show)(___engine,___prop_name); }
+static void
+___15_ibus_chewing_engine_property_show(IBusEngine *engine G_GNUC_UNUSED,
+                                        const gchar *prop_name)
+#define PARENT_HANDLER(___engine, ___prop_name)                                \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->property_show)                    \
+            (*IBUS_ENGINE_CLASS(parent_class)->property_show)(___engine,       \
+                                                              ___prop_name);   \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::property_show"
-{
-	
+    {
+
         IBUS_CHEWING_LOG(INFO, "property_show(-, %s)", prop_name);
         Self *self = SELF(engine);
         IBusProperty *prop = self_get_ibus_property_by_name(self, prop_name);
+
         ibus_property_set_visible(prop, TRUE);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-static void 
-___16_ibus_chewing_engine_property_hide (IBusEngine * engine G_GNUC_UNUSED, const gchar * prop_name)
-#define PARENT_HANDLER(___engine,___prop_name) \
-	{ if(IBUS_ENGINE_CLASS(parent_class)->property_hide) \
-		(* IBUS_ENGINE_CLASS(parent_class)->property_hide)(___engine,___prop_name); }
+static void
+___16_ibus_chewing_engine_property_hide(IBusEngine *engine G_GNUC_UNUSED,
+                                        const gchar *prop_name)
+#define PARENT_HANDLER(___engine, ___prop_name)                                \
+    {                                                                          \
+        if (IBUS_ENGINE_CLASS(parent_class)->property_hide)                    \
+            (*IBUS_ENGINE_CLASS(parent_class)->property_hide)(___engine,       \
+                                                              ___prop_name);   \
+    }
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::property_hide"
-{
-	
+    {
+
         IBUS_CHEWING_LOG(INFO, "property_hide(-, %s)", prop_name);
         Self *self = SELF(engine);
         IBusProperty *prop = self_get_ibus_property_by_name(self, prop_name);
+
         ibus_property_set_visible(prop, FALSE);
-    }}
+    }
+}
+
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
@@ -785,14 +880,13 @@ ___16_ibus_chewing_engine_property_hide (IBusEngine * engine G_GNUC_UNUSED, cons
  * ibus_chewing_engine_start:
  * @self: IBusChewingEngine instance.
  *
- * This is different with init. This will be called in the beginning of 
+ * This is different with init. This will be called in the beginning of
  * reset, enable, and focus_in for setup.
  */
-void ibus_chewing_engine_start(IBusChewingEngine * self)
-{
+void ibus_chewing_engine_start(IBusChewingEngine *self) {
 #ifndef UNIT_TEST
-    if (!ibus_chewing_engine_has_status_flag
-        (self, ENGINE_FLAG_PROPERTIES_REGISTERED)) {
+    if (!ibus_chewing_engine_has_status_flag(
+            self, ENGINE_FLAG_PROPERTIES_REGISTERED)) {
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
                                                    "InputMode");
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self),
@@ -807,7 +901,6 @@ void ibus_chewing_engine_start(IBusChewingEngine * self)
     ibus_chewing_engine_use_setting(self);
     ibus_chewing_engine_restore_mode(self);
     ibus_chewing_engine_refresh_property_list(self);
-
 }
 
 /**
@@ -815,10 +908,10 @@ void ibus_chewing_engine_start(IBusChewingEngine * self)
  * @self: IBusChewingEngine instance.
  *
  * Reset the outgoing and pre_edit buffer and cursor
- * chewing_reset will NOT called here, as it will chnage the KBType and input mode.
+ * chewing_reset will NOT called here, as it will chnage the KBType and input
+ * mode.
  */
-void ibus_chewing_engine_reset(IBusChewingEngine * self)
-{
+void ibus_chewing_engine_reset(IBusChewingEngine *self) {
     IBUS_CHEWING_LOG(MSG, "* reset");
 
     /* Always clean buffer */
@@ -828,31 +921,25 @@ void ibus_chewing_engine_reset(IBusChewingEngine * self)
 
     ibus_engine_hide_auxiliary_text(engine);
     ibus_engine_hide_lookup_table(engine);
-    ibus_engine_update_preedit_text(engine,
-                                    IBUS_CHEWING_ENGINE_GET_CLASS(self)->emptyText, 0, FALSE);
+    ibus_engine_update_preedit_text(
+        engine, IBUS_CHEWING_ENGINE_GET_CLASS(self)->emptyText, 0, FALSE);
 
 #endif
 }
 
-void ibus_chewing_engine_enable(IBusChewingEngine * self)
-{
-    IBUS_CHEWING_LOG(MSG, "* enable(): statusFlags=%x",
-                     selfp->statusFlags);
+void ibus_chewing_engine_enable(IBusChewingEngine *self) {
+    IBUS_CHEWING_LOG(MSG, "* enable(): statusFlags=%x", selfp->statusFlags);
     ibus_chewing_engine_start(self);
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_ENABLED);
 }
 
-void ibus_chewing_engine_disable(IBusChewingEngine * self)
-{
-    IBUS_CHEWING_LOG(MSG, "* disable(): statusFlags=%x",
-                     selfp->statusFlags);
+void ibus_chewing_engine_disable(IBusChewingEngine *self) {
+    IBUS_CHEWING_LOG(MSG, "* disable(): statusFlags=%x", selfp->statusFlags);
     ibus_chewing_engine_clear_status_flag(self, ENGINE_FLAG_ENABLED);
 }
 
-void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
-{
-    IBUS_CHEWING_LOG(MSG, "* focus_in(): statusFlags=%x",
-                     selfp->statusFlags);
+void ibus_chewing_engine_focus_in(IBusChewingEngine *self) {
+    IBUS_CHEWING_LOG(MSG, "* focus_in(): statusFlags=%x", selfp->statusFlags);
     ibus_chewing_engine_start(self);
     /* Shouldn't have anything to commit when Focus-in */
     ibus_chewing_pre_edit_clear(self->icPreEdit);
@@ -865,17 +952,14 @@ void ibus_chewing_engine_focus_in(IBusChewingEngine * self)
                      selfp->statusFlags);
 }
 
-void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
-{
-    IBUS_CHEWING_LOG(MSG, "* focus_out(): statusFlags=%x",
-                     selfp->statusFlags);
-    ibus_chewing_engine_clear_status_flag(self,
-                                          ENGINE_FLAG_FOCUS_IN |
-                                          ENGINE_FLAG_PROPERTIES_REGISTERED);
+void ibus_chewing_engine_focus_out(IBusChewingEngine *self) {
+    IBUS_CHEWING_LOG(MSG, "* focus_out(): statusFlags=%x", selfp->statusFlags);
+    ibus_chewing_engine_clear_status_flag(
+        self, ENGINE_FLAG_FOCUS_IN | ENGINE_FLAG_PROPERTIES_REGISTERED);
     ibus_chewing_engine_hide_property_list(self);
 
-    if (ibus_chewing_pre_edit_get_property_boolean
-        (self->icPreEdit, "clean-buffer-focus-out")) {
+    if (ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit,
+                                                   "clean-buffer-focus-out")) {
         /* Clean the buffer when focus out */
         ibus_chewing_pre_edit_clear(self->icPreEdit);
         refresh_pre_edit_text(self);
@@ -885,14 +969,11 @@ void ibus_chewing_engine_focus_out(IBusChewingEngine * self)
     IBUS_CHEWING_LOG(DEBUG, "focus_out(): return");
 }
 
-
-
 #if IBUS_CHECK_VERSION(1, 5, 4)
-void ibus_chewing_engine_set_content_type(IBusEngine * engine,
-                                          guint purpose, guint hints)
-{
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)",
-                     purpose, hints);
+void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose,
+                                          guint hints) {
+    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_set_content_type(%d, %d)", purpose,
+                     hints);
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
@@ -910,8 +991,7 @@ void ibus_chewing_engine_set_content_type(IBusEngine * engine,
  *
  */
 
-void parent_commit_text(IBusEngine * iEngine)
-{
+void parent_commit_text(IBusEngine *iEngine) {
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(iEngine);
 
     IBUS_CHEWING_LOG(MSG, "* parent_commit_text(-): outgoingText=%s",
@@ -923,37 +1003,30 @@ void parent_commit_text(IBusEngine * iEngine)
 #endif
 }
 
-void parent_update_pre_edit_text(IBusEngine * iEngine,
-                                 IBusText * iText, guint cursor_pos,
-                                 gboolean visible)
-{
+void parent_update_pre_edit_text(IBusEngine *iEngine, IBusText *iText,
+                                 guint cursor_pos, gboolean visible) {
 #ifdef UNIT_TEST
-    printf("* parent_update_pre_edit_text(-, %s, %u, %x)\n",
-           iText->text, cursor_pos, visible);
+    printf("* parent_update_pre_edit_text(-, %s, %u, %x)\n", iText->text,
+           cursor_pos, visible);
 #else
     ibus_engine_update_preedit_text(iEngine, iText, cursor_pos, visible);
 #endif
 }
 
-void parent_update_pre_edit_text_with_mode(IBusEngine * iEngine,
-                                           IBusText * iText,
-                                           guint cursor_pos,
-                                           gboolean visible,
-                                           IBusPreeditFocusMode mode)
-{
+void parent_update_pre_edit_text_with_mode(IBusEngine *iEngine, IBusText *iText,
+                                           guint cursor_pos, gboolean visible,
+                                           IBusPreeditFocusMode mode) {
 #ifdef UNIT_TEST
-    printf
-        ("* parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n",
-         iText->text, cursor_pos, visible, mode);
+    printf("* parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n",
+           iText->text, cursor_pos, visible, mode);
 #else
-    ibus_engine_update_preedit_text_with_mode
-        (iEngine, iText, cursor_pos, visible, mode);
+    ibus_engine_update_preedit_text_with_mode(iEngine, iText, cursor_pos,
+                                              visible, mode);
 #endif
 }
 
-void parent_update_auxiliary_text(IBusEngine * iEngine,
-                                  IBusText * iText, gboolean visible)
-{
+void parent_update_auxiliary_text(IBusEngine *iEngine, IBusText *iText,
+                                  gboolean visible) {
 #ifdef UNIT_TEST
     printf("* parent_update_auxiliary_text(-, %s, %x)\n",
            (iText) ? iText->text : "NULL", visible);
@@ -967,50 +1040,42 @@ void parent_update_auxiliary_text(IBusEngine * iEngine,
 #endif
 }
 
-IBusText *decorate_pre_edit(IBusChewingPreEdit * icPreEdit,
-                            IBusCapabilite capabilite)
-{
+IBusText *decorate_pre_edit(IBusChewingPreEdit *icPreEdit,
+                            IBusCapabilite capabilite) {
     gchar *preEdit = ibus_chewing_pre_edit_get_pre_edit(icPreEdit);
     IBusText *iText = ibus_text_new_from_string(preEdit);
     gint chiSymbolCursor = chewing_cursor_Current(icPreEdit->context);
-    gint charLen = (gint) g_utf8_strlen(preEdit, -1);
+    gint charLen = (gint)g_utf8_strlen(preEdit, -1);
 
-    IBUS_CHEWING_LOG(DEBUG, "decorate_pre_edit() cursor=%d preEdit=%s charLen=%d",
+    IBUS_CHEWING_LOG(DEBUG,
+                     "decorate_pre_edit() cursor=%d preEdit=%s charLen=%d",
                      chiSymbolCursor, preEdit, charLen);
 
     /* Use single underline to mark whole pre-edit buffer */
-    ibus_text_append_attribute(iText,
-                               IBUS_ATTR_TYPE_UNDERLINE,
-                               IBUS_ATTR_UNDERLINE_SINGLE,
-                               0, charLen);
+    ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_UNDERLINE,
+                               IBUS_ATTR_UNDERLINE_SINGLE, 0, charLen);
 
     /* Use background color to show current cursor */
     if (chiSymbolCursor < charLen) {
-        ibus_text_append_attribute(iText,
-                                   IBUS_ATTR_TYPE_BACKGROUND,
-                                   0x00c8c8f0,
+        ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_BACKGROUND, 0x00c8c8f0,
                                    chiSymbolCursor, chiSymbolCursor + 1);
-        ibus_text_append_attribute(iText,
-                                   IBUS_ATTR_TYPE_FOREGROUND,
-                                   0x00000000,
+        ibus_text_append_attribute(iText, IBUS_ATTR_TYPE_FOREGROUND, 0x00000000,
                                    chiSymbolCursor, chiSymbolCursor + 1);
     }
 
     return iText;
 }
 
-void refresh_pre_edit_text(IBusChewingEngine * self)
-{
-    IBusText *iText =
-        decorate_pre_edit(self->icPreEdit, selfp->capabilite);
+void refresh_pre_edit_text(IBusChewingEngine *self) {
+    IBusText *iText = decorate_pre_edit(self->icPreEdit, selfp->capabilite);
+
     if (self->preEditText) {
         g_object_unref(self->preEditText);
     }
     self->preEditText = g_object_ref_sink(iText);
 }
 
-void update_pre_edit_text(IBusChewingEngine * self)
-{
+void update_pre_edit_text(IBusChewingEngine *self) {
     refresh_pre_edit_text(self);
     gboolean visible = TRUE;
     gint bpmfLen = self->icPreEdit->bpmfLen;
@@ -1024,13 +1089,12 @@ void update_pre_edit_text(IBusChewingEngine * self)
         mode = IBUS_ENGINE_PREEDIT_COMMIT;
     }
 
-    parent_update_pre_edit_text_with_mode(IBUS_ENGINE(self),
-                                          self->preEditText,
-                                          cursor_current + bpmfLen, visible, mode);
+    parent_update_pre_edit_text_with_mode(IBUS_ENGINE(self), self->preEditText,
+                                          cursor_current + bpmfLen, visible,
+                                          mode);
 }
 
-void refresh_aux_text(IBusChewingEngine * self)
-{
+void refresh_aux_text(IBusChewingEngine *self) {
     IBUS_CHEWING_LOG(INFO, "refresh_aux_text()");
 
     if (self->auxText != NULL) {
@@ -1041,9 +1105,8 @@ void refresh_aux_text(IBusChewingEngine * self)
      * Use auxText to show messages from libchewing, such as "已有：".
      */
 
-    gboolean showPageNumber =
-        ibus_chewing_pre_edit_get_property_boolean(self->icPreEdit,
-                                                   "show-page-number");
+    gboolean showPageNumber = ibus_chewing_pre_edit_get_property_boolean(
+        self->icPreEdit, "show-page-number");
 
     if (chewing_aux_Length(self->icPreEdit->context) > 0) {
         IBUS_CHEWING_LOG(INFO, "update_aux_text() chewing_aux_Length=%x",
@@ -1053,25 +1116,26 @@ void refresh_aux_text(IBusChewingEngine * self)
         IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
         self->auxText = g_object_ref_sink(ibus_text_new_from_string(auxStr));
         g_free(auxStr);
-    } else if (showPageNumber && (chewing_cand_TotalPage(self->icPreEdit->context) > 0)) {
+    } else if (showPageNumber &&
+               (chewing_cand_TotalPage(self->icPreEdit->context) > 0)) {
         int TotalPage = chewing_cand_TotalPage(self->icPreEdit->context);
-        int currentPage = chewing_cand_CurrentPage(self->icPreEdit->context) + 1;
-        self->auxText = g_object_ref_sink(ibus_text_new_from_printf("(%i/%i)", currentPage, TotalPage));
+        int currentPage =
+            chewing_cand_CurrentPage(self->icPreEdit->context) + 1;
+        self->auxText = g_object_ref_sink(
+            ibus_text_new_from_printf("(%i/%i)", currentPage, TotalPage));
     } else {
         /* clear out auxText, otherwise it will be displayed continually. */
         self->auxText = g_object_ref_sink(ibus_text_new_from_static_string(""));
     }
 }
 
-void update_aux_text(IBusChewingEngine * self)
-{
+void update_aux_text(IBusChewingEngine *self) {
     IBUS_CHEWING_LOG(DEBUG, "update_aux_text()");
     refresh_aux_text(self);
     parent_update_auxiliary_text(IBUS_ENGINE(self), self->auxText, TRUE);
 }
 
-void update_lookup_table(IBusChewingEngine * self)
-{
+void update_lookup_table(IBusChewingEngine *self) {
     IBUS_CHEWING_LOG(DEBUG, "update_lookup_table() CurrentPage=%d",
                      chewing_cand_CurrentPage(self->icPreEdit->context));
 
@@ -1093,8 +1157,7 @@ void update_lookup_table(IBusChewingEngine * self)
     }
 }
 
-void refresh_outgoing_text(IBusChewingEngine * self)
-{
+void refresh_outgoing_text(IBusChewingEngine *self) {
     gchar *outgoingStr = ibus_chewing_pre_edit_get_outgoing(self->icPreEdit);
 
     IBUS_CHEWING_LOG(INFO, "refresh_outgoing_text() outgoingStr=|%s|",
@@ -1109,28 +1172,26 @@ void refresh_outgoing_text(IBusChewingEngine * self)
                      self->outgoingText->text);
 }
 
-void commit_text(IBusChewingEngine * self)
-{
+void commit_text(IBusChewingEngine *self) {
     refresh_outgoing_text(self);
-    if (!ibus_text_is_empty(self->outgoingText)
-        || !ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_FOCUS_IN)) {
+    if (!ibus_text_is_empty(self->outgoingText) ||
+        !ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_FOCUS_IN)) {
         parent_commit_text(IBUS_ENGINE(self));
     }
 
     ibus_chewing_pre_edit_clear_outgoing(self->icPreEdit);
 }
 
+#include "IBusChewingProperties.h"
 #include "ibus-chewing-engine-private.h"
 #include "ibus-chewing-engine.h"
-#include "IBusChewingProperties.h"
 
-gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
-                                               KSym keySym, guint keycode,
-                                               KeyModifiers unmaskedMod)
-{
+gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, KSym keySym,
+                                               guint keycode,
+                                               KeyModifiers unmaskedMod) {
     IBUS_CHEWING_LOG(MSG, "******** process_key_event(-,%x(%s),%x,%x) %s",
-                     keySym, key_sym_get_name(keySym), keycode,
-                     unmaskedMod, modifiers_to_string(unmaskedMod));
+                     keySym, key_sym_get_name(keySym), keycode, unmaskedMod,
+                     modifiers_to_string(unmaskedMod));
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
@@ -1140,18 +1201,16 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
     if (is_password(self))
         return FALSE;
 
-    KSym kSym =
-        ibus_chewing_pre_edit_key_code_to_key_sym(self->icPreEdit, keySym,
-                                                  keycode,
-                                                  unmaskedMod);
+    KSym kSym = ibus_chewing_pre_edit_key_code_to_key_sym(
+        self->icPreEdit, keySym, keycode, unmaskedMod);
 
-    gboolean result = ibus_chewing_pre_edit_process_key(self->icPreEdit, kSym,
-                                                        unmaskedMod);
+    gboolean result =
+        ibus_chewing_pre_edit_process_key(self->icPreEdit, kSym, unmaskedMod);
 
     IBUS_CHEWING_LOG(MSG, "process_key_event() result=%d", result);
     ibus_chewing_engine_update(self);
 
-    if (kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R || 
+    if (kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R ||
         kSym == IBUS_KEY_Caps_Lock) {
         /* Refresh property list (language bar) only when users toggle
          * Chi-Eng Mode or Shape Mode with Shift or Caps Lock, otherwise
@@ -1166,12 +1225,9 @@ gboolean ibus_chewing_engine_process_key_event(IBusEngine * engine,
 /*===================================================
  * Mouse events
  */
-void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
-                                           guint index, guint button,
-                                           guint state)
-{
-    IBUS_CHEWING_LOG(INFO,
-                     "*** candidate_clicked(-, %x, %x, %x) ... proceed.",
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
+                                           guint button, guint state) {
+    IBUS_CHEWING_LOG(INFO, "*** candidate_clicked(-, %x, %x, %x) ... proceed.",
                      index, button, state);
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
@@ -1183,7 +1239,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
     }
     if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_TABLE_SHOW)) {
         gint *selKeys = chewing_get_selKey(self->icPreEdit->context);
-        KSym k = (KSym) selKeys[index];
+        KSym k = (KSym)selKeys[index];
 
         ibus_chewing_pre_edit_process_key(self->icPreEdit, k, 0);
         g_free(selKeys);
@@ -1194,10 +1250,9 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine * engine,
     }
 }
 
-void ibus_chewing_engine_property_activate(IBusEngine * engine,
-                                           const gchar * prop_name,
-                                           guint prop_state)
-{
+void ibus_chewing_engine_property_activate(IBusEngine *engine,
+                                           const gchar *prop_name,
+                                           guint prop_state) {
     IBUS_CHEWING_LOG(INFO, "property_activate(-, %s, %u)", prop_name,
                      prop_state);
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
@@ -1205,8 +1260,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
     if (STRING_EQUALS(prop_name, "InputMode")) {
         /* Toggle Chinese <-> English */
         ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
-        IBUS_CHEWING_LOG(INFO,
-                         "property_activate chinese=%d",
+        IBUS_CHEWING_LOG(INFO, "property_activate chinese=%d",
                          ibus_chewing_engine_is_chinese_mode(self));
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
@@ -1218,9 +1272,7 @@ void ibus_chewing_engine_property_activate(IBusEngine * engine,
         /* open preferences window */
         system(QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing");
     } else {
-        IBUS_CHEWING_LOG(DEBUG,
-                         "property_activate(-, %s, %u) not recognized",
+        IBUS_CHEWING_LOG(DEBUG, "property_activate(-, %s, %u) not recognized",
                          prop_name, prop_state);
     }
-
 }

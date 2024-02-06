@@ -27,7 +27,6 @@ struct _IbusSetupChewingApplication {
 
 G_DEFINE_TYPE(IbusSetupChewingApplication, ibus_setup_chewing_application,
               ADW_TYPE_APPLICATION)
-
 IbusSetupChewingApplication *
 ibus_setup_chewing_application_new(const char *application_id,
                                    GApplicationFlags flags) {

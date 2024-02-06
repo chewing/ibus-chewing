@@ -1,9 +1,8 @@
-#include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
+#include "MakerDialogUtil.h"
 
-MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
-                              const gchar * basePath, gpointer auxData)
-{
+MkdgBackend *mkdg_backend_new(const gchar *id, gpointer config,
+                              const gchar *basePath, gpointer auxData) {
     g_assert(config);
     g_assert(!STRING_IS_EMPTY(id));
     MkdgBackend *result = g_new0(MkdgBackend, 1);
@@ -16,24 +15,19 @@ MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
     return result;
 }
 
-gchar *mkdg_backend_get_key(MkdgBackend * backend,
-                            const gchar * section, const gchar * key,
-                            gpointer userData)
-{
+gchar *mkdg_backend_get_key(MkdgBackend *backend, const gchar *section,
+                            const gchar *key, gpointer userData) {
     return backend->getKeyFunc(backend, section, key, userData);
 }
 
-
-GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
-                          const gchar * section, const gchar * key,
-                          gpointer userData)
-{
+GValue *mkdg_backend_read(MkdgBackend *backend, GValue *value,
+                          const gchar *section, const gchar *key,
+                          gpointer userData) {
     return backend->readFunc(backend, value, section, key, userData);
 }
 
-gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
-                            const gchar * section, const gchar * key,
-                            gpointer userData)
-{
+gboolean mkdg_backend_write(MkdgBackend *backend, GValue *value,
+                            const gchar *section, const gchar *key,
+                            gpointer userData) {
     return backend->writeFunc(backend, value, section, key, userData);
 }
