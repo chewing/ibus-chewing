@@ -107,8 +107,6 @@ typedef IBusChewingEngineClass SelfClass;
 G_DEFINE_TYPE_WITH_CODE(IBusChewingEngine, ibus_chewing_engine, IBUS_TYPE_ENGINE, G_ADD_PRIVATE(IBusChewingEngine));
 
 /* here are local prototypes */
-// static void ibus_chewing_engine_init (IBusChewingEngine * self) G_GNUC_UNUSED;
-// static void ibus_chewing_engine_class_init (IBusChewingEngineClass * klass) G_GNUC_UNUSED;
 static void ibus_chewing_engine_constructor (IBusChewingEngine * self) G_GNUC_UNUSED;
 static IBusProperty * ibus_chewing_engine_get_ibus_property_by_name (IBusChewingEngine * self, const gchar * prop_name) G_GNUC_UNUSED;
 static void ___b_ibus_chewing_engine_reset (IBusEngine * engine) G_GNUC_UNUSED;
@@ -200,7 +198,6 @@ static void
 ibus_chewing_engine_init (IBusChewingEngine * self G_GNUC_UNUSED)
 {
 #define __GOB_FUNCTION__ "IBus:Chewing:Engine::init"
-	// ibus_chewing_engine_get_instance_private (self) = G_TYPE_INSTANCE_GET_PRIVATE(self,IBUS_TYPE_CHEWING_ENGINE,IBusChewingEnginePrivate);
 	self->icPreEdit = NULL;
 	self->sDialog = NULL;
 	self->preEditText = NULL;
@@ -305,7 +302,6 @@ ibus_chewing_engine_class_init (IBusChewingEngineClass * klass G_GNUC_UNUSED)
 	GObjectClass *g_object_class G_GNUC_UNUSED = (GObjectClass*) klass;
 	IBusEngineClass *ibus_engine_class = (IBusEngineClass *)klass;
 
-	// g_type_class_add_private(klass,sizeof(IBusChewingEnginePrivate));
 	klass->InputMode_label_chi = 
         g_object_ref_sink(ibus_text_new_from_static_string(_("Chinese Mode")))
     ;
