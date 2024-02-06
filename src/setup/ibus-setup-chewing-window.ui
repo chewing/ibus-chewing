@@ -105,10 +105,10 @@
               <object class="AdwSpinRow" id="max_chi_symbol_len">
                 <property name="adjustment">
                   <object class="GtkAdjustment">
-                    <property name="lower">5.0</property>
+                    <property name="lower">11.0</property>
                     <property name="step-increment">1.0</property>
-                    <property name="upper">20.0</property>
-                    <property name="value">10.0</property>
+                    <property name="upper">33.0</property>
+                    <property name="value">20.0</property>
                   </object>
                 </property>
                 <property name="title" translatable="yes">Maximum Chinese Characters</property>
@@ -128,6 +128,7 @@
                     </items>
                   </object>
                 </property>
+                <property name="selected">1</property>
               </object>
             </child>
             <child>
@@ -140,6 +141,7 @@
                     </items>
                   </object>
                 </property>
+                <property name="selected">0</property>
                 <property name="title" translatable="yes">Sync Caps Lock and IM</property>
               </object>
             </child>
@@ -168,9 +170,9 @@
               <object class="AdwSpinRow" id="cand_per_page">
                 <property name="adjustment">
                   <object class="GtkAdjustment">
-                    <property name="lower">1.0</property>
+                    <property name="lower">4.0</property>
                     <property name="step-increment">1.0</property>
-                    <property name="upper">20.0</property>
+                    <property name="upper">10.0</property>
                     <property name="value">10.0</property>
                   </object>
                 </property>
@@ -179,7 +181,7 @@
             </child>
             <child>
               <object class="AdwSwitchRow" id="show_page_number">
-                <property name="active">True</property>
+                <property name="active">False</property>
                 <property name="title" translatable="yes">Show Page Number</property>
               </object>
             </child>

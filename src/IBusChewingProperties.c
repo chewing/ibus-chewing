@@ -60,7 +60,7 @@ MkdgPropertySpec propSpecs[] = {
      NULL},
     /*== The callback will be handled in IBusChewingEngine.gob ==*/
     {G_TYPE_BOOLEAN, "show-systray", PAGE_KEYBOARD, N_("Show systray icons"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1, NULL, 0,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1, NULL, 0,
      N_("On: Show Chinese/English and Full/Half shape status as a systray "
         "icon\n"
         "Off: Do not show the status icon"),
@@ -76,7 +76,7 @@ MkdgPropertySpec propSpecs[] = {
      N_("Use Ctrl + Numbers (2-9) to add new phrase before the cursor"), NULL},
     {G_TYPE_BOOLEAN, "clean-buffer-focus-out", PAGE_EDITING,
      N_("Clean pre-edit buffer when focus out"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL, 0, 1,
      cleanBufferFocusOut_apply_callback, 0,
      N_("On: Clean pre-edit buffer when focus out to prevent program crash\n"
         "Off: Keep what you already type for convenience"),
@@ -97,7 +97,7 @@ MkdgPropertySpec propSpecs[] = {
      NULL},
     {G_TYPE_STRING, "chi-eng-mode-toggle", PAGE_EDITING,
      N_("Chinese/Alphanumeric Mode Toggle Key"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "caps_lock", chiEngToggle, NULL, 0, 0,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "shift", chiEngToggle, NULL, 0, 0,
      chiEngToggle_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION, NULL,
      NULL},
@@ -116,7 +116,7 @@ MkdgPropertySpec propSpecs[] = {
     /* Sync between CapsLock and IM */
     {G_TYPE_STRING, "sync-caps-lock", PAGE_EDITING,
      N_("Sync between CapsLock and IM"), IBUS_CHEWING_PROPERTIES_SUBSECTION,
-     "keyboard", syncCapsLock_strs, "Sync", 0, 1, syncCapsLock_apply_callback,
+     "disable", syncCapsLock_strs, "Sync", 0, 1, syncCapsLock_apply_callback,
      MKDG_PROPERTY_FLAG_NO_NEW | MKDG_PROPERTY_FLAG_HAS_TRANSLATION,
      N_("Occasionally, the CapsLock status does not match the IM, this option "
         "determines how these status be synchronized. Valid values:\n"
@@ -131,7 +131,7 @@ MkdgPropertySpec propSpecs[] = {
         "options are disabled or ignored."),
      NULL},
     {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "5", NULL, NULL, 4, 10,
+     IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 4, 10,
      candPerPage_apply_callback, 0, N_("Number of candidate per page."), NULL},
     {G_TYPE_BOOLEAN, "show-page-number", PAGE_SELECTING, N_("Show page number"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
@@ -144,11 +144,11 @@ MkdgPropertySpec propSpecs[] = {
         "cursor to the front."),
      NULL},
     {G_TYPE_BOOLEAN, "space-as-selection", PAGE_SELECTING,
-     N_("Space to select"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL,
+     N_("Space to select"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL, NULL,
      0, 1, spaceAsSelection_apply_callback, 0,
      "Press Space to select the candidate.", NULL},
     {G_TYPE_BOOLEAN, "vertical-lookup-table", PAGE_SELECTING,
-     N_("Vertical Lookup Table"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL,
+     N_("Vertical Lookup Table"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "1", NULL,
      NULL, 0, 1, verticalLookupTable_apply_callback, 0,
      "Use vertical lookup table.", NULL},
     {G_TYPE_INVALID, "", "", "", IBUS_CHEWING_PROPERTIES_SUBSECTION, "", NULL,
