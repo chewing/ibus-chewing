@@ -278,13 +278,6 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
                                           KeyModifiers unmaskedMod) {
     filter_modifiers(IBUS_SHIFT_MASK);
 
-    if (!is_full_shape && !is_chinese) {
-        /* Users treat English Sub-mode as IM Disabled,
-         * So key strokes should be passed to client directly. Github 144.
-         */
-        ignore_when_buffer_is_empty_and_table_not_showing;
-    }
-
     handle_log("key_sym_default");
 
     /* Seem like we need to disable easy symbol temporarily
@@ -421,7 +414,7 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
     }
 
     if (!event_is_released(unmaskedMod)) {
-        return EVENT_RESPONSE_ABSORB;
+        return EVENT_RESPONSE_IGNORE;
     }
 
     /* keyLast != Shift means Shift is just part of combination,
@@ -429,11 +422,11 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
      */
     if (self->keyLast != IBUS_KEY_Shift_L &&
         self->keyLast != IBUS_KEY_Shift_R) {
-        return EVENT_RESPONSE_ABSORB;
+        return EVENT_RESPONSE_IGNORE;
     }
 
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
-    return EVENT_RESPONSE_ABSORB;
+    return EVENT_RESPONSE_IGNORE;
 }
 
 EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
@@ -448,7 +441,7 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
     }
 
     if (!event_is_released(unmaskedMod)) {
-        return EVENT_RESPONSE_ABSORB;
+        return EVENT_RESPONSE_IGNORE;
     }
 
     /* keyLast != Shift means Shift is just part of combination,
@@ -456,11 +449,11 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
      */
     if (self->keyLast != IBUS_KEY_Shift_L &&
         self->keyLast != IBUS_KEY_Shift_R) {
-        return EVENT_RESPONSE_ABSORB;
+        return EVENT_RESPONSE_IGNORE;
     }
 
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
-    return EVENT_RESPONSE_ABSORB;
+    return EVENT_RESPONSE_IGNORE;
 }
 
 EventResponse self_handle_page_up(IBusChewingPreEdit *self, KSym kSym,
@@ -749,6 +742,7 @@ EventResponse self_handle_end(IBusChewingPreEdit *self, KSym kSym,
 EventResponse self_handle_special(IBusChewingPreEdit *self, KSym kSym,
                                   KeyModifiers unmaskedMod) {
     /* KSym >=128 is special key, which IM ignore. */
+    IBUS_CHEWING_LOG(MSG, "ignore special key");
     return EVENT_RESPONSE_IGNORE;
 }
 
@@ -854,6 +848,19 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym) {
                      bpmf_check, cursor_current, total_choice, is_chinese,     \
                      is_full_shape, is_plain_zhuyin)
 
+gboolean is_shift_key(KSym kSym) {
+    return kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R;
+}
+
+gboolean is_shift_toggle(KSym keyLast, KSym kSym, KeyModifiers unmaskedMod) {
+    KeyModifiers maskedMod = modifiers_mask(unmaskedMod);
+
+    if (is_shift_only && is_shift_key(keyLast) && is_shift_key(kSym)) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 /* keyCode should be converted to kSym already */
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
                                            KeyModifiers unmaskedMod) {
@@ -864,6 +871,18 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
 
     /* Find corresponding rule */
     EventResponse response;
+
+    if (!is_full_shape && !is_chinese &&
+        !is_shift_toggle(self->keyLast, kSym, unmaskedMod)) {
+        /* Users treat English Sub-mode as IM Disabled,
+         * So key strokes should be passed to client directly. Github 144.
+         */
+        if (((ibus_chewing_pre_edit_length(self) == 0)) &&
+            !((self->flags & FLAG_TABLE_SHOW) == FLAG_TABLE_SHOW)) {
+            self->keyLast = kSym;
+            return FALSE;
+        };
+    }
 
     response = handle_key(kSym, unmaskedMod);
 
