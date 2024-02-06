@@ -1,0 +1,4 @@
+# .git-blame-ignore-revs
+# https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view
+# Switched to clang-format and LLVM style
+9a4dc58421e8bb5042ca0b6aaef711a126c8248b
