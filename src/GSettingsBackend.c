@@ -16,16 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
-#include <ibus.h>
-#include <glib.h>
-#include "MakerDialogUtil.h"
 #include "GSettingsBackend.h"
+#include "MakerDialogUtil.h"
+#include <glib.h>
+#include <ibus.h>
 
-gchar *mkdg_g_variant_to_string(GVariant * gVar)
-{
+gchar *mkdg_g_variant_to_string(GVariant *gVar) {
     static gchar result[MAKER_DIALOG_VALUE_LENGTH];
 
     result[0] = '\0';
@@ -65,9 +65,8 @@ gchar *mkdg_g_variant_to_string(GVariant * gVar)
 
 #define KEY_BUFFER_SIZE 300
 
-GValue *mkdg_g_settings_read_value(GSettings * settings,
-                                   GValue * value, const gchar * key)
-{
+GValue *mkdg_g_settings_read_value(GSettings *settings, GValue *value,
+                                   const gchar *key) {
     GVariant *confValue = g_settings_get_value(settings, key);
 
     mkdg_log(DEBUG, "mkdg_g_settings_read_value(-,-,%s)", key);
@@ -80,38 +79,30 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
     return value;
 }
 
-
 /*============================================
  * Interface routines
  */
-gchar *mkdg_g_settings_backend_get_key(MkdgBackend * backend,
-                                       const gchar * section,
-                                       const gchar * key, gpointer userData)
-{
-    return (gchar *) key;
+gchar *mkdg_g_settings_backend_get_key(MkdgBackend *backend,
+                                       const gchar *section, const gchar *key,
+                                       gpointer userData) {
+    return (gchar *)key;
 }
 
-GValue *mkdg_g_settings_backend_read_value(MkdgBackend * backend,
-                                           GValue * value,
-                                           const gchar * section,
-                                           const gchar * key, gpointer userData)
-{
-    GSettings *config = (GSettings *) backend->config;
+GValue *mkdg_g_settings_backend_read_value(MkdgBackend *backend, GValue *value,
+                                           const gchar *section,
+                                           const gchar *key,
+                                           gpointer userData) {
+    GSettings *config = (GSettings *)backend->config;
 
     return mkdg_g_settings_read_value(config, value, key);
 }
 
-
-gboolean mkdg_g_settings_backend_write_value(MkdgBackend *
-                                             backend,
-                                             GValue *
-                                             value,
-                                             const gchar *
-                                             section,
-                                             const gchar *
-                                             key, gpointer userData)
-{
-    GSettings *config = (GSettings *) backend->config;
+gboolean mkdg_g_settings_backend_write_value(MkdgBackend *backend,
+                                             GValue *value,
+                                             const gchar *section,
+                                             const gchar *key,
+                                             gpointer userData) {
+    GSettings *config = (GSettings *)backend->config;
     GVariant *confValue = g_variant_ref_sink(mkdg_g_value_to_g_variant(value));
 
     mkdg_log(DEBUG, "mkdg_g_settings_write_value(-,%s,%s) %s",
@@ -122,22 +113,20 @@ gboolean mkdg_g_settings_backend_write_value(MkdgBackend *
     g_settings_sync();
     if (!result) {
         mkdg_log(ERROR,
-                 "mkdg_g_settings_backend_write_value(-,%s,%s,%s,-): Fail g_settings_set_value",
+                 "mkdg_g_settings_backend_write_value(-,%s,%s,%s,-): Fail "
+                 "g_settings_set_value",
                  mkdg_g_value_to_string(value), section, key);
     }
     g_variant_unref(confValue);
     return result;
 }
 
-MkdgBackend *mkdg_g_settings_backend_new(const gchar *
-                                         schemaId,
-                                         const gchar *
-                                         basePath, gpointer auxData)
-{
+MkdgBackend *mkdg_g_settings_backend_new(const gchar *schemaId,
+                                         const gchar *basePath,
+                                         gpointer auxData) {
     GSettings *client = g_settings_new(schemaId);
-    MkdgBackend *result =
-        mkdg_backend_new(GSETTINGS_BACKEND_ID, (gpointer) client, basePath,
-                         auxData);
+    MkdgBackend *result = mkdg_backend_new(GSETTINGS_BACKEND_ID,
+                                           (gpointer)client, basePath, auxData);
 
     result->getKeyFunc = mkdg_g_settings_backend_get_key;
     result->readFunc = mkdg_g_settings_backend_read_value;

@@ -9,15 +9,15 @@
 
 
 function exit_print_error(){
-    if [[ -z $Indent ]];then
-        echo "Please install 'indent' and put it in system PATH," > /dev/stderr
+    if [[ -z $clang_format ]];then
+        echo "Please install 'clang-format' and put it in system PATH," > /dev/stderr
         echo "or specify it in 'git config hooks.indent'" > /dev/stderr
         exit 1
     fi
 }
 
 trap exit_print_error EXIT
-Indent="$(git config hooks.indent)" || Indent=$(which indent 2>/dev/null)
+clang_format="$(git config hooks.indent)" || clang_format=$(command -v clang-format 2>/dev/null)
 
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
     Against=HEAD
@@ -39,16 +39,10 @@ while read File; do
     Ext=${File##*.}
     case $Ext in
         c|h)
-            echo "Indenting " $File > /dev/stderr
-            "$Indent" -kr --no-tabs\
-                --line-length 80\
-                --blank-lines-after-declarations\
-                --preprocessor-indentation 4\
-                "$File"
+            echo "clang-format " $File > /dev/stderr
+            $clang_format -i $File
             ;;
     esac
-    echo "Chopping  " $File > /dev/stderr
-    sed -r -i -e 's/[[:blank:]]+$//' $File
     git add "$File"
 done < <(git diff --cached --name-only $Against)
 

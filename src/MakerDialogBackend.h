@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
@@ -26,44 +27,43 @@
  * @stability: Stable
  * @include: MakerDailogBackend.h
  *
- * A MakerDialog backend provides an interface to configuration service like GConf2 or dconf
+ * A MakerDialog backend provides an interface to configuration service like
+ * GConf2 or dconf
  */
 #ifndef _MAKER_DIALOG_BACKEND_H_
-#    define _MAKER_DIALOG_BACKEND_H_
-#    include <glib.h>
-#    include <glib-object.h>
+#define _MAKER_DIALOG_BACKEND_H_
+#include <glib-object.h>
+#include <glib.h>
 
 typedef struct MkdgBackend_ MkdgBackend;
 
-
 /**
  * MkdgBackendFlag:
- * @MKDG_BACKEND_FLAG_DISCONNECTED: Disconnect from backend, so the backend works without connect to real service.
+ * @MKDG_BACKEND_FLAG_DISCONNECTED: Disconnect from backend, so the backend
+ * works without connect to real service.
  *
  * MakerDialog backend flags.
- * 
+ *
  */
-typedef enum {
-    MKDG_BACKEND_FLAG_DISCONNECTED = 1
-} MkdgBackendFlag;
+typedef enum { MKDG_BACKEND_FLAG_DISCONNECTED = 1 } MkdgBackendFlag;
 
-typedef gchar *(*BackendGetKeyFunc) (MkdgBackend * backend,
-                                     const gchar * section,
-                                     const gchar * key, gpointer userData);
+typedef gchar *(*BackendGetKeyFunc)(MkdgBackend *backend, const gchar *section,
+                                    const gchar *key, gpointer userData);
 
-typedef GValue *(*BackendReadFunc) (MkdgBackend * backend, GValue * value,
-                                    const gchar * section,
-                                    const gchar * key, gpointer userData);
+typedef GValue *(*BackendReadFunc)(MkdgBackend *backend, GValue *value,
+                                   const gchar *section, const gchar *key,
+                                   gpointer userData);
 
-typedef gboolean(*BackendWriteFunc) (MkdgBackend * backend, GValue * value,
-                                     const gchar * section,
-                                     const gchar * key, gpointer userData);
+typedef gboolean (*BackendWriteFunc)(MkdgBackend *backend, GValue *value,
+                                     const gchar *section, const gchar *key,
+                                     gpointer userData);
 
 /**
  * MkdgBackend:
  * @id: A string that identify the backend.
  * @config: A configuration service
- * @basePath: All keys and sub-sections of this project should be put under this path (with trailing '/')
+ * @basePath: All keys and sub-sections of this project should be put under this
+ * path (with trailing '/')
  * @readFunc: Callback function for load
  * @writeFunc: Callback function for save
  * @auxData:  Auxiliary data that might be useful.
@@ -81,19 +81,18 @@ struct MkdgBackend_ {
     gpointer auxData;
 };
 
-MkdgBackend *mkdg_backend_new(const gchar * id, gpointer config,
-                              const gchar * basePath, gpointer auxData);
+MkdgBackend *mkdg_backend_new(const gchar *id, gpointer config,
+                              const gchar *basePath, gpointer auxData);
 
-gchar *mkdg_backend_get_key(MkdgBackend * backend,
-                            const gchar * section, const gchar * key,
-                            gpointer userData);
+gchar *mkdg_backend_get_key(MkdgBackend *backend, const gchar *section,
+                            const gchar *key, gpointer userData);
 
-GValue *mkdg_backend_read(MkdgBackend * backend, GValue * value,
-                          const gchar * section, const gchar * key,
+GValue *mkdg_backend_read(MkdgBackend *backend, GValue *value,
+                          const gchar *section, const gchar *key,
                           gpointer userData);
 
-gboolean mkdg_backend_write(MkdgBackend * backend, GValue * value,
-                            const gchar * section, const gchar * key,
+gboolean mkdg_backend_write(MkdgBackend *backend, GValue *value,
+                            const gchar *section, const gchar *key,
                             gpointer userData);
 
-#endif                          /* _MAKER_DIALOG_BACKEND_H_ */
+#endif /* _MAKER_DIALOG_BACKEND_H_ */

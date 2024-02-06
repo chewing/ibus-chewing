@@ -1,9 +1,9 @@
 #ifndef _IBUS_CHEWING_PROPERTIES_H_
-#    define _IBUS_CHEWING_PROPERTIES_H_
-#    include <glib.h>
-#    include <ibus.h>
-#    include "MakerDialogProperty.h"
-#    include "MakerDialogBackend.h"
+#define _IBUS_CHEWING_PROPERTIES_H_
+#include "MakerDialogBackend.h"
+#include "MakerDialogProperty.h"
+#include <glib.h>
+#include <ibus.h>
 
 typedef struct {
     MkdgProperties *properties;
@@ -11,75 +11,71 @@ typedef struct {
 } IBusChewingProperties;
 
 /* GConf/dconf section under PROJECT_SCHEMA_BASE */
-#    define IBUS_CHEWING_PROPERTIES_SUBSECTION QUOTE_ME(PROJECT_SCHEMA_SECTION)
+#define IBUS_CHEWING_PROPERTIES_SUBSECTION QUOTE_ME(PROJECT_SCHEMA_SECTION)
 
-IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend * backend,
+IBusChewingProperties *ibus_chewing_properties_new(MkdgBackend *backend,
                                                    gpointer parent,
                                                    gpointer auxData);
 
-GValue *ibus_chewing_properties_read_general(IBusChewingProperties * self,
-                                             GValue * value,
-                                             const gchar * section,
-                                             const gchar * key,
+GValue *ibus_chewing_properties_read_general(IBusChewingProperties *self,
+                                             GValue *value,
+                                             const gchar *section,
+                                             const gchar *key,
                                              gpointer userData);
 
-gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
-                                                      * self,
-                                                      const gchar *
-                                                      section,
-                                                      const gchar * key,
-                                                      gpointer userData);
+gboolean ibus_chewing_properties_read_boolean_general(
+    IBusChewingProperties *self, const gchar *section, const gchar *key,
+    gpointer userData);
 
 /*============================================
  * Callback functions
  */
-gboolean KBType_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean KBType_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean selKeys_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean selKeys_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean showSystray_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean showSystray_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean autoShiftCur_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean autoShiftCur_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean addPhraseDirection_apply_callback(PropertyContext * ctx,
+gboolean addPhraseDirection_apply_callback(PropertyContext *ctx,
                                            gpointer userData);
 
-gboolean cleanBufferFocusOut_apply_callback(PropertyContext * ctx,
+gboolean cleanBufferFocusOut_apply_callback(PropertyContext *ctx,
                                             gpointer userData);
 
-gboolean easySymbolInput_apply_callback(PropertyContext * ctx,
+gboolean easySymbolInput_apply_callback(PropertyContext *ctx,
                                         gpointer userData);
 
-gboolean escCleanAllBuf_apply_callback(PropertyContext * ctx,
-                                       gpointer userData);
+gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean maxChiSymbolLen_apply_callback(PropertyContext * ctx,
+gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx,
                                         gpointer userData);
 
-gboolean forceLowercaseEnglish_apply_callback(PropertyContext * ctx,
+gboolean forceLowercaseEnglish_apply_callback(PropertyContext *ctx,
                                               gpointer userData);
 
-gboolean syncCapsLock_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean syncCapsLock_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean candPerPage_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean candPerPage_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean phraseChoiceRearward_apply_callback(PropertyContext * ctx,
+gboolean phraseChoiceRearward_apply_callback(PropertyContext *ctx,
                                              gpointer userData);
 
-gboolean showPageNumber_apply_callback(PropertyContext * ctx,
-                                             gpointer userData);
+gboolean showPageNumber_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean spaceAsSelection_apply_callback(PropertyContext * ctx,
+gboolean spaceAsSelection_apply_callback(PropertyContext *ctx,
                                          gpointer userData);
 
-gboolean defaultEnglishLetterCase_apply_callback(PropertyContext * ctx,
+gboolean defaultEnglishLetterCase_apply_callback(PropertyContext *ctx,
                                                  gpointer userData);
 
-gboolean plainZhuyin_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean plainZhuyin_apply_callback(PropertyContext *ctx, gpointer userData);
 
-gboolean verticalLookupTable_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean verticalLookupTable_apply_callback(PropertyContext *ctx,
+                                            gpointer userData);
 
-gboolean chiEngToggle_apply_callback(PropertyContext * ctx, gpointer userData);
+gboolean chiEngToggle_apply_callback(PropertyContext *ctx, gpointer userData);
 
 extern MkdgPropertySpec propSpecs[];
 
@@ -91,4 +87,4 @@ extern const gchar *syncCapsLock_strs[];
 
 extern const gchar *outputCharsets[];
 
-#endif                          /* _IBUS_CHEWING_PROPERTIES_H_ */
+#endif /* _IBUS_CHEWING_PROPERTIES_H_ */

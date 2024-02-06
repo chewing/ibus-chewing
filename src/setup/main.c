@@ -40,6 +40,7 @@ static void application_quit(gpointer user_data) {
 int main(int argc, char *argv[]) {
     GError *error = NULL;
     GOptionContext *context;
+
     g_autoptr(IbusSetupChewingApplication) app = NULL;
     int ret;
 

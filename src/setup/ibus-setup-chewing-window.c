@@ -46,11 +46,9 @@ struct _IbusSetupChewingWindow {
 
 G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
                     ADW_TYPE_PREFERENCES_WINDOW)
-
 #define bind_child(child_id)                                                   \
     gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
                                          child_id)
-
 static void
 ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
@@ -132,6 +130,7 @@ static GVariant *id_set_mapping(const GValue *value,
                                 const GVariantType *expected_type,
                                 gpointer user_data) {
     gchar **ids_list = (gchar **)user_data;
+
     return g_variant_new_string(ids_list[g_value_get_uint(value)]);
 }
 

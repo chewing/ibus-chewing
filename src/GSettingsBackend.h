@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
@@ -30,17 +31,16 @@
  */
 
 #ifndef _MKDG_GSETTINGS_BACKEND_H_
-#    define _MKDG_GSETTINGS_BACKEND_H_
-#    include <stdio.h>
-#    include <glib.h>
-#    include <gio/gio.h>
-#    include "MakerDialogPropertySpec.h"
-#    include "MakerDialogBackend.h"
-#    define GSETTINGS_BACKEND_ID "gsettings"
+#define _MKDG_GSETTINGS_BACKEND_H_
+#include "MakerDialogBackend.h"
+#include "MakerDialogPropertySpec.h"
+#include <gio/gio.h>
+#include <glib.h>
+#include <stdio.h>
+#define GSETTINGS_BACKEND_ID "gsettings"
 
-GValue *mkdg_g_settings_read_value(GSettings * settings,
-                                   GValue * value, const gchar * key);
-
+GValue *mkdg_g_settings_read_value(GSettings *settings, GValue *value,
+                                   const gchar *key);
 
 /**
  * mkdg_g_settings_backend_new:
@@ -52,8 +52,8 @@ GValue *mkdg_g_settings_read_value(GSettings * settings,
  *
  */
 
-MkdgBackend *mkdg_g_settings_backend_new(const gchar * schemaId,
-                                         const gchar * basePath,
+MkdgBackend *mkdg_g_settings_backend_new(const gchar *schemaId,
+                                         const gchar *basePath,
                                          gpointer auxData);
 
-#endif                          /* _MKDG_GSETTINGS_BACKEND_H_ */
+#endif /* _MKDG_GSETTINGS_BACKEND_H_ */

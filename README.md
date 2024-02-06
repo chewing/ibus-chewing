@@ -1,6 +1,7 @@
 # IBus-Chewing
 
-IBus-Chewing is an IBus front-end of Chewing, an intelligent Chinese input method for Zhuyin (BoPoMoFo) users.
+IBus-Chewing is an IBus front-end of Chewing, an intelligent Chinese input
+method for Zhuyin (BoPoMoFo) users.
 
 Following documents provide further instruction:
 
@@ -16,7 +17,9 @@ Bugs and enhancement can be filed to either:
 
 # Development
 
-We use **[K&R](https://en.wikipedia.org/wiki/Indent_style#K.26R_style), 4 spaces** coding style to make our review easier, so if you like to contribute, please set the git pre-commit hook by:
+We use LLVM coding style to make our review easier, so if you like to
+contribute, please install clang-format and set the git pre-commit hook by:
+
 ```sh
 ln -s ../../pre-commit .git/hooks/pre-commit
 ```

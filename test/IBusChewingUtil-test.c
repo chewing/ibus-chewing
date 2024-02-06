@@ -1,11 +1,10 @@
+#include "IBusChewingUtil.h"
+#include "test-util.h"
 #include <ctype.h>
 #include <glib.h>
-#include "test-util.h"
-#include "IBusChewingUtil.h"
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingUtil", f)
 
-void key_sym_get_name_test()
-{
+void key_sym_get_name_test() {
     /* Test  */
     guint kSym;
 
@@ -18,8 +17,7 @@ void key_sym_get_name_test()
     g_assert_cmpstr(key_sym_get_name(-1), ==, "WARN");
 }
 
-gint main(gint argc, gchar ** argv)
-{
+gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
     mkdg_log_set_level(INFO);
     TEST_RUN_THIS(key_sym_get_name_test);

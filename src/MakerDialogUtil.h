@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 /**
@@ -32,10 +33,10 @@
  */
 
 #ifndef _MAKER_DIALOG_UTIL_H_
-#    define _MAKER_DIALOG_UTIL_H_
-#    include <stdio.h>
-#    include <string.h>
-#    include <glib-object.h>
+#define _MAKER_DIALOG_UTIL_H_
+#include <glib-object.h>
+#include <stdio.h>
+#include <string.h>
 
 /**
  * MkdgLogLevel:
@@ -48,67 +49,56 @@
  * Message verbose level, from low to high. Similar to Log level of Gtk.
  *
  */
-typedef enum {
-    ERROR,
-    WARN,
-    MSG,
-    INFO,
-    DEBUG
-} MkdgLogLevel;
+typedef enum { ERROR, WARN, MSG, INFO, DEBUG } MkdgLogLevel;
 
 void mkdg_log_set_level(MkdgLogLevel level);
 
-void mkdg_log_set_file(FILE * file);
+void mkdg_log_set_file(FILE *file);
 
-void mkdg_log(MkdgLogLevel level, const gchar * format, ...);
+void mkdg_log(MkdgLogLevel level, const gchar *format, ...);
 
-void mkdg_log_domain(const gchar * domain, MkdgLogLevel level,
-                     const gchar * format, ...);
+void mkdg_log_domain(const gchar *domain, MkdgLogLevel level,
+                     const gchar *format, ...);
 
-gchar *mkdg_g_value_to_string(GValue * value);
+gchar *mkdg_g_value_to_string(GValue *value);
 
-gboolean mkdg_g_value_reset(GValue * value, GType type, gboolean overwrite);
+gboolean mkdg_g_value_reset(GValue *value, GType type, gboolean overwrite);
 
-gboolean mkdg_g_value_from_string(GValue * value, const gchar * str);
+gboolean mkdg_g_value_from_string(GValue *value, const gchar *str);
 
-gint mkdg_g_ptr_array_find_string(GPtrArray * array, const gchar * str);
+gint mkdg_g_ptr_array_find_string(GPtrArray *array, const gchar *str);
 
-#    define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value)==G_TYPE_BOOLEAN)
+#define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value) == G_TYPE_BOOLEAN)
 
-#    define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value)==G_TYPE_INT)
+#define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value) == G_TYPE_INT)
 
-#    define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value)==G_TYPE_UINT)
+#define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value) == G_TYPE_UINT)
 
-#    define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value)==G_TYPE_STRING)
+#define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value) == G_TYPE_STRING)
 
-void mkdg_g_variant_to_g_value(GVariant * gVar, GValue * value);
+void mkdg_g_variant_to_g_value(GVariant *gVar, GValue *value);
 
-GVariant *mkdg_g_value_to_g_variant(GValue * value);
-
+GVariant *mkdg_g_value_to_g_variant(GValue *value);
 
 /**************************************
  * String Utility Macros and Functions
  */
 
-#    define QUOTE_ME_INNER(s) #s
-#    define QUOTE_ME(s) QUOTE_ME_INNER(s)
+#define QUOTE_ME_INNER(s) #s
+#define QUOTE_ME(s) QUOTE_ME_INNER(s)
 
-#    define STRING_IS_EMPTY(str) \
-    (!str  || \
-     (str[0] == '\0')\
-    )
+#define STRING_IS_EMPTY(str) (!str || (str[0] == '\0'))
 
-#    define STRING_EQUALS(str1, str2) \
-    ((str1==NULL && str2==NULL) ||\
-     ((str1!=NULL && str2!=NULL) && strcmp(str1, str2)==0) \
-    )
+#define STRING_EQUALS(str1, str2)                                              \
+    ((str1 == NULL && str2 == NULL) ||                                         \
+     ((str1 != NULL && str2 != NULL) && strcmp(str1, str2) == 0))
 
 /**************************************
  * Flag Utility Macros
  */
 
-#    define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
-#    define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
-#    define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
-#    define MAKER_DIALOG_VALUE_LENGTH 200
-#endif                          /* _MAKER_DIALOG_UTIL_H_ */
+#define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
+#define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
+#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
+#define MAKER_DIALOG_VALUE_LENGTH 200
+#endif /* _MAKER_DIALOG_UTIL_H_ */

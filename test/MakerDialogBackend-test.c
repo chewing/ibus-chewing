@@ -1,20 +1,19 @@
+#include "GSettingsBackend.h"
+#include "MakerDialogBackend.h"
+#include "MakerDialogUtil.h"
+#include "test-util.h"
+#include <glib.h>
+#include <glib/gprintf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib.h>
-#include <glib/gprintf.h>
-#include "test-util.h"
-#include "MakerDialogUtil.h"
-#include "MakerDialogBackend.h"
-#include "GSettingsBackend.h"
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)
 #define COMMAND_BUFFER_SIZE 200
 #define FILE_BUFFER_SIZE 1024
 
 MkdgBackend *backend = NULL;
 
-gchar *command_run_obtain_output(const gchar * cmd)
-{
+gchar *command_run_obtain_output(const gchar *cmd) {
     mkdg_log(DEBUG, "command_run_obtain_output(%s)\n", cmd);
     static gchar readBuffer[FILE_BUFFER_SIZE];
     FILE *stream = popen(cmd, "r");
@@ -35,8 +34,7 @@ gchar *command_run_obtain_output(const gchar * cmd)
     return line;
 }
 
-GValue *backend_command_get_key_value(const gchar * key, GValue * value)
-{
+GValue *backend_command_get_key_value(const gchar *key, GValue *value) {
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 
@@ -54,8 +52,7 @@ GValue *backend_command_get_key_value(const gchar * key, GValue * value)
     return value;
 }
 
-void backend_command_set_key_value(const gchar * key, GValue * value)
-{
+void backend_command_set_key_value(const gchar *key, GValue *value) {
     gchar *valueStr = mkdg_g_value_to_string(value);
 
     if (mkdg_g_value_is_boolean(value)) {
@@ -64,15 +61,13 @@ void backend_command_set_key_value(const gchar * key, GValue * value)
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 
-    g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE,
-               "gsettings set %s %s %s",
+    g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gsettings set %s %s %s",
                QUOTE_ME(PROJECT_SCHEMA_ID), cKey, valueStr);
 
     command_run_obtain_output(cmdBuf);
 }
 
-gboolean mkdg_g_value_is_equal(GValue * value1, GValue * value2)
-{
+gboolean mkdg_g_value_is_equal(GValue *value1, GValue *value2) {
     switch (G_VALUE_TYPE(value1)) {
     case G_TYPE_BOOLEAN:
         return (g_value_get_boolean(value1) == g_value_get_boolean(value2));
@@ -81,22 +76,20 @@ gboolean mkdg_g_value_is_equal(GValue * value1, GValue * value2)
     case G_TYPE_UINT:
         return (g_value_get_uint(value1) == g_value_get_uint(value2));
     case G_TYPE_STRING:
-        return (STRING_EQUALS
-                (g_value_get_string(value1), g_value_get_string(value2)));
+        return (STRING_EQUALS(g_value_get_string(value1),
+                              g_value_get_string(value2)));
     default:
         break;
     }
     return FALSE;
 }
 
-void backup_key_to_g_value(const gchar * key, GType gType, GValue * value)
-{
+void backup_key_to_g_value(const gchar *key, GType gType, GValue *value) {
     g_value_init(value, gType);
     backend_command_get_key_value(key, value);
 }
 
-void change_new_value_from_orig_value(GValue * newValue, GValue * origValue)
-{
+void change_new_value_from_orig_value(GValue *newValue, GValue *origValue) {
     g_value_init(newValue, G_VALUE_TYPE(origValue));
     gchar *tempStr = NULL;
 
@@ -105,16 +98,14 @@ void change_new_value_from_orig_value(GValue * newValue, GValue * origValue)
         g_value_set_boolean(newValue, !g_value_get_boolean(origValue));
         break;
     case G_TYPE_INT:
-        g_value_set_int(newValue,
-                        (g_value_get_int(origValue) >
-                         0) ? g_value_get_int(origValue) -
-                        1 : g_value_get_int(origValue) + 1);
+        g_value_set_int(newValue, (g_value_get_int(origValue) > 0)
+                                      ? g_value_get_int(origValue) - 1
+                                      : g_value_get_int(origValue) + 1);
         break;
     case G_TYPE_UINT:
-        g_value_set_uint(newValue,
-                         (g_value_get_uint(origValue) >
-                          0) ? g_value_get_uint(origValue) -
-                         1 : g_value_get_uint(origValue) + 1);
+        g_value_set_uint(newValue, (g_value_get_uint(origValue) > 0)
+                                       ? g_value_get_uint(origValue) - 1
+                                       : g_value_get_uint(origValue) + 1);
         break;
     case G_TYPE_STRING:
         tempStr = g_strdup_printf("%sx", g_value_get_string(origValue));
@@ -125,34 +116,31 @@ void change_new_value_from_orig_value(GValue * newValue, GValue * origValue)
     }
 }
 
-void write_key_with_g_value(const gchar * key, GValue * value)
-{
-    mkdg_backend_write(backend, value, QUOTE_ME(PROJECT_SCHEMA_SECTION),
-                       key, NULL);
+void write_key_with_g_value(const gchar *key, GValue *value) {
+    mkdg_backend_write(backend, value, QUOTE_ME(PROJECT_SCHEMA_SECTION), key,
+                       NULL);
 }
 
-void assert_new_value_is_written(const gchar * key, GValue * newValue)
-{
-    GValue storedGValue = { 0 };
+void assert_new_value_is_written(const gchar *key, GValue *newValue) {
+    GValue storedGValue = {0};
     g_value_init(&storedGValue, G_VALUE_TYPE(newValue));
     backend_command_get_key_value(key, &storedGValue);
     g_assert(mkdg_g_value_is_equal(newValue, &storedGValue));
     g_value_unset(&storedGValue);
 }
 
-void mkdg_g_value_from_string_test(const gchar * key, GType gType)
-{
-    GValue origGValue = { 0 };
+void mkdg_g_value_from_string_test(const gchar *key, GType gType) {
+    GValue origGValue = {0};
     backup_key_to_g_value(key, gType, &origGValue);
 
-    GValue newGValue = { 0 };
+    GValue newGValue = {0};
     change_new_value_from_orig_value(&newGValue, &origGValue);
 
     write_key_with_g_value(key, &newGValue);
     assert_new_value_is_written(key, &newGValue);
 
     /*
-     * Restore the origValue 
+     * Restore the origValue
      */
     write_key_with_g_value(key, &origGValue);
 
@@ -160,53 +148,47 @@ void mkdg_g_value_from_string_test(const gchar * key, GType gType)
     g_value_unset(&newGValue);
 }
 
-void mkdg_g_value_from_string_boolean_test()
-{
+void mkdg_g_value_from_string_boolean_test() {
     mkdg_g_value_from_string_test("plain-zhuyin", G_TYPE_BOOLEAN);
 }
 
-void mkdg_g_value_from_string_int_test()
-{
+void mkdg_g_value_from_string_int_test() {
     mkdg_g_value_from_string_test("max-chi-symbol-len", G_TYPE_INT);
 }
 
-void mkdg_g_value_from_string_uint_test()
-{
+void mkdg_g_value_from_string_uint_test() {
     mkdg_g_value_from_string_test("cand-per-page", G_TYPE_UINT);
 }
 
-void mkdg_g_value_from_string_string_test()
-{
+void mkdg_g_value_from_string_string_test() {
     mkdg_g_value_from_string_test("max-chi-symbol-len", G_TYPE_INT);
 }
 
-void int_w_test()
-{
+void int_w_test() {
 #define GCONF_KEY "max-chi-symbol-len"
-    GValue origValue = { 0 };
+    GValue origValue = {0};
     g_value_init(&origValue, G_TYPE_BOOLEAN);
     backend_command_get_key_value(GCONF_KEY, &origValue);
 
-    GValue newValue = { 0 };
+    GValue newValue = {0};
     g_value_init(&newValue, G_TYPE_BOOLEAN);
     g_value_set_int(&newValue, !g_value_get_int(&origValue));
-    mkdg_backend_write(backend, &newValue,
-                       QUOTE_ME(PROJECT_SCHEMA_SECTION), GCONF_KEY, NULL);
+    mkdg_backend_write(backend, &newValue, QUOTE_ME(PROJECT_SCHEMA_SECTION),
+                       GCONF_KEY, NULL);
 
-    GValue storedValue = { 0 };
+    GValue storedValue = {0};
     g_value_init(&storedValue, G_TYPE_BOOLEAN);
     backend_command_get_key_value(GCONF_KEY, &storedValue);
     g_assert(mkdg_g_value_is_equal(&newValue, &storedValue));
 
     /*
-     * Restore the original value 
+     * Restore the original value
      */
     backend_command_set_key_value(GCONF_KEY, &origValue);
 #undef GCONF_KEY
 }
 
-gint main(gint argc, gchar ** argv)
-{
+gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
     backend = mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
                                           QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
