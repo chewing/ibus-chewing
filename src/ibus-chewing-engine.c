@@ -431,14 +431,16 @@ ibus_chewing_engine_restore_mode (IBusChewingEngine * self)
         GdkDisplay *display = gdk_display_get_default();
         if (display != NULL) {
             GdkSeat *seat = gdk_display_get_default_seat(display);
-            GdkDevice *keyboard = gdk_seat_get_keyboard(seat);
-            /* Restore Led Mode only make sense if display is available */
-            if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)) {
-                IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_IM (deprecated)");
-            } else if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)) {
-                IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
-                gboolean caps_lock_on = gdk_device_get_caps_lock_state(keyboard);
-                chewing_set_ChiEngMode(self->icPreEdit->context, caps_lock_on ? 0 : CHINESE_MODE);
+            if (seat != NULL) {
+                GdkDevice *keyboard = gdk_seat_get_keyboard(seat);
+                /* Restore Led Mode only make sense if display is available */
+                if (ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_IM)) {
+                    IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_IM (deprecated)");
+                } else if (keyboard != NULL && ibus_chewing_pre_edit_has_flag(self->icPreEdit, FLAG_SYNC_FROM_KEYBOARD)) {
+                    IBUS_CHEWING_LOG(DEBUG, "restore_mode() FLAG_SYNC_FROM_KEYBOARD");
+                    gboolean caps_lock_on = gdk_device_get_caps_lock_state(keyboard);
+                    chewing_set_ChiEngMode(self->icPreEdit->context, caps_lock_on ? 0 : CHINESE_MODE);
+                }
             }
             self_refresh_property(self, "InputMode");
         }
