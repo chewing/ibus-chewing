@@ -6,11 +6,7 @@
 #include "test-util.h"
 #include "MakerDialogUtil.h"
 #include "MakerDialogBackend.h"
-#ifdef USE_GSETTINGS
-#    include "GSettingsBackend.h"
-#elif defined USE_GCONF2
-#    include "GConf2Backend.h"
-#endif
+#include "GSettingsBackend.h"
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogBackend", f)
 #define COMMAND_BUFFER_SIZE 200
 #define FILE_BUFFER_SIZE 1024
@@ -44,23 +40,16 @@ GValue *backend_command_get_key_value(const gchar * key, GValue * value)
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 
-#ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gsettings get %s %s",
                QUOTE_ME(PROJECT_SCHEMA_ID), cKey);
-#else
-    g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE, "gconftool-2 --get  %s/%s",
-               QUOTE_ME(PROJECT_GCONF2_SCHEMA_DIR), cKey);
-#endif
     gchar *retStr = command_run_obtain_output(cmdBuf);
 
-#ifdef USE_GSETTINGS
     /* gsettings prepend 'uint32 ' before actual value */
     if (G_VALUE_TYPE(value) == G_TYPE_UINT) {
         gint offset = strlen("uint32 ");
 
         retStr += offset;
     }
-#endif
     mkdg_g_value_from_string(value, retStr);
     return value;
 }
@@ -75,38 +64,9 @@ void backend_command_set_key_value(const gchar * key, GValue * value)
     gchar cmdBuf[COMMAND_BUFFER_SIZE];
     gchar *cKey = mkdg_backend_get_key(backend, NULL, key, NULL);
 
-#ifdef USE_GSETTINGS
     g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE,
                "gsettings set %s %s %s",
                QUOTE_ME(PROJECT_SCHEMA_ID), cKey, valueStr);
-#else
-    gchar *typeStr;
-    GType gType = G_VALUE_TYPE(value);
-
-    switch (gType) {
-    case G_TYPE_BOOLEAN:
-        typeStr = "bool";
-        break;
-    case G_TYPE_FLOAT:
-    case G_TYPE_DOUBLE:
-        typeStr = "float";
-        break;
-    case G_TYPE_INT:
-    case G_TYPE_UINT:
-    case G_TYPE_LONG:
-    case G_TYPE_ULONG:
-    case G_TYPE_INT64:
-    case G_TYPE_UINT64:
-        typeStr = "int";
-        break;
-    case G_TYPE_STRING:
-        typeStr = "string";
-        break;
-    }
-    g_snprintf(cmdBuf, COMMAND_BUFFER_SIZE,
-               "gconftool-2 --set %s/%s --type %s '%s'",
-               QUOTE_ME(PROJECT_SCHEMA_DIR), cKey, typeStr, valueStr);
-#endif
 
     command_run_obtain_output(cmdBuf);
 }
@@ -248,15 +208,8 @@ void int_w_test()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-#ifdef USE_GSETTINGS
     backend = mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
                                           QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif defined USE_GCONF2
-    backend = gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
-#else
-    g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
-    return 2;
-#endif                          /* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
 
     TEST_RUN_THIS(mkdg_g_value_from_string_boolean_test);

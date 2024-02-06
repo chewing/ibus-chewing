@@ -26,8 +26,6 @@
 #    include <glib.h>
 #    include <ibus.h>
 #    include <chewing.h>
-#    include <X11/Xlib.h>
-#    include <X11/XKBlib.h>
 
 #    define ZHUYIN_BUFFER_SIZE 12
 
@@ -66,23 +64,12 @@ typedef enum {
 #    endif
 } ChewingKbType;
 
-
-gint get_tone(ChewingKbType kbType, KSym k);
-
-void add_tone(char *str, gint tone);
-
 KSym key_sym_KP_to_normal(KSym k);
 
 const char *key_sym_get_name(KSym k);
 
-gboolean is_caps_led_on(Display * pDisplay);
-
-void set_caps_led(gboolean on, Display * pDisplay);
-
 const gchar *modifier_get_string(guint modifier);
 
 const gchar *modifiers_to_string(guint modifier);
-
-gboolean ibus_chewing_property_get_state(IBusProperty * prop);
 
 #endif                          /* _IBUS_CHEWING_UTIL_H_ */

@@ -11,12 +11,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: fedora:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install build dependencies
-        run: sudo apt install -y libgtk-3-dev libibus-1.0-dev libx11-dev libchewing3-dev ibus gettext xvfb
+        run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston
 
       - name: Build
         run: |
@@ -25,21 +26,29 @@ jobs:
           cmake --build --preset default -t install --verbose
 
       - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
+          GSETTINGS_BACKEND: keyfile
         run: |
-          xvfb-run -a ctest --test-dir out/build/default --output-on-failure --verbose
+          glib-compile-schemas src/setup --targetdir=out/build/default/bin
+          weston --no-config --socket=wl-headless --backend=headless &
+          WAYLAND_DISPLAY=wl-headless cmake --build --preset default -t test --verbose
 
   coverage:
     runs-on: ubuntu-latest
+    container: fedora:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install build dependencies
-        run: sudo apt install -y libgtk-3-dev libibus-1.0-dev libx11-dev libchewing3-dev ibus gettext xvfb
+        run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston
 
       - name: Install llvm
         run: |
-          sudo apt install -y llvm
+          sudo dnf -y install llvm rustup bzip2 git
+          rustup-init -y
+          source "$HOME/.cargo/env"
           rustup component add llvm-tools
 
       - name: Setup grcov
@@ -54,8 +63,14 @@ jobs:
           cmake --build --preset c99-coverage --verbose
 
       - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
+          GSETTINGS_BACKEND: keyfile
         run: |
-          xvfb-run -a ctest --test-dir out/build/c99-coverage --output-on-failure --verbose
+          source "$HOME/.cargo/env"
+          glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
+          weston --no-config --socket=wl-headless --backend=headless &
+          WAYLAND_DISPLAY=wl-headless cmake --build --preset c99-coverage -t test --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov

@@ -1,0 +1,137 @@
+<schemalist>
+    <schema id="org.freedesktop.IBus.Chewing" path="/desktop/ibus/engine/chewing/" gettext-domain="ibus-chewing">
+        <key name="kb-type" type="s">
+            <default l10n="messages">"default"</default>
+            <summary>Keyboard Type</summary>
+            <description>
+                Select Zhuyin keyboard layout
+            </description>
+        </key>
+        <key name="sel-keys" type="s">
+            <default>"1234567890"</default>
+            <summary>Selection keys</summary>
+            <description>
+                Keys used to select candidate. For example "asdfghjkl;", press 'a' to select the 1st candidate, 's' for 2nd, and so on.
+            </description>
+        </key>
+        <key name="show-systray" type="b">
+            <default>true</default>
+            <summary>Show systray icons</summary>
+            <description>
+                On: Show Chinese/English and Full/Half shape status as a systray icon
+                Off: Do not show the status icon
+            </description>
+        </key>
+        <key name="auto-shift-cur" type="b">
+            <default>true</default>
+            <summary>Auto move cursor</summary>
+            <description>
+                Automatically move the cursor to the next character after selection
+            </description>
+        </key>
+        <key name="add-phrase-direction" type="b">
+            <default>true</default>
+            <summary>Add phrase before the cursor</summary>
+            <description>
+                Use Ctrl + Numbers (2-9) to add new phrase before the cursor
+            </description>
+        </key>
+        <key name="clean-buffer-focus-out" type="b">
+            <default>false</default>
+            <summary>Clean pre-edit buffer when focus out</summary>
+            <description>
+                On: Clean pre-edit buffer when focus out to prevent program crash
+                Off: Keep what you already type for convenience
+            </description>
+        </key>
+        <key name="easy-symbol-input" type="b">
+            <default>true</default>
+            <summary>Easy symbol input</summary>
+            <description>
+                Press shift to input Chinese punctuation symbols
+            </description>
+        </key>
+        <key name="esc-clean-all-buf" type="b">
+            <default>false</default>
+            <summary>Esc clean all buffer</summary>
+            <description>
+                Escape key cleans the text in pre-edit-buffer
+            </description>
+        </key>
+        <key name="max-chi-symbol-len" type="i">
+            <default>20</default>
+            <summary>Maximum Chinese characters</summary>
+            <description>
+                Maximum Chinese characters in pre-edit buffer, not including inputing Zhuyin symbols.
+            </description>
+        </key>
+        <key name="chi-eng-mode-toggle" type="s">
+            <default l10n="messages">"caps_lock"</default>
+            <summary>Chinese/Alphanumeric Mode Toggle Key</summary>
+            <description>
+</description>
+        </key>
+        <key name="default-english-case" type="s">
+            <default l10n="messages">"lowercase"</default>
+            <summary>Default English letter case
+(Only effective when Caps Lock is the toggle key)</summary>
+            <description>
+                no control: No default letter case. Not recommend if you use multiple keyboards or synergy
+                lowercase: Default to lowercase, press shift for uppercase.
+                uppercase: Default to uppercase, press shift for lowercase.
+            </description>
+        </key>
+        <key name="sync-caps-lock" type="s">
+            <default l10n="messages" context="Sync">"keyboard"</default>
+            <summary>Sync between CapsLock and IM</summary>
+            <description>
+                Occasionally, the CapsLock status does not match the IM, this option determines how these status be synchronized. Valid values:
+                "disable": Do nothing
+                "keyboard": IM status follows keyboard status
+                "IM": Keyboard status follows IM status
+            </description>
+        </key>
+        <key name="plain-zhuyin" type="b">
+            <default>false</default>
+            <summary>Plain Zhuyin mode</summary>
+            <description>
+                In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored.
+            </description>
+        </key>
+        <key name="cand-per-page" type="u">
+            <default>5</default>
+            <summary>Candidate per page</summary>
+            <description>
+                Number of candidate per page.
+            </description>
+        </key>
+        <key name="show-page-number" type="b">
+            <default>false</default>
+            <summary>Show page number</summary>
+            <description>
+                Display the page number of the candidate list.
+            </description>
+        </key>
+        <key name="phrase-choice-from-last" type="b">
+            <default>true</default>
+            <summary>Choose phrases from backward</summary>
+            <description>
+                Open candidate list from the back of a phrase, without moving the cursor to the front.
+            </description>
+        </key>
+        <key name="space-as-selection" type="b">
+            <default>false</default>
+            <summary>Space to select</summary>
+            <description>
+                Press Space to select the candidate.
+            </description>
+        </key>
+        <key name="vertical-lookup-table" type="b">
+            <default>false</default>
+            <summary>Vertical Lookup Table</summary>
+            <description>
+                Use vertical lookup table.
+            </description>
+        </key>
+    </schema>
+</schemalist>

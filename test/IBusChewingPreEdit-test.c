@@ -3,11 +3,7 @@
 #include "IBusChewingPreEdit.h"
 #include "IBusChewingPreEdit-private.h"
 #include "IBusChewingUtil.h"
-#ifdef USE_GSETTINGS
-#    include "GSettingsBackend.h"
-#elif defined USE_GCONF2
-#    include "GConf2Backend.h"
-#endif
+#include "GSettingsBackend.h"
 #include "MakerDialogUtil.h"
 #include "test-util.h"
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)
@@ -916,19 +912,9 @@ void test_keypad()
 gint main(gint argc, gchar ** argv)
 {
     g_test_init(&argc, &argv, NULL);
-#ifdef USE_GSETTINGS
     MkdgBackend *backend =
         mkdg_g_settings_backend_new(QUOTE_ME(PROJECT_SCHEMA_ID),
                                     QUOTE_ME(PROJECT_SCHEMA_DIR), NULL);
-#elif defined USE_GCONF2
-    MkdgBackend *backend =
-        gconf2_backend_new(QUOTE_ME(PROJECT_SCHEMA_BASE), NULL);
-#else
-    MkdgBackend *backend = NULL;
-
-    g_error("Flag GSETTINGS_SUPPORT or GCONF2_SUPPORT are required!");
-    return 1;
-#endif                          /* USE_GSETTINGS */
     mkdg_log_set_level(DEBUG);
     self = ibus_chewing_pre_edit_new(backend);
     ibus_chewing_pre_edit_use_all_configure(self);

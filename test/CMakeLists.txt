@@ -39,14 +39,10 @@ add_test(NAME IBusChewingPreEdit
 add_executable(ibus-chewing-engine-test ibus-chewing-engine-test.c
     ../src/ibus-chewing-engine.c
     ../src/ibus-chewing-engine.h
-    ../src/IBusChewingEngine-signal.c
-    ../src/IBusChewingEngine-input-events.c
     ../src/IBusChewingLookupTable.c
     ../src/IBusChewingLookupTable.h
     ../src/IBusChewingPreEdit.c
     ../src/IBusChewingPreEdit.h
-    ../src/IBusChewingSystray.c
-    ../src/IBusChewingSystray.h
     ../src/IBusChewingUtil.c
     ../src/IBusChewingUtil.h
 )
@@ -54,4 +50,10 @@ target_link_libraries(ibus-chewing-engine-test gui-core)
 add_test(NAME ibus-chewing-engine
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-engine-test)
 set_tests_properties(ibus-chewing-engine PROPERTIES
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+
+# ==================
+add_test(NAME ibus-setup-chewing
+    COMMAND ${CMAKE_BINARY_DIR}/bin/ibus-setup-chewing -q)
+set_tests_properties(ibus-setup-chewing PROPERTIES
     ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")

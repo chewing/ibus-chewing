@@ -7,10 +7,16 @@
  * PropertyContext Methods
  */
 
+static gboolean property_context_from_string(PropertyContext * ctx, const gchar * str)
+{
+    if (ctx == NULL) {
+        return FALSE;
+    }
+    return mkdg_g_value_from_string(&(ctx->value), str);
+}
+
 void property_context_default(PropertyContext * ctx)
 {
-    if (ctx->spec->defaultValue == NULL)
-        return;
     mkdg_log(DEBUG, "property_context_default(%s)", ctx->spec->key);
     gboolean ret = property_context_from_string(ctx, ctx->spec->defaultValue);
 
@@ -47,34 +53,6 @@ PropertyContext *property_context_new(MkdgPropertySpec * spec,
     }
     mkdg_log(DEBUG, "property_context_new(%s):Done", ctx->spec->key);
     return ctx;
-}
-
-gchar *property_context_to_string(PropertyContext * ctx)
-{
-    if (ctx == NULL) {
-        return NULL;
-    }
-    return mkdg_g_value_to_string(&(ctx->value));
-}
-
-gboolean property_context_from_string(PropertyContext * ctx, const gchar * str)
-{
-    if (ctx == NULL) {
-        return FALSE;
-    }
-    return mkdg_g_value_from_string(&(ctx->value), str);
-}
-
-gboolean property_context_from_gvalue(PropertyContext * ctx, GValue * value)
-{
-    if (ctx == NULL) {
-        return FALSE;
-    }
-    if (!G_IS_VALUE(value)) {
-        return FALSE;
-    }
-    g_value_copy(value, &(ctx->value));
-    return TRUE;
 }
 
 /* read: backend -> Context */
@@ -400,59 +378,6 @@ gboolean mkdg_properties_apply_by_key(MkdgProperties * properties,
 gsize mkdg_properties_size(MkdgProperties * properties)
 {
     return properties->contexts->len;
-}
-
-/* For setup interface */
-gboolean mkdg_properties_load_all(MkdgProperties * properties,
-                                  gpointer userData)
-{
-    gsize i;
-    gboolean result = TRUE;
-
-    for (i = 0; i < mkdg_properties_size(properties); i++) {
-        PropertyContext *ctx = mkdg_properties_index(properties, i);
-        GValue *value = property_context_load(ctx, userData);
-
-        if (value == NULL) {
-            result = FALSE;
-        }
-    }
-    return result;
-}
-
-gboolean mkdg_properties_write_all(MkdgProperties * properties,
-                                   gpointer userData)
-{
-    gsize i;
-    gboolean result = TRUE;
-
-    for (i = 0; i < mkdg_properties_size(properties); i++) {
-        PropertyContext *ctx = mkdg_properties_index(properties, i);
-        gboolean ret = property_context_write(ctx, userData);
-
-        if (!ret) {
-            result = FALSE;
-        }
-    }
-    return result;
-}
-
-/* For actual runtime */
-gboolean mkdg_properties_apply_all(MkdgProperties * properties,
-                                   gpointer userData)
-{
-    gsize i;
-    gboolean result = TRUE;
-
-    for (i = 0; i < mkdg_properties_size(properties); i++) {
-        PropertyContext *ctx = mkdg_properties_index(properties, i);
-        gboolean ret = property_context_apply(ctx, userData);
-
-        if (!ret) {
-            result = FALSE;
-        }
-    }
-    return result;
 }
 
 gboolean mkdg_properties_use_all(MkdgProperties * properties, gpointer userData)

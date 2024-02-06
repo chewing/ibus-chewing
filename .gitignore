@@ -17,7 +17,6 @@
 *.o
 *.old
 *.orig
-*.pot
 *.rej
 *.rpm
 *.so

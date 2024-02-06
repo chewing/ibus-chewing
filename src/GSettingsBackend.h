@@ -56,14 +56,4 @@ MkdgBackend *mkdg_g_settings_backend_new(const gchar * schemaId,
                                          const gchar * basePath,
                                          gpointer auxData);
 
-gboolean mkdg_g_settings_write_schema_from_spec_array(const gchar *
-                                                      schemaId,
-                                                      const gchar *
-                                                      basePath,
-                                                      FILE * file,
-                                                      MkdgPropertySpec
-                                                      specs[],
-                                                      const gchar *
-                                                      gettextDomain);
-
 #endif                          /* _MKDG_GSETTINGS_BACKEND_H_ */

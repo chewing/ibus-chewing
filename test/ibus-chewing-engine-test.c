@@ -33,7 +33,7 @@ void focus_out_then_focus_in_with_aux_text_test()
     ibus_chewing_pre_edit_save_property_boolean(engine->icPreEdit,
                                                 "add-phrase-direction", TRUE);
 
-    ibus_chewing_engine_set_capabilite(engine, IBUS_CAP_AUXILIARY_TEXT);
+    g_signal_emit_by_name(engine, "set_capabilities", IBUS_CAP_AUXILIARY_TEXT);
     ibus_chewing_engine_focus_in(engine);
     ibus_chewing_engine_enable(engine);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);

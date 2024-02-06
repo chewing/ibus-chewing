@@ -26,19 +26,11 @@
 #include <stdio.h>
 #define GETTEXT_PACKAGE "gtk30"
 #include <glib/gi18n.h>
-#include <X11/Xlib.h>
-#include <X11/XKBlib.h>
 #include <ctype.h>
 #include "IBusChewingUtil.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingSystray.h"
-#ifdef USE_GSETTINGS
 #include "GSettingsBackend.h"
-#endif
-#ifdef USE_GCONF2
-#include "GConf2Backend.h"
-#endif
 
 #ifndef __IBUS_CHEWING_ENGINE_PRIVATE_H__
 #define __IBUS_CHEWING_ENGINE_PRIVATE_H__
@@ -51,7 +43,6 @@ extern "C" {
 
 
 
-#include "maker-dialog.h"
 void ibus_chewing_engine_handle_Default(IBusChewingEngine * self,
                                         guint keyval,
                                         gboolean shiftPressed);
@@ -78,7 +69,6 @@ struct _IBusChewingEnginePrivate {
 	EngineFlag statusFlags;
 	IBusCapabilite capabilite;
 	ChewingInputStyle inputStyle;
-	Display * pDisplay;
 };
 void 	ibus_chewing_engine_use_setting	(IBusChewingEngine * self);
 void 	ibus_chewing_engine_restore_mode	(IBusChewingEngine * self);

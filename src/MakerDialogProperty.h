@@ -86,12 +86,6 @@ PropertyContext *property_context_new(MkdgPropertySpec * spec,
  */
 void property_context_default(PropertyContext * ctx);
 
-gchar *property_context_to_string(PropertyContext * ctx);
-
-gboolean property_context_from_string(PropertyContext * ctx, const gchar * str);
-
-gboolean property_context_from_gvalue(PropertyContext * ctx, GValue * value);
-
 GValue *property_context_read(PropertyContext * ctx, gpointer userData);
 
 gboolean property_context_write(PropertyContext * ctx, gpointer userData);

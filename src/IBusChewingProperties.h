@@ -30,11 +30,6 @@ gboolean ibus_chewing_properties_read_boolean_general(IBusChewingProperties
                                                       const gchar * key,
                                                       gpointer userData);
 
-gint ibus_chewing_properties_read_int_general(IBusChewingProperties * self,
-                                              const gchar * section,
-                                              const gchar * key,
-                                              gpointer userData);
-
 /*============================================
  * Callback functions
  */
