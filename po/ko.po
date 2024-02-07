@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-04 22:11+0900\n"
 "PO-Revision-Date: 2024-02-07 06:20+0000\n"
-"Last-Translator: 김인수 <simmon@nplob.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/ko/>\n"
 "Language: ko\n"
@@ -21,7 +22,7 @@ msgstr "ibus-setup-chewing"
 
 #: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
 msgid "No description"
-msgstr ""
+msgstr "설명 없음"
 
 #: src/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
@@ -33,7 +34,7 @@ msgstr "입력기"
 
 #: src/ibus-setup-chewing-window.ui:20
 msgid "Standard"
-msgstr ""
+msgstr "표준"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/ibus-setup-chewing-window.ui:21
