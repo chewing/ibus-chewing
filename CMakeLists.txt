@@ -60,20 +60,29 @@ add_compile_definitions(PRJ_ICON_DIR="${CMAKE_INSTALL_DATADIR}/ibus-chewing/icon
 
 # GSettings/GConf schemas
 set(PROJECT_SCHEMA_ID org.freedesktop.IBus.Chewing)
+set(LIBEXEC_DIR ${CMAKE_INSTALL_FULL_LIBEXECDIR})
+set(PRJ_DATA_DIR ${CMAKE_INSTALL_FULL_DATADIR}/ibus-chewing)
+set(PRJ_VER ${CMAKE_PROJECT_VERSION})
 add_compile_definitions(
+    PROJECT_NAME=${CMAKE_PROJECT_NAME}
     PROJECT_SCHEMA_ID=${PROJECT_SCHEMA_ID}
     # TODO path deprecated
     PROJECT_SCHEMA_BASE=/desktop/ibus/engine
     PROJECT_SCHEMA_SECTION=chewing
     PROJECT_SCHEMA_DIR=/desktop/ibus/engine/chewing
     PROJECT_SCHEMA_PATH=/desktop/ibus/engine/chewing/
+    DATA_DIR=${CMAKE_INSTALL_DATADIR}
+    PRJ_DATA_DIR=${PRJ_DATA_DIR}
+    PRJ_VER=${PRJ_VER}
+    LIBEXEC_DIR=${LIBEXEC_DIR}
+    CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}
 )
 
 # chewing.xml
 set(SYMBOL_XML "<symbol>&#x9177;</symbol>")
 set(CHEWING_HOTKEYS "Super+space")
 set(HOTKEYS_XML "<hotkeys>${CHEWING_HOTKEYS}</hotkeys>")
-set(SETUP_PROGRAM_XML "<setup>${CMAKE_INSTALL_LIBEXECDIR}/ibus-setup-chewing</setup>")
+set(SETUP_PROGRAM_XML "<setup>${CMAKE_INSTALL_FULL_LIBEXECDIR}/ibus-setup-chewing</setup>")
 
 if(IBUS_VERSION LESS 1.3.99)
     set(SYMBOL_XML "<!-- ${SYMBOL_XML} -->")
