@@ -73,7 +73,7 @@ add_compile_definitions(
 set(SYMBOL_XML "<symbol>&#x9177;</symbol>")
 set(CHEWING_HOTKEYS "Super+space")
 set(HOTKEYS_XML "<hotkeys>${CHEWING_HOTKEYS}</hotkeys>")
-set(SETUP_PROGRAM_XML "<setup>${CMAKE_INSTALL_LIBEXECDIR}/ibus-setup-chewing</setup>")
+set(SETUP_PROGRAM_XML "<setup>${CMAKE_INSTALL_FULL_LIBEXECDIR}/ibus-setup-chewing</setup>")
 
 if(IBUS_VERSION LESS 1.3.99)
     set(SYMBOL_XML "<!-- ${SYMBOL_XML} -->")
@@ -81,6 +81,9 @@ if(IBUS_VERSION LESS 1.3.99)
     set(SETUP_PROGRAM_XML "<!-- ${SETUP_PROGRAM_XML} -->")
 endif()
 
+set(LIBEXEC_DIR ${CMAKE_INSTALL_FULL_LIBEXECDIR})
+set(PRJ_DATA_DIR ${CMAKE_INSTALL_FULL_DATADIR}/ibus-chewing)
+set(PRJ_VER ${CMAKE_PROJECT_VERSION})
 configure_file(data/chewing.xml.in data/chewing.xml)
 configure_file(data/ibus-setup-chewing.desktop.in data/ibus-setup-chewing.desktop)
 
