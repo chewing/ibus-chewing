@@ -4,15 +4,16 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-04 22:11+0900\n"
-"PO-Revision-Date: 2014-11-04 03:01-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Italian\n"
+"PO-Revision-Date: 2024-02-07 14:20+0000\n"
+"Last-Translator: Simone <baldelli.simone@gmail.com>\n"
+"Language-Team: Italian <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.3.1\n"
 
 #: data/org.freedesktop.IBus.Chewing.Setup.desktop.in:3
 msgid "ibus-setup-chewing"
@@ -20,11 +21,11 @@ msgstr ""
 
 #: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
 msgid "No description"
-msgstr ""
+msgstr "Nessuna descrizione"
 
 #: src/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
-msgstr ""
+msgstr "Configura il metodo di inserimento"
 
 #: src/ibus-setup-chewing-window.ui:14
 msgid "Input Method"
@@ -36,14 +37,12 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:21
-#, fuzzy
-#| msgid "hsu"
 msgid "Hsu"
-msgstr "hsu"
+msgstr "Hsu"
 
 #: src/ibus-setup-chewing-window.ui:22
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/ibus-setup-chewing-window.ui:23
 msgid "Gin-Yieh"
@@ -59,10 +58,8 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:26
-#, fuzzy
-#| msgid "dvorak"
 msgid "Dvorak"
-msgstr "dvorak"
+msgstr "Dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:27
@@ -101,19 +98,19 @@ msgstr "Tasti di selezione"
 
 #: src/ibus-setup-chewing-window.ui:55
 msgid "Keys used to select candidate"
-msgstr ""
+msgstr "Tasti usati per selezionare il candidato"
 
 #: src/ibus-setup-chewing-window.ui:61
 msgid "Intelligent Phrasing"
-msgstr ""
+msgstr "Fraseggio intelligente"
 
 #: src/ibus-setup-chewing-window.ui:62
 msgid "Enable or disable automatic candidate selection"
-msgstr ""
+msgstr "Abilita o disabilita la selezione automatica del candidato"
 
 #: src/ibus-setup-chewing-window.ui:67
 msgid "Show Systray Icon"
-msgstr ""
+msgstr "Mostra icona Systray"
 
 #: src/ibus-setup-chewing-window.ui:68
 msgid "Whether to show the systray icon"
@@ -121,7 +118,7 @@ msgstr ""
 
 #: src/ibus-setup-chewing-window.ui:69
 msgid "This feature is currently not implemented."
-msgstr ""
+msgstr "Questa funzionalità non è implementata al momento."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:77
@@ -130,7 +127,7 @@ msgstr "Modifica"
 
 #: src/ibus-setup-chewing-window.ui:78
 msgid "Configure the input method behavior"
-msgstr ""
+msgstr "Configura l'ambiente del metodo di input"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:82
@@ -141,11 +138,11 @@ msgstr "Sposta automaticamente il cursore"
 
 #: src/ibus-setup-chewing-window.ui:83
 msgid "Automatically move the cursor to the next character after selection"
-msgstr ""
+msgstr "Muovi automaticamente il cursore al carattere dopo la selezione"
 
 #: src/ibus-setup-chewing-window.ui:89
 msgid "Add Phrase Before Cursor"
-msgstr ""
+msgstr "Aggiungi la frase prima del cursore"
 
 #: src/ibus-setup-chewing-window.ui:90
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
@@ -240,7 +237,7 @@ msgstr ""
 
 #: src/ibus-setup-chewing-window.ui:162
 msgid "Upper Case"
-msgstr ""
+msgstr "Maiuscoli"
 
 #: src/ibus-setup-chewing-window.ui:166
 msgid "Default English Letter Case"
@@ -257,18 +254,16 @@ msgstr "Selezione"
 
 #: src/ibus-setup-chewing-window.ui:175
 msgid "Configure the candidate selection behavior"
-msgstr ""
+msgstr "Configura l'ambiente di selezione del candidato"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:186
-#, fuzzy
-#| msgid "Candidate per page"
 msgid "Candidates Per Page"
-msgstr "Candidato per pagina"
+msgstr "Candidati per pagina"
 
 #: src/ibus-setup-chewing-window.ui:192
 msgid "Show Page Number"
-msgstr ""
+msgstr "Mostra numeri di pagina"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/ibus-setup-chewing-window.ui:198
@@ -283,7 +278,7 @@ msgstr ""
 
 #: src/ibus-setup-chewing-window.ui:205
 msgid "Use Space Key as Selection Key"
-msgstr ""
+msgstr "Usa spazio come tasto di selezione"
 
 #: src/ibus-setup-chewing-window.ui:211
 msgid "Use Vertical Candidate Panel"
@@ -291,7 +286,7 @@ msgstr ""
 
 #: src/ibus-setup-chewing-window.ui:212
 msgid "Choose from vertical or horizontal panel"
-msgstr ""
+msgstr "Scegli tra pannello verticale o orizzontale"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #~ msgid "Keyboard"
