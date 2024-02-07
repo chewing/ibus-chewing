@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 22:12+0900\n"
-"PO-Revision-Date: 2024-02-07 14:20+0000\n"
+"PO-Revision-Date: 2024-02-07 16:08+0000\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/pt_BR/>\n"
@@ -16,11 +16,8 @@ msgstr ""
 "X-Generator: Weblate 5.3.1\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:13
-#, fuzzy
-#| msgctxt "Sync"
-#| msgid "input method"
 msgid "Configure the input method"
-msgstr "método de entrada"
+msgstr "Configure o método de entrada"
 
 #: src/setup/ibus-setup-chewing-window.ui:14
 msgid "Input Method"
@@ -159,7 +156,7 @@ msgstr "Esc limpa todo o buffer"
 
 #: src/setup/ibus-setup-chewing-window.ui:109
 msgid "Escape key discards all uncommitted texts"
-msgstr "A tecla Escape descarta todos os textos não confirmados"
+msgstr "A tecla Escape descarta todos os textos não enviados"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/setup/ibus-setup-chewing-window.ui:122
@@ -167,9 +164,8 @@ msgid "Maximum Chinese Characters"
 msgstr "Máximo de caracteres chineses"
 
 #: src/setup/ibus-setup-chewing-window.ui:123
-#, fuzzy
 msgid "Until how many characters should trigger auto-commit"
-msgstr "Até quantos caracteres devem acionar o commit automático"
+msgstr "Até quantos caracteres devem acionar o envio automático"
 
 #: src/setup/ibus-setup-chewing-window.ui:128
 msgid "Chinese/Alphanumeric Mode Toggle Key"
@@ -219,11 +215,11 @@ msgstr "Maiúsculo"
 
 #: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Default English Letter Case"
-msgstr ""
+msgstr "Padrão de maiúsculas e minúsculas em inglês"
 
 #: src/setup/ibus-setup-chewing-window.ui:166
 msgid "The letter case without pressing the Shift key"
-msgstr ""
+msgstr "Mostra letra em maiúsculo ou minúsculo sem pressionar a tecla Shift"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/setup/ibus-setup-chewing-window.ui:173
@@ -232,41 +228,37 @@ msgstr "Selecionando"
 
 #: src/setup/ibus-setup-chewing-window.ui:174
 msgid "Configure the candidate selection behavior"
-msgstr ""
+msgstr "Configure o comportamento de seleção de candidato"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/setup/ibus-setup-chewing-window.ui:185
-#, fuzzy
-#| msgid "Candidate per page"
 msgid "Candidates Per Page"
-msgstr "Candidato por página"
+msgstr "Candidatos por página"
 
 #: src/setup/ibus-setup-chewing-window.ui:191
 msgid "Show Page Number"
-msgstr ""
+msgstr "Mostrar número da página"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/setup/ibus-setup-chewing-window.ui:197
-#, fuzzy
-#| msgid "Choose phrases from backward"
 msgid "Choose Phrases Backwards"
-msgstr "Escolher frases de tras para frente"
+msgstr "Escolher frases de trás para frente"
 
 #: src/setup/ibus-setup-chewing-window.ui:198
 msgid "Open candidate list from the last character of a phrase"
-msgstr ""
+msgstr "Abre a lista de candidatos a partir do último caractere da frase"
 
 #: src/setup/ibus-setup-chewing-window.ui:204
 msgid "Use Space Key as Selection Key"
-msgstr ""
+msgstr "Usar tecla Espaço como tecla de seleção"
 
 #: src/setup/ibus-setup-chewing-window.ui:210
 msgid "Use Vertical Candidate Panel"
-msgstr ""
+msgstr "Usar painel de candidatos vertical"
 
 #: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Choose from vertical or horizontal panel"
-msgstr ""
+msgstr "Escolha entre painel vertical ou horizontal"
 
 #~ msgid "ibus-setup-chewing"
 #~ msgstr "ibus-setup-chewing"
