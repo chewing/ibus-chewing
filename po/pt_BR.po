@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-04 22:11+0900\n"
-"PO-Revision-Date: 2024-02-07 06:20+0000\n"
+"PO-Revision-Date: 2024-02-07 09:28+0000\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/pt_BR/>\n"
@@ -31,104 +31,93 @@ msgid "Configure the input method"
 msgstr "método de entrada"
 
 #: src/ibus-setup-chewing-window.ui:14
-#, fuzzy
-#| msgctxt "Sync"
-#| msgid "input method"
 msgid "Input Method"
-msgstr "método de entrada"
+msgstr "Método de entrada"
 
 #: src/ibus-setup-chewing-window.ui:20
 msgid "Standard"
-msgstr ""
+msgstr "Padrão"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:21
-#, fuzzy
-#| msgid "hsu"
 msgid "Hsu"
-msgstr "hsu"
+msgstr "Hsu"
 
 #: src/ibus-setup-chewing-window.ui:22
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/ibus-setup-chewing-window.ui:23
 msgid "Gin-Yieh"
-msgstr ""
+msgstr "Gin-Yieh"
 
 #: src/ibus-setup-chewing-window.ui:24
 msgid "Eten"
-msgstr ""
+msgstr "Eten"
 
 #: src/ibus-setup-chewing-window.ui:25
 msgid "Eten 26"
-msgstr ""
+msgstr "Eten 26"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:26
-#, fuzzy
-#| msgid "dvorak"
 msgid "Dvorak"
-msgstr "dvorak"
+msgstr "Dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:27
-#, fuzzy
-#| msgid "dvorak_hsu"
 msgid "Dvorak-Hsu"
-msgstr "dvorak_hsu"
+msgstr "Dvorak-Hsu"
 
 #: src/ibus-setup-chewing-window.ui:28
 msgid "DaChen 26"
-msgstr ""
+msgstr "DaChen 26"
 
 #: src/ibus-setup-chewing-window.ui:29
 msgid "Hanyu Pinyin"
-msgstr ""
+msgstr "Hanyu Pinyin"
 
 #: src/ibus-setup-chewing-window.ui:30
 msgid "THL Pinyin"
-msgstr ""
+msgstr "THL Pinyin"
 
 #: src/ibus-setup-chewing-window.ui:31
 msgid "MPS2 Pinyin"
-msgstr ""
+msgstr "MPS2 Pinyin"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:35
 msgid "Keyboard Type"
-msgstr "Tipo de Teclado"
+msgstr "Tipo de teclado"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:54
-#, fuzzy
-#| msgid "Selection keys"
 msgid "Selection Keys"
 msgstr "Teclas de seleção"
 
 #: src/ibus-setup-chewing-window.ui:55
 msgid "Keys used to select candidate"
-msgstr ""
+msgstr "Teclado usadas para selecionar um candidato"
 
 #: src/ibus-setup-chewing-window.ui:61
 msgid "Intelligent Phrasing"
-msgstr ""
+msgstr "Frases inteligentes"
 
 #: src/ibus-setup-chewing-window.ui:62
 msgid "Enable or disable automatic candidate selection"
-msgstr ""
+msgstr "Habilita ou desabilita seleção automática de candidato"
 
 #: src/ibus-setup-chewing-window.ui:67
 msgid "Show Systray Icon"
-msgstr ""
+msgstr "Mostrar ícone de bandeja"
 
 #: src/ibus-setup-chewing-window.ui:68
 msgid "Whether to show the systray icon"
-msgstr ""
+msgstr "Se deve mostrar o ícone na bandeja de sistema"
 
 #: src/ibus-setup-chewing-window.ui:69
 msgid "This feature is currently not implemented."
-msgstr ""
+msgstr "Este recurso não está atualmente implementado."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:77
@@ -137,52 +126,47 @@ msgstr "Editando"
 
 #: src/ibus-setup-chewing-window.ui:78
 msgid "Configure the input method behavior"
-msgstr ""
+msgstr "Configurar o comportamento do método de entrada"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:82
-#, fuzzy
-#| msgid "Auto move cursor"
 msgid "Auto Move Cursor"
 msgstr "Auto mover o cursor"
 
 #: src/ibus-setup-chewing-window.ui:83
 msgid "Automatically move the cursor to the next character after selection"
-msgstr ""
+msgstr "Move automaticamente o cursor para o próximo caractere após a seleção"
 
 #: src/ibus-setup-chewing-window.ui:89
 msgid "Add Phrase Before Cursor"
-msgstr ""
+msgstr "Adicionar frase antes do cursor"
 
 #: src/ibus-setup-chewing-window.ui:90
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
 msgstr ""
+"Use Ctrl + Números (2-9) para salvar a nova frase antes ou depois do cursor"
 
 #: src/ibus-setup-chewing-window.ui:96
 msgid "Clear Pre-Edit Buffer When Focus Out"
-msgstr ""
+msgstr "Limpar buffer de pré-edição quando o perder foco"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:102
-#, fuzzy
-#| msgid "Easy symbol input"
 msgid "Easy Symbol Input"
 msgstr "Entrada de símbolo fácil"
 
 #: src/ibus-setup-chewing-window.ui:103
 msgid "Press Shift + keys to input Chinese punctuation symbols"
-msgstr ""
+msgstr "Pressione as teclas Shift + para inserir símbolos de pontuação chineses"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:108
-#, fuzzy
-#| msgid "Esc clean all buffer"
 msgid "Esc Clean All Buffer"
-msgstr "Esc limpar todo o buffer"
+msgstr "Esc limpa todo o buffer"
 
 #: src/ibus-setup-chewing-window.ui:109
 msgid "Escape key discards all uncommitted texts"
-msgstr ""
+msgstr "A tecla Escape descarta todos os textos não confirmados"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
 #: src/ibus-setup-chewing-window.ui:122
