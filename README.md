@@ -38,3 +38,9 @@ ln -s ../../pre-commit .git/hooks/pre-commit
 export G_MESSAGES_DEBUG=all
 ibus-daemon -rvx
 ```
+
+# Translation
+
+There is a weblate instance at
+https://translate.fedoraproject.org/projects/ibus-chewing/ for easier
+contribution.
