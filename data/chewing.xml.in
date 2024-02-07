@@ -6,7 +6,7 @@
     <version>@PRJ_VER@</version>
     <license>@LICENSE@</license>
     <author>Peng Huang, Ding-Yi Chen</author>
-    <homepage>@RPM_SPEC_URL@</homepage>
+    <homepage>@PRJ_URL@</homepage>
     <exec>@LIBEXEC_DIR@/ibus-engine-chewing --ibus</exec>
     <textdomain>ibus-chewing</textdomain>
     <engines>

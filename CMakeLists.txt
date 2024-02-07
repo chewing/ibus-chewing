@@ -27,8 +27,7 @@ set(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 set(VENDOR "Red Hat, APAC, Inc.")
 set(LICENSE "GPLv2+")
 set(PRJ_GROUP "System Environment/Libraries")
-set(RPM_SPEC_URL "https://github.com/definite/${PROJECT_NAME}")
-set(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
+set(RRJ_URL "https://github.com/chewing/${PROJECT_NAME}")
 
 enable_testing()
 include(GNUInstallDirs)
@@ -74,6 +73,7 @@ add_compile_definitions(
     DATA_DIR=${CMAKE_INSTALL_FULL_DATADIR}
     PRJ_DATA_DIR=${PRJ_DATA_DIR}
     PRJ_VER=${PRJ_VER}
+    PRJ_URL=${PRJ_URL}
     LIBEXEC_DIR=${LIBEXEC_DIR}
     CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}
 )
