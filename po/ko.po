@@ -3,12 +3,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-04 22:11+0900\n"
+"POT-Creation-Date: 2024-02-07 22:12+0900\n"
 "PO-Revision-Date: 2024-02-07 06:20+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
-"Language-Team: Korean <https://translate.fedoraproject.org/projects/"
-"ibus-chewing/master/ko/>\n"
+"Language-Team: Korean <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,260 +16,257 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.3.1\n"
 
-#: data/org.freedesktop.IBus.Chewing.Setup.desktop.in:3
-msgid "ibus-setup-chewing"
-msgstr "ibus-setup-chewing"
-
-#: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
-msgid "No description"
-msgstr "설명 없음"
-
-#: src/ibus-setup-chewing-window.ui:13
+#: src/setup/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
 msgstr "입력기를 구성합니다"
 
-#: src/ibus-setup-chewing-window.ui:14
+#: src/setup/ibus-setup-chewing-window.ui:14
 msgid "Input Method"
 msgstr "입력기"
 
-#: src/ibus-setup-chewing-window.ui:20
+#: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Standard"
 msgstr "표준"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:21
+#: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Hsu"
 msgstr "hsu"
 
-#: src/ibus-setup-chewing-window.ui:22
+#: src/setup/ibus-setup-chewing-window.ui:22
 msgid "IBM"
 msgstr "IBM"
 
-#: src/ibus-setup-chewing-window.ui:23
+#: src/setup/ibus-setup-chewing-window.ui:23
 msgid "Gin-Yieh"
 msgstr "Gin-Yieh"
 
-#: src/ibus-setup-chewing-window.ui:24
+#: src/setup/ibus-setup-chewing-window.ui:24
 msgid "Eten"
 msgstr "Eten"
 
-#: src/ibus-setup-chewing-window.ui:25
+#: src/setup/ibus-setup-chewing-window.ui:25
 msgid "Eten 26"
 msgstr "Eten 26"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:26
+#: src/setup/ibus-setup-chewing-window.ui:26
 msgid "Dvorak"
 msgstr "드보락 (dvorak)"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:27
+#: src/setup/ibus-setup-chewing-window.ui:27
 msgid "Dvorak-Hsu"
 msgstr "dvorak_hsu"
 
-#: src/ibus-setup-chewing-window.ui:28
+#: src/setup/ibus-setup-chewing-window.ui:28
 msgid "DaChen 26"
 msgstr "DaChen 26"
 
-#: src/ibus-setup-chewing-window.ui:29
+#: src/setup/ibus-setup-chewing-window.ui:29
 msgid "Hanyu Pinyin"
 msgstr "한어병음"
 
-#: src/ibus-setup-chewing-window.ui:30
+#: src/setup/ibus-setup-chewing-window.ui:30
 msgid "THL Pinyin"
 msgstr "THL 병음"
 
-#: src/ibus-setup-chewing-window.ui:31
+#: src/setup/ibus-setup-chewing-window.ui:31
 msgid "MPS2 Pinyin"
 msgstr "MPS2 병음"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:35
+#: src/setup/ibus-setup-chewing-window.ui:35
 msgid "Keyboard Type"
 msgstr "키보드 유형"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:54
+#: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Selection Keys"
 msgstr "선택 키"
 
-#: src/ibus-setup-chewing-window.ui:55
+#: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Keys used to select candidate"
 msgstr "후보자를 선택하는데 사용되는 키"
 
-#: src/ibus-setup-chewing-window.ui:61
+#: src/setup/ibus-setup-chewing-window.ui:61
 msgid "Intelligent Phrasing"
 msgstr "지능적인 표현"
 
-#: src/ibus-setup-chewing-window.ui:62
+#: src/setup/ibus-setup-chewing-window.ui:62
 msgid "Enable or disable automatic candidate selection"
 msgstr "자동 후보자 선택을 활성화 또는 비활성화"
 
-#: src/ibus-setup-chewing-window.ui:67
+#: src/setup/ibus-setup-chewing-window.ui:67
 msgid "Show Systray Icon"
 msgstr "시스템트레이 아이콘 표시"
 
-#: src/ibus-setup-chewing-window.ui:68
+#: src/setup/ibus-setup-chewing-window.ui:68
 msgid "Whether to show the systray icon"
 msgstr "시스템트레이 아이콘 표시 여부"
 
-#: src/ibus-setup-chewing-window.ui:69
+#: src/setup/ibus-setup-chewing-window.ui:69
 msgid "This feature is currently not implemented."
 msgstr "이와 같은 기능은 현재 구현되어 있지 않습니다."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:77
+#: src/setup/ibus-setup-chewing-window.ui:77
 msgid "Editing"
 msgstr "편집"
 
-#: src/ibus-setup-chewing-window.ui:78
+#: src/setup/ibus-setup-chewing-window.ui:78
 msgid "Configure the input method behavior"
 msgstr "입력 방법 동작을 구성합니다"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:82
+#: src/setup/ibus-setup-chewing-window.ui:82
 msgid "Auto Move Cursor"
 msgstr "자동 커서 이동"
 
-#: src/ibus-setup-chewing-window.ui:83
+#: src/setup/ibus-setup-chewing-window.ui:83
 msgid "Automatically move the cursor to the next character after selection"
 msgstr "선택 후에 자동으로 커서를 다음 문자로 움직입니다"
 
-#: src/ibus-setup-chewing-window.ui:89
+#: src/setup/ibus-setup-chewing-window.ui:89
 msgid "Add Phrase Before Cursor"
 msgstr "커서 앞에 문구를 추가합니다"
 
-#: src/ibus-setup-chewing-window.ui:90
+#: src/setup/ibus-setup-chewing-window.ui:90
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
 msgstr "Ctrl + 수(2-9)를 사용하고 커서 앞이나 뒤에 신규 문구를 저장합니다"
 
-#: src/ibus-setup-chewing-window.ui:96
+#: src/setup/ibus-setup-chewing-window.ui:96
 msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr "포커스 아웃 일 때에 사전-편집 버퍼 지우기"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:102
+#: src/setup/ibus-setup-chewing-window.ui:102
 msgid "Easy Symbol Input"
 msgstr "쉬운 기호 입력"
 
-#: src/ibus-setup-chewing-window.ui:103
+#: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Press Shift + keys to input Chinese punctuation symbols"
 msgstr "Shift + keys를 누르고 중국어 구두점 기호를 입력합니다"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:108
+#: src/setup/ibus-setup-chewing-window.ui:108
 msgid "Esc Clean All Buffer"
 msgstr "Esc 키는 모든 버퍼를 지웁니다"
 
-#: src/ibus-setup-chewing-window.ui:109
+#: src/setup/ibus-setup-chewing-window.ui:109
 msgid "Escape key discards all uncommitted texts"
 msgstr "Escape 키는 모든 수행되지 않은 텍스트를 삭제합니다"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:122
+#: src/setup/ibus-setup-chewing-window.ui:122
 msgid "Maximum Chinese Characters"
 msgstr "최대 중국어 문자 수"
 
-#: src/ibus-setup-chewing-window.ui:123
+#: src/setup/ibus-setup-chewing-window.ui:123
 msgid "Until how many characters should trigger auto-commit"
 msgstr "자동-수행을 실행 해야 하는 문자 수까지"
 
-#: src/ibus-setup-chewing-window.ui:128
+#: src/setup/ibus-setup-chewing-window.ui:128
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "중국어/영숫자 방식 토글 키"
 
-#: src/ibus-setup-chewing-window.ui:132
+#: src/setup/ibus-setup-chewing-window.ui:132
 msgid "Caps Lock"
 msgstr "캡스 락"
 
-#: src/ibus-setup-chewing-window.ui:133
+#: src/setup/ibus-setup-chewing-window.ui:133
 msgid "Shift"
 msgstr "쉬프트"
 
-#: src/ibus-setup-chewing-window.ui:134
+#: src/setup/ibus-setup-chewing-window.ui:134
 msgid "Shift_L"
 msgstr "Shift_L"
 
-#: src/ibus-setup-chewing-window.ui:135
+#: src/setup/ibus-setup-chewing-window.ui:135
 msgid "Shift_R"
 msgstr "Shift_R"
 
-#: src/ibus-setup-chewing-window.ui:146
+#: src/setup/ibus-setup-chewing-window.ui:146
 msgid "Disable Syncing"
 msgstr "동기화 비활성화"
 
-#: src/ibus-setup-chewing-window.ui:147
+#: src/setup/ibus-setup-chewing-window.ui:147
 msgid "Sync with Keyboard State"
 msgstr "키보드 상태로 동기화"
 
-#: src/ibus-setup-chewing-window.ui:148
-msgid "Sync with IM State"
-msgstr "입력기 상태로 동기화"
-
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:152
+#: src/setup/ibus-setup-chewing-window.ui:151
 msgid "Sync Caps Lock and IM"
 msgstr "Caps Lock과 IM 간의 동기화"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:160
+#: src/setup/ibus-setup-chewing-window.ui:159
 msgid "No Default"
 msgstr "기본값 없음"
 
-#: src/ibus-setup-chewing-window.ui:161
+#: src/setup/ibus-setup-chewing-window.ui:160
 msgid "Lower Case"
 msgstr "소문자"
 
-#: src/ibus-setup-chewing-window.ui:162
+#: src/setup/ibus-setup-chewing-window.ui:161
 msgid "Upper Case"
 msgstr "대문자"
 
-#: src/ibus-setup-chewing-window.ui:166
+#: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Default English Letter Case"
 msgstr "기본 영문 대소문자"
 
-#: src/ibus-setup-chewing-window.ui:167
+#: src/setup/ibus-setup-chewing-window.ui:166
 msgid "The letter case without pressing the Shift key"
 msgstr "쉬프트 키를 누르지 않고 대소문자"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:174
+#: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Selecting"
 msgstr "선택 중"
 
-#: src/ibus-setup-chewing-window.ui:175
+#: src/setup/ibus-setup-chewing-window.ui:174
 msgid "Configure the candidate selection behavior"
 msgstr "후보자 선택 동작 구성"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:186
+#: src/setup/ibus-setup-chewing-window.ui:185
 msgid "Candidates Per Page"
 msgstr "페이지 당 후보"
 
-#: src/ibus-setup-chewing-window.ui:192
+#: src/setup/ibus-setup-chewing-window.ui:191
 msgid "Show Page Number"
 msgstr "쪽 수 표기"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
-#: src/ibus-setup-chewing-window.ui:198
+#: src/setup/ibus-setup-chewing-window.ui:197
 msgid "Choose Phrases Backwards"
 msgstr "문구를 거꾸로 선택합니다"
 
-#: src/ibus-setup-chewing-window.ui:199
+#: src/setup/ibus-setup-chewing-window.ui:198
 msgid "Open candidate list from the last character of a phrase"
 msgstr "문구의 마지막 문자에서 후보자 목록을 엽니다"
 
-#: src/ibus-setup-chewing-window.ui:205
+#: src/setup/ibus-setup-chewing-window.ui:204
 msgid "Use Space Key as Selection Key"
 msgstr "선택 키로 스페이스 키를 사용합니다"
 
-#: src/ibus-setup-chewing-window.ui:211
+#: src/setup/ibus-setup-chewing-window.ui:210
 msgid "Use Vertical Candidate Panel"
 msgstr "수직의 후보 패널을 사용합니다"
 
-#: src/ibus-setup-chewing-window.ui:212
+#: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Choose from vertical or horizontal panel"
 msgstr "수직 또는 수평 패널에서 선택합니다"
+
+#~ msgid "ibus-setup-chewing"
+#~ msgstr "ibus-setup-chewing"
+
+#~ msgid "No description"
+#~ msgstr "설명 없음"
+
+#~ msgid "Sync with IM State"
+#~ msgstr "입력기 상태로 동기화"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #~ msgid "Keyboard"

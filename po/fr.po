@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-04 22:11+0900\n"
+"POT-Creation-Date: 2024-02-07 22:12+0900\n"
 "PO-Revision-Date: 2016-09-19 12:43-0400\n"
 "Last-Translator: José Fournier <jaaf64@zoraldia.com>\n"
 "Language-Team: French\n"
@@ -17,172 +17,164 @@ msgstr ""
 "X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: data/org.freedesktop.IBus.Chewing.Setup.desktop.in:3
-msgid "ibus-setup-chewing"
-msgstr ""
-
-#: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
-msgid "No description"
-msgstr ""
-
-#: src/ibus-setup-chewing-window.ui:13
+#: src/setup/ibus-setup-chewing-window.ui:13
 #, fuzzy
 #| msgid "Chinese chewing input method"
 msgid "Configure the input method"
 msgstr "Méthode de saisie chinoise « Chewing »"
 
-#: src/ibus-setup-chewing-window.ui:14
+#: src/setup/ibus-setup-chewing-window.ui:14
 #, fuzzy
 #| msgctxt "Sync"
 #| msgid "input method"
 msgid "Input Method"
 msgstr "Méthode de saisie"
 
-#: src/ibus-setup-chewing-window.ui:20
+#: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Standard"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:21
+#: src/setup/ibus-setup-chewing-window.ui:21
 #, fuzzy
 #| msgid "hsu"
 msgid "Hsu"
 msgstr "hsu"
 
-#: src/ibus-setup-chewing-window.ui:22
+#: src/setup/ibus-setup-chewing-window.ui:22
 msgid "IBM"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:23
+#: src/setup/ibus-setup-chewing-window.ui:23
 msgid "Gin-Yieh"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:24
+#: src/setup/ibus-setup-chewing-window.ui:24
 msgid "Eten"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:25
+#: src/setup/ibus-setup-chewing-window.ui:25
 msgid "Eten 26"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:26
+#: src/setup/ibus-setup-chewing-window.ui:26
 #, fuzzy
 #| msgid "dvorak"
 msgid "Dvorak"
 msgstr "dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:27
+#: src/setup/ibus-setup-chewing-window.ui:27
 #, fuzzy
 #| msgid "dvorak_hsu"
 msgid "Dvorak-Hsu"
 msgstr "dvorak_hsu"
 
-#: src/ibus-setup-chewing-window.ui:28
+#: src/setup/ibus-setup-chewing-window.ui:28
 msgid "DaChen 26"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:29
+#: src/setup/ibus-setup-chewing-window.ui:29
 msgid "Hanyu Pinyin"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:30
+#: src/setup/ibus-setup-chewing-window.ui:30
 msgid "THL Pinyin"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:31
+#: src/setup/ibus-setup-chewing-window.ui:31
 msgid "MPS2 Pinyin"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:35
+#: src/setup/ibus-setup-chewing-window.ui:35
 msgid "Keyboard Type"
 msgstr "Type de clavier"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:54
+#: src/setup/ibus-setup-chewing-window.ui:54
 #, fuzzy
 #| msgid "Selection keys"
 msgid "Selection Keys"
 msgstr "Touches de sélection"
 
-#: src/ibus-setup-chewing-window.ui:55
+#: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Keys used to select candidate"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:61
+#: src/setup/ibus-setup-chewing-window.ui:61
 msgid "Intelligent Phrasing"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:62
+#: src/setup/ibus-setup-chewing-window.ui:62
 msgid "Enable or disable automatic candidate selection"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:67
+#: src/setup/ibus-setup-chewing-window.ui:67
 #, fuzzy
 #| msgid "Show systray icons"
 msgid "Show Systray Icon"
 msgstr "Afficher une icône dans la barre des tâches"
 
-#: src/ibus-setup-chewing-window.ui:68
+#: src/setup/ibus-setup-chewing-window.ui:68
 #, fuzzy
 #| msgid "Show systray icons"
 msgid "Whether to show the systray icon"
 msgstr "Afficher une icône dans la barre des tâches"
 
-#: src/ibus-setup-chewing-window.ui:69
+#: src/setup/ibus-setup-chewing-window.ui:69
 msgid "This feature is currently not implemented."
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:77
+#: src/setup/ibus-setup-chewing-window.ui:77
 msgid "Editing"
 msgstr "Modifier"
 
-#: src/ibus-setup-chewing-window.ui:78
+#: src/setup/ibus-setup-chewing-window.ui:78
 #, fuzzy
 #| msgid "Chinese chewing input method"
 msgid "Configure the input method behavior"
 msgstr "Méthode de saisie chinoise « Chewing »"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:82
+#: src/setup/ibus-setup-chewing-window.ui:82
 #, fuzzy
 #| msgid "Auto move cursor"
 msgid "Auto Move Cursor"
 msgstr "Déplacement automatique du curseur"
 
-#: src/ibus-setup-chewing-window.ui:83
+#: src/setup/ibus-setup-chewing-window.ui:83
 #, fuzzy
 #| msgid "Automatically move cursor to next character"
 msgid "Automatically move the cursor to the next character after selection"
 msgstr "Déplace automatiquement le curseur au prochain caractère"
 
-#: src/ibus-setup-chewing-window.ui:89
+#: src/setup/ibus-setup-chewing-window.ui:89
 #, fuzzy
 #| msgid "Add phrases to the front"
 msgid "Add Phrase Before Cursor"
 msgstr "Ajouter les phrases à l'avant"
 
-#: src/ibus-setup-chewing-window.ui:90
+#: src/setup/ibus-setup-chewing-window.ui:90
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:96
+#: src/setup/ibus-setup-chewing-window.ui:96
 #, fuzzy
 #| msgid "Clean pre-edit buffer when focus out"
 msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr "Vider le tampon de pré-édition lorsqu'il a perdu le focus"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:102
+#: src/setup/ibus-setup-chewing-window.ui:102
 #, fuzzy
 #| msgid "Easy symbol input"
 msgid "Easy Symbol Input"
 msgstr "Saisie facile des symboles"
 
-#: src/ibus-setup-chewing-window.ui:103
+#: src/setup/ibus-setup-chewing-window.ui:103
 #, fuzzy
 #| msgid "Press shift to input Chinese punctuation symbols"
 msgid "Press Shift + keys to input Chinese punctuation symbols"
@@ -191,132 +183,128 @@ msgstr ""
 "chinois"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:108
+#: src/setup/ibus-setup-chewing-window.ui:108
 #, fuzzy
 #| msgid "Esc clean all buffer"
 msgid "Esc Clean All Buffer"
 msgstr "La touche Échap supprime toute les mémoires tampons"
 
-#: src/ibus-setup-chewing-window.ui:109
+#: src/setup/ibus-setup-chewing-window.ui:109
 msgid "Escape key discards all uncommitted texts"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:122
+#: src/setup/ibus-setup-chewing-window.ui:122
 #, fuzzy
 #| msgid "Maximum Chinese characters"
 msgid "Maximum Chinese Characters"
 msgstr "Nombre maximum de caractères chinois"
 
-#: src/ibus-setup-chewing-window.ui:123
+#: src/setup/ibus-setup-chewing-window.ui:123
 msgid "Until how many characters should trigger auto-commit"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:128
+#: src/setup/ibus-setup-chewing-window.ui:128
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:132
+#: src/setup/ibus-setup-chewing-window.ui:132
 msgid "Caps Lock"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:133
+#: src/setup/ibus-setup-chewing-window.ui:133
 msgid "Shift"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:134
+#: src/setup/ibus-setup-chewing-window.ui:134
 msgid "Shift_L"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:135
+#: src/setup/ibus-setup-chewing-window.ui:135
 msgid "Shift_R"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:146
+#: src/setup/ibus-setup-chewing-window.ui:146
 msgid "Disable Syncing"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:147
+#: src/setup/ibus-setup-chewing-window.ui:147
 msgid "Sync with Keyboard State"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:148
-msgid "Sync with IM State"
-msgstr ""
-
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:152
+#: src/setup/ibus-setup-chewing-window.ui:151
 #, fuzzy
 #| msgid "Sync between CapsLock and IM"
 msgid "Sync Caps Lock and IM"
 msgstr "Synchronisation entre verrouillage des majuscules et mode de saisie"
 
-#: src/ibus-setup-chewing-window.ui:160
+#: src/setup/ibus-setup-chewing-window.ui:159
 #, fuzzy
 #| msgid "no default"
 msgid "No Default"
 msgstr "pas de valeur par défaut"
 
-#: src/ibus-setup-chewing-window.ui:161
+#: src/setup/ibus-setup-chewing-window.ui:160
 #, fuzzy
 #| msgid "lowercase"
 msgid "Lower Case"
 msgstr "Minuscule"
 
-#: src/ibus-setup-chewing-window.ui:162
+#: src/setup/ibus-setup-chewing-window.ui:161
 #, fuzzy
 #| msgid "uppercase"
 msgid "Upper Case"
 msgstr "Majuscule"
 
-#: src/ibus-setup-chewing-window.ui:166
+#: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Default English Letter Case"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:167
+#: src/setup/ibus-setup-chewing-window.ui:166
 msgid "The letter case without pressing the Shift key"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:174
+#: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Selecting"
 msgstr "Sélection"
 
-#: src/ibus-setup-chewing-window.ui:175
+#: src/setup/ibus-setup-chewing-window.ui:174
 msgid "Configure the candidate selection behavior"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:186
+#: src/setup/ibus-setup-chewing-window.ui:185
 #, fuzzy
 #| msgid "Candidate per page"
 msgid "Candidates Per Page"
 msgstr "Candidats par page"
 
-#: src/ibus-setup-chewing-window.ui:192
+#: src/setup/ibus-setup-chewing-window.ui:191
 msgid "Show Page Number"
 msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: src/ibus-setup-chewing-window.ui:198
+#: src/setup/ibus-setup-chewing-window.ui:197
 #, fuzzy
 #| msgid "Choose phrases from backward"
 msgid "Choose Phrases Backwards"
 msgstr "Choisir des phrases depuis l'arrière"
 
-#: src/ibus-setup-chewing-window.ui:199
+#: src/setup/ibus-setup-chewing-window.ui:198
 msgid "Open candidate list from the last character of a phrase"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:205
+#: src/setup/ibus-setup-chewing-window.ui:204
 msgid "Use Space Key as Selection Key"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:211
+#: src/setup/ibus-setup-chewing-window.ui:210
 msgid "Use Vertical Candidate Panel"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:212
+#: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Choose from vertical or horizontal panel"
 msgstr ""
 

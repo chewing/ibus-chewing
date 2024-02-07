@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-04 22:11+0900\n"
+"POT-Creation-Date: 2024-02-07 22:12+0900\n"
 "PO-Revision-Date: 2023-12-02 23:18+0800\n"
 "Last-Translator: Ding-Yi Chen <dchen@redhat.com>\n"
 "Language-Team: Chinese (Traditional Han, Taiwan)\n"
@@ -20,287 +20,275 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.4\n"
 
-#: data/org.freedesktop.IBus.Chewing.Setup.desktop.in:3
-msgid "ibus-setup-chewing"
-msgstr ""
-
-#: data/org.freedesktop.IBus.Chewing.Setup.metainfo.xml.in:7
-msgid "No description"
-msgstr ""
-
-#: src/ibus-setup-chewing-window.ui:13
+#: src/setup/ibus-setup-chewing-window.ui:13
 #, fuzzy
 #| msgid "Chinese chewing input method"
 msgid "Configure the input method"
 msgstr "中文新酷音輸入法"
 
-#: src/ibus-setup-chewing-window.ui:14
+#: src/setup/ibus-setup-chewing-window.ui:14
 #, fuzzy
 #| msgctxt "Sync"
 #| msgid "input method"
 msgid "Input Method"
 msgstr "由輸入法"
 
-#: src/ibus-setup-chewing-window.ui:20
+#: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Standard"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:21
+#: src/setup/ibus-setup-chewing-window.ui:21
 #, fuzzy
 #| msgid "hsu"
 msgid "Hsu"
 msgstr "許氏"
 
-#: src/ibus-setup-chewing-window.ui:22
+#: src/setup/ibus-setup-chewing-window.ui:22
 msgid "IBM"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:23
+#: src/setup/ibus-setup-chewing-window.ui:23
 msgid "Gin-Yieh"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:24
+#: src/setup/ibus-setup-chewing-window.ui:24
 msgid "Eten"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:25
+#: src/setup/ibus-setup-chewing-window.ui:25
 msgid "Eten 26"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:26
+#: src/setup/ibus-setup-chewing-window.ui:26
 #, fuzzy
 #| msgid "dvorak"
 msgid "Dvorak"
 msgstr "Dvorak"
 
-#: src/ibus-setup-chewing-window.ui:27
+#: src/setup/ibus-setup-chewing-window.ui:27
 #, fuzzy
 #| msgid "dvorak_hsu"
 msgid "Dvorak-Hsu"
 msgstr "Dvorak+許氏"
 
-#: src/ibus-setup-chewing-window.ui:28
+#: src/setup/ibus-setup-chewing-window.ui:28
 msgid "DaChen 26"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:29
+#: src/setup/ibus-setup-chewing-window.ui:29
 msgid "Hanyu Pinyin"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:30
+#: src/setup/ibus-setup-chewing-window.ui:30
 msgid "THL Pinyin"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:31
+#: src/setup/ibus-setup-chewing-window.ui:31
 msgid "MPS2 Pinyin"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:35
+#: src/setup/ibus-setup-chewing-window.ui:35
 msgid "Keyboard Type"
 msgstr "鍵盤排列"
 
-#: src/ibus-setup-chewing-window.ui:54
+#: src/setup/ibus-setup-chewing-window.ui:54
 #, fuzzy
 #| msgid "Selection keys"
 msgid "Selection Keys"
 msgstr "選字按鍵"
 
-#: src/ibus-setup-chewing-window.ui:55
+#: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Keys used to select candidate"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:61
+#: src/setup/ibus-setup-chewing-window.ui:61
 msgid "Intelligent Phrasing"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:62
+#: src/setup/ibus-setup-chewing-window.ui:62
 msgid "Enable or disable automatic candidate selection"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:67
+#: src/setup/ibus-setup-chewing-window.ui:67
 #, fuzzy
 #| msgid "Show systray icons"
 msgid "Show Systray Icon"
 msgstr "在系統匣顯示圖示"
 
-#: src/ibus-setup-chewing-window.ui:68
+#: src/setup/ibus-setup-chewing-window.ui:68
 #, fuzzy
 #| msgid "Show systray icons"
 msgid "Whether to show the systray icon"
 msgstr "在系統匣顯示圖示"
 
-#: src/ibus-setup-chewing-window.ui:69
+#: src/setup/ibus-setup-chewing-window.ui:69
 msgid "This feature is currently not implemented."
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:77
+#: src/setup/ibus-setup-chewing-window.ui:77
 msgid "Editing"
 msgstr "編輯"
 
-#: src/ibus-setup-chewing-window.ui:78
+#: src/setup/ibus-setup-chewing-window.ui:78
 #, fuzzy
 #| msgid "Chinese chewing input method"
 msgid "Configure the input method behavior"
 msgstr "中文新酷音輸入法"
 
-#: src/ibus-setup-chewing-window.ui:82
+#: src/setup/ibus-setup-chewing-window.ui:82
 #, fuzzy
 #| msgid "Auto move cursor"
 msgid "Auto Move Cursor"
 msgstr "自動移動游標"
 
-#: src/ibus-setup-chewing-window.ui:83
+#: src/setup/ibus-setup-chewing-window.ui:83
 msgid "Automatically move the cursor to the next character after selection"
 msgstr "選字後，自動將游標移到下一個字"
 
-#: src/ibus-setup-chewing-window.ui:89
+#: src/setup/ibus-setup-chewing-window.ui:89
 #, fuzzy
 #| msgid "Add phrase before the cursor"
 msgid "Add Phrase Before Cursor"
 msgstr "新增游標前方的詞"
 
-#: src/ibus-setup-chewing-window.ui:90
+#: src/setup/ibus-setup-chewing-window.ui:90
 #, fuzzy
 #| msgid "Use Ctrl + Numbers (2-9) to add new phrase before the cursor"
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
 msgstr "使用 Ctrl 鍵 + 數字鍵 (2-9) 來新增游標前方的詞"
 
-#: src/ibus-setup-chewing-window.ui:96
+#: src/setup/ibus-setup-chewing-window.ui:96
 #, fuzzy
 #| msgid "Clean pre-edit buffer when focus out"
 msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr "當輸入焦點移開後清空預編區"
 
-#: src/ibus-setup-chewing-window.ui:102
+#: src/setup/ibus-setup-chewing-window.ui:102
 #, fuzzy
 #| msgid "Easy symbol input"
 msgid "Easy Symbol Input"
 msgstr "簡易符號輸入"
 
-#: src/ibus-setup-chewing-window.ui:103
+#: src/setup/ibus-setup-chewing-window.ui:103
 #, fuzzy
 #| msgid "Press shift to input Chinese punctuation symbols"
 msgid "Press Shift + keys to input Chinese punctuation symbols"
 msgstr "按下 shift 來輸入中文標點符號"
 
-#: src/ibus-setup-chewing-window.ui:108
+#: src/setup/ibus-setup-chewing-window.ui:108
 #, fuzzy
 #| msgid "Esc clean all buffer"
 msgid "Esc Clean All Buffer"
 msgstr "Esc 鍵清預編區"
 
-#: src/ibus-setup-chewing-window.ui:109
+#: src/setup/ibus-setup-chewing-window.ui:109
 msgid "Escape key discards all uncommitted texts"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:122
+#: src/setup/ibus-setup-chewing-window.ui:122
 #, fuzzy
 #| msgid "Maximum Chinese characters"
 msgid "Maximum Chinese Characters"
 msgstr "容納中文字數"
 
-#: src/ibus-setup-chewing-window.ui:123
+#: src/setup/ibus-setup-chewing-window.ui:123
 msgid "Until how many characters should trigger auto-commit"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:128
+#: src/setup/ibus-setup-chewing-window.ui:128
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "中英模式切換鍵"
 
-#: src/ibus-setup-chewing-window.ui:132
+#: src/setup/ibus-setup-chewing-window.ui:132
 msgid "Caps Lock"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:133
+#: src/setup/ibus-setup-chewing-window.ui:133
 #, fuzzy
 #| msgid "shift"
 msgid "Shift"
 msgstr "Shift"
 
-#: src/ibus-setup-chewing-window.ui:134
+#: src/setup/ibus-setup-chewing-window.ui:134
 #, fuzzy
 #| msgid "shift_l"
 msgid "Shift_L"
 msgstr "Shift L"
 
-#: src/ibus-setup-chewing-window.ui:135
+#: src/setup/ibus-setup-chewing-window.ui:135
 #, fuzzy
 #| msgid "shift_l"
 msgid "Shift_R"
 msgstr "Shift L"
 
-#: src/ibus-setup-chewing-window.ui:146
+#: src/setup/ibus-setup-chewing-window.ui:146
 msgid "Disable Syncing"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:147
+#: src/setup/ibus-setup-chewing-window.ui:147
 msgid "Sync with Keyboard State"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:148
-msgid "Sync with IM State"
-msgstr ""
-
-#: src/ibus-setup-chewing-window.ui:152
+#: src/setup/ibus-setup-chewing-window.ui:151
 #, fuzzy
 #| msgid "Sync between CapsLock and IM"
 msgid "Sync Caps Lock and IM"
 msgstr "Caps Lock 與輸入法狀態同步"
 
-#: src/ibus-setup-chewing-window.ui:160
+#: src/setup/ibus-setup-chewing-window.ui:159
 #, fuzzy
 #| msgid "no default"
 msgid "No Default"
 msgstr "無預設值"
 
-#: src/ibus-setup-chewing-window.ui:161
+#: src/setup/ibus-setup-chewing-window.ui:160
 #, fuzzy
 #| msgid "lowercase"
 msgid "Lower Case"
 msgstr "小寫"
 
-#: src/ibus-setup-chewing-window.ui:162
+#: src/setup/ibus-setup-chewing-window.ui:161
 #, fuzzy
 #| msgid "uppercase"
 msgid "Upper Case"
 msgstr "大寫"
 
-#: src/ibus-setup-chewing-window.ui:166
+#: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Default English Letter Case"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:167
+#: src/setup/ibus-setup-chewing-window.ui:166
 msgid "The letter case without pressing the Shift key"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:174
+#: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Selecting"
 msgstr "選字"
 
-#: src/ibus-setup-chewing-window.ui:175
+#: src/setup/ibus-setup-chewing-window.ui:174
 msgid "Configure the candidate selection behavior"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:186
+#: src/setup/ibus-setup-chewing-window.ui:185
 #, fuzzy
 #| msgid "Candidate per page"
 msgid "Candidates Per Page"
 msgstr "每頁候選字數"
 
-#: src/ibus-setup-chewing-window.ui:192
+#: src/setup/ibus-setup-chewing-window.ui:191
 #, fuzzy
 #| msgid "Show page number"
 msgid "Show Page Number"
 msgstr "顯示頁碼"
 
-#: src/ibus-setup-chewing-window.ui:198
+#: src/setup/ibus-setup-chewing-window.ui:197
 #, fuzzy
 #| msgid "Choose phrases from backward"
 msgid "Choose Phrases Backwards"
 msgstr "後方選詞"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
-#: src/ibus-setup-chewing-window.ui:199
+#: src/setup/ibus-setup-chewing-window.ui:198
 #, fuzzy
 #| msgid ""
 #| "Open candidate list from the back of a phrase, without moving the cursor "
@@ -308,15 +296,15 @@ msgstr "後方選詞"
 msgid "Open candidate list from the last character of a phrase"
 msgstr "直接由後方選詞，不必把游標移到候選詞前。"
 
-#: src/ibus-setup-chewing-window.ui:205
+#: src/setup/ibus-setup-chewing-window.ui:204
 msgid "Use Space Key as Selection Key"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:211
+#: src/setup/ibus-setup-chewing-window.ui:210
 msgid "Use Vertical Candidate Panel"
 msgstr ""
 
-#: src/ibus-setup-chewing-window.ui:212
+#: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Choose from vertical or horizontal panel"
 msgstr ""
 
