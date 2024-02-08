@@ -11,7 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 22:12+0900\n"
 "PO-Revision-Date: 2024-02-09 13:36+0000\n"
-"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -47,15 +48,13 @@ msgstr "精業"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "Eten"
-msgstr ""
+msgstr "倚天"
 
 #: src/setup/ibus-setup-chewing-window.ui:25
 msgid "Eten 26"
 msgstr "倚天 26 鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:26
-#, fuzzy
-#| msgid "dvorak"
 msgid "Dvorak"
 msgstr "Dvorak"
 
@@ -69,7 +68,7 @@ msgstr "大千 26 鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:29
 msgid "Hanyu Pinyin"
-msgstr ""
+msgstr "漢語拼音"
 
 #: src/setup/ibus-setup-chewing-window.ui:30
 msgid "THL Pinyin"
