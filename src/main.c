@@ -82,14 +82,23 @@ static void start_component(void) {
             QUOTE_ME(PROJECT_NAME));
     }
 
+    // clang-format off
     IBusEngineDesc *engineDesc = ibus_engine_desc_new_varargs(
-        "name", "chewing", "longname", _("Chewing"), "description",
-        _("Chinese chewing input method"), "language", "zh_TW", "license",
-        "GPLv2+", "author", _("Peng Huang, Ding-Yi Chen"), "icon",
-        QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
-        "layout", "us", "setup", QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing",
-        "version", QUOTE_ME(PRJ_VER), "textdomain", QUOTE_ME(PROJECT_NAME),
+        "name", "chewing",
+        "longname", _("Chewing"),
+        "description", _("Chinese chewing input method"),
+        "language", "zh_TW",
+        "license", "GPLv2+",
+        "author", _("Peng Huang, Ding-Yi Chen"),
+        "icon", QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
+        "icon_prop_key", "InputMode",
+        "symbol", "&#x9177;",
+        "layout", "us",
+        "setup", QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing",
+        "version", QUOTE_ME(PRJ_VER),
+        "textdomain", QUOTE_ME(PROJECT_NAME),
         NULL);
+    // clang-format on
 
     ibus_component_add_engine(component, engineDesc);
 
