@@ -336,10 +336,10 @@ ibus_chewing_engine_class_init(IBusChewingEngineClass *klass G_GNUC_UNUSED) {
     GObjectClass *g_object_class G_GNUC_UNUSED = (GObjectClass *)klass;
     IBusEngineClass *ibus_engine_class = (IBusEngineClass *)klass;
 
-    klass->InputMode_label_chi =
-        g_object_ref_sink(ibus_text_new_from_static_string(_("Chinese Mode")));
+    klass->InputMode_label_chi = g_object_ref_sink(
+        ibus_text_new_from_static_string(_("Switch to Alphanumeric Mode")));
     klass->InputMode_label_eng = g_object_ref_sink(
-        ibus_text_new_from_static_string(_("Alphanumeric Mode")));
+        ibus_text_new_from_static_string(_("Switch to Chinese Mode")));
     klass->InputMode_tooltip =
         g_object_ref_sink(ibus_text_new_from_static_string(
             _("Click to toggle Chinese/Alphanumeric Mode")));
