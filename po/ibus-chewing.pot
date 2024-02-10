@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-10 08:57+0900\n"
+"POT-Creation-Date: 2024-02-10 09:15+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -249,19 +249,11 @@ msgstr ""
 msgid "Cannot connect to IBus!"
 msgstr ""
 
-#: src/main.c:78
-msgid "Chewing component"
-msgstr ""
-
-#: src/main.c:79 src/main.c:92
-msgid "Peng Huang, Ding-Yi Chen"
-msgstr ""
-
-#: src/main.c:88
+#: src/main.c:94
 msgid "Chewing"
 msgstr ""
 
-#: src/main.c:89
+#: src/main.c:95
 msgid "Chinese chewing input method"
 msgstr ""
 

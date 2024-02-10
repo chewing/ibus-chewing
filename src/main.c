@@ -74,12 +74,18 @@ static void start_component(void) {
         component = ibus_component_new_from_file(
             QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
     } else {
+        // clang-format off
         component = ibus_component_new(
-            QUOTE_ME(PROJECT_SCHEMA_ID), _("Chewing component"),
-            QUOTE_ME(PRJ_VER), "GPLv2+", _("Peng Huang, Ding-Yi Chen"),
-            "http://code.google.com/p/ibus",
+            QUOTE_ME(PROJECT_SCHEMA_ID),
+            "Chewing component",
+            QUOTE_ME(PRJ_VER),
+            "GPLv2+",
+            "Peng Huang, Ding-Yi Chen",
+            "https://github.com/chewing/ibus-chewing",
             QUOTE_ME(LIBEXEC_DIR) "/ibus-engine-chewing --ibus",
-            QUOTE_ME(PROJECT_NAME));
+            QUOTE_ME(PROJECT_NAME)
+        );
+        // clang-format on
     }
 
     // clang-format off
@@ -89,7 +95,7 @@ static void start_component(void) {
         "description", _("Chinese chewing input method"),
         "language", "zh_TW",
         "license", "GPLv2+",
-        "author", _("Peng Huang, Ding-Yi Chen"),
+        "author", "Peng Huang, Ding-Yi Chen",
         "icon", QUOTE_ME(PRJ_DATA_DIR) "/icons/" QUOTE_ME(PROJECT_NAME) ".png",
         "icon_prop_key", "InputMode",
         "symbol", "&#x9177;",
