@@ -11,7 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-10 16:42+0900\n"
 "PO-Revision-Date: 2024-02-10 08:45+0000\n"
-"Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -284,9 +285,8 @@ msgid "Chewing"
 msgstr "新酷音"
 
 #: src/main.c:95
-#, fuzzy
 msgid "Chinese chewing input method"
-msgstr "調整輸入法組態設定"
+msgstr "中文新酷音輸入法"
 
 #~ msgid "Show Systray Icon"
 #~ msgstr "顯示系統匣圖示"
