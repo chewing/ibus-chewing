@@ -15,6 +15,16 @@ Bugs and enhancement can be filed to either:
  * [GitHub ibus-chewing](https://github.com/definite/ibus-chewing/issues)
 
 
+ibus-chewing releases can be verified with the following [minisign][] public key
+
+    RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
+
+For example, to verify the 2.0.0 release
+
+    minisign -Vm ibus-chewing-2.0.0-Source.tar.xz -P RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
+
+[minisign]: https://jedisct1.github.io/minisign/
+
 # Development
 
 We use LLVM coding style to make our review easier, so if you like to
