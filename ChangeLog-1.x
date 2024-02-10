@@ -10,7 +10,7 @@
     + GitHub Issue: #165 Support vertical lookup table and optimize turn page keys
     + GitHub Issue: #166 Tweak ibus-setup dialog window and replace some deprecated APIs
     + GitHub Issue: #167 Add dropdown menu for Chi-Eng-Mode toggle key
-- Fix: 
+- Fix:
     + GitHub Issue: #130 Destroy *preEditText, *auxText and *outgoingText when disable to prevent leak
     + GitHub Issue: #144, 149 Ignore keystrokes in English mode
 - Acknowledge:

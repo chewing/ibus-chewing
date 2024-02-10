@@ -22,6 +22,7 @@
  */
 
 #include "IBusChewingUtil.h"
+#include "MakerDialogUtil.h"
 #include "ibus-chewing-engine.h"
 #include <chewing.h>
 #include <glib/gi18n.h>

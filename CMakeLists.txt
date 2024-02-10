@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21.0)
 
-project(ibus-chewing VERSION 1.6.2 LANGUAGES C)
+project(ibus-chewing VERSION 2.0.0 LANGUAGES C)
 set(PRJ_SUMMARY "The Chewing engine for IBus input platform")
 set(SUMMARY_TRANSLATIONS "zh_TW" "IBus新酷音輸入法")
 
@@ -27,8 +27,7 @@ set(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
 set(VENDOR "Red Hat, APAC, Inc.")
 set(LICENSE "GPLv2+")
 set(PRJ_GROUP "System Environment/Libraries")
-set(RPM_SPEC_URL "https://github.com/definite/${PROJECT_NAME}")
-set(RPM_SPEC_SOURCES "https://github.com/definite/%{name}/releases/download/%{version}/%{name}-%{version}-Source.tar.gz")
+set(RRJ_URL "https://github.com/chewing/${PROJECT_NAME}")
 
 enable_testing()
 include(GNUInstallDirs)
@@ -51,6 +50,7 @@ pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
 pkg_check_modules(LIBADWAITA REQUIRED IMPORTED_TARGET libadwaita-1)
 
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
+find_program(GLIB_COMPILE_SCHEMAS NAMES glib-compile-schemas)
 
 set(CMAKE_C_STANDARD 99)
 add_compile_definitions(_XOPEN_SOURCE)
@@ -74,6 +74,7 @@ add_compile_definitions(
     DATA_DIR=${CMAKE_INSTALL_FULL_DATADIR}
     PRJ_DATA_DIR=${PRJ_DATA_DIR}
     PRJ_VER=${PRJ_VER}
+    PRJ_URL=${PRJ_URL}
     LIBEXEC_DIR=${LIBEXEC_DIR}
     CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}
 )
@@ -101,7 +102,7 @@ add_subdirectory(po)
 add_subdirectory(src bin)
 add_subdirectory(test)
 
-install(FILES AUTHORS README.md ChangeLog COPYING USER-GUIDE
+install(FILES AUTHORS README.md CHANGELOG.md ChangeLog-1.x COPYING USER-GUIDE
     DESTINATION ${CMAKE_INSTALL_DOCDIR})
 install(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml
     DESTINATION ${CMAKE_INSTALL_DATADIR}/ibus/component)

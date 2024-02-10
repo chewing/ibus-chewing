@@ -77,7 +77,7 @@ add_executable(ibus-engine-chewing
     main.c
 )
 target_compile_definitions(ibus-engine-chewing
-    PRIVATE VERBOSE_LEVEL=$<IF:$<CONFIG:Debug>,DEBUG,MSG>)
+    PRIVATE VERBOSE_LEVEL=$<IF:$<CONFIG:Debug>,DEBUG,WARN>)
 target_include_directories(ibus-engine-chewing
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -89,6 +89,9 @@ set(GSETTINGS_SCHEMAS_DIR ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas)
 install(FILES setup/${PROJECT_GSCHEMA_XML}
     DESTINATION ${GSETTINGS_SCHEMAS_DIR}
 )
+if(GLIB_COMPILE_SCHEMAS)
+    install(CODE "execute_process(COMMAND glib-compile-schemas ${CMAKE_INSTALL_PREFIX}/${GSETTINGS_SCHEMAS_DIR})")
+endif()
 
 install(TARGETS ibus-engine-chewing ibus-setup-chewing
     DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
