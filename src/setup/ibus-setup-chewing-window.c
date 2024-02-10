@@ -27,7 +27,6 @@ struct _IbusSetupChewingWindow {
     AdwComboRow *kb_type;
     AdwComboRow *sel_keys;
     AdwSwitchRow *plain_zhuyin;
-    AdwSwitchRow *show_systray;
     AdwSwitchRow *auto_shift_cur;
     AdwSwitchRow *add_phrase_direction;
     AdwSwitchRow *clean_buffer_focus_out;
@@ -60,7 +59,6 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(kb_type);
     bind_child(sel_keys);
     bind_child(plain_zhuyin);
-    bind_child(show_systray);
     bind_child(auto_shift_cur);
     bind_child(add_phrase_direction);
     bind_child(clean_buffer_focus_out);
