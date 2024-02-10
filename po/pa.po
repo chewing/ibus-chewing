@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 22:12+0900\n"
+"POT-Creation-Date: 2024-02-10 16:42+0900\n"
 "PO-Revision-Date: 2014-11-13 09:28-0500\n"
 "Last-Translator: A S Alam <aalam@fedoraproject.org>\n"
 "Language-Team: Punjabi\n"
@@ -13,6 +13,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: src/setup/ibus-setup-chewing-window.ui:8
+#, fuzzy
+msgid "Chewing Settings"
+msgstr "ਸੈਟਿੰਗ"
 
 #: src/setup/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
@@ -76,7 +81,6 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:54
 #, fuzzy
-#| msgid "Selecting"
 msgid "Selection Keys"
 msgstr "ਚੋਣ"
 
@@ -92,162 +96,190 @@ msgstr ""
 msgid "Enable or disable automatic candidate selection"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:67
-msgid "Show Systray Icon"
-msgstr ""
-
-#: src/setup/ibus-setup-chewing-window.ui:68
-msgid "Whether to show the systray icon"
-msgstr ""
-
 #: src/setup/ibus-setup-chewing-window.ui:69
-msgid "This feature is currently not implemented."
-msgstr ""
-
-#: src/setup/ibus-setup-chewing-window.ui:77
 msgid "Editing"
 msgstr "ਸੋਧ"
 
-#: src/setup/ibus-setup-chewing-window.ui:78
+#: src/setup/ibus-setup-chewing-window.ui:70
 msgid "Configure the input method behavior"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:82
+#: src/setup/ibus-setup-chewing-window.ui:74
 msgid "Auto Move Cursor"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:83
+#: src/setup/ibus-setup-chewing-window.ui:75
 msgid "Automatically move the cursor to the next character after selection"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:89
+#: src/setup/ibus-setup-chewing-window.ui:81
 msgid "Add Phrase Before Cursor"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:90
+#: src/setup/ibus-setup-chewing-window.ui:82
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:96
+#: src/setup/ibus-setup-chewing-window.ui:88
 msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:102
+#: src/setup/ibus-setup-chewing-window.ui:94
 msgid "Easy Symbol Input"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:103
+#: src/setup/ibus-setup-chewing-window.ui:95
 msgid "Press Shift + keys to input Chinese punctuation symbols"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:108
+#: src/setup/ibus-setup-chewing-window.ui:100
 msgid "Esc Clean All Buffer"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:109
+#: src/setup/ibus-setup-chewing-window.ui:101
 msgid "Escape key discards all uncommitted texts"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:122
+#: src/setup/ibus-setup-chewing-window.ui:114
 msgid "Maximum Chinese Characters"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:123
+#: src/setup/ibus-setup-chewing-window.ui:115
 msgid "Until how many characters should trigger auto-commit"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:128
+#: src/setup/ibus-setup-chewing-window.ui:120
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:132
+#: src/setup/ibus-setup-chewing-window.ui:124
 msgid "Caps Lock"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:133
+#: src/setup/ibus-setup-chewing-window.ui:125
 msgid "Shift"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:134
+#: src/setup/ibus-setup-chewing-window.ui:126
 msgid "Shift_L"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:135
+#: src/setup/ibus-setup-chewing-window.ui:127
 msgid "Shift_R"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:146
+#: src/setup/ibus-setup-chewing-window.ui:138
 msgid "Disable Syncing"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:147
+#: src/setup/ibus-setup-chewing-window.ui:139
 msgid "Sync with Keyboard State"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:151
+#: src/setup/ibus-setup-chewing-window.ui:143
 msgid "Sync Caps Lock and IM"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:159
+#: src/setup/ibus-setup-chewing-window.ui:151
 #, fuzzy
-#| msgid "default"
 msgid "No Default"
 msgstr "ਮੂਲ"
 
-#: src/setup/ibus-setup-chewing-window.ui:160
+#: src/setup/ibus-setup-chewing-window.ui:152
 msgid "Lower Case"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:161
+#: src/setup/ibus-setup-chewing-window.ui:153
 msgid "Upper Case"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:165
+#: src/setup/ibus-setup-chewing-window.ui:157
 msgid "Default English Letter Case"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:166
+#: src/setup/ibus-setup-chewing-window.ui:158
 msgid "The letter case without pressing the Shift key"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:173
+#: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Selecting"
 msgstr "ਚੋਣ"
 
-#: src/setup/ibus-setup-chewing-window.ui:174
+#: src/setup/ibus-setup-chewing-window.ui:166
 msgid "Configure the candidate selection behavior"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:185
+#: src/setup/ibus-setup-chewing-window.ui:177
 msgid "Candidates Per Page"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:191
+#: src/setup/ibus-setup-chewing-window.ui:183
 msgid "Show Page Number"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:197
+#: src/setup/ibus-setup-chewing-window.ui:189
 msgid "Choose Phrases Backwards"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:198
+#: src/setup/ibus-setup-chewing-window.ui:190
 msgid "Open candidate list from the last character of a phrase"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:204
+#: src/setup/ibus-setup-chewing-window.ui:196
 msgid "Use Space Key as Selection Key"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:210
+#: src/setup/ibus-setup-chewing-window.ui:202
 msgid "Use Vertical Candidate Panel"
 msgstr ""
 
-#: src/setup/ibus-setup-chewing-window.ui:211
+#: src/setup/ibus-setup-chewing-window.ui:203
 msgid "Choose from vertical or horizontal panel"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:339
+msgid "Switch to Alphanumeric Mode"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:341
+msgid "Switch to Chinese Mode"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:344
+msgid "Click to toggle Chinese/Alphanumeric Mode"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:350
+msgid "Fullwidth Form"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:352
+msgid "Halfwidth Form"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:355
+msgid "Click to toggle Halfwidth/Fullwidth Form"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:361
+msgid "IBus-Chewing Preferences"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:363
+msgid "Click to configure IBus-Chewing"
+msgstr ""
+
+#: src/main.c:67
+msgid "Cannot connect to IBus!"
+msgstr ""
+
+#: src/main.c:94
+msgid "Chewing"
+msgstr ""
+
+#: src/main.c:95
+msgid "Chinese chewing input method"
 msgstr ""
 
 #~ msgid "Keyboard"
 #~ msgstr "ਕੀਬੋਰਡ"
-
-#~ msgid "Setting"
-#~ msgstr "ਸੈਟਿੰਗ"
