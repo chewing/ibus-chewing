@@ -19,20 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  */
+#include "GSettingsBackend.h"
+#include "IBusChewingPreEdit.h"
+#include "IBusChewingProperties.h"
+#include "IBusChewingUtil.h"
 #include <chewing.h>
+#include <ctype.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <ibus.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define GETTEXT_PACKAGE "gtk30"
-#include "GSettingsBackend.h"
-#include "IBusChewingPreEdit.h"
-#include "IBusChewingProperties.h"
-#include "IBusChewingUtil.h"
-#include <ctype.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
 
 #define GOB_VERSION_MAJOR 2
 #define GOB_VERSION_MINOR 0
