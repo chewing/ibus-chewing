@@ -1,4 +1,3 @@
-#define GETTEXT_PACKAGE "gtk30"
 #include "IBusChewingProperties.h"
 #include "GSettingsBackend.h"
 #include "IBusChewingUtil.h"

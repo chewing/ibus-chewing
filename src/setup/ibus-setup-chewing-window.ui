@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Created with Cambalache 0.16.0 -->
-<interface>
+<interface domain="ibus-chewing">
   <!-- interface-name ibus-setup-chewing.ui -->
   <requires lib="gtk" version="4.0" />
   <requires lib="libadwaita" version="1.4" />
   <template class="IbusSetupChewingWindow" parent="AdwPreferencesWindow">
-    <property name="title">Chewing Settings</property>
+    <property name="title" translatable="yes">Chewing Settings</property>
     <child>
       <object class="AdwPreferencesPage">
         <child>
