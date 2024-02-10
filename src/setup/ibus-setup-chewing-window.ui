@@ -62,14 +62,6 @@
                 <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection</property>
               </object>
             </child>
-            <child>
-              <object class="AdwSwitchRow" id="show_systray">
-                <property name="title" translatable="yes">Show Systray Icon</property>
-                <property name="subtitle" translatable="yes">Whether to show the systray icon</property>
-                <property name="tooltip-text" translatable="yes">This feature is currently not implemented.</property>
-                <property name="sensitive">False</property>
-              </object>
-            </child>
           </object>
         </child>
         <child>
