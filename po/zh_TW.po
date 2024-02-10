@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-10 16:42+0900\n"
-"PO-Revision-Date: 2024-02-09 13:36+0000\n"
+"PO-Revision-Date: 2024-02-10 08:45+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
@@ -23,9 +23,8 @@ msgstr ""
 "X-Generator: Weblate 5.3.1\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
-#, fuzzy
 msgid "Chewing Settings"
-msgstr "設定"
+msgstr "設定新酷音"
 
 #: src/setup/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
@@ -61,7 +60,7 @@ msgstr "倚天 26 鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:26
 msgid "Dvorak"
-msgstr "Dvorak"
+msgstr "Dvorak 鍵盤"
 
 #: src/setup/ibus-setup-chewing-window.ui:27
 msgid "Dvorak-Hsu"
@@ -246,37 +245,35 @@ msgstr "選擇垂直或水平式面板"
 
 #: src/ibus-chewing-engine.c:339
 msgid "Switch to Alphanumeric Mode"
-msgstr ""
+msgstr "切換到英數模式"
 
 #: src/ibus-chewing-engine.c:341
-#, fuzzy
 msgid "Switch to Chinese Mode"
-msgstr "Shift 切換中文"
+msgstr "切換到中文模式"
 
 #: src/ibus-chewing-engine.c:344
-#, fuzzy
 msgid "Click to toggle Chinese/Alphanumeric Mode"
-msgstr "Shift 鍵切換中文模式"
+msgstr "點擊以切換中文或英數模式"
 
 #: src/ibus-chewing-engine.c:350
 msgid "Fullwidth Form"
-msgstr ""
+msgstr "全形符號"
 
 #: src/ibus-chewing-engine.c:352
 msgid "Halfwidth Form"
-msgstr ""
+msgstr "半形符號"
 
 #: src/ibus-chewing-engine.c:355
 msgid "Click to toggle Halfwidth/Fullwidth Form"
-msgstr ""
+msgstr "點擊以切換全形或半形符號"
 
 #: src/ibus-chewing-engine.c:361
 msgid "IBus-Chewing Preferences"
-msgstr ""
+msgstr "打開新酷音組態設定"
 
 #: src/ibus-chewing-engine.c:363
 msgid "Click to configure IBus-Chewing"
-msgstr ""
+msgstr "點擊以打開新酷音組態設定"
 
 #: src/main.c:67
 msgid "Cannot connect to IBus!"
@@ -288,9 +285,8 @@ msgid "Chewing"
 msgstr "新酷音"
 
 #: src/main.c:95
-#, fuzzy
 msgid "Chinese chewing input method"
-msgstr "調整輸入法組態設定"
+msgstr "中文新酷音輸入法"
 
 #~ msgid "Show Systray Icon"
 #~ msgstr "顯示系統匣圖示"
