@@ -5,406 +5,537 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
-"Report-Msgid-Bugs-To: Ding-Yi Chen <dchen at redhat.com>\n"
-"POT-Creation-Date: 2016-05-02 00:48+1000\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-07 22:12+0900\n"
 "PO-Revision-Date: 2016-09-19 12:43-0400\n"
 "Last-Translator: José Fournier <jaaf64@zoraldia.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:13
-msgid "Editing"
-msgstr "Modifier"
+#: src/setup/ibus-setup-chewing-window.ui:13
+#, fuzzy
+#| msgid "Chinese chewing input method"
+msgid "Configure the input method"
+msgstr "Méthode de saisie chinoise « Chewing »"
+
+#: src/setup/ibus-setup-chewing-window.ui:14
+#, fuzzy
+#| msgctxt "Sync"
+#| msgid "input method"
+msgid "Input Method"
+msgstr "Méthode de saisie"
+
+#: src/setup/ibus-setup-chewing-window.ui:20
+msgid "Standard"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:14
-msgid "Selecting"
-msgstr "Sélection"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:15
-msgid "Keyboard"
-msgstr "Clavier"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:18
-msgid "default"
-msgstr "par défaut"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:19
-msgid "hsu"
+#: src/setup/ibus-setup-chewing-window.ui:21
+#, fuzzy
+#| msgid "hsu"
+msgid "Hsu"
 msgstr "hsu"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:20
-msgid "ibm"
-msgstr "ibm"
+#: src/setup/ibus-setup-chewing-window.ui:22
+msgid "IBM"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:23
+msgid "Gin-Yieh"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:24
+msgid "Eten"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:25
+msgid "Eten 26"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:21
-msgid "gin_yieh"
-msgstr "gin_yieh"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:22
-msgid "eten"
-msgstr "eten"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:23
-msgid "eten26"
-msgstr "eten26"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:24
-msgid "dvorak"
+#: src/setup/ibus-setup-chewing-window.ui:26
+#, fuzzy
+#| msgid "dvorak"
+msgid "Dvorak"
 msgstr "dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:25
-msgid "dvorak_hsu"
+#: src/setup/ibus-setup-chewing-window.ui:27
+#, fuzzy
+#| msgid "dvorak_hsu"
+msgid "Dvorak-Hsu"
 msgstr "dvorak_hsu"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:26
-msgid "dachen_26"
-msgstr "dachen_26"
+#: src/setup/ibus-setup-chewing-window.ui:28
+msgid "DaChen 26"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:29
+msgid "Hanyu Pinyin"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:30
+msgid "THL Pinyin"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:31
+msgid "MPS2 Pinyin"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:27
-msgid "hanyu"
-msgstr "hanyu"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:45
-msgid "no default"
-msgstr "pas de valeur par défaut"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:46
-msgid "lowercase"
-msgstr "Minuscule"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:47
-msgid "uppercase"
-msgstr "Majuscule"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:52
-msgctxt "Sync"
-msgid "disable"
-msgstr "Désactiver"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:53
-msgctxt "Sync"
-msgid "keyboard"
-msgstr "Clavier"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:54
-msgctxt "Sync"
-msgid "input method"
-msgstr "Méthode de saisie"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:59
-msgid "Auto"
-msgstr "Auto"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:60
-msgid "Big5"
-msgstr "Big5"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:61
-msgid "UTF8"
-msgstr "UTF8"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:66
+#: src/setup/ibus-setup-chewing-window.ui:35
 msgid "Keyboard Type"
 msgstr "Type de clavier"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:70
-msgid "Select Zhuyin keyboard layout"
-msgstr "Sélectionner la disposition Zhuyin du clavier."
-
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:72
-msgid "Selection keys"
+#: src/setup/ibus-setup-chewing-window.ui:54
+#, fuzzy
+#| msgid "Selection keys"
+msgid "Selection Keys"
 msgstr "Touches de sélection"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:78
-msgid ""
-"Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
-"select the 1st candidate, 's' for 2nd, and so on."
+#: src/setup/ibus-setup-chewing-window.ui:55
+msgid "Keys used to select candidate"
 msgstr ""
-"Touches utilisées pour sélectionner le candidat. Par exemple : « asdfghjkl; "
-"» , appuyez sur « a » pour sélectionner le 1er candidat, sur « s » pour le "
-"2ᵉ, etc."
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:82
-msgid "Hsu's selection key"
-msgstr "Touche de sélection de Hsu"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:86
-msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
+#: src/setup/ibus-setup-chewing-window.ui:61
+msgid "Intelligent Phrasing"
 msgstr ""
-"Touches de sélection du clavier Hsu, 1 pour asdfjkl789, 2 pour asdfzxcv89 ."
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:91
-msgid "Show systray icons"
+#: src/setup/ibus-setup-chewing-window.ui:62
+msgid "Enable or disable automatic candidate selection"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:67
+#, fuzzy
+#| msgid "Show systray icons"
+msgid "Show Systray Icon"
 msgstr "Afficher une icône dans la barre des tâches"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:95
-msgid ""
-"On: Show Chinese/English and Full/Half shape status as a systray icon\n"
-"Off: Do not show the status icon"
+#: src/setup/ibus-setup-chewing-window.ui:68
+#, fuzzy
+#| msgid "Show systray icons"
+msgid "Whether to show the systray icon"
+msgstr "Afficher une icône dans la barre des tâches"
+
+#: src/setup/ibus-setup-chewing-window.ui:69
+msgid "This feature is currently not implemented."
 msgstr ""
-"Cochée :  affiche les états chinois/anglais et demie/pleine largeur sous "
-"forme d'une icône dans la zone de notification du système\n"
-"Décochée : n'affiche pas l'icône d'état"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:99
-msgid "Auto move cursor"
+#: src/setup/ibus-setup-chewing-window.ui:77
+msgid "Editing"
+msgstr "Modifier"
+
+#: src/setup/ibus-setup-chewing-window.ui:78
+#, fuzzy
+#| msgid "Chinese chewing input method"
+msgid "Configure the input method behavior"
+msgstr "Méthode de saisie chinoise « Chewing »"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#: src/setup/ibus-setup-chewing-window.ui:82
+#, fuzzy
+#| msgid "Auto move cursor"
+msgid "Auto Move Cursor"
 msgstr "Déplacement automatique du curseur"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:102
-msgid "Automatically move cursor to next character"
+#: src/setup/ibus-setup-chewing-window.ui:83
+#, fuzzy
+#| msgid "Automatically move cursor to next character"
+msgid "Automatically move the cursor to the next character after selection"
 msgstr "Déplace automatiquement le curseur au prochain caractère"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:105
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:108
-msgid "Add phrases to the front"
+#: src/setup/ibus-setup-chewing-window.ui:89
+#, fuzzy
+#| msgid "Add phrases to the front"
+msgid "Add Phrase Before Cursor"
 msgstr "Ajouter les phrases à l'avant"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:111
-msgid "Clean pre-edit buffer when focus out"
+#: src/setup/ibus-setup-chewing-window.ui:90
+msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:96
+#, fuzzy
+#| msgid "Clean pre-edit buffer when focus out"
+msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr "Vider le tampon de pré-édition lorsqu'il a perdu le focus"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:115
-msgid ""
-"On: Clean pre-edit buffer when focus out to prevent program crash\n"
-"Off: Keep what you already type for convenience"
-msgstr ""
-"Cochée : vide le tampon de pré-édition lorsqu'il a perdu le focus pour "
-"éviter le plantage du programme\n"
-"Décochée : pour commodité, conserve ce qui a déjà été saisi"
-
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:119
-msgid "Easy symbol input"
+#: src/setup/ibus-setup-chewing-window.ui:102
+#, fuzzy
+#| msgid "Easy symbol input"
+msgid "Easy Symbol Input"
 msgstr "Saisie facile des symboles"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:122
-msgid "Press shift to input Chinese punctuation symbols"
+#: src/setup/ibus-setup-chewing-window.ui:103
+#, fuzzy
+#| msgid "Press shift to input Chinese punctuation symbols"
+msgid "Press Shift + keys to input Chinese punctuation symbols"
 msgstr ""
 "Appuyez sur la touche majuscule pour saisir des caractères de ponctuation "
 "chinois"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:125
-msgid "Esc clean all buffer"
+#: src/setup/ibus-setup-chewing-window.ui:108
+#, fuzzy
+#| msgid "Esc clean all buffer"
+msgid "Esc Clean All Buffer"
 msgstr "La touche Échap supprime toute les mémoires tampons"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:128
-msgid "Escape key cleans the text in pre-edit-buffer"
+#: src/setup/ibus-setup-chewing-window.ui:109
+msgid "Escape key discards all uncommitted texts"
 msgstr ""
-"La touche d'échappement vide le texte stocké dans le tampon de pré-édition"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:131
-msgid "Maximum Chinese characters"
+#: src/setup/ibus-setup-chewing-window.ui:122
+#, fuzzy
+#| msgid "Maximum Chinese characters"
+msgid "Maximum Chinese Characters"
 msgstr "Nombre maximum de caractères chinois"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:135
-msgid ""
-"Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
-"symbols."
+#: src/setup/ibus-setup-chewing-window.ui:123
+msgid "Until how many characters should trigger auto-commit"
 msgstr ""
-"Le nombre maximum de caractères chinois dans la mémoire tampon de pré-"
-"édition, incluant les symboles Zhuyin saisis."
+
+#: src/setup/ibus-setup-chewing-window.ui:128
+msgid "Chinese/Alphanumeric Mode Toggle Key"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:132
+msgid "Caps Lock"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:133
+msgid "Shift"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:134
+msgid "Shift_L"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:135
+msgid "Shift_R"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:146
+msgid "Disable Syncing"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:147
+msgid "Sync with Keyboard State"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:140
-msgid "Sync between CapsLock and IM"
+#: src/setup/ibus-setup-chewing-window.ui:151
+#, fuzzy
+#| msgid "Sync between CapsLock and IM"
+msgid "Sync Caps Lock and IM"
 msgstr "Synchronisation entre verrouillage des majuscules et mode de saisie"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:147
-msgid ""
-"Occasionally, the CapsLock status does not match the IM, this option "
-"determines how these status be synchronized. Valid values:\n"
-"\"disable\": Do nothing\n"
-"\"keyboard\": IM status follows keyboard status\n"
-"\"IM\": Keyboard status follows IM status"
+#: src/setup/ibus-setup-chewing-window.ui:159
+#, fuzzy
+#| msgid "no default"
+msgid "No Default"
+msgstr "pas de valeur par défaut"
+
+#: src/setup/ibus-setup-chewing-window.ui:160
+#, fuzzy
+#| msgid "lowercase"
+msgid "Lower Case"
+msgstr "Minuscule"
+
+#: src/setup/ibus-setup-chewing-window.ui:161
+#, fuzzy
+#| msgid "uppercase"
+msgid "Upper Case"
+msgstr "Majuscule"
+
+#: src/setup/ibus-setup-chewing-window.ui:165
+msgid "Default English Letter Case"
 msgstr ""
-"Occasionnellement, l'état du verrouillage des majuscules ne correspond pas "
-"au mode de saisie, cette option détermine la manière de synchroniser ces "
-"états. Valeurs valides :\n"
-"« Désactiver » : ne rien faire\n"
-"« Clavier » : la méthode de saisie suit l'état du clavier\n"
-"« IM » : le clavier suit l'état de la méthode de saisie"
+
+#: src/setup/ibus-setup-chewing-window.ui:166
+msgid "The letter case without pressing the Shift key"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:153
-msgid "Number pad always input number"
-msgstr "Le pavé numérique produit toujours des chiffres"
+#: src/setup/ibus-setup-chewing-window.ui:173
+msgid "Selecting"
+msgstr "Sélection"
 
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:156
-msgid "Always input numbers when number keys from key pad is inputted"
+#: src/setup/ibus-setup-chewing-window.ui:174
+msgid "Configure the candidate selection behavior"
 msgstr ""
-"Toujours saisir des chiffres lorsque des touches du clavier numérique sont "
-"pressées"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:160
-msgid "Shift toggle Chinese Mode"
-msgstr "La touche majuscule fait basculer en mode chinois"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:163
-msgid "Shift key to toggle Chinese Mode"
-msgstr "Touche majuscule pour activer/désactiver le mode chinois"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:166
-msgid "Caps Lock toggles Chinese Mode"
-msgstr ""
-"La touche verrouillage des majuscules active/désactive le mode chinois"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:169
-msgid ""
-"On: Caps Lock toggle Chinese/English\n"
-"Off: Caps Lock only affect English letter case"
-msgstr ""
-"Cochée : la touche verrouillage des majuscules fait basculer de chinois à "
-"anglais et inversement\n"
-"Décochée : la touche verrouillage des majuscules affecte uniquement la casse "
-"anglaise"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:174
-msgid ""
-"Default English letter case\n"
-"  (Only effective when Caps Lock toggles Chinese is ON)"
-msgstr ""
-"Casse par défaut en anglais\n"
-"... (actif uniquement quand l'option « Touche verrouillage des majuscules "
-"active/désactive le mode chinois » est activée)"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:180
-msgid ""
-"no control: No default letter case. Not recommend if you use multiple "
-"keyboards or synergy\n"
-"lowercase: Default to lowercase, press shift for uppercase.\n"
-"uppercase: Default to uppercase, press shift for lowercase."
-msgstr ""
-"sans contrôle : pas de casse par défaut. Non recommandé si vous utilisez "
-"plusieurs claviers ou le logiciel Synergy\n"
-"minuscule : par défaut en minuscule, appuyez sur Maj pour passer en "
-"majuscule\n"
-"majuscule : par défaut en majuscule, appuyez sur Maj pour passer en "
-"minuscule"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:187
-msgid "Plain Zhuyin mode"
-msgstr "Mode Zhuyin simple"
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:191
-msgid ""
-"In plain Zhuyin mode, automatic candidate selection and related options are "
-"disabled or ignored."
-msgstr ""
-"En mode Zhuyin simple, la sélection de candidat automatique et les options "
-"qui y sont liées sont désactivées ou ignorées."
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:196
-msgid "Candidate per page"
+#: src/setup/ibus-setup-chewing-window.ui:185
+#, fuzzy
+#| msgid "Candidate per page"
+msgid "Candidates Per Page"
 msgstr "Candidats par page"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:199
-msgid "Number of candidate per page."
-msgstr "Nombre de candidats par page."
+#: src/setup/ibus-setup-chewing-window.ui:191
+msgid "Show Page Number"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:204
-msgid "Choose phrases from backward"
+#: src/setup/ibus-setup-chewing-window.ui:197
+#, fuzzy
+#| msgid "Choose phrases from backward"
+msgid "Choose Phrases Backwards"
 msgstr "Choisir des phrases depuis l'arrière"
 
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:207
-msgid "Choose phrases from the back, without moving cursor."
-msgstr "Choisir des phrases depuis l'arrière, sans déplacer le curseur."
-
-# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingProperties.c:212
-msgid "Space to select"
-msgstr "Espace à sélectionner"
-
-#: /home/dchen/ibus-chewing/po/../src/IBusChewingSystray.c:167
-msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+#: src/setup/ibus-setup-chewing-window.ui:198
+msgid "Open candidate list from the last character of a phrase"
 msgstr ""
-"Clic gauche pour basculer entre le chinois et l'anglais; clic droit pour "
-"basculer entre la demi-largeur et la pleine largeur"
 
-#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:7
-msgctxt "Configure"
-msgid "Cancel"
-msgstr "Annuler"
+#: src/setup/ibus-setup-chewing-window.ui:204
+msgid "Use Space Key as Selection Key"
+msgstr ""
 
-#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:8
-msgctxt "Configure"
-msgid "Save"
-msgstr "Sauvegarder"
+#: src/setup/ibus-setup-chewing-window.ui:210
+msgid "Use Vertical Candidate Panel"
+msgstr ""
 
-#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:9
-msgctxt "Configure"
-msgid "Apply"
-msgstr "Appliquer"
-
-#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:10
-msgctxt "Configure"
-msgid "Close"
-msgstr "Fermer"
-
-#: /home/dchen/ibus-chewing/po/../src/MakerDialogWidget.c:11
-msgctxt "Configure"
-msgid "Ok"
-msgstr "OK"
+#: src/setup/ibus-setup-chewing-window.ui:211
+msgid "Choose from vertical or horizontal panel"
+msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/ibus-setup-chewing.c:73
-msgid "Setting"
-msgstr "Paramètres"
-
-#: /home/dchen/ibus-chewing/po/../src/main.c:72
-msgid "Cannot connect to IBus!"
-msgstr "Connexion à IBus impossible !"
+#~ msgid "Keyboard"
+#~ msgstr "Clavier"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/main.c:82
-msgid "Chewing component"
-msgstr "Composant Chewing"
+#~ msgid "default"
+#~ msgstr "par défaut"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/main.c:84
-#: /home/dchen/ibus-chewing/po/../src/main.c:99
-msgid "Peng Huang, Ding-Yi Chen"
-msgstr "Peng Huang, Ding-Yi Chen"
+#~ msgid "ibm"
+#~ msgstr "ibm"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
-#: /home/dchen/ibus-chewing/po/../src/main.c:93
-msgid "Chewing"
-msgstr "Chewing"
+#~ msgid "gin_yieh"
+#~ msgstr "gin_yieh"
 
-#: /home/dchen/ibus-chewing/po/../src/main.c:95
-msgid "Chinese chewing input method"
-msgstr "Méthode de saisie chinoise « Chewing »"
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "eten"
+#~ msgstr "eten"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "eten26"
+#~ msgstr "eten26"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "dachen_26"
+#~ msgstr "dachen_26"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "hanyu"
+#~ msgstr "hanyu"
+
+#~ msgctxt "Sync"
+#~ msgid "disable"
+#~ msgstr "Désactiver"
+
+#~ msgctxt "Sync"
+#~ msgid "keyboard"
+#~ msgstr "Clavier"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Auto"
+#~ msgstr "Auto"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Big5"
+#~ msgstr "Big5"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "UTF8"
+#~ msgstr "UTF8"
+
+#~ msgid "Select Zhuyin keyboard layout"
+#~ msgstr "Sélectionner la disposition Zhuyin du clavier."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid ""
+#~ "Keys used to select candidate. For example \"asdfghjkl;\", press 'a' to "
+#~ "select the 1st candidate, 's' for 2nd, and so on."
+#~ msgstr ""
+#~ "Touches utilisées pour sélectionner le candidat. Par exemple : « "
+#~ "asdfghjkl; » , appuyez sur « a » pour sélectionner le 1er candidat, sur « "
+#~ "s » pour le 2ᵉ, etc."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Hsu's selection key"
+#~ msgstr "Touche de sélection de Hsu"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Hsu's keyboard selection keys, 1 for asdfjkl789, 2 for asdfzxcv89 ."
+#~ msgstr ""
+#~ "Touches de sélection du clavier Hsu, 1 pour asdfjkl789, 2 pour "
+#~ "asdfzxcv89 ."
+
+#~ msgid ""
+#~ "On: Show Chinese/English and Full/Half shape status as a systray icon\n"
+#~ "Off: Do not show the status icon"
+#~ msgstr ""
+#~ "Cochée :  affiche les états chinois/anglais et demie/pleine largeur sous "
+#~ "forme d'une icône dans la zone de notification du système\n"
+#~ "Décochée : n'affiche pas l'icône d'état"
+
+#~ msgid ""
+#~ "On: Clean pre-edit buffer when focus out to prevent program crash\n"
+#~ "Off: Keep what you already type for convenience"
+#~ msgstr ""
+#~ "Cochée : vide le tampon de pré-édition lorsqu'il a perdu le focus pour "
+#~ "éviter le plantage du programme\n"
+#~ "Décochée : pour commodité, conserve ce qui a déjà été saisi"
+
+#~ msgid "Escape key cleans the text in pre-edit-buffer"
+#~ msgstr ""
+#~ "La touche d'échappement vide le texte stocké dans le tampon de pré-édition"
+
+#~ msgid ""
+#~ "Maximum Chinese characters in pre-edit buffer, including inputing Zhuyin "
+#~ "symbols."
+#~ msgstr ""
+#~ "Le nombre maximum de caractères chinois dans la mémoire tampon de pré-"
+#~ "édition, incluant les symboles Zhuyin saisis."
+
+#~ msgid ""
+#~ "Occasionally, the CapsLock status does not match the IM, this option "
+#~ "determines how these status be synchronized. Valid values:\n"
+#~ "\"disable\": Do nothing\n"
+#~ "\"keyboard\": IM status follows keyboard status\n"
+#~ "\"IM\": Keyboard status follows IM status"
+#~ msgstr ""
+#~ "Occasionnellement, l'état du verrouillage des majuscules ne correspond "
+#~ "pas au mode de saisie, cette option détermine la manière de synchroniser "
+#~ "ces états. Valeurs valides :\n"
+#~ "« Désactiver » : ne rien faire\n"
+#~ "« Clavier » : la méthode de saisie suit l'état du clavier\n"
+#~ "« IM » : le clavier suit l'état de la méthode de saisie"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Number pad always input number"
+#~ msgstr "Le pavé numérique produit toujours des chiffres"
+
+#~ msgid "Always input numbers when number keys from key pad is inputted"
+#~ msgstr ""
+#~ "Toujours saisir des chiffres lorsque des touches du clavier numérique "
+#~ "sont pressées"
+
+#~ msgid "Shift toggle Chinese Mode"
+#~ msgstr "La touche majuscule fait basculer en mode chinois"
+
+#~ msgid "Shift key to toggle Chinese Mode"
+#~ msgstr "Touche majuscule pour activer/désactiver le mode chinois"
+
+#~ msgid "Caps Lock toggles Chinese Mode"
+#~ msgstr ""
+#~ "La touche verrouillage des majuscules active/désactive le mode chinois"
+
+#~ msgid ""
+#~ "On: Caps Lock toggle Chinese/English\n"
+#~ "Off: Caps Lock only affect English letter case"
+#~ msgstr ""
+#~ "Cochée : la touche verrouillage des majuscules fait basculer de chinois à "
+#~ "anglais et inversement\n"
+#~ "Décochée : la touche verrouillage des majuscules affecte uniquement la "
+#~ "casse anglaise"
+
+#~ msgid ""
+#~ "Default English letter case\n"
+#~ "  (Only effective when Caps Lock toggles Chinese is ON)"
+#~ msgstr ""
+#~ "Casse par défaut en anglais\n"
+#~ "... (actif uniquement quand l'option « Touche verrouillage des majuscules "
+#~ "active/désactive le mode chinois » est activée)"
+
+#~ msgid ""
+#~ "no control: No default letter case. Not recommend if you use multiple "
+#~ "keyboards or synergy\n"
+#~ "lowercase: Default to lowercase, press shift for uppercase.\n"
+#~ "uppercase: Default to uppercase, press shift for lowercase."
+#~ msgstr ""
+#~ "sans contrôle : pas de casse par défaut. Non recommandé si vous utilisez "
+#~ "plusieurs claviers ou le logiciel Synergy\n"
+#~ "minuscule : par défaut en minuscule, appuyez sur Maj pour passer en "
+#~ "majuscule\n"
+#~ "majuscule : par défaut en majuscule, appuyez sur Maj pour passer en "
+#~ "minuscule"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Plain Zhuyin mode"
+#~ msgstr "Mode Zhuyin simple"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid ""
+#~ "In plain Zhuyin mode, automatic candidate selection and related options "
+#~ "are disabled or ignored."
+#~ msgstr ""
+#~ "En mode Zhuyin simple, la sélection de candidat automatique et les "
+#~ "options qui y sont liées sont désactivées ou ignorées."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Number of candidate per page."
+#~ msgstr "Nombre de candidats par page."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Choose phrases from the back, without moving cursor."
+#~ msgstr "Choisir des phrases depuis l'arrière, sans déplacer le curseur."
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Space to select"
+#~ msgstr "Espace à sélectionner"
+
+#~ msgid "Left click to toggle Chi/Eng; Right click to toggle full/half shape"
+#~ msgstr ""
+#~ "Clic gauche pour basculer entre le chinois et l'anglais; clic droit pour "
+#~ "basculer entre la demi-largeur et la pleine largeur"
+
+#~ msgctxt "Configure"
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgctxt "Configure"
+#~ msgid "Save"
+#~ msgstr "Sauvegarder"
+
+#~ msgctxt "Configure"
+#~ msgid "Apply"
+#~ msgstr "Appliquer"
+
+#~ msgctxt "Configure"
+#~ msgid "Close"
+#~ msgstr "Fermer"
+
+#~ msgctxt "Configure"
+#~ msgid "Ok"
+#~ msgstr "OK"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Setting"
+#~ msgstr "Paramètres"
+
+#~ msgid "Cannot connect to IBus!"
+#~ msgstr "Connexion à IBus impossible !"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Chewing component"
+#~ msgstr "Composant Chewing"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Peng Huang, Ding-Yi Chen"
+#~ msgstr "Peng Huang, Ding-Yi Chen"
+
+# translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author samfreemanz
+#~ msgid "Chewing"
+#~ msgstr "Chewing"
