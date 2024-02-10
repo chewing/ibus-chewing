@@ -79,11 +79,15 @@ add_compile_definitions(
 )
 
 # chewing.xml
+set(ICON_PROP_KEY "<icon_prop_key>InputMode</icon_prop_key>")
 set(SYMBOL_XML "<symbol>&#x9177;</symbol>")
 set(CHEWING_HOTKEYS "Super+space")
 set(HOTKEYS_XML "<hotkeys>${CHEWING_HOTKEYS}</hotkeys>")
 set(SETUP_PROGRAM_XML "<setup>${CMAKE_INSTALL_FULL_LIBEXECDIR}/ibus-setup-chewing</setup>")
 
+if(IBUS_VERSION LESS 1.5.11)
+    set(ICON_PROP_KEY "<!-- ${ICON_PROP_KEY} -->")
+endif()
 if(IBUS_VERSION LESS 1.3.99)
     set(SYMBOL_XML "<!-- ${SYMBOL_XML} -->")
     set(HOTKEYS_XML "<!-- ${HOTKEYS_XML} -->")

@@ -11,20 +11,21 @@
     <textdomain>ibus-chewing</textdomain>
     <engines>
         <engine>
-	    <name>chewing</name>
-	    <longname>Chewing</longname>
-	    <description>Chinese chewing input method</description>
-	    <language>zh_TW</language>
-	    <license>GPLv2+</license>
-	    <author>Peng Huang, Ding-Yi Chen</author>
-            <icon>@PRJ_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
-	    <layout>us</layout>
-	    <version>@PRJ_VER@</version>
-	    <textdomain>@PROJECT_NAME@</textdomain>
-	    <rank>80</rank>
-	    @HOTKEYS_XML@
-	    @SYMBOL_XML@
-	    @SETUP_PROGRAM_XML@
+        <name>chewing</name>
+        <longname>Chewing</longname>
+        <description>Chinese chewing input method</description>
+        <language>zh_TW</language>
+        <license>GPLv2+</license>
+        <author>Peng Huang, Ding-Yi Chen</author>
+        <icon>@PRJ_DATA_DIR@/icons/@PROJECT_NAME@.png</icon>
+        <layout>us</layout>
+        <version>@PRJ_VER@</version>
+        <textdomain>@PROJECT_NAME@</textdomain>
+        <rank>80</rank>
+        @ICON_PROP_KEY@
+        @HOTKEYS_XML@
+        @SYMBOL_XML@
+        @SETUP_PROGRAM_XML@
         </engine>
     </engines>
 </component>
