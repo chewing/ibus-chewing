@@ -71,7 +71,7 @@ add_compile_definitions(
     PROJECT_SCHEMA_SECTION=chewing
     PROJECT_SCHEMA_DIR=/desktop/ibus/engine/chewing
     PROJECT_SCHEMA_PATH=/desktop/ibus/engine/chewing/
-    DATA_DIR=${CMAKE_INSTALL_DATADIR}
+    DATA_DIR=${CMAKE_INSTALL_FULL_DATADIR}
     PRJ_DATA_DIR=${PRJ_DATA_DIR}
     PRJ_VER=${PRJ_VER}
     LIBEXEC_DIR=${LIBEXEC_DIR}
