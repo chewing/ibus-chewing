@@ -102,7 +102,7 @@ add_subdirectory(po)
 add_subdirectory(src bin)
 add_subdirectory(test)
 
-install(FILES AUTHORS README.md ChangeLog COPYING USER-GUIDE
+install(FILES AUTHORS README.md CHANGELOG.md ChangeLog-1.x COPYING USER-GUIDE
     DESTINATION ${CMAKE_INSTALL_DOCDIR})
 install(FILES ${CMAKE_BINARY_DIR}/data/chewing.xml
     DESTINATION ${CMAKE_INSTALL_DATADIR}/ibus/component)
