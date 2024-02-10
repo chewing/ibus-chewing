@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21.0)
 
-project(ibus-chewing VERSION 1.6.2 LANGUAGES C)
+project(ibus-chewing VERSION 2.0.0 LANGUAGES C)
 set(PRJ_SUMMARY "The Chewing engine for IBus input platform")
 set(SUMMARY_TRANSLATIONS "zh_TW" "IBus新酷音輸入法")
 
