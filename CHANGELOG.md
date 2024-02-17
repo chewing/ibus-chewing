@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.0.0-rc1] - 2024-02-10
+## [v2.0.0] - 2024-02-17
 
 ### Added
 
 - On non-gnome desktop with systray icon enabled, IBus will display the
-  currently selected input mode.
+  currently selected input mode. Clicking on the icon shows a menu to switch
+  input modes.
 
 ### Changed
 
@@ -28,9 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- GtkStatusIcon based systray icon has been removed. Now there is only one icon
-  provided by IBus to avoid confusion.
-- Sync IM status back to CapsLock has been removed.
+- GtkStatusIcon (X11) based systray icon has been removed. Now there is only one
+  icon provided by IBus to avoid confusion. The new systray does not support
+  using left mouse button to switch between Chinese and English, and the right
+  button to switch between full and half width mode.
+- Sync IM status back to CapsLock has been removed which also depends on X11.
 
 ### Fixed
 
@@ -44,5 +47,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [ChangeLog-1.x](./ChangeLog-1.x)
 
-[unreleased]: https://github.com/chewing/ibus-chewing/compare/1.6.2...HEAD
-[v2.0.0-rc1]: https://github.com/chewing/ibus-chewing/compare/1.6.2...HEAD
+[v2.0.0]: https://github.com/chewing/ibus-chewing/compare/1.6.2...HEAD
