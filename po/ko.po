@@ -4,11 +4,11 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-10 16:42+0900\n"
-"PO-Revision-Date: 2024-02-07 06:20+0000\n"
+"PO-Revision-Date: 2024-02-11 12:36+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
-"Language-Team: Korean <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/ko/>\n"
+"Language-Team: Korean <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,9 +18,8 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:8
-#, fuzzy
 msgid "Chewing Settings"
-msgstr "설정 "
+msgstr "Chewing 설정"
 
 #: src/setup/ibus-setup-chewing-window.ui:13
 msgid "Configure the input method"
@@ -255,41 +254,39 @@ msgstr "수직 또는 수평 패널에서 선택합니다"
 
 #: src/ibus-chewing-engine.c:339
 msgid "Switch to Alphanumeric Mode"
-msgstr ""
+msgstr "영숫자 방식으로 전환"
 
 #: src/ibus-chewing-engine.c:341
-#, fuzzy
 msgid "Switch to Chinese Mode"
-msgstr "중국어 모드 토클 Shift"
+msgstr "중국어 방식으로 전환"
 
 #: src/ibus-chewing-engine.c:344
-#, fuzzy
 msgid "Click to toggle Chinese/Alphanumeric Mode"
-msgstr "중국어 모드 토클을 위한 Shift 키"
+msgstr "중국어/영숫자 방식으로 토글하여 누릅니다"
 
 #: src/ibus-chewing-engine.c:350
 msgid "Fullwidth Form"
-msgstr ""
+msgstr "전각 모양"
 
 #: src/ibus-chewing-engine.c:352
 msgid "Halfwidth Form"
-msgstr ""
+msgstr "반각 모양"
 
 #: src/ibus-chewing-engine.c:355
 msgid "Click to toggle Halfwidth/Fullwidth Form"
-msgstr ""
+msgstr "전각/반각 모양을 토글하여 누릅니다"
 
 #: src/ibus-chewing-engine.c:361
 msgid "IBus-Chewing Preferences"
-msgstr ""
+msgstr "IBus-Chewing 환경설정"
 
 #: src/ibus-chewing-engine.c:363
 msgid "Click to configure IBus-Chewing"
-msgstr ""
+msgstr "IBus-Chewing을 구성하려고 누릅니다"
 
 #: src/main.c:67
 msgid "Cannot connect to IBus!"
-msgstr ""
+msgstr "IBus로 연결 할 수 없습니다!"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/main.c:94
@@ -297,9 +294,8 @@ msgid "Chewing"
 msgstr "Chewing"
 
 #: src/main.c:95
-#, fuzzy
 msgid "Chinese chewing input method"
-msgstr "입력기를 구성합니다"
+msgstr "중국어 chewing 입력 방식"
 
 #~ msgid "Show Systray Icon"
 #~ msgstr "시스템트레이 아이콘 표시"
