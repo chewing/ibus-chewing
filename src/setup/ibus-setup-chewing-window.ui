@@ -29,6 +29,9 @@
                       <item translatable="yes">Hanyu Pinyin</item>
                       <item translatable="yes">THL Pinyin</item>
                       <item translatable="yes">MPS2 Pinyin</item>
+                      <item translatable="yes">Carpalx</item>
+                      <item translatable="yes">Colemak-DH ANSI</item>
+                      <item translatable="yes">Colemak-DH Ortholinear</item>
                     </items>
                   </object>
                 </property>
