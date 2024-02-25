@@ -76,9 +76,23 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
 }
 
 const gchar *kb_type_ids[] = {
-    "default",     "hsu",         "ibm",        "gin_yieh",  "eten",
-    "eten26",      "dvorak",      "dvorak_hsu", "dachen_26", "hanyu",
-    "thl_pinying", "mps2_pinyin", NULL};
+    "default",
+    "hsu",
+    "ibm",
+    "gin_yieh",
+    "eten",
+    "eten26",
+    "dvorak",
+    "dvorak_hsu",
+    "dachen_26",
+    "hanyu",
+    "thl_pinying",
+    "mps2_pinyin",
+    "carpalx",
+    "colemak_dh_ansi",
+    "colemak_dh_orth",
+    NULL,
+};
 
 const gchar *sel_key_ids[] = {
     "1234567890", "asdfghjkl;", "asdfzxcv89",
