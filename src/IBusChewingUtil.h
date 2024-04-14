@@ -62,6 +62,15 @@ typedef enum {
     CHEWING_KBTYPE_LUOMA_PINYIN,
     CHEWING_KBTYPE_MSP2
 #endif
+#if CHEWING_CHECK_VERSION(0, 5, 0)
+    ,
+    CHEWING_KBTYPE_CARPALX
+#endif
+#if CHEWING_CHECK_VERSION(0, 3, 4)
+    ,
+    CHEWING_KBTYPE_COLEMAK_DH_ANSI,
+    CHEWING_KBTYPE_COLEMAK_DH_ORTH
+#endif
 } ChewingKbType;
 
 KSym key_sym_KP_to_normal(KSym k);
