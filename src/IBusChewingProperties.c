@@ -24,6 +24,13 @@ const gchar *kbType_ids[] = {N_("default"),
                              N_("thl_pinying"),
                              N_("mps2_pinyin"),
 #endif
+#if CHEWING_CHECK_VERSION(0, 5, 0)
+                             N_("carpalx"),
+#endif
+#if CHEWING_CHECK_VERSION(0, 6, 0)
+                             N_("colemak_dh_ansi"),
+                             N_("colemak_dh_orth"),
+#endif
                              NULL};
 
 #define SELKEYS_ARRAY_SIZE 8
