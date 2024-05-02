@@ -410,8 +410,8 @@ void ibus_chewing_engine_update(IBusChewingEngine *self) {
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
     {
         IBUS_CHEWING_LOG(DEBUG, "update() statusFlags=%x", selfp->statusFlags);
-        commit_text(self);
         update_pre_edit_text(self);
+        commit_text(self);
         update_aux_text(self);
 
         IBUS_CHEWING_LOG(DEBUG, "update() nPhoneSeq=%d statusFlags=%x",
