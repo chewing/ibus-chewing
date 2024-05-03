@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add Carpalx, Colemak-DH ANSI, and Colemak-DH Orth layout.
 
+### Changed
+
+- Clear pre-edit buffer before commit it to engine to avoid showing both buffer
+  on the screen.
+
 ## [v2.0.0] - 2024-02-17
 
 ### Added
