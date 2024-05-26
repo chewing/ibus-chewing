@@ -9,10 +9,9 @@ Following documents provide further instruction:
  * INSTALL: Installation instruction.
  * USER-GUIDE: How to use ibus-chewing
 
-Bugs and enhancement can be filed to either:
+Bugs and enhancement can be filed to:
 
- * [Red Hat Bugzilla](https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&component=ibus-chewing)
- * [GitHub ibus-chewing](https://github.com/definite/ibus-chewing/issues)
+ * [GitHub](https://github.com/chewing/ibus-chewing/issues)
 
 
 ibus-chewing releases can be verified with the following [minisign][] public key
