@@ -32,10 +32,9 @@
             "name": "c99",
             "displayName": "C99 (Debug)",
             "description": "Build with only C dependencies",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
