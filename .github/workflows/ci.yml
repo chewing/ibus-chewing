@@ -31,7 +31,7 @@ jobs:
           XDG_RUNTIME_DIR: /tmp
           GSETTINGS_BACKEND: keyfile
         run: |
-          glib-compile-schemas src/setup --targetdir=out/build/default/bin
+          glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless cmake --build --preset default -t test --verbose
 
@@ -69,7 +69,7 @@ jobs:
           GSETTINGS_BACKEND: keyfile
         run: |
           source "$HOME/.cargo/env"
-          glib-compile-schemas src/setup --targetdir=out/build/c99-coverage/bin
+          glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless cmake --build --preset c99-coverage -t test --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
