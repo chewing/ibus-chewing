@@ -6,12 +6,27 @@
   <requires lib="libadwaita" version="1.4" />
   <template class="IbusSetupChewingWindow" parent="AdwPreferencesWindow">
     <property name="title" translatable="yes">Chewing Settings</property>
+    <property name="default-height">700</property>
     <child>
       <object class="AdwPreferencesPage">
         <child>
           <object class="AdwPreferencesGroup">
             <property name="description" translatable="yes">Configure the input method</property>
             <property name="title" translatable="yes">Input Method</property>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">About</property>
+                <property name="subtitle" translatable="yes">IBus Chewing</property>
+                <property name="activatable">true</property>
+                <property name="action-name">about</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="valign">center</property>
+                    <property name="icon-name">help-about-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
             <child>
               <object class="AdwComboRow" id="kb_type">
                 <property name="model">
