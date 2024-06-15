@@ -21,6 +21,7 @@
 #include "ibus-setup-chewing-about.h"
 
 #include <glib/gi18n.h>
+#include <stdio.h>
 
 #define QUOTE_ME_INNER(s) #s
 #define QUOTE_ME(s) QUOTE_ME_INNER(s)

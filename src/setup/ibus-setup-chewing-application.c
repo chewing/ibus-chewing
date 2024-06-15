@@ -19,7 +19,9 @@
  */
 
 #include "ibus-setup-chewing-application.h"
+#include "ibus-setup-chewing-about.h"
 #include "ibus-setup-chewing-window.h"
+#include <stdlib.h>
 
 struct _IbusSetupChewingApplication {
     AdwApplication parent_instance;
@@ -67,8 +69,22 @@ static void ibus_setup_chewing_application_quit_action(GSimpleAction *action,
     g_application_quit(G_APPLICATION(self));
 }
 
+static void ibus_setup_chewing_application_about_action(GSimpleAction *action,
+                                                        GVariant *parameter,
+                                                        gpointer user_data) {
+    GtkWindow *window;
+    IbusSetupChewingApplication *self = user_data;
+
+    g_assert(IBUS_SETUP_CHEWING_IS_APPLICATION(self));
+
+    window = gtk_application_get_active_window(GTK_APPLICATION(self));
+
+    show_about(GTK_WIDGET(window));
+}
+
 static const GActionEntry app_actions[] = {
     {"quit", ibus_setup_chewing_application_quit_action},
+    {"about", ibus_setup_chewing_application_about_action},
 };
 
 static void

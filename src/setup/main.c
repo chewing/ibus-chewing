@@ -23,10 +23,13 @@
 #include "ibus-setup-chewing-application.h"
 
 static gboolean quit = FALSE;
+static gboolean about = FALSE;
 
 static GOptionEntry entries[] = {
     {"quit", 'q', 0, G_OPTION_ARG_NONE, &quit,
      "Cause the application to quit immediately after launch", NULL},
+    {"about", 0, 0, G_OPTION_ARG_NONE, &about,
+     "Cause the application to show about dialog after launch", NULL},
     G_OPTION_ENTRY_NULL};
 
 static void application_quit(gpointer user_data) {
@@ -35,6 +38,14 @@ static void application_quit(gpointer user_data) {
 
     quit_action = g_action_map_lookup_action(G_ACTION_MAP(self), "quit");
     g_action_activate(G_ACTION(quit_action), NULL);
+}
+
+static void application_about(gpointer user_data) {
+    IbusSetupChewingApplication *self = user_data;
+    GAction *about_action;
+
+    about_action = g_action_map_lookup_action(G_ACTION_MAP(self), "about");
+    g_action_activate(G_ACTION(about_action), NULL);
 }
 
 int main(int argc, char *argv[]) {
@@ -58,6 +69,9 @@ int main(int argc, char *argv[]) {
 
     app = ibus_setup_chewing_application_new(
         "org.freedesktop.IBus.Chewing.Setup", G_APPLICATION_DEFAULT_FLAGS);
+    if (about) {
+        g_idle_add(G_SOURCE_FUNC(application_about), app);
+    }
     if (quit) {
         g_idle_add(G_SOURCE_FUNC(application_quit), app);
     }

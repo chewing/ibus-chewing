@@ -57,3 +57,7 @@ add_test(NAME ibus-setup-chewing
     COMMAND ${CMAKE_BINARY_DIR}/bin/ibus-setup-chewing -q)
 set_tests_properties(ibus-setup-chewing PROPERTIES
     ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+add_test(NAME ibus-setup-chewing-about
+    COMMAND ${CMAKE_BINARY_DIR}/bin/ibus-setup-chewing --about -q)
+set_tests_properties(ibus-setup-chewing-about PROPERTIES
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
