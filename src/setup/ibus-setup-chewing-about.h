@@ -22,4 +22,8 @@
 
 #include <adwaita.h>
 
+G_BEGIN_DECLS
+
 void show_about(GtkWidget *self);
+
+G_END_DECLS
