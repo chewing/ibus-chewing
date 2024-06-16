@@ -121,6 +121,7 @@ static char *generate_debug_info(void) {
 }
 
 void show_about(GtkWidget *self) {
+    AdwDialog *about;
     char *debug_info = generate_debug_info();
 
     // clang-format off
@@ -134,15 +135,15 @@ void show_about(GtkWidget *self) {
     // clang-format on
 
     // clang-format off
-    adw_show_about_dialog(
-        GTK_WIDGET(self),
+    about = g_object_new(
+        ADW_TYPE_ABOUT_DIALOG,
         "application-name", _("IBus Chewing"),
         "application-icon", "application-x-executable",
         "version", QUOTE_ME(PRJ_VER),
         "website", "https://chewing.im",
-        "issue-url", "https://github.com/chewing/ibus-chewing",
-        "support-url", "https://github.com/chewing/ibus-chewing/discussions",
+        "issue-url", "https://github.com/chewing/ibus-chewing/issues",
         "debug-info", debug_info,
+        "debug-info-filename", "ibus-chewing-debug-info.txt",
         "copyright", "© 2024 libchewing Core Team",
         "license-type", GTK_LICENSE_GPL_2_0,
         "developers", developers,
@@ -150,6 +151,14 @@ void show_about(GtkWidget *self) {
         NULL
     );
     // clang-format on
+
+    adw_about_dialog_add_link(ADW_ABOUT_DIALOG(about), _("_Mailing list"),
+                              "https://groups.google.com/g/chewing");
+
+    adw_about_dialog_add_link(ADW_ABOUT_DIALOG(about), _("_Chat"),
+                              "https://matrix.to/#/#chewing-users:matrix.org");
+
+    adw_dialog_present(about, GTK_WIDGET(self));
 
     g_free(debug_info);
 }
