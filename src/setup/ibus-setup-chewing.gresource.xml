@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/org/freedesktop/IBus/Chewing/Setup">
     <file preprocess="xml-stripblanks">ibus-setup-chewing-window.ui</file>
+    <file preprocess="xml-stripblanks" alias="icons/scalable/apps/im.chewing.Chewing.svg">im.chewing.Chewing.svg</file>
   </gresource>
 </gresources>

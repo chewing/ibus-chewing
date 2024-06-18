@@ -138,7 +138,7 @@ void show_about(GtkWidget *self) {
     about = g_object_new(
         ADW_TYPE_ABOUT_DIALOG,
         "application-name", _("IBus Chewing"),
-        "application-icon", "application-x-executable",
+        "application-icon", "im.chewing.Chewing",
         "version", QUOTE_ME(PRJ_VER),
         "website", "https://chewing.im",
         "issue-url", "https://github.com/chewing/ibus-chewing/issues",
