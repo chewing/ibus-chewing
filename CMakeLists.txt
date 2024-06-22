@@ -114,6 +114,8 @@ install(FILES ${CMAKE_BINARY_DIR}/data/ibus-setup-chewing.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 install(DIRECTORY icons
     DESTINATION ${CMAKE_INSTALL_DATADIR}/ibus-chewing)
+install(FILES icons/org.freedesktop.IBus.Chewing.Setup.svg
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
 set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_SOURCE_IGNORE_FILES "/build" "/out" "/\\\\..*")
