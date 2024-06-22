@@ -29,6 +29,8 @@ set(LICENSE "GPLv2+")
 set(PRJ_GROUP "System Environment/Libraries")
 set(RRJ_URL "https://github.com/chewing/${PROJECT_NAME}")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 enable_testing()
 include(GNUInstallDirs)
 
@@ -75,6 +77,8 @@ add_compile_definitions(
     PRJ_DATA_DIR=${PRJ_DATA_DIR}
     PRJ_VER=${PRJ_VER}
     PRJ_URL=${PRJ_URL}
+    IBUS_VERSION=${IBUS_VERSION}
+    CHEWING_VERSION=${CHEWING_VERSION}
     LIBEXEC_DIR=${LIBEXEC_DIR}
     CHEWING_DATADIR_REAL=${CHEWING_DATADIR_REAL}
 )
@@ -110,6 +114,8 @@ install(FILES ${CMAKE_BINARY_DIR}/data/ibus-setup-chewing.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 install(DIRECTORY icons
     DESTINATION ${CMAKE_INSTALL_DATADIR}/ibus-chewing)
+install(FILES icons/org.freedesktop.IBus.Chewing.Setup.svg
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
 set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_SOURCE_IGNORE_FILES "/build" "/out" "/\\\\..*")

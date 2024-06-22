@@ -19,6 +19,7 @@
  */
 
 #include "ibus-setup-chewing-window.h"
+#include "ibus-setup-chewing-about.h"
 
 struct _IbusSetupChewingWindow {
     AdwPreferencesWindow parent_instance;
@@ -45,9 +46,11 @@ struct _IbusSetupChewingWindow {
 
 G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
                     ADW_TYPE_PREFERENCES_WINDOW)
+
 #define bind_child(child_id)                                                   \
     gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
                                          child_id)
+
 static void
 ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
@@ -73,6 +76,9 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(phrase_choice_from_last);
     bind_child(space_as_selection);
     bind_child(vertical_lookup_table);
+
+    gtk_widget_class_install_action(widget_class, "about", NULL,
+                                    (GtkWidgetActionActivateFunc)show_about);
 }
 
 const gchar *kb_type_ids[] = {

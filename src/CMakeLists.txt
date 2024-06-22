@@ -55,6 +55,8 @@ add_executable(ibus-setup-chewing
     setup/ibus-setup-chewing-application.h
     setup/ibus-setup-chewing-window.c
     setup/ibus-setup-chewing-window.h
+    setup/ibus-setup-chewing-about.c
+    setup/ibus-setup-chewing-about.h
     setup/main.c
     ${CMAKE_CURRENT_BINARY_DIR}/ibus-setup-chewing-window-ui.c
 )
@@ -90,7 +92,7 @@ install(FILES setup/${PROJECT_GSCHEMA_XML}
     DESTINATION ${GSETTINGS_SCHEMAS_DIR}
 )
 if(GLIB_COMPILE_SCHEMAS)
-    install(CODE "execute_process(COMMAND glib-compile-schemas ${CMAKE_INSTALL_PREFIX}/${GSETTINGS_SCHEMAS_DIR})")
+    install(CODE "execute_process(COMMAND glib-compile-schemas \${CMAKE_INSTALL_PREFIX}/${GSETTINGS_SCHEMAS_DIR})")
 endif()
 
 install(TARGETS ibus-engine-chewing ibus-setup-chewing
