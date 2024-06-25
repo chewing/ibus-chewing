@@ -75,7 +75,7 @@ jobs:
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
