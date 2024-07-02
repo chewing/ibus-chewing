@@ -43,7 +43,11 @@ set(DESCRIPTION_TRANSLATIONS
 
 本輸入法也同時支援帶調漢語拼音輸入。")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+option(ERROR_ON_WARNING "Toggle error-on-warning build" OFF)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+if(ERROR_ON_WARNING)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+endif()
 
 set(AUTHORS "Peng Huang, Ding-Yi Chen")
 set(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")

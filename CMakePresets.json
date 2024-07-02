@@ -49,6 +49,17 @@
             }
         },
         {
+            "name": "c23-release-ci",
+            "displayName": "C23 (Release CI)",
+            "description": "Build with only C dependencies",
+            "inherits": [
+                "c23-release"
+            ],
+            "cacheVariables": {
+                "ERROR_ON_WARNING": true
+            }
+        },
+        {
             "name": "c23-coverage",
             "displayName": "C23 (Debug Coverage)",
             "description": "Build with only C dependencies",
@@ -66,6 +77,10 @@
         {
             "name": "c23-coverage",
             "configurePreset": "c23-coverage"
+        },
+        {
+            "name": "c23-release-ci",
+            "configurePreset": "c23-release-ci"
         }
     ]
 }
