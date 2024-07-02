@@ -20,7 +20,7 @@ set(DESCRIPTION_TRANSLATIONS
 
 本輸入法也同時支援帶調漢語拼音輸入。")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
 
 set(AUTHORS "Peng Huang, Ding-Yi Chen")
 set(MAINTAINER "Ding-Yi Chen <dchen at redhat.com>")
