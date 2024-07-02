@@ -77,7 +77,7 @@ pkg_check_modules(LIBADWAITA REQUIRED IMPORTED_TARGET libadwaita-1)
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
 find_program(GLIB_COMPILE_SCHEMAS NAMES glib-compile-schemas)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 23)
 add_compile_definitions(_XOPEN_SOURCE)
 
 # Directory that store ibus-chewing icons

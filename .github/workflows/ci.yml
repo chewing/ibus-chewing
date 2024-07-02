@@ -60,8 +60,8 @@ jobs:
 
       - name: Build
         run: |
-          cmake --preset c99-coverage
-          cmake --build --preset c99-coverage --verbose
+          cmake --preset c23-coverage
+          cmake --build --preset c23-coverage --verbose
 
       - name: Test
         env:
@@ -71,7 +71,7 @@ jobs:
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless cmake --build --preset c99-coverage -t test --verbose
+          WAYLAND_DISPLAY=wl-headless cmake --build --preset c23-coverage -t test --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov
