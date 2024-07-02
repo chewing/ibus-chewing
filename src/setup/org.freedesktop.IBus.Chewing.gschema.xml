@@ -1,6 +1,23 @@
 <schemalist>
     <schema id="org.freedesktop.IBus.Chewing" path="/desktop/ibus/engine/chewing/" gettext-domain="ibus-chewing">
         <key name="kb-type" type="s">
+            <choices>
+                <choice value="default"/>
+                <choice value="hsu"/>
+                <choice value="ibm"/>
+                <choice value="gin_yieh"/>
+                <choice value="eten"/>
+                <choice value="eten26"/>
+                <choice value="dvorak"/>
+                <choice value="dvorak_hsu"/>
+                <choice value="dachen_26"/>
+                <choice value="hanyu"/>
+                <choice value="thl_pinying"/>
+                <choice value="mps2_pinyin"/>
+                <choice value="carpalx"/>
+                <choice value="colemak_dh_ansi"/>
+                <choice value="colemak_dh_orth"/>
+            </choices>
             <default l10n="messages">"default"</default>
             <summary>Keyboard Type</summary>
             <description>
@@ -8,6 +25,16 @@
             </description>
         </key>
         <key name="sel-keys" type="s">
+            <choices>
+                <choice value="1234567890"/>
+                <choice value="asdfghjkl;"/>
+                <choice value="asdfzxcv89"/>
+                <choice value="asdfjkl789"/>
+                <choice value="aoeu;qjkix"/>
+                <choice value="aoeuhtnsid"/>
+                <choice value="aoeuidhtns"/>
+                <choice value="1234qweras"/>
+            </choices>
             <default>"1234567890"</default>
             <summary>Selection keys</summary>
             <description>
@@ -59,6 +86,7 @@
             </description>
         </key>
         <key name="max-chi-symbol-len" type="i">
+            <range min="0" max="39"/>
             <default>20</default>
             <summary>Maximum Chinese characters</summary>
             <description>
@@ -66,12 +94,24 @@
             </description>
         </key>
         <key name="chi-eng-mode-toggle" type="s">
+            <choices>
+                <choice value="caps_lock"/>
+                <choice value="shift"/>
+                <choice value="shift_l"/>
+                <choice value="shift_r"/>
+            </choices>
             <default l10n="messages">"caps_lock"</default>
             <summary>Chinese/Alphanumeric Mode Toggle Key</summary>
             <description>
 </description>
         </key>
         <key name="default-english-case" type="s">
+            <choices>
+                <choice value="no default"/>
+                <choice value="lowercase"/>
+                <choice value="uppercase"/>
+                <choice value="shift_r"/>
+            </choices>
             <default l10n="messages">"lowercase"</default>
             <summary>Default English letter case
 (Only effective when Caps Lock is the toggle key)</summary>
@@ -82,6 +122,11 @@
             </description>
         </key>
         <key name="sync-caps-lock" type="s">
+            <choices>
+                <choice value="disable"/>
+                <choice value="keyboard"/>
+                <choice value="input method"/>
+            </choices>
             <default l10n="messages" context="Sync">"keyboard"</default>
             <summary>Sync between CapsLock and IM</summary>
             <description>
@@ -99,6 +144,7 @@
             </description>
         </key>
         <key name="cand-per-page" type="u">
+            <range min="4" max="10"/>
             <default>5</default>
             <summary>Candidate per page</summary>
             <description>

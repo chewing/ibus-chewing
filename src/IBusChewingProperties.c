@@ -98,7 +98,7 @@ MkdgPropertySpec propSpecs[] = {
      N_("Escape key cleans the text in pre-edit-buffer"), NULL},
     {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
      N_("Maximum Chinese characters"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "20",
-     NULL, NULL, 11, 33, maxChiSymbolLen_apply_callback, 0,
+     NULL, NULL, 0, 39, maxChiSymbolLen_apply_callback, 0,
      N_("Maximum Chinese characters in pre-edit buffer, not including inputing "
         "Zhuyin symbols."),
      NULL},
