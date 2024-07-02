@@ -150,9 +150,10 @@ static gboolean id_get_mapping(GValue *value, GVariant *variant,
     return FALSE;
 }
 
-static GVariant *id_set_mapping(const GValue *value,
-                                const GVariantType *expected_type,
-                                gpointer user_data) {
+static GVariant *
+id_set_mapping(const GValue *value,
+               [[maybe_unused]] const GVariantType *expected_type,
+               gpointer user_data) {
     gchar **ids_list = (gchar **)user_data;
 
     return g_variant_new_string(ids_list[g_value_get_uint(value)]);
