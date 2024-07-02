@@ -10,7 +10,7 @@
             "displayName": "Default (Release)",
             "description": "Default preset for release build",
             "inherits": [
-                "c99-release"
+                "c23-release"
             ]
         },
         {
@@ -29,8 +29,8 @@
             }
         },
         {
-            "name": "c99",
-            "displayName": "C99 (Debug)",
+            "name": "c23",
+            "displayName": "C23 (Debug)",
             "description": "Build with only C dependencies",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
@@ -38,22 +38,22 @@
             }
         },
         {
-            "name": "c99-release",
-            "displayName": "C99 (Release)",
+            "name": "c23-release",
+            "displayName": "C23 (Release)",
             "description": "Build with only C dependencies",
             "inherits": [
-                "c99"
+                "c23"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "c99-coverage",
-            "displayName": "C99 (Debug Coverage)",
+            "name": "c23-coverage",
+            "displayName": "C23 (Debug Coverage)",
             "description": "Build with only C dependencies",
             "inherits": [
-                "c99",
+                "c23",
                 "coverage-base"
             ]
         }
@@ -64,8 +64,8 @@
             "configurePreset": "default"
         },
         {
-            "name": "c99-coverage",
-            "configurePreset": "c99-coverage"
+            "name": "c23-coverage",
+            "configurePreset": "c23-coverage"
         }
     ]
 }
