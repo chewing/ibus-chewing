@@ -65,7 +65,7 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers) {
 }
 
 void key_press_from_string(const gchar *keySeq) {
-    gint i;
+    guint i;
 
     for (i = 0; i < strlen(keySeq); i++) {
         key_press_from_key_sym((guint)keySeq[i], 0);

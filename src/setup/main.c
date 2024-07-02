@@ -30,7 +30,8 @@ static GOptionEntry entries[] = {
      "Cause the application to quit immediately after launch", NULL},
     {"about", 0, 0, G_OPTION_ARG_NONE, &about,
      "Cause the application to show about dialog after launch", NULL},
-    G_OPTION_ENTRY_NULL};
+    {}, // null entry
+};
 
 static void application_quit(gpointer user_data) {
     IbusSetupChewingApplication *self = user_data;

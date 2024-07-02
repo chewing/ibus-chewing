@@ -59,9 +59,9 @@ static void ibus_setup_chewing_application_class_init(
     app_class->activate = ibus_setup_chewing_application_activate;
 }
 
-static void ibus_setup_chewing_application_quit_action(GSimpleAction *action,
-                                                       GVariant *parameter,
-                                                       gpointer user_data) {
+static void ibus_setup_chewing_application_quit_action(
+    [[maybe_unused]] GSimpleAction *action,
+    [[maybe_unused]] GVariant *parameter, gpointer user_data) {
     IbusSetupChewingApplication *self = user_data;
 
     g_assert(IBUS_SETUP_CHEWING_IS_APPLICATION(self));
@@ -69,9 +69,9 @@ static void ibus_setup_chewing_application_quit_action(GSimpleAction *action,
     g_application_quit(G_APPLICATION(self));
 }
 
-static void ibus_setup_chewing_application_about_action(GSimpleAction *action,
-                                                        GVariant *parameter,
-                                                        gpointer user_data) {
+static void ibus_setup_chewing_application_about_action(
+    [[maybe_unused]] GSimpleAction *action,
+    [[maybe_unused]] GVariant *parameter, gpointer user_data) {
     GtkWindow *window;
     IbusSetupChewingApplication *self = user_data;
 
@@ -83,8 +83,8 @@ static void ibus_setup_chewing_application_about_action(GSimpleAction *action,
 }
 
 static const GActionEntry app_actions[] = {
-    {"quit", ibus_setup_chewing_application_quit_action},
-    {"about", ibus_setup_chewing_application_about_action},
+    {.name = "quit", .activate = ibus_setup_chewing_application_quit_action},
+    {.name = "about", .activate = ibus_setup_chewing_application_about_action},
 };
 
 static void

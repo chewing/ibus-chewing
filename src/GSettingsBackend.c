@@ -82,26 +82,25 @@ GValue *mkdg_g_settings_read_value(GSettings *settings, GValue *value,
 /*============================================
  * Interface routines
  */
-gchar *mkdg_g_settings_backend_get_key(MkdgBackend *backend,
-                                       const gchar *section, const gchar *key,
-                                       gpointer userData) {
+gchar *mkdg_g_settings_backend_get_key([[maybe_unused]] MkdgBackend *backend,
+                                       [[maybe_unused]] const gchar *section,
+                                       const gchar *key,
+                                       [[maybe_unused]] gpointer userData) {
     return (gchar *)key;
 }
 
-GValue *mkdg_g_settings_backend_read_value(MkdgBackend *backend, GValue *value,
-                                           const gchar *section,
-                                           const gchar *key,
-                                           gpointer userData) {
+GValue *mkdg_g_settings_backend_read_value(
+    MkdgBackend *backend, GValue *value, [[maybe_unused]] const gchar *section,
+    const gchar *key, [[maybe_unused]] gpointer userData) {
     GSettings *config = (GSettings *)backend->config;
 
     return mkdg_g_settings_read_value(config, value, key);
 }
 
-gboolean mkdg_g_settings_backend_write_value(MkdgBackend *backend,
-                                             GValue *value,
-                                             const gchar *section,
-                                             const gchar *key,
-                                             gpointer userData) {
+gboolean
+mkdg_g_settings_backend_write_value(MkdgBackend *backend, GValue *value,
+                                    const gchar *section, const gchar *key,
+                                    [[maybe_unused]] gpointer userData) {
     GSettings *config = (GSettings *)backend->config;
     GVariant *confValue = g_variant_ref_sink(mkdg_g_value_to_g_variant(value));
 

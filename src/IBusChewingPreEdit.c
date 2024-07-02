@@ -739,8 +739,9 @@ EventResponse self_handle_end(IBusChewingPreEdit *self, KSym kSym,
     return event_process_or_ignore(!chewing_handle_End(self->context));
 }
 
-EventResponse self_handle_special(IBusChewingPreEdit *self, KSym kSym,
-                                  KeyModifiers unmaskedMod) {
+EventResponse self_handle_special([[maybe_unused]] IBusChewingPreEdit *self,
+                                  [[maybe_unused]] KSym kSym,
+                                  [[maybe_unused]] KeyModifiers unmaskedMod) {
     /* KSym >=128 is special key, which IM ignore. */
     IBUS_CHEWING_LOG(MSG, "ignore special key");
     return EVENT_RESPONSE_IGNORE;
