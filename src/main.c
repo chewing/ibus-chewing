@@ -49,7 +49,7 @@ static const GOptionEntry entries[] = {
      "[integer]"},
     {"xml", 'x', 0, G_OPTION_ARG_NONE, &xml,
      "read chewing engine desc from xml file", NULL},
-    {NULL},
+    {}, // null entry
 };
 
 static void ibus_disconnected_cb(IBusBus *bus, gpointer user_data) {

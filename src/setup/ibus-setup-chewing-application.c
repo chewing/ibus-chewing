@@ -83,8 +83,8 @@ static void ibus_setup_chewing_application_about_action(GSimpleAction *action,
 }
 
 static const GActionEntry app_actions[] = {
-    {"quit", ibus_setup_chewing_application_quit_action},
-    {"about", ibus_setup_chewing_application_about_action},
+    {.name = "quit", .activate = ibus_setup_chewing_application_quit_action},
+    {.name = "about", .activate = ibus_setup_chewing_application_about_action},
 };
 
 static void
