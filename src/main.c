@@ -52,7 +52,8 @@ static const GOptionEntry entries[] = {
     {}, // null entry
 };
 
-static void ibus_disconnected_cb(IBusBus *bus, gpointer user_data) {
+static void ibus_disconnected_cb([[maybe_unused]] IBusBus *bus,
+                                 [[maybe_unused]] gpointer user_data) {
     g_debug("bus disconnected");
     ibus_quit();
 }
