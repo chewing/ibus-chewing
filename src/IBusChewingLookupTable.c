@@ -57,7 +57,7 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable,
                                        IBusChewingProperties *iProperties,
                                        ChewingContext *context) {
     IBusText *iText = NULL;
-    guint i;
+    gint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);
     gint totalChoice = chewing_cand_TotalChoice(context);
     gint currentPage = chewing_cand_CurrentPage(context);

@@ -987,7 +987,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
 
     if (is_password(self))
         return;
-    if (index >= chewing_get_candPerPage(self->icPreEdit->context)) {
+    if ((gint)index >= chewing_get_candPerPage(self->icPreEdit->context)) {
         IBUS_CHEWING_LOG(DEBUG, "candidate_clicked() index out of ranged");
         return;
     }
