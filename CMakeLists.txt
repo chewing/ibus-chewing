@@ -20,8 +20,11 @@ if(Git_FOUND)
         COMMAND ${GIT_EXECUTABLE} --work-tree ${CMAKE_SOURCE_DIR} describe --dirty --always
         OUTPUT_STRIP_TRAILING_WHITESPACE
         OUTPUT_VARIABLE GIT_DESCRIBE
+        ERROR_VARIABLE GIT_DESCRIBE_ERROR
     )
-    string(REPLACE "v" "" PRJ_VER ${GIT_DESCRIBE})
+    if(NOT GIT_DESCRIBE_ERROR)
+        string(REPLACE "v" "" PRJ_VER ${GIT_DESCRIBE})
+    endif()
 endif()
 
 set(PRJ_DESCRIPTION
