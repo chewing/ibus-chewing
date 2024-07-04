@@ -1,8 +1,28 @@
 cmake_minimum_required(VERSION 3.21.0)
 
-project(ibus-chewing VERSION 2.0.0 LANGUAGES C)
+project(ibus-chewing LANGUAGES C)
 set(PRJ_SUMMARY "The Chewing engine for IBus input platform")
 set(SUMMARY_TRANSLATIONS "zh_TW" "IBus新酷音輸入法")
+
+set(PRJ_VER_MAJOR 2)
+set(PRJ_VER_MINOR 0)
+set(PRJ_VER_PATCH 0)
+set(PRJ_VER_EXTRA "")
+
+set(PRJ_VER "${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}")
+if(DEFINED PRJ_VER_EXTRA)
+  string(APPEND PRJ_VER "-${PRJ_VER_EXTRA}")
+endif()
+
+find_package(Git)
+if(Git_FOUND)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} --work-tree ${CMAKE_SOURCE_DIR} describe --dirty --always
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE GIT_DESCRIBE
+    )
+    string(REPLACE "v" "" PRJ_VER ${GIT_DESCRIBE})
+endif()
 
 set(PRJ_DESCRIPTION
 "IBus-chewing is an IBus front-end of Chewing, an intelligent Chinese input
@@ -64,7 +84,6 @@ add_compile_definitions(PRJ_ICON_DIR="${CMAKE_INSTALL_DATADIR}/ibus-chewing/icon
 set(PROJECT_SCHEMA_ID org.freedesktop.IBus.Chewing)
 set(LIBEXEC_DIR ${CMAKE_INSTALL_FULL_LIBEXECDIR})
 set(PRJ_DATA_DIR ${CMAKE_INSTALL_FULL_DATADIR}/ibus-chewing)
-set(PRJ_VER ${CMAKE_PROJECT_VERSION})
 add_compile_definitions(
     PROJECT_NAME=${CMAKE_PROJECT_NAME}
     PROJECT_SCHEMA_ID=${PROJECT_SCHEMA_ID}
@@ -117,6 +136,7 @@ install(DIRECTORY icons
 install(FILES icons/org.freedesktop.IBus.Chewing.Setup.svg
     DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
+set(CPACK_PACKAGE_VERSION ${PRJ_VER})
 set(CPACK_PACKAGE_CHECKSUM SHA256)
 set(CPACK_SOURCE_IGNORE_FILES "/build" "/out" "/\\\\..*")
 set(CPACK_SOURCE_GENERATOR TXZ)
