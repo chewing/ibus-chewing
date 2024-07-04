@@ -110,7 +110,6 @@
                 <choice value="no default"/>
                 <choice value="lowercase"/>
                 <choice value="uppercase"/>
-                <choice value="shift_r"/>
             </choices>
             <default l10n="messages">"lowercase"</default>
             <summary>Default English letter case
