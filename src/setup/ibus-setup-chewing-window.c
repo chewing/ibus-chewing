@@ -51,6 +51,12 @@ G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
     gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
                                          child_id)
 
+static void action_adaptor_show_about(GtkWidget *widget,
+                                      [[maybe_unused]] const char *action_name,
+                                      [[maybe_unused]] GVariant *parameter) {
+    show_about(widget);
+}
+
 static void
 ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
@@ -78,7 +84,7 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(vertical_lookup_table);
 
     gtk_widget_class_install_action(widget_class, "about", NULL,
-                                    (GtkWidgetActionActivateFunc)show_about);
+                                    action_adaptor_show_about);
 }
 
 const gchar *kb_type_ids[] = {
@@ -144,9 +150,10 @@ static gboolean id_get_mapping(GValue *value, GVariant *variant,
     return FALSE;
 }
 
-static GVariant *id_set_mapping(const GValue *value,
-                                const GVariantType *expected_type,
-                                gpointer user_data) {
+static GVariant *
+id_set_mapping(const GValue *value,
+               [[maybe_unused]] const GVariantType *expected_type,
+               gpointer user_data) {
     gchar **ids_list = (gchar **)user_data;
 
     return g_variant_new_string(ids_list[g_value_get_uint(value)]);

@@ -53,11 +53,12 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable,
     ibus_lookup_table_set_orientation(iTable, verticalLookupTable);
 }
 
-guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable,
-                                       IBusChewingProperties *iProperties,
-                                       ChewingContext *context) {
+guint ibus_chewing_lookup_table_update(
+    IBusLookupTable *iTable,
+    [[maybe_unused]] IBusChewingProperties *iProperties,
+    ChewingContext *context) {
     IBusText *iText = NULL;
-    guint i;
+    gint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);
     gint totalChoice = chewing_cand_TotalChoice(context);
     gint currentPage = chewing_cand_CurrentPage(context);

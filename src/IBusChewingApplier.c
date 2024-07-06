@@ -16,7 +16,7 @@ static ChewingKbType kbType_id_get_index(const gchar *kbType_id) {
 /*============================================
  * Callback routines
  */
-gboolean KBType_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean KBType_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
 
     IBUS_CHEWING_LOG(DEBUG, "KBType_apply_callback(%s,%s)", ctx->spec->key,
@@ -28,7 +28,7 @@ gboolean KBType_apply_callback(PropertyContext *ctx, gpointer userData) {
     return TRUE;
 }
 
-gboolean selKeys_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean selKeys_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
 
     IBUS_CHEWING_LOG(DEBUG, "selKeys_apply_callback(%s,%s)", ctx->spec->key,
@@ -40,7 +40,7 @@ gboolean selKeys_apply_callback(PropertyContext *ctx, gpointer userData) {
     return TRUE;
 }
 
-gboolean autoShiftCur_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean autoShiftCur_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -49,8 +49,7 @@ gboolean autoShiftCur_apply_callback(PropertyContext *ctx, gpointer userData) {
     return TRUE;
 }
 
-gboolean addPhraseDirection_apply_callback(PropertyContext *ctx,
-                                           gpointer userData) {
+gboolean addPhraseDirection_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -59,13 +58,11 @@ gboolean addPhraseDirection_apply_callback(PropertyContext *ctx,
     return TRUE;
 }
 
-gboolean cleanBufferFocusOut_apply_callback(PropertyContext *ctx,
-                                            gpointer userData) {
+gboolean cleanBufferFocusOut_apply_callback(PropertyContext *, gpointer) {
     return TRUE;
 }
 
-gboolean easySymbolInput_apply_callback(PropertyContext *ctx,
-                                        gpointer userData) {
+gboolean easySymbolInput_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -75,8 +72,7 @@ gboolean easySymbolInput_apply_callback(PropertyContext *ctx,
     return TRUE;
 }
 
-gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx,
-                                       gpointer userData) {
+gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -86,8 +82,7 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx,
 }
 
 /* Additional symbol buffer length */
-gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx,
-                                        gpointer userData) {
+gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -97,13 +92,12 @@ gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx,
     return TRUE;
 }
 
-gboolean defaultEnglishLetterCase_apply_callback(PropertyContext *ctx,
-                                                 gpointer userData) {
+gboolean defaultEnglishLetterCase_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean syncCapsLock_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean syncCapsLock_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
     const gchar *str = g_value_get_string(value);
@@ -121,7 +115,7 @@ gboolean syncCapsLock_apply_callback(PropertyContext *ctx, gpointer userData) {
     return TRUE;
 }
 
-gboolean candPerPage_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean candPerPage_apply_callback(PropertyContext *ctx, gpointer) {
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
     ibus_chewing_lookup_table_resize(icPreEdit->iTable, icPreEdit->iProperties,
@@ -129,14 +123,12 @@ gboolean candPerPage_apply_callback(PropertyContext *ctx, gpointer userData) {
     return TRUE;
 }
 
-gboolean showPageNumber_apply_callback(PropertyContext *ctx,
-                                       gpointer userData) {
+gboolean showPageNumber_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean phraseChoiceRearward_apply_callback(PropertyContext *ctx,
-                                             gpointer userData) {
+gboolean phraseChoiceRearward_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -145,8 +137,7 @@ gboolean phraseChoiceRearward_apply_callback(PropertyContext *ctx,
     return TRUE;
 }
 
-gboolean spaceAsSelection_apply_callback(PropertyContext *ctx,
-                                         gpointer userData) {
+gboolean spaceAsSelection_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
     IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
 
@@ -155,18 +146,17 @@ gboolean spaceAsSelection_apply_callback(PropertyContext *ctx,
     return TRUE;
 }
 
-gboolean plainZhuyin_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean plainZhuyin_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean verticalLookupTable_apply_callback(PropertyContext *ctx,
-                                            gpointer userData) {
+gboolean verticalLookupTable_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }
 
-gboolean chiEngToggle_apply_callback(PropertyContext *ctx, gpointer userData) {
+gboolean chiEngToggle_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
     return TRUE;
 }

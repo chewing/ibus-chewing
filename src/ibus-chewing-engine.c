@@ -421,8 +421,8 @@ void ibus_chewing_engine_update(IBusChewingEngine *self) {
     }
 }
 
-void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
-                                          const gchar *prop_name) {
+void ibus_chewing_engine_refresh_property(
+    IBusChewingEngine *self, [[maybe_unused]] const gchar *prop_name) {
     g_return_if_fail(self != NULL);
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
     {
@@ -761,8 +761,9 @@ void parent_commit_text(IBusEngine *iEngine) {
 #endif
 }
 
-void parent_update_pre_edit_text(IBusEngine *iEngine, IBusText *iText,
-                                 guint cursor_pos, gboolean visible) {
+void parent_update_pre_edit_text([[maybe_unused]] IBusEngine *iEngine,
+                                 IBusText *iText, guint cursor_pos,
+                                 gboolean visible) {
 #ifdef UNIT_TEST
     printf("* parent_update_pre_edit_text(-, %s, %u, %x)\n", iText->text,
            cursor_pos, visible);
@@ -771,8 +772,9 @@ void parent_update_pre_edit_text(IBusEngine *iEngine, IBusText *iText,
 #endif
 }
 
-void parent_update_pre_edit_text_with_mode(IBusEngine *iEngine, IBusText *iText,
-                                           guint cursor_pos, gboolean visible,
+void parent_update_pre_edit_text_with_mode([[maybe_unused]] IBusEngine *iEngine,
+                                           IBusText *iText, guint cursor_pos,
+                                           gboolean visible,
                                            IBusPreeditFocusMode mode) {
 #ifdef UNIT_TEST
     printf("* parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n",
@@ -783,8 +785,8 @@ void parent_update_pre_edit_text_with_mode(IBusEngine *iEngine, IBusText *iText,
 #endif
 }
 
-void parent_update_auxiliary_text(IBusEngine *iEngine, IBusText *iText,
-                                  gboolean visible) {
+void parent_update_auxiliary_text([[maybe_unused]] IBusEngine *iEngine,
+                                  IBusText *iText, gboolean visible) {
 #ifdef UNIT_TEST
     printf("* parent_update_auxiliary_text(-, %s, %x)\n",
            (iText) ? iText->text : "NULL", visible);
@@ -799,7 +801,7 @@ void parent_update_auxiliary_text(IBusEngine *iEngine, IBusText *iText,
 }
 
 IBusText *decorate_pre_edit(IBusChewingPreEdit *icPreEdit,
-                            IBusCapabilite capabilite) {
+                            [[maybe_unused]] IBusCapabilite capabilite) {
     gchar *preEdit = ibus_chewing_pre_edit_get_pre_edit(icPreEdit);
     IBusText *iText = ibus_text_new_from_string(preEdit);
     gint chiSymbolCursor = chewing_cursor_Current(icPreEdit->context);
@@ -987,7 +989,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
 
     if (is_password(self))
         return;
-    if (index >= chewing_get_candPerPage(self->icPreEdit->context)) {
+    if ((gint)index >= chewing_get_candPerPage(self->icPreEdit->context)) {
         IBUS_CHEWING_LOG(DEBUG, "candidate_clicked() index out of ranged");
         return;
     }
