@@ -5,8 +5,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-15 17:36+0900\n"
 "PO-Revision-Date: 2024-07-08 20:29+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/ko/>\n"
 "Language: ko\n"
@@ -36,10 +35,8 @@ msgstr "정보"
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:19
 #: src/setup/ibus-setup-chewing-about.c:42
-#, fuzzy
-#| msgid "Chewing"
 msgid "IBus Chewing"
-msgstr "Chewing"
+msgstr "IBus Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:35
 msgid "Standard"
@@ -94,15 +91,15 @@ msgstr "MPS2 병음"
 
 #: src/setup/ibus-setup-chewing-window.ui:47
 msgid "Carpalx"
-msgstr ""
+msgstr "Carpalx"
 
 #: src/setup/ibus-setup-chewing-window.ui:48
 msgid "Colemak-DH ANSI"
-msgstr ""
+msgstr "Colemak-DH ANSI"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "Colemak-DH Ortholinear"
-msgstr ""
+msgstr "Colemak-DH Ortholinear"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:53
