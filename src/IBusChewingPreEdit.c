@@ -20,20 +20,8 @@ IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend *backend) {
     self->wordLen = 0;
     self->engine = NULL;
 
-    /* Create chewing context */
-    gchar buf[100];
-
-    g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
-#if !CHEWING_CHECK_VERSION(0, 4, 0)
-    gint ret = chewing_Init(QUOTE_ME(CHEWING_DATADIR_REAL), buf);
-
-    if (ret) {
-        IBUS_CHEWING_LOG(ERROR,
-                         "ibus_chewing_pre_edit_new() chewing_Init(%s,%s)",
-                         QUOTE_ME(CHEWING_DATADIR_REAL), buf);
-    }
-#endif
     self->context = chewing_new();
+    // TODO add default mode setting
     chewing_set_ChiEngMode(self->context, CHINESE_MODE);
 
     self->iTable = g_object_ref_sink(
@@ -52,13 +40,9 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit *self) {
 }
 
 gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit *self) {
-#if CHEWING_CHECK_VERSION(0, 4, 0)
     const gchar *buf = chewing_bopomofo_String_static(self->context);
 
     return g_strdup(buf);
-#else
-    return chewing_zuin_String(self->context, &(self->bpmfLen));
-#endif
 }
 
 void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit *self) {
@@ -566,12 +550,6 @@ EventResponse self_handle_backspace(IBusChewingPreEdit *self, KSym kSym,
     absorb_when_release; // Triggers focus-out and focus-in on ignore, so use
     // absorb.
     handle_log("backspace");
-
-#if !CHEWING_CHECK_VERSION(0, 4, 0)
-    if (table_is_showing) {
-        return event_process_or_ignore(!chewing_handle_Esc(self->context));
-    }
-#endif
 
     return event_process_or_ignore(!chewing_handle_Backspace(self->context));
 }

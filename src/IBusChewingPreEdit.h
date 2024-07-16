@@ -245,11 +245,7 @@ KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit *self,
  * @returns: 1 if bopomofo buffer is non-empty; 0 if bopomofo buffer is empty.
  *
  */
-#if CHEWING_CHECK_VERSION(0, 4, 0)
 #define ibus_chewing_bopomofo_check chewing_bopomofo_Check
-#else
-#define ibus_chewing_bopomofo_check !chewing_zuin_Check
-#endif
 gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit *self);
 
 typedef enum {

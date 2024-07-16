@@ -20,26 +20,28 @@ const gchar *kbType_ids[] = {N_("default"),
                              N_("dvorak_hsu"),
                              N_("dachen_26"),
                              N_("hanyu"),
-#if CHEWING_CHECK_VERSION(0, 3, 4)
                              N_("thl_pinying"),
                              N_("mps2_pinyin"),
-#endif
-#if CHEWING_CHECK_VERSION(0, 5, 0)
                              N_("carpalx"),
-#endif
-#if CHEWING_CHECK_VERSION(0, 6, 0)
                              N_("colemak_dh_ansi"),
                              N_("colemak_dh_orth"),
-#endif
                              NULL};
 
 #define SELKEYS_ARRAY_SIZE 8
+
+// clang-format off
 const gchar *selKeys_array[SELKEYS_ARRAY_SIZE + 1] = {
-    "1234567890", "asdfghjkl;", "asdfzxcv89",
-    "asdfjkl789", "aoeu;qjkix", /* Dvorak */
-    "aoeuhtnsid",               /* Dvorak */
-    "aoeuidhtns",               /* Dvorak */
-    "1234qweras", NULL};
+    "1234567890",
+    "asdfghjkl;",
+    "asdfzxcv89",
+    "asdfjkl789",
+    "aoeu;qjkix", /* Dvorak */
+    "aoeuhtnsid", /* Dvorak */
+    "aoeuidhtns", /* Dvorak */
+    "1234qweras",
+    NULL
+};
+// clang-format on
 
 const gchar *propDefaultEnglishLettercase_array[] = {
     N_("no default"), N_("lowercase"), N_("uppercase"), NULL};

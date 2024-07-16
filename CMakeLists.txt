@@ -65,13 +65,13 @@ option(GNOME_SHELL "Enable GNOME Shell support" ON)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(IBUS REQUIRED IMPORTED_TARGET ibus-1.0>=1.3)
-pkg_check_modules(CHEWING REQUIRED IMPORTED_TARGET chewing>=0.5.1)
+pkg_check_modules(CHEWING REQUIRED IMPORTED_TARGET chewing>=0.9.0)
 pkg_get_variable(CHEWING_DATADIR_REAL chewing datadir)
 
 add_compile_definitions(
     CHEWING_VERSION_MAJOR=0
-    CHEWING_VERSION_MINOR=5
-    CHEWING_VERSION_PATCH=1
+    CHEWING_VERSION_MINOR=9
+    CHEWING_VERSION_PATCH=0
 )
 
 pkg_check_modules(GLIB2 REQUIRED IMPORTED_TARGET glib-2.0)
