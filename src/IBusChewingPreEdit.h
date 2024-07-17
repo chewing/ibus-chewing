@@ -55,15 +55,11 @@
  * @FLAG_SYNC_FROM_IM: Sync the Chinese mode with input method
  * @FLAG_SYNC_FROM_KEYBOARD: Sync the Chinese mode with Caps Lock status
  * @FLAG_TABLE_SHOW: Lookup table is shown.
- * @FLAG_UPDATED_OUTGOING: The commit string is already send to outgoing, to
- * avoid double committing.
- *
  */
 typedef enum {
     FLAG_SYNC_FROM_IM = 1,
     FLAG_SYNC_FROM_KEYBOARD = 1 << 1,
     FLAG_TABLE_SHOW = 1 << 2,
-    FLAG_UPDATED_OUTGOING = 1 << 3,
 } IBusChewingPreEditFlag;
 
 /**

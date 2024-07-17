@@ -2,6 +2,7 @@
 #include "IBusChewingPreEdit-private.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingUtil.h"
+#include <chewing.h>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -50,18 +51,15 @@ void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit *self) {
 }
 
 void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit *self) {
-    if (ibus_chewing_pre_edit_has_flag(self, FLAG_UPDATED_OUTGOING)) {
-        /* Commit already sent to outgoing, no need to update again */
-        return;
-    }
     if (chewing_commit_Check(self->context)) {
         /* commit_Check=1 means new commit available */
         gchar *commitStr = chewing_commit_String(self->context);
 
         IBUS_CHEWING_LOG(INFO, "commitStr=|%s|\n", commitStr);
         g_string_append(self->outgoing, commitStr);
-        g_free(commitStr);
-        ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
+
+        chewing_free(commitStr);
+        chewing_ack(self->context);
     }
     IBUS_CHEWING_LOG(INFO, "outgoing=|%s|\n", self->outgoing->str);
     IBUS_CHEWING_LOG(
@@ -282,7 +280,6 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
     gint ret = chewing_handle_Default(self->context, fixedKSym);
 
     /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     switch (ret) {
@@ -537,7 +534,6 @@ EventResponse self_handle_return(IBusChewingPreEdit *self, KSym kSym,
         event_process_or_ignore(!chewing_handle_Enter(self->context));
 
     /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     return response;
