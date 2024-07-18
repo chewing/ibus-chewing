@@ -74,10 +74,18 @@
               </object>
             </child>
             <child>
-              <object class="AdwSwitchRow" id="plain_zhuyin">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Intelligent Phrasing</property>
-                <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection</property>
+              <object class="AdwComboRow" id="conversion_engine">
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Plain Zhuyin</item>
+                      <item translatable="yes">Chewing (Default)</item>
+                      <item translatable="yes">Fuzzy Chewing</item>
+                    </items>
+                  </object>
+                </property>
+                <property name="title" translatable="yes">Conversion Engine</property>
+                <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection, or fuzzy input.</property>
               </object>
             </child>
           </object>

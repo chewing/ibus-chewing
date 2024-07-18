@@ -818,10 +818,10 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym) {
     IBUS_CHEWING_LOG(DEBUG,                                                    \
                      "ibus_chewing_pre_edit_process_key(): %s flags=%x "       \
                      "buff_check=%d bpmf_check=%d cursor=%d total_choice=%d "  \
-                     "is_chinese=%d is_full_shape=%d is_plain_zhuyin=%d",      \
+                     "is_chinese=%d is_full_shape=%d",                         \
                      prompt, self->flags, chewing_buffer_Check(self->context), \
                      bpmf_check, cursor_current, total_choice, is_chinese,     \
-                     is_full_shape, is_plain_zhuyin)
+                     is_full_shape)
 
 gboolean is_shift_key(KSym kSym) {
     return kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R;
@@ -873,36 +873,6 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
     default:
         break;
     }
-
-    /**
-     *Plain zhuyin mode
-     */
-    if (is_plain_zhuyin && !bpmf_check) {
-        /* libchewing functions are used here to skip the check
-         * that handle_key functions perform.
-         */
-        if (kSym == IBUS_KEY_Escape) {
-            ibus_chewing_pre_edit_clear_pre_edit(self);
-        } else if (kSym == IBUS_KEY_Return && table_is_showing) {
-            /* Use Enter to select the last chosen */
-            chewing_handle_Up(self->context);
-            chewing_handle_Enter(self->context);
-        } else if (is_chinese && !table_is_showing) {
-            /* Character completed, and lookup table is not show */
-            /* Then open lookup table */
-
-            if (is_shift) {
-                /* For Chinese symbols */
-                chewing_handle_Left(self->context);
-            }
-            chewing_handle_Down(self->context);
-        } else if (total_choice == 0) {
-            /* lookup table is shown */
-            /* but selection is done */
-            chewing_handle_Enter(self->context);
-        }
-    }
-    process_key_debug("After plain-zhuyin handling");
 
     ibus_chewing_pre_edit_update(self);
 

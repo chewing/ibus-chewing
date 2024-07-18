@@ -2,6 +2,7 @@
 #define _IBUS_CHEWING_PROPERTIES_H_
 #include "MakerDialogBackend.h"
 #include "MakerDialogProperty.h"
+#include "MakerDialogPropertySpec.h"
 #include <glib.h>
 #include <ibus.h>
 
@@ -71,6 +72,9 @@ gboolean defaultEnglishLetterCase_apply_callback(PropertyContext *ctx,
                                                  gpointer userData);
 
 gboolean plainZhuyin_apply_callback(PropertyContext *ctx, gpointer userData);
+
+gboolean conversion_engine_apply_callback(PropertyContext *ctx,
+                                          gpointer userData);
 
 gboolean verticalLookupTable_apply_callback(PropertyContext *ctx,
                                             gpointer userData);

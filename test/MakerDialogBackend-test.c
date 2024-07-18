@@ -149,7 +149,7 @@ void mkdg_g_value_from_string_test(const gchar *key, GType gType) {
 }
 
 void mkdg_g_value_from_string_boolean_test() {
-    mkdg_g_value_from_string_test("plain-zhuyin", G_TYPE_BOOLEAN);
+    mkdg_g_value_from_string_test("conversion-engine", G_TYPE_STRING);
 }
 
 void mkdg_g_value_from_string_int_test() {

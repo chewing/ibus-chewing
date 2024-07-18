@@ -58,6 +58,9 @@ static char *generate_debug_info(void) {
             string, "- plain-zhuyin: %d\n",
             g_settings_get_boolean(settings, "plain-zhuyin"));
         g_string_append_printf(
+            string, "- conversion-engine: %d\n",
+            g_settings_get_enum(settings, "conversion-engine"));
+        g_string_append_printf(
             string, "- auto-shift-cur: %d\n",
             g_settings_get_boolean(settings, "auto-shift-cur"));
         g_string_append_printf(

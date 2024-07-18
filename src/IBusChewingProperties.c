@@ -133,12 +133,9 @@ MkdgPropertySpec propSpecs[] = {
         "\"keyboard\": IM status follows keyboard status\n"
         "\"IM\": Keyboard status follows IM status"),
      NULL},
-    {G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING, N_("Plain Zhuyin mode"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-     plainZhuyin_apply_callback, 0,
-     N_("In plain Zhuyin mode, automatic candidate selection and related "
-        "options are disabled or ignored."),
-     NULL},
+    {G_TYPE_STRING, "conversion-engine", PAGE_SELECTING,
+     N_("Conversion engine"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL,
+     NULL, 0, 1, conversion_engine_apply_callback, 0, N_(""), NULL},
     {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 4, 10,
      candPerPage_apply_callback, 0, N_("Number of candidate per page."), NULL},

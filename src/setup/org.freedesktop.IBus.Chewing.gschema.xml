@@ -1,4 +1,9 @@
 <schemalist>
+    <enum id="conversion-engine-enum">
+        <value nick="simple" value="0"/>
+        <value nick="chewing" value="1"/>
+        <value nick="fuzzy-chewing" value="2"/>
+    </enum>
     <schema id="org.freedesktop.IBus.Chewing" path="/desktop/ibus/engine/chewing/" gettext-domain="ibus-chewing">
         <key name="kb-type" type="s">
             <choices>
@@ -137,9 +142,18 @@
         </key>
         <key name="plain-zhuyin" type="b">
             <default>false</default>
-            <summary>Plain Zhuyin mode</summary>
+            <summary>Plain Zhuyin mode (deprecated)</summary>
             <description>
                 In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored.
+                Deprecated option - use conversion-engine instead.
+            </description>
+        </key>
+        <key name="conversion-engine" enum="conversion-engine-enum">
+            <default>"chewing"</default>
+            <summary>Conversion mode</summary>
+            <description>
+                In Simple mode, automatic candidate selection and related options are disabled or ignored.
+                In FuzzyChewing mode, tones or even parts of bopomofo can be omitted.
             </description>
         </key>
         <key name="cand-per-page" type="u">

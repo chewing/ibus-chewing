@@ -27,7 +27,7 @@ struct _IbusSetupChewingWindow {
     /* Template widgets */
     AdwComboRow *kb_type;
     AdwComboRow *sel_keys;
-    AdwSwitchRow *plain_zhuyin;
+    AdwComboRow *conversion_engine;
     AdwSwitchRow *auto_shift_cur;
     AdwSwitchRow *add_phrase_direction;
     AdwSwitchRow *clean_buffer_focus_out;
@@ -67,7 +67,7 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
 
     bind_child(kb_type);
     bind_child(sel_keys);
-    bind_child(plain_zhuyin);
+    bind_child(conversion_engine);
     bind_child(auto_shift_cur);
     bind_child(add_phrase_direction);
     bind_child(clean_buffer_focus_out);
@@ -106,13 +106,19 @@ const gchar *kb_type_ids[] = {
     NULL,
 };
 
+// clang-format off
 const gchar *sel_key_ids[] = {
-    "1234567890", "asdfghjkl;", "asdfzxcv89",
-    "asdfjkl789", "aoeu;qjkix", /* Dvorak */
-    "aoeuhtnsid",               /* Dvorak */
-    "aoeuidhtns",               /* Dvorak */
-    "1234qweras", NULL,
+    "1234567890",
+    "asdfghjkl;",
+    "asdfzxcv89",
+    "asdfjkl789",
+    "aoeu;qjkix", /* Dvorak */
+    "aoeuhtnsid", /* Dvorak */
+    "aoeuidhtns", /* Dvorak */
+    "1234qweras",
+    NULL,
 };
+// clang-format on
 
 const gchar *chi_eng_mode_toggle_ids[] = {
     "caps_lock", "shift", "shift_l", "shift_r", NULL,
@@ -129,6 +135,13 @@ const gchar *default_english_case_ids[] = {
     "no default",
     "lowercase",
     "uppercase",
+    NULL,
+};
+
+const gchar *conversion_engine_ids[] = {
+    "simple",
+    "chewing",
+    "fuzzy-chewing",
     NULL,
 };
 
@@ -173,8 +186,10 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
                                  "selected", G_SETTINGS_BIND_DEFAULT,
                                  id_get_mapping, id_set_mapping, sel_key_ids,
                                  NULL);
-    g_settings_bind(settings, "plain-zhuyin", self->plain_zhuyin, "active",
-                    G_SETTINGS_BIND_INVERT_BOOLEAN);
+    g_settings_bind_with_mapping(settings, "conversion-engine",
+                                 self->conversion_engine, "selected",
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
+                                 id_set_mapping, conversion_engine_ids, NULL);
     g_settings_bind(settings, "auto-shift-cur", self->auto_shift_cur, "active",
                     G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "add-phrase-direction",
