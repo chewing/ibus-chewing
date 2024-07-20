@@ -160,6 +160,7 @@
                     <property name="model">
                       <object class="GtkStringList">
                         <items>
+                          <item translatable="yes">Disable</item>
                           <item translatable="yes">Caps Lock</item>
                           <item translatable="yes">Shift</item>
                           <item translatable="yes">Shift_L</item>
@@ -167,7 +168,7 @@
                         </items>
                       </object>
                     </property>
-                    <property name="selected">1</property>
+                    <property name="selected">2</property>
                   </object>
                 </child>
                 <child>

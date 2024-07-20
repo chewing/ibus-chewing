@@ -108,6 +108,7 @@
         </key>
         <key name="chi-eng-mode-toggle" type="s">
             <choices>
+                <choice value="disable"/>
                 <choice value="caps_lock"/>
                 <choice value="shift"/>
                 <choice value="shift_l"/>
@@ -116,7 +117,8 @@
             <default l10n="messages">"caps_lock"</default>
             <summary>Chinese/Alphanumeric Mode Toggle Key</summary>
             <description>
-</description>
+                Toggle Chinese/Alphanumeric mode with key
+            </description>
         </key>
         <key name="default-english-case" type="s">
             <choices>

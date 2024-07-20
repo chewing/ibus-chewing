@@ -127,7 +127,7 @@ const gchar *sel_key_ids[] = {
 // clang-format on
 
 const gchar *chi_eng_mode_toggle_ids[] = {
-    "caps_lock", "shift", "shift_l", "shift_r", NULL,
+    "disable", "caps_lock", "shift", "shift_l", "shift_r", NULL,
 };
 
 const gchar *sync_caps_lock_ids[] = {
