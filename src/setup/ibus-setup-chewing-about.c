@@ -20,6 +20,7 @@
 
 #include "ibus-setup-chewing-about.h"
 
+#include <chewing/chewing.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
 
@@ -36,7 +37,7 @@ static char *generate_debug_info(void) {
                            QUOTE_ME(CHEWING_VERSION));
 
     g_string_append(string, "\nRunning against:\n");
-    g_string_append_printf(string, "- libchewing: n/a\n");
+    g_string_append_printf(string, "- libchewing: %s\n", chewing_version());
 
     g_string_append(string, "\n");
     {
@@ -58,6 +59,9 @@ static char *generate_debug_info(void) {
             string, "- plain-zhuyin: %d\n",
             g_settings_get_boolean(settings, "plain-zhuyin"));
         g_string_append_printf(
+            string, "- conversion-engine: %d\n",
+            g_settings_get_enum(settings, "conversion-engine"));
+        g_string_append_printf(
             string, "- auto-shift-cur: %d\n",
             g_settings_get_boolean(settings, "auto-shift-cur"));
         g_string_append_printf(
@@ -72,6 +76,9 @@ static char *generate_debug_info(void) {
         g_string_append_printf(
             string, "- esc-clean-all-buf: %d\n",
             g_settings_get_boolean(settings, "esc-clean-all-buf"));
+        g_string_append_printf(
+            string, "- enable-fullwidth-toggle-key: %d\n",
+            g_settings_get_boolean(settings, "enable-fullwidth-toggle-key"));
         g_string_append_printf(
             string, "- max-chi-symbol-len: %d\n",
             g_settings_get_int(settings, "max-chi-symbol-len"));

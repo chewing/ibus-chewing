@@ -20,26 +20,29 @@ const gchar *kbType_ids[] = {N_("default"),
                              N_("dvorak_hsu"),
                              N_("dachen_26"),
                              N_("hanyu"),
-#if CHEWING_CHECK_VERSION(0, 3, 4)
                              N_("thl_pinying"),
                              N_("mps2_pinyin"),
-#endif
-#if CHEWING_CHECK_VERSION(0, 5, 0)
                              N_("carpalx"),
-#endif
-#if CHEWING_CHECK_VERSION(0, 6, 0)
                              N_("colemak_dh_ansi"),
                              N_("colemak_dh_orth"),
-#endif
+                             N_("workman"),
                              NULL};
 
 #define SELKEYS_ARRAY_SIZE 8
+
+// clang-format off
 const gchar *selKeys_array[SELKEYS_ARRAY_SIZE + 1] = {
-    "1234567890", "asdfghjkl;", "asdfzxcv89",
-    "asdfjkl789", "aoeu;qjkix", /* Dvorak */
-    "aoeuhtnsid",               /* Dvorak */
-    "aoeuidhtns",               /* Dvorak */
-    "1234qweras", NULL};
+    "1234567890",
+    "asdfghjkl;",
+    "asdfzxcv89",
+    "asdfjkl789",
+    "aoeu;qjkix", /* Dvorak */
+    "aoeuhtnsid", /* Dvorak */
+    "aoeuidhtns", /* Dvorak */
+    "1234qweras",
+    NULL
+};
+// clang-format on
 
 const gchar *propDefaultEnglishLettercase_array[] = {
     N_("no default"), N_("lowercase"), N_("uppercase"), NULL};
@@ -96,6 +99,10 @@ MkdgPropertySpec propSpecs[] = {
      N_("Esc clean all buffer"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL,
      NULL, 0, 1, escCleanAllBuf_apply_callback, 0,
      N_("Escape key cleans the text in pre-edit-buffer"), NULL},
+    {G_TYPE_BOOLEAN, "enable-fullwidth-toggle-key", PAGE_EDITING,
+     N_("Enable fullwidth toggle key"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0",
+     NULL, NULL, 0, 1, enable_fullwidth_toggle_key_apply_callback, 0,
+     N_("Escape key cleans the text in pre-edit-buffer"), NULL},
     {G_TYPE_INT, "max-chi-symbol-len", PAGE_EDITING,
      N_("Maximum Chinese characters"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "20",
      NULL, NULL, 0, 39, maxChiSymbolLen_apply_callback, 0,
@@ -131,12 +138,9 @@ MkdgPropertySpec propSpecs[] = {
         "\"keyboard\": IM status follows keyboard status\n"
         "\"IM\": Keyboard status follows IM status"),
      NULL},
-    {G_TYPE_BOOLEAN, "plain-zhuyin", PAGE_SELECTING, N_("Plain Zhuyin mode"),
-     IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL, NULL, 0, 1,
-     plainZhuyin_apply_callback, 0,
-     N_("In plain Zhuyin mode, automatic candidate selection and related "
-        "options are disabled or ignored."),
-     NULL},
+    {G_TYPE_STRING, "conversion-engine", PAGE_SELECTING,
+     N_("Conversion engine"), IBUS_CHEWING_PROPERTIES_SUBSECTION, "0", NULL,
+     NULL, 0, 1, conversion_engine_apply_callback, 0, N_(""), NULL},
     {G_TYPE_UINT, "cand-per-page", PAGE_SELECTING, N_("Candidate per page"),
      IBUS_CHEWING_PROPERTIES_SUBSECTION, "10", NULL, NULL, 4, 10,
      candPerPage_apply_callback, 0, N_("Number of candidate per page."), NULL},

@@ -20,19 +20,21 @@
 
 #include "ibus-setup-chewing-window.h"
 #include "ibus-setup-chewing-about.h"
+#include <gdk/gdkkeysyms.h>
 
 struct _IbusSetupChewingWindow {
-    AdwPreferencesWindow parent_instance;
+    AdwApplicationWindow parent_instance;
 
     /* Template widgets */
     AdwComboRow *kb_type;
     AdwComboRow *sel_keys;
-    AdwSwitchRow *plain_zhuyin;
+    AdwComboRow *conversion_engine;
     AdwSwitchRow *auto_shift_cur;
     AdwSwitchRow *add_phrase_direction;
     AdwSwitchRow *clean_buffer_focus_out;
     AdwSwitchRow *easy_symbol_input;
     AdwSwitchRow *esc_clean_all_buf;
+    AdwSwitchRow *enable_fullwidth_toggle_key;
     AdwSpinRow *max_chi_symbol_len;
     AdwComboRow *chi_eng_mode_toggle;
     AdwComboRow *sync_caps_lock;
@@ -45,7 +47,7 @@ struct _IbusSetupChewingWindow {
 };
 
 G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
-                    ADW_TYPE_PREFERENCES_WINDOW)
+                    ADW_TYPE_APPLICATION_WINDOW)
 
 #define bind_child(child_id)                                                   \
     gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
@@ -67,12 +69,13 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
 
     bind_child(kb_type);
     bind_child(sel_keys);
-    bind_child(plain_zhuyin);
+    bind_child(conversion_engine);
     bind_child(auto_shift_cur);
     bind_child(add_phrase_direction);
     bind_child(clean_buffer_focus_out);
     bind_child(easy_symbol_input);
     bind_child(esc_clean_all_buf);
+    bind_child(enable_fullwidth_toggle_key);
     bind_child(max_chi_symbol_len);
     bind_child(chi_eng_mode_toggle);
     bind_child(sync_caps_lock);
@@ -85,6 +88,8 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
 
     gtk_widget_class_install_action(widget_class, "about", NULL,
                                     action_adaptor_show_about);
+    gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0,
+                                        "window.close", NULL);
 }
 
 const gchar *kb_type_ids[] = {
@@ -103,19 +108,26 @@ const gchar *kb_type_ids[] = {
     "carpalx",
     "colemak_dh_ansi",
     "colemak_dh_orth",
+    "workman",
     NULL,
 };
 
+// clang-format off
 const gchar *sel_key_ids[] = {
-    "1234567890", "asdfghjkl;", "asdfzxcv89",
-    "asdfjkl789", "aoeu;qjkix", /* Dvorak */
-    "aoeuhtnsid",               /* Dvorak */
-    "aoeuidhtns",               /* Dvorak */
-    "1234qweras", NULL,
+    "1234567890",
+    "asdfghjkl;",
+    "asdfzxcv89",
+    "asdfjkl789",
+    "aoeu;qjkix", /* Dvorak */
+    "aoeuhtnsid", /* Dvorak */
+    "aoeuidhtns", /* Dvorak */
+    "1234qweras",
+    NULL,
 };
+// clang-format on
 
 const gchar *chi_eng_mode_toggle_ids[] = {
-    "caps_lock", "shift", "shift_l", "shift_r", NULL,
+    "disable", "caps_lock", "shift", "shift_l", "shift_r", NULL,
 };
 
 const gchar *sync_caps_lock_ids[] = {
@@ -129,6 +141,13 @@ const gchar *default_english_case_ids[] = {
     "no default",
     "lowercase",
     "uppercase",
+    NULL,
+};
+
+const gchar *conversion_engine_ids[] = {
+    "simple",
+    "chewing",
+    "fuzzy-chewing",
     NULL,
 };
 
@@ -173,8 +192,10 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
                                  "selected", G_SETTINGS_BIND_DEFAULT,
                                  id_get_mapping, id_set_mapping, sel_key_ids,
                                  NULL);
-    g_settings_bind(settings, "plain-zhuyin", self->plain_zhuyin, "active",
-                    G_SETTINGS_BIND_INVERT_BOOLEAN);
+    g_settings_bind_with_mapping(settings, "conversion-engine",
+                                 self->conversion_engine, "selected",
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
+                                 id_set_mapping, conversion_engine_ids, NULL);
     g_settings_bind(settings, "auto-shift-cur", self->auto_shift_cur, "active",
                     G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "add-phrase-direction",
@@ -187,6 +208,9 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
                     "active", G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "esc-clean-all-buf", self->esc_clean_all_buf,
                     "active", G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "enable-fullwidth-toggle-key",
+                    self->enable_fullwidth_toggle_key, "active",
+                    G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "max-chi-symbol-len", self->max_chi_symbol_len,
                     "value", G_SETTINGS_BIND_DEFAULT);
     g_settings_bind_with_mapping(settings, "chi-eng-mode-toggle",

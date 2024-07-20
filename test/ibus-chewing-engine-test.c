@@ -89,8 +89,6 @@ gint main(gint argc, gchar **argv) {
     engine = ibus_chewing_engine_new();
     ibus_chewing_pre_edit_save_property_int(engine->icPreEdit,
                                             "max-chi-symbol-len", 8);
-    ibus_chewing_pre_edit_set_apply_property_boolean(engine->icPreEdit,
-                                                     "plain-zhuyin", FALSE);
 
     gboolean cleanBufferFocusOut = ibus_chewing_pre_edit_get_property_boolean(
         engine->icPreEdit, "clean-buffer-focus-out");

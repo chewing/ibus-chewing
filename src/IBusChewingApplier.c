@@ -81,6 +81,17 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx, gpointer) {
     return TRUE;
 }
 
+gboolean enable_fullwidth_toggle_key_apply_callback(PropertyContext *ctx,
+                                                    gpointer) {
+    GValue *value = &(ctx->value);
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
+
+    chewing_config_set_int(icPreEdit->context,
+                           "chewing.enable_fullwidth_toggle_key",
+                           g_value_get_boolean(value));
+    return TRUE;
+}
+
 /* Additional symbol buffer length */
 gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);
@@ -148,6 +159,28 @@ gboolean spaceAsSelection_apply_callback(PropertyContext *ctx, gpointer) {
 
 gboolean plainZhuyin_apply_callback(PropertyContext *, gpointer) {
     /* Use MkdgProperty directly, no need to call IBusChewingEngine */
+    return TRUE;
+}
+
+gboolean conversion_engine_apply_callback(PropertyContext *ctx, gpointer) {
+    GValue *value = &(ctx->value);
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
+    const gchar *engine_enum = g_value_get_string(value);
+    int engine = 1;
+
+    if (!g_strcmp0(engine_enum, "simple")) {
+        engine = 0;
+    } else if (!g_strcmp0(engine_enum, "chewing")) {
+        engine = 1;
+    } else if (!g_strcmp0(engine_enum, "fuzzy-chewing")) {
+        engine = 2;
+    }
+
+    mkdg_log(INFO,
+             "conversion_engine_apply_callback(): engine_enum=%s, engine=%d",
+             engine_enum, engine);
+    chewing_config_set_int(icPreEdit->context, "chewing.conversion_engine",
+                           engine);
     return TRUE;
 }
 

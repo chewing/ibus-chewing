@@ -2,6 +2,7 @@
 #include "IBusChewingPreEdit-private.h"
 #include "IBusChewingProperties.h"
 #include "IBusChewingUtil.h"
+#include <chewing.h>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -20,20 +21,8 @@ IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend *backend) {
     self->wordLen = 0;
     self->engine = NULL;
 
-    /* Create chewing context */
-    gchar buf[100];
-
-    g_snprintf(buf, 100, "%s/.chewing", getenv("HOME"));
-#if !CHEWING_CHECK_VERSION(0, 4, 0)
-    gint ret = chewing_Init(QUOTE_ME(CHEWING_DATADIR_REAL), buf);
-
-    if (ret) {
-        IBUS_CHEWING_LOG(ERROR,
-                         "ibus_chewing_pre_edit_new() chewing_Init(%s,%s)",
-                         QUOTE_ME(CHEWING_DATADIR_REAL), buf);
-    }
-#endif
     self->context = chewing_new();
+    // TODO add default mode setting
     chewing_set_ChiEngMode(self->context, CHINESE_MODE);
 
     self->iTable = g_object_ref_sink(
@@ -52,13 +41,9 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit *self) {
 }
 
 gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit *self) {
-#if CHEWING_CHECK_VERSION(0, 4, 0)
     const gchar *buf = chewing_bopomofo_String_static(self->context);
 
     return g_strdup(buf);
-#else
-    return chewing_zuin_String(self->context, &(self->bpmfLen));
-#endif
 }
 
 void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit *self) {
@@ -66,18 +51,15 @@ void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit *self) {
 }
 
 void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit *self) {
-    if (ibus_chewing_pre_edit_has_flag(self, FLAG_UPDATED_OUTGOING)) {
-        /* Commit already sent to outgoing, no need to update again */
-        return;
-    }
     if (chewing_commit_Check(self->context)) {
         /* commit_Check=1 means new commit available */
         gchar *commitStr = chewing_commit_String(self->context);
 
         IBUS_CHEWING_LOG(INFO, "commitStr=|%s|\n", commitStr);
         g_string_append(self->outgoing, commitStr);
-        g_free(commitStr);
-        ibus_chewing_pre_edit_set_flag(self, FLAG_UPDATED_OUTGOING);
+
+        chewing_free(commitStr);
+        chewing_ack(self->context);
     }
     IBUS_CHEWING_LOG(INFO, "outgoing=|%s|\n", self->outgoing->str);
     IBUS_CHEWING_LOG(
@@ -298,7 +280,6 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
     gint ret = chewing_handle_Default(self->context, fixedKSym);
 
     /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     switch (ret) {
@@ -508,7 +489,7 @@ EventResponse self_handle_space(IBusChewingPreEdit *self, KSym kSym,
     handle_log("space");
 
     if (is_shift_only) {
-        ibus_chewing_pre_edit_toggle_full_half_mode(self);
+        chewing_handle_ShiftSpace(self->context);
         return EVENT_RESPONSE_PROCESS;
     }
 
@@ -553,7 +534,6 @@ EventResponse self_handle_return(IBusChewingPreEdit *self, KSym kSym,
         event_process_or_ignore(!chewing_handle_Enter(self->context));
 
     /* Handle quick commit */
-    ibus_chewing_pre_edit_clear_flag(self, FLAG_UPDATED_OUTGOING);
     ibus_chewing_pre_edit_update_outgoing(self);
 
     return response;
@@ -566,12 +546,6 @@ EventResponse self_handle_backspace(IBusChewingPreEdit *self, KSym kSym,
     absorb_when_release; // Triggers focus-out and focus-in on ignore, so use
     // absorb.
     handle_log("backspace");
-
-#if !CHEWING_CHECK_VERSION(0, 4, 0)
-    if (table_is_showing) {
-        return event_process_or_ignore(!chewing_handle_Esc(self->context));
-    }
-#endif
 
     return event_process_or_ignore(!chewing_handle_Backspace(self->context));
 }
@@ -844,10 +818,10 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym) {
     IBUS_CHEWING_LOG(DEBUG,                                                    \
                      "ibus_chewing_pre_edit_process_key(): %s flags=%x "       \
                      "buff_check=%d bpmf_check=%d cursor=%d total_choice=%d "  \
-                     "is_chinese=%d is_full_shape=%d is_plain_zhuyin=%d",      \
+                     "is_chinese=%d is_full_shape=%d",                         \
                      prompt, self->flags, chewing_buffer_Check(self->context), \
                      bpmf_check, cursor_current, total_choice, is_chinese,     \
-                     is_full_shape, is_plain_zhuyin)
+                     is_full_shape)
 
 gboolean is_shift_key(KSym kSym) {
     return kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R;
@@ -899,36 +873,6 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
     default:
         break;
     }
-
-    /**
-     *Plain zhuyin mode
-     */
-    if (is_plain_zhuyin && !bpmf_check) {
-        /* libchewing functions are used here to skip the check
-         * that handle_key functions perform.
-         */
-        if (kSym == IBUS_KEY_Escape) {
-            ibus_chewing_pre_edit_clear_pre_edit(self);
-        } else if (kSym == IBUS_KEY_Return && table_is_showing) {
-            /* Use Enter to select the last chosen */
-            chewing_handle_Up(self->context);
-            chewing_handle_Enter(self->context);
-        } else if (is_chinese && !table_is_showing) {
-            /* Character completed, and lookup table is not show */
-            /* Then open lookup table */
-
-            if (is_shift) {
-                /* For Chinese symbols */
-                chewing_handle_Left(self->context);
-            }
-            chewing_handle_Down(self->context);
-        } else if (total_choice == 0) {
-            /* lookup table is shown */
-            /* but selection is done */
-            chewing_handle_Enter(self->context);
-        }
-    }
-    process_key_debug("After plain-zhuyin handling");
 
     ibus_chewing_pre_edit_update(self);
 

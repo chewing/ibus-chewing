@@ -60,8 +60,6 @@
                : 'n')
 
 /*== Conditional Expression Shortcut ==*/
-#define is_plain_zhuyin                                                        \
-    ibus_chewing_pre_edit_get_property_boolean(self, "plain-zhuyin")
 #define bpmf_check ibus_chewing_bopomofo_check(self->context)
 #define table_is_showing ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW)
 

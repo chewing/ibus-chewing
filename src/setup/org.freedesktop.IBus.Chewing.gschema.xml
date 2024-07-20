@@ -1,4 +1,9 @@
 <schemalist>
+    <enum id="conversion-engine-enum">
+        <value nick="simple" value="0"/>
+        <value nick="chewing" value="1"/>
+        <value nick="fuzzy-chewing" value="2"/>
+    </enum>
     <schema id="org.freedesktop.IBus.Chewing" path="/desktop/ibus/engine/chewing/" gettext-domain="ibus-chewing">
         <key name="kb-type" type="s">
             <choices>
@@ -17,6 +22,7 @@
                 <choice value="carpalx"/>
                 <choice value="colemak_dh_ansi"/>
                 <choice value="colemak_dh_orth"/>
+                <choice value="workman"/>
             </choices>
             <default l10n="messages">"default"</default>
             <summary>Keyboard Type</summary>
@@ -85,6 +91,13 @@
                 Escape key cleans the text in pre-edit-buffer
             </description>
         </key>
+        <key name="enable-fullwidth-toggle-key" type="b">
+            <default>true</default>
+            <summary>Enable fullwidth toggle key</summary>
+            <description>
+                Enable fullwidth/halfwidth toggle key (Shift+Space)
+            </description>
+        </key>
         <key name="max-chi-symbol-len" type="i">
             <range min="0" max="39"/>
             <default>20</default>
@@ -95,6 +108,7 @@
         </key>
         <key name="chi-eng-mode-toggle" type="s">
             <choices>
+                <choice value="disable"/>
                 <choice value="caps_lock"/>
                 <choice value="shift"/>
                 <choice value="shift_l"/>
@@ -103,7 +117,8 @@
             <default l10n="messages">"caps_lock"</default>
             <summary>Chinese/Alphanumeric Mode Toggle Key</summary>
             <description>
-</description>
+                Toggle Chinese/Alphanumeric mode with key
+            </description>
         </key>
         <key name="default-english-case" type="s">
             <choices>
@@ -137,9 +152,18 @@
         </key>
         <key name="plain-zhuyin" type="b">
             <default>false</default>
-            <summary>Plain Zhuyin mode</summary>
+            <summary>Plain Zhuyin mode (deprecated)</summary>
             <description>
                 In plain Zhuyin mode, automatic candidate selection and related options are disabled or ignored.
+                Deprecated option - use conversion-engine instead.
+            </description>
+        </key>
+        <key name="conversion-engine" enum="conversion-engine-enum">
+            <default>"chewing"</default>
+            <summary>Conversion mode</summary>
+            <description>
+                In Simple mode, automatic candidate selection and related options are disabled or ignored.
+                In FuzzyChewing mode, tones or even parts of bopomofo can be omitted.
             </description>
         </key>
         <key name="cand-per-page" type="u">

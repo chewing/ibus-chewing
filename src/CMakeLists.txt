@@ -65,7 +65,10 @@ target_compile_definitions(ibus-setup-chewing PRIVATE
     LOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}"
 )
 target_include_directories(ibus-setup-chewing PRIVATE setup)
-target_link_libraries(ibus-setup-chewing PkgConfig::LIBADWAITA)
+target_link_libraries(ibus-setup-chewing
+    PkgConfig::LIBADWAITA
+    PkgConfig::CHEWING
+)
 
 add_executable(ibus-engine-chewing
     ibus-chewing-engine.c

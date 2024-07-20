@@ -466,8 +466,6 @@ void process_key_buffer_full_handling_test() {
 /* 程式 */
 void process_key_down_arrow_test() {
     TEST_CASE_INIT();
-    ibus_chewing_pre_edit_set_apply_property_boolean(self, "plain-zhuyin",
-                                                     FALSE);
     ibus_chewing_pre_edit_set_apply_property_boolean(
         self, "phrase-choice-from-last", TRUE);
     key_press_from_string("t/6g4");
@@ -496,8 +494,6 @@ void process_key_shift_and_caps_test() {
 #if 0
 
     TEST_CASE_INIT();
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-                                                     "plain-zhuyin", FALSE);
     ibus_chewing_pre_edit_set_apply_property_boolean(self,
                                                      "space-as-selection",
                                                      FALSE);
