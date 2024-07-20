@@ -81,6 +81,17 @@ gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx, gpointer) {
     return TRUE;
 }
 
+gboolean enable_fullwidth_toggle_key_apply_callback(PropertyContext *ctx,
+                                                    gpointer) {
+    GValue *value = &(ctx->value);
+    IBusChewingPreEdit *icPreEdit = (IBusChewingPreEdit *)ctx->parent;
+
+    chewing_config_set_int(icPreEdit->context,
+                           "chewing.enable_fullwidth_toggle_key",
+                           g_value_get_boolean(value));
+    return TRUE;
+}
+
 /* Additional symbol buffer length */
 gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx, gpointer) {
     GValue *value = &(ctx->value);

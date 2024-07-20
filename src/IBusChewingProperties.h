@@ -50,6 +50,9 @@ gboolean easySymbolInput_apply_callback(PropertyContext *ctx,
 
 gboolean escCleanAllBuf_apply_callback(PropertyContext *ctx, gpointer userData);
 
+gboolean enable_fullwidth_toggle_key_apply_callback(PropertyContext *ctx,
+                                                    gpointer userData);
+
 gboolean maxChiSymbolLen_apply_callback(PropertyContext *ctx,
                                         gpointer userData);
 

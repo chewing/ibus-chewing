@@ -135,6 +135,12 @@
                   </object>
                 </child>
                 <child>
+                  <object class="AdwSwitchRow" id="enable_fullwidth_toggle_key">
+                    <property name="title" translatable="yes">Enable Fullwidth Toggle Key (Shift+Space)</property>
+                    <property name="subtitle" translatable="yes">Use Shift+Space to switch between fullwdith and halfwidth symbols input</property>
+                  </object>
+                </child>
+                <child>
                   <object class="AdwSpinRow" id="max_chi_symbol_len">
                     <property name="adjustment">
                       <object class="GtkAdjustment">

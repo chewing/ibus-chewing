@@ -77,6 +77,9 @@ static char *generate_debug_info(void) {
             string, "- esc-clean-all-buf: %d\n",
             g_settings_get_boolean(settings, "esc-clean-all-buf"));
         g_string_append_printf(
+            string, "- enable-fullwidth-toggle-key: %d\n",
+            g_settings_get_boolean(settings, "enable-fullwidth-toggle-key"));
+        g_string_append_printf(
             string, "- max-chi-symbol-len: %d\n",
             g_settings_get_int(settings, "max-chi-symbol-len"));
         g_string_append_printf(string, "- chi-eng-mode-toggle: %s\n",

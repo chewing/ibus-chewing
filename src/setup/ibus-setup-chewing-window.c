@@ -34,6 +34,7 @@ struct _IbusSetupChewingWindow {
     AdwSwitchRow *clean_buffer_focus_out;
     AdwSwitchRow *easy_symbol_input;
     AdwSwitchRow *esc_clean_all_buf;
+    AdwSwitchRow *enable_fullwidth_toggle_key;
     AdwSpinRow *max_chi_symbol_len;
     AdwComboRow *chi_eng_mode_toggle;
     AdwComboRow *sync_caps_lock;
@@ -74,6 +75,7 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(clean_buffer_focus_out);
     bind_child(easy_symbol_input);
     bind_child(esc_clean_all_buf);
+    bind_child(enable_fullwidth_toggle_key);
     bind_child(max_chi_symbol_len);
     bind_child(chi_eng_mode_toggle);
     bind_child(sync_caps_lock);
@@ -206,6 +208,9 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
                     "active", G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "esc-clean-all-buf", self->esc_clean_all_buf,
                     "active", G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "enable-fullwidth-toggle-key",
+                    self->enable_fullwidth_toggle_key, "active",
+                    G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "max-chi-symbol-len", self->max_chi_symbol_len,
                     "value", G_SETTINGS_BIND_DEFAULT);
     g_settings_bind_with_mapping(settings, "chi-eng-mode-toggle",

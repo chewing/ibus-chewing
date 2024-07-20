@@ -489,7 +489,7 @@ EventResponse self_handle_space(IBusChewingPreEdit *self, KSym kSym,
     handle_log("space");
 
     if (is_shift_only) {
-        ibus_chewing_pre_edit_toggle_full_half_mode(self);
+        chewing_handle_ShiftSpace(self->context);
         return EVENT_RESPONSE_PROCESS;
     }
 

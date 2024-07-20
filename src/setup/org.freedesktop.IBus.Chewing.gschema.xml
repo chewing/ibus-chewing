@@ -91,6 +91,13 @@
                 Escape key cleans the text in pre-edit-buffer
             </description>
         </key>
+        <key name="enable-fullwidth-toggle-key" type="b">
+            <default>true</default>
+            <summary>Enable fullwidth toggle key</summary>
+            <description>
+                Enable fullwidth/halfwidth toggle key (Shift+Space)
+            </description>
+        </key>
         <key name="max-chi-symbol-len" type="i">
             <range min="0" max="39"/>
             <default>20</default>
