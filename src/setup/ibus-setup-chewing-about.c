@@ -20,6 +20,7 @@
 
 #include "ibus-setup-chewing-about.h"
 
+#include <chewing/chewing.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
 
@@ -36,7 +37,7 @@ static char *generate_debug_info(void) {
                            QUOTE_ME(CHEWING_VERSION));
 
     g_string_append(string, "\nRunning against:\n");
-    g_string_append_printf(string, "- libchewing: n/a\n");
+    g_string_append_printf(string, "- libchewing: %s\n", chewing_version());
 
     g_string_append(string, "\n");
     {
