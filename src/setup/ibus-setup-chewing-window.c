@@ -103,6 +103,7 @@ const gchar *kb_type_ids[] = {
     "carpalx",
     "colemak_dh_ansi",
     "colemak_dh_orth",
+    "workman",
     NULL,
 };
 

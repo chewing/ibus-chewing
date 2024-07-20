@@ -25,6 +25,7 @@ const gchar *kbType_ids[] = {N_("default"),
                              N_("carpalx"),
                              N_("colemak_dh_ansi"),
                              N_("colemak_dh_orth"),
+                             N_("workman"),
                              NULL};
 
 #define SELKEYS_ARRAY_SIZE 8

@@ -47,6 +47,7 @@
                       <item translatable="yes">Carpalx</item>
                       <item translatable="yes">Colemak-DH ANSI</item>
                       <item translatable="yes">Colemak-DH Ortholinear</item>
+                      <item translatable="yes">Workman</item>
                     </items>
                   </object>
                 </property>

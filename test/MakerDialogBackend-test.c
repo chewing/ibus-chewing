@@ -149,7 +149,7 @@ void mkdg_g_value_from_string_test(const gchar *key, GType gType) {
 }
 
 void mkdg_g_value_from_string_boolean_test() {
-    mkdg_g_value_from_string_test("conversion-engine", G_TYPE_STRING);
+    mkdg_g_value_from_string_test("auto-shift-cur", G_TYPE_BOOLEAN);
 }
 
 void mkdg_g_value_from_string_int_test() {
