@@ -20,9 +20,10 @@
 
 #include "ibus-setup-chewing-window.h"
 #include "ibus-setup-chewing-about.h"
+#include <gdk/gdkkeysyms.h>
 
 struct _IbusSetupChewingWindow {
-    AdwPreferencesWindow parent_instance;
+    AdwApplicationWindow parent_instance;
 
     /* Template widgets */
     AdwComboRow *kb_type;
@@ -45,7 +46,7 @@ struct _IbusSetupChewingWindow {
 };
 
 G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
-                    ADW_TYPE_PREFERENCES_WINDOW)
+                    ADW_TYPE_APPLICATION_WINDOW)
 
 #define bind_child(child_id)                                                   \
     gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
@@ -85,6 +86,8 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
 
     gtk_widget_class_install_action(widget_class, "about", NULL,
                                     action_adaptor_show_about);
+    gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0,
+                                        "window.close", NULL);
 }
 
 const gchar *kb_type_ids[] = {

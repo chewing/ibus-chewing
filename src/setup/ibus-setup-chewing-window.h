@@ -25,5 +25,5 @@
 G_BEGIN_DECLS
 #define IBUS_SETUP_CHEWING_TYPE_WINDOW (ibus_setup_chewing_window_get_type())
 G_DECLARE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
-                     IBUS_SETUP_CHEWING, WINDOW, AdwPreferencesWindow)
+                     IBUS_SETUP_CHEWING, WINDOW, AdwApplicationWindow)
 G_END_DECLS

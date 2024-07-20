@@ -4,237 +4,245 @@
   <!-- interface-name ibus-setup-chewing.ui -->
   <requires lib="gtk" version="4.0" />
   <requires lib="libadwaita" version="1.4" />
-  <template class="IbusSetupChewingWindow" parent="AdwPreferencesWindow">
+  <template class="IbusSetupChewingWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Chewing Settings</property>
-    <property name="default-height">700</property>
-    <child>
-      <object class="AdwPreferencesPage">
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="description" translatable="yes">Configure the input method</property>
-            <property name="title" translatable="yes">Input Method</property>
+    <property name="default-height">800</property>
+    <property name="default-width">700</property>
+    <property name="content">
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" />
+        </child>
+        <property name="content">
+          <object class="AdwPreferencesPage">
             <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="yes">About</property>
-                <property name="subtitle" translatable="yes">IBus Chewing</property>
-                <property name="activatable">true</property>
-                <property name="action-name">about</property>
+              <object class="AdwPreferencesGroup">
+                <property name="description" translatable="yes">Configure the input method</property>
+                <property name="title" translatable="yes">Input Method</property>
                 <child>
-                  <object class="GtkImage">
-                    <property name="valign">center</property>
-                    <property name="icon-name">help-about-symbolic</property>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">About</property>
+                    <property name="subtitle" translatable="yes">IBus Chewing</property>
+                    <property name="activatable">true</property>
+                    <property name="action-name">about</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="valign">center</property>
+                        <property name="icon-name">help-about-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="kb_type">
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">Standard</item>
+                          <item translatable="yes">Hsu</item>
+                          <item translatable="yes">IBM</item>
+                          <item translatable="yes">Gin-Yieh</item>
+                          <item translatable="yes">Eten</item>
+                          <item translatable="yes">Eten 26</item>
+                          <item translatable="yes">Dvorak</item>
+                          <item translatable="yes">Dvorak-Hsu</item>
+                          <item translatable="yes">DaChen 26</item>
+                          <item translatable="yes">Hanyu Pinyin</item>
+                          <item translatable="yes">THL Pinyin</item>
+                          <item translatable="yes">MPS2 Pinyin</item>
+                          <item translatable="yes">Carpalx</item>
+                          <item translatable="yes">Colemak-DH ANSI</item>
+                          <item translatable="yes">Colemak-DH Ortholinear</item>
+                          <item translatable="yes">Workman</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Keyboard Type</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="sel_keys">
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item>1234567890</item>
+                          <item>asdfghjkl;</item>
+                          <item>asdfzxcv89</item>
+                          <item>asdfjkl789</item>
+                          <item>aoeu;qjkix</item>
+                          <item>aoeuhtnsid</item>
+                          <item>aoeuidhtns</item>
+                          <item>1234qweras</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Selection Keys</property>
+                    <property name="subtitle" translatable="yes">Keys used to select candidate</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="conversion_engine">
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">Plain Zhuyin</item>
+                          <item translatable="yes">Chewing (Default)</item>
+                          <item translatable="yes">Fuzzy Chewing</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Conversion Engine</property>
+                    <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection, or fuzzy input.</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="AdwComboRow" id="kb_type">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">Standard</item>
-                      <item translatable="yes">Hsu</item>
-                      <item translatable="yes">IBM</item>
-                      <item translatable="yes">Gin-Yieh</item>
-                      <item translatable="yes">Eten</item>
-                      <item translatable="yes">Eten 26</item>
-                      <item translatable="yes">Dvorak</item>
-                      <item translatable="yes">Dvorak-Hsu</item>
-                      <item translatable="yes">DaChen 26</item>
-                      <item translatable="yes">Hanyu Pinyin</item>
-                      <item translatable="yes">THL Pinyin</item>
-                      <item translatable="yes">MPS2 Pinyin</item>
-                      <item translatable="yes">Carpalx</item>
-                      <item translatable="yes">Colemak-DH ANSI</item>
-                      <item translatable="yes">Colemak-DH Ortholinear</item>
-                      <item translatable="yes">Workman</item>
-                    </items>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Editing</property>
+                <property name="description" translatable="yes">Configure the input method behavior</property>
+                <child>
+                  <object class="AdwSwitchRow" id="auto_shift_cur">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Auto Move Cursor</property>
+                    <property name="subtitle" translatable="yes">Automatically move the cursor to the next character after selection</property>
                   </object>
-                </property>
-                <property name="title" translatable="yes">Keyboard Type</property>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="add_phrase_direction">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Add Phrase Before Cursor</property>
+                    <property name="subtitle" translatable="yes">Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="clean_buffer_focus_out">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Clear Pre-Edit Buffer When Focus Out</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="easy_symbol_input">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Easy Symbol Input</property>
+                    <property name="subtitle" translatable="yes">Press Shift + keys to input Chinese punctuation symbols</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="esc_clean_all_buf">
+                    <property name="title" translatable="yes">Esc Clean All Buffer</property>
+                    <property name="subtitle" translatable="yes">Escape key discards all uncommitted texts</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSpinRow" id="max_chi_symbol_len">
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">11.0</property>
+                        <property name="step-increment">1.0</property>
+                        <property name="upper">33.0</property>
+                        <property name="value">20.0</property>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Maximum Chinese Characters</property>
+                    <property name="subtitle" translatable="yes">Until how many characters should trigger auto-commit</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="chi_eng_mode_toggle">
+                    <property name="title" translatable="yes">Chinese/Alphanumeric Mode Toggle Key</property>
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">Caps Lock</item>
+                          <item translatable="yes">Shift</item>
+                          <item translatable="yes">Shift_L</item>
+                          <item translatable="yes">Shift_R</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="selected">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="sync_caps_lock">
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">Disable Syncing</item>
+                          <item translatable="yes">Sync with Keyboard State</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="selected">0</property>
+                    <property name="title" translatable="yes">Sync Caps Lock and IM</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="default_english_case">
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">No Default</item>
+                          <item translatable="yes">Lower Case</item>
+                          <item translatable="yes">Upper Case</item>
+                        </items>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Default English Letter Case</property>
+                    <property name="subtitle" translatable="yes">The letter case without pressing the Shift key</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="AdwComboRow" id="sel_keys">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item>1234567890</item>
-                      <item>asdfghjkl;</item>
-                      <item>asdfzxcv89</item>
-                      <item>asdfjkl789</item>
-                      <item>aoeu;qjkix</item>
-                      <item>aoeuhtnsid</item>
-                      <item>aoeuidhtns</item>
-                      <item>1234qweras</item>
-                    </items>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Selecting</property>
+                <property name="description" translatable="yes">Configure the candidate selection behavior</property>
+                <child>
+                  <object class="AdwSpinRow" id="cand_per_page">
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">4.0</property>
+                        <property name="step-increment">1.0</property>
+                        <property name="upper">10.0</property>
+                        <property name="value">10.0</property>
+                      </object>
+                    </property>
+                    <property name="title" translatable="yes">Candidates Per Page</property>
                   </object>
-                </property>
-                <property name="title" translatable="yes">Selection Keys</property>
-                <property name="subtitle" translatable="yes">Keys used to select candidate</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwComboRow" id="conversion_engine">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">Plain Zhuyin</item>
-                      <item translatable="yes">Chewing (Default)</item>
-                      <item translatable="yes">Fuzzy Chewing</item>
-                    </items>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="show_page_number">
+                    <property name="active">False</property>
+                    <property name="title" translatable="yes">Show Page Number</property>
                   </object>
-                </property>
-                <property name="title" translatable="yes">Conversion Engine</property>
-                <property name="subtitle" translatable="yes">Enable or disable automatic candidate selection, or fuzzy input.</property>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="phrase_choice_from_last">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Choose Phrases Backwards</property>
+                    <property name="subtitle" translatable="yes">Open candidate list from the last character of a phrase</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="space_as_selection">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Use Space Key as Selection Key</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="vertical_lookup_table">
+                    <property name="active">True</property>
+                    <property name="title" translatable="yes">Use Vertical Candidate Panel</property>
+                    <property name="subtitle" translatable="yes">Choose from vertical or horizontal panel</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Editing</property>
-            <property name="description" translatable="yes">Configure the input method behavior</property>
-            <child>
-              <object class="AdwSwitchRow" id="auto_shift_cur">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Auto Move Cursor</property>
-                <property name="subtitle" translatable="yes">Automatically move the cursor to the next character after selection</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="add_phrase_direction">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Add Phrase Before Cursor</property>
-                <property name="subtitle" translatable="yes">Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="clean_buffer_focus_out">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Clear Pre-Edit Buffer When Focus Out</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="easy_symbol_input">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Easy Symbol Input</property>
-                <property name="subtitle" translatable="yes">Press Shift + keys to input Chinese punctuation symbols</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="esc_clean_all_buf">
-                <property name="title" translatable="yes">Esc Clean All Buffer</property>
-                <property name="subtitle" translatable="yes">Escape key discards all uncommitted texts</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSpinRow" id="max_chi_symbol_len">
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">11.0</property>
-                    <property name="step-increment">1.0</property>
-                    <property name="upper">33.0</property>
-                    <property name="value">20.0</property>
-                  </object>
-                </property>
-                <property name="title" translatable="yes">Maximum Chinese Characters</property>
-                <property name="subtitle" translatable="yes">Until how many characters should trigger auto-commit</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwComboRow" id="chi_eng_mode_toggle">
-                <property name="title" translatable="yes">Chinese/Alphanumeric Mode Toggle Key</property>
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">Caps Lock</item>
-                      <item translatable="yes">Shift</item>
-                      <item translatable="yes">Shift_L</item>
-                      <item translatable="yes">Shift_R</item>
-                    </items>
-                  </object>
-                </property>
-                <property name="selected">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwComboRow" id="sync_caps_lock">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">Disable Syncing</item>
-                      <item translatable="yes">Sync with Keyboard State</item>
-                    </items>
-                  </object>
-                </property>
-                <property name="selected">0</property>
-                <property name="title" translatable="yes">Sync Caps Lock and IM</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwComboRow" id="default_english_case">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">No Default</item>
-                      <item translatable="yes">Lower Case</item>
-                      <item translatable="yes">Upper Case</item>
-                    </items>
-                  </object>
-                </property>
-                <property name="title" translatable="yes">Default English Letter Case</property>
-                <property name="subtitle" translatable="yes">The letter case without pressing the Shift key</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Selecting</property>
-            <property name="description" translatable="yes">Configure the candidate selection behavior</property>
-            <child>
-              <object class="AdwSpinRow" id="cand_per_page">
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">4.0</property>
-                    <property name="step-increment">1.0</property>
-                    <property name="upper">10.0</property>
-                    <property name="value">10.0</property>
-                  </object>
-                </property>
-                <property name="title" translatable="yes">Candidates Per Page</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="show_page_number">
-                <property name="active">False</property>
-                <property name="title" translatable="yes">Show Page Number</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="phrase_choice_from_last">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Choose Phrases Backwards</property>
-                <property name="subtitle" translatable="yes">Open candidate list from the last character of a phrase</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="space_as_selection">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Use Space Key as Selection Key</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="vertical_lookup_table">
-                <property name="active">True</property>
-                <property name="title" translatable="yes">Use Vertical Candidate Panel</property>
-                <property name="subtitle" translatable="yes">Choose from vertical or horizontal panel</property>
-              </object>
-            </child>
-          </object>
-        </child>
+        </property>
       </object>
-    </child>
+    </property>
   </template>
 </interface>
