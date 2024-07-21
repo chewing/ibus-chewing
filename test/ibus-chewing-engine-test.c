@@ -31,8 +31,8 @@ void focus_out_then_focus_in_with_aux_text_test() {
                                                 "add-phrase-direction", TRUE);
 
     g_signal_emit_by_name(engine, "set_capabilities", IBUS_CAP_AUXILIARY_TEXT);
-    ibus_chewing_engine_focus_in(engine);
-    ibus_chewing_engine_enable(engine);
+    ibus_chewing_engine_focus_in(IBUS_ENGINE(engine));
+    ibus_chewing_engine_enable(IBUS_ENGINE(engine));
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
     ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24,
                                           IBUS_RELEASE_MASK);
@@ -52,7 +52,7 @@ void focus_out_then_focus_in_with_aux_text_test() {
     check_output("", "五五", "已有：五五");
 
     /* focus out should not touch Texts */
-    ibus_chewing_engine_focus_out(engine);
+    ibus_chewing_engine_focus_out(IBUS_ENGINE(engine));
     g_assert(cleanBufferFocusOut ==
              ibus_chewing_pre_edit_get_property_boolean(
                  engine->icPreEdit, "clean-buffer-focus-out"));
@@ -64,7 +64,7 @@ void focus_out_then_focus_in_with_aux_text_test() {
     }
 
     /* all should be clean */
-    ibus_chewing_engine_focus_in(engine);
+    ibus_chewing_engine_focus_in(IBUS_ENGINE(engine));
     check_output("", "", "");
 
     ibus_chewing_pre_edit_clear(engine->icPreEdit);

@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  */
+
+#pragma once
+
 #include "GSettingsBackend.h"
 #include "IBusChewingPreEdit.h"
 #include "IBusChewingProperties.h"
@@ -32,14 +35,44 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef __IBUS_CHEWING_ENGINE_PRIVATE_H__
-#define __IBUS_CHEWING_ENGINE_PRIVATE_H__
-
 #include "ibus-chewing-engine.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
+
+struct _IBusChewingEngine {
+    IBusEngine __parent__;
+    /*< public > */
+    IBusChewingPreEdit *icPreEdit;
+    IBusText *preEditText;
+    IBusText *auxText;
+    IBusText *outgoingText;
+    IBusProperty *InputMode;
+    IBusProperty *AlnumSize;
+    IBusProperty *setup_prop;
+    IBusPropList *prop_list;
+    /*< private > */
+    FILE *logFile;         /* protected */
+    IBusKeymap *keymap_us; /* protected */
+
+    EngineFlag statusFlags;
+    IBusCapabilite capabilite;
+    ChewingInputStyle inputStyle;
+
+    IBusText *InputMode_label_chi;
+    IBusText *InputMode_label_eng;
+    IBusText *InputMode_tooltip;
+    IBusText *InputMode_symbol_chi;
+    IBusText *InputMode_symbol_eng;
+    IBusText *AlnumSize_label_full;
+    IBusText *AlnumSize_label_half;
+    IBusText *AlnumSize_tooltip;
+    IBusText *AlnumSize_symbol_full;
+    IBusText *AlnumSize_symbol_half;
+    IBusText *setup_prop_label;
+    IBusText *setup_prop_tooltip;
+    IBusText *setup_prop_symbol;
+    IBusText *emptyText;
+};
 
 void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval,
                                         gboolean shiftPressed);
@@ -61,18 +94,10 @@ void update_lookup_table(IBusChewingEngine *self);
 void refresh_outgoing_text(IBusChewingEngine *self);
 void commit_text(IBusChewingEngine *self);
 
-struct _IBusChewingEnginePrivate {
-    EngineFlag statusFlags;
-    IBusCapabilite capabilite;
-    ChewingInputStyle inputStyle;
-};
 void ibus_chewing_engine_use_setting(IBusChewingEngine *self);
 void ibus_chewing_engine_restore_mode(IBusChewingEngine *self);
 void ibus_chewing_engine_update(IBusChewingEngine *self);
 void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
                                           const gchar *prop_name);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-#endif
+G_END_DECLS
