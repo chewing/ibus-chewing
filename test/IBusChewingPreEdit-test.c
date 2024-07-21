@@ -12,6 +12,7 @@
 
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)
 #define TEST_CASE_INIT()                                                                           \
+    g_object_set(G_OBJECT(self->engine), "conversion-engine", "chewing", NULL);                    \
     ibus_chewing_pre_edit_clear(self);                                                             \
     ibus_chewing_pre_edit_set_full_half_mode(self, FALSE);                                         \
     ibus_chewing_pre_edit_set_chi_eng_mode(self, TRUE)
@@ -509,7 +510,7 @@ void plain_zhuyin_test() {
      */
     /* assert_outgoing_pre_edit("","資"); */
     key_press_from_string("4");
-    assert_outgoing_pre_edit("吱", "");
+    assert_outgoing_pre_edit("", "吱");
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
@@ -519,50 +520,44 @@ void plain_zhuyin_test() {
 
 /*  你好，*/
 void plain_zhuyin_shift_symbol_test() {
-    g_object_set(G_OBJECT(self->engine), "plain-zhuyin", TRUE, "chi-eng-mode-toggle", "shift",
-                 NULL);
+    g_object_set(G_OBJECT(self->engine), "conversion-engine", "simple", "chi-eng-mode-toggle",
+                 "shift", NULL);
 
     key_press_from_string("su31cl31");
 
     /* ， */
     key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);
-    /* Candidate window should be shown */
-    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
-    key_press_from_string("1");
 
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
-    assert_outgoing_pre_edit("你好，", "");
+    assert_outgoing_pre_edit("", "你好，");
 
     /* 打電話  */
     key_press_from_string("28312u041cj841");
-    assert_outgoing_pre_edit("你好，打電話", "");
+    assert_outgoing_pre_edit("", "你好，打電話");
 
     /* ； */
     key_press_from_key_sym(IBUS_KEY_quotedbl, IBUS_SHIFT_MASK);
-    key_press_from_string("1");
-    assert_outgoing_pre_edit("你好，打電話；", "");
+    assert_outgoing_pre_edit("", "你好，打電話；");
 
     /* Mix with shift */
 
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
 
-    /* String is bypass in English mode */
     key_press_from_string("4321-9876 ");
-
-    assert_outgoing_pre_edit("你好，打電話；", "");
+    assert_outgoing_pre_edit("", "你好，打電話；4321-9876 ");
     key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
     /* "來訂餐" */
     key_press_from_string("x9612u/42h0 2");
-    assert_outgoing_pre_edit("你好，打電話；來訂餐", "");
+    assert_outgoing_pre_edit("", "你好，打電話；4321-9876 來訂餐");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
 }
 
 void plain_zhuyin_full_half_shape_test() {
-    g_object_set(G_OBJECT(self->engine), "plain-zhuyin", TRUE, NULL);
+    g_object_set(G_OBJECT(self->engine), "conversion-engine", "simple", NULL);
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     g_assert(!ibus_chewing_pre_edit_get_chi_eng_mode(self));
@@ -796,9 +791,9 @@ gint main(gint argc, gchar **argv) {
     TEST_RUN_THIS(process_key_down_arrow_test);
     TEST_RUN_THIS(process_key_shift_and_caps_test);
     TEST_RUN_THIS(full_half_shape_test);
-    // TEST_RUN_THIS(plain_zhuyin_test);
-    // TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
-    // TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
+    TEST_RUN_THIS(plain_zhuyin_test);
+    TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
+    TEST_RUN_THIS(plain_zhuyin_full_half_shape_test);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_bopomofo);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_clear_pre_edit);
     TEST_RUN_THIS(test_ibus_chewing_pre_edit_set_chi_eng_mode);
