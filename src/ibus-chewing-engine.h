@@ -41,13 +41,6 @@
 G_BEGIN_DECLS
 
 typedef enum {
-    CHEWING_INPUT_STYLE_IN_APPLICATION,
-    CHEWING_INPUT_STYLE_IN_CANDIDATE
-} ChewingInputStyle;
-#define CHEWING_TYPE_INPUT_STYLE chewing_input_style_get_type()
-GType chewing_input_style_get_type(void) G_GNUC_CONST;
-
-typedef enum {
     ENGINE_FLAG_INITIALIZED = 0x1,
     ENGINE_FLAG_ENABLED = 0x2,
     ENGINE_FLAG_FOCUS_IN = 0x4,

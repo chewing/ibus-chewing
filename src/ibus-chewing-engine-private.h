@@ -53,7 +53,6 @@ struct _IBusChewingEngine {
 
     EngineFlag statusFlags;
     IBusCapabilite capabilite;
-    ChewingInputStyle inputStyle;
 
     IBusText *InputMode_label_chi;
     IBusText *InputMode_label_eng;

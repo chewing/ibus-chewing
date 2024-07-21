@@ -32,22 +32,6 @@
 
 #include "ibus-chewing-engine-private.h"
 
-static const GEnumValue _chewing_input_style_values[] = {
-    {CHEWING_INPUT_STYLE_IN_APPLICATION,
-     (char *)"CHEWING_INPUT_STYLE_IN_APPLICATION", (char *)"in-application"},
-    {CHEWING_INPUT_STYLE_IN_CANDIDATE,
-     (char *)"CHEWING_INPUT_STYLE_IN_CANDIDATE", (char *)"in-candidate"},
-    {0, NULL, NULL}};
-
-GType chewing_input_style_get_type(void) {
-    static GType type = 0;
-
-    if G_UNLIKELY (type == 0)
-        type = g_enum_register_static("ChewingInputStyle",
-                                      _chewing_input_style_values);
-    return type;
-}
-
 static const GEnumValue _engine_flag_values[] = {
     {ENGINE_FLAG_INITIALIZED, (char *)"ENGINE_FLAG_INITIALIZED",
      (char *)"initialized"},
@@ -221,20 +205,9 @@ static void ibus_chewing_engine_class_init(IBusChewingEngineClass *klass) {
 void ibus_chewing_engine_use_setting(IBusChewingEngine *self) {
     g_return_if_fail(self != NULL);
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
-    {
-        IBUS_CHEWING_LOG(INFO, "use_setting()");
+    IBUS_CHEWING_LOG(INFO, "use_setting()");
 
-        ibus_chewing_pre_edit_use_all_configure(self->icPreEdit);
-
-        /* Input style */
-        if (ibus_chewing_properties_read_boolean_general(
-                self->icPreEdit->iProperties, "ibus/general",
-                "embed-preedit-text", NULL)) {
-            self->inputStyle = CHEWING_INPUT_STYLE_IN_APPLICATION;
-        } else {
-            self->inputStyle = CHEWING_INPUT_STYLE_IN_CANDIDATE;
-        }
-    }
+    ibus_chewing_pre_edit_use_all_configure(self->icPreEdit);
 }
 
 void ibus_chewing_engine_restore_mode(IBusChewingEngine *self) {
