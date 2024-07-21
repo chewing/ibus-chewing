@@ -1,16 +1,8 @@
 add_library(common STATIC
-    IBusChewingApplier.c
-    IBusChewingProperties.c
     IBusChewingLookupTable.c
-    MakerDialogBackend.c
-    MakerDialogProperty.c
     MakerDialogUtil.c
 
     IBusChewingLookupTable.h
-    IBusChewingProperties.h
-    MakerDialogBackend.h
-    MakerDialogProperty.h
-    MakerDialogPropertySpec.h
     MakerDialogUtil.h
     ibus-chewing-engine.h
 )
@@ -18,19 +10,6 @@ target_link_libraries(common PUBLIC
     PkgConfig::CHEWING
     PkgConfig::GLIB2
     PkgConfig::IBUS
-)
-
-add_library(gui-core STATIC
-    GSettingsBackend.c
-    GSettingsBackend.h
-)
-target_link_libraries(gui-core PUBLIC
-    common
-    PkgConfig::GLIB2
-    PkgConfig::GTK4
-    PkgConfig::LIBADWAITA
-    PkgConfig::IBUS
-    PkgConfig::CHEWING
 )
 
 add_custom_command(
@@ -86,7 +65,14 @@ target_compile_definitions(ibus-engine-chewing
 target_include_directories(ibus-engine-chewing
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(ibus-engine-chewing gui-core)
+target_link_libraries(ibus-engine-chewing
+    common
+    PkgConfig::GLIB2
+    PkgConfig::GTK4
+    PkgConfig::LIBADWAITA
+    PkgConfig::IBUS
+    PkgConfig::CHEWING
+)
 
 set(PROJECT_GSCHEMA_XML ${PROJECT_SCHEMA_ID}.gschema.xml)
 set(GSETTINGS_SCHEMAS_DIR ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas)

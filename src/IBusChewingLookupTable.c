@@ -1,29 +1,25 @@
 #include "IBusChewingLookupTable.h"
 #include "IBusChewingUtil.h"
-#include "MakerDialogProperty.h"
+#include "MakerDialogUtil.h"
 
-IBusLookupTable *
-ibus_chewing_lookup_table_new(IBusChewingProperties *iProperties,
-                              ChewingContext *context) {
+IBusLookupTable *ibus_chewing_lookup_table_new(ChewingContext *context) {
     guint size = 10;
     gboolean cursorShow = TRUE;
     gboolean wrapAround = TRUE;
     IBusLookupTable *iTable =
         ibus_lookup_table_new(size, 0, cursorShow, wrapAround);
 
-    ibus_chewing_lookup_table_resize(iTable, iProperties, context);
+    ibus_chewing_lookup_table_resize(iTable, context);
 
     return iTable;
 }
 
 void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable,
-                                      IBusChewingProperties *iProperties,
                                       ChewingContext *context) {
     gint selKSym[MAX_SELKEY];
-    const gchar *selKeyStr =
-        mkdg_properties_get_string_by_key(iProperties->properties, "sel-keys");
-    guint candPerPage = mkdg_properties_get_uint_by_key(iProperties->properties,
-                                                        "cand-per-page");
+    g_autoptr(GSettings) settings = g_settings_new(QUOTE_ME(PROJECT_SCHEMA_ID));
+    g_autofree char *selKeyStr = g_settings_get_string(settings, "sel-keys");
+    guint candPerPage = g_settings_get_uint(settings, "cand-per-page");
 
     /* Users are allowed to specify their own selKeys,
      * we have to check the length and take the smaller one.
@@ -47,16 +43,14 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable,
     chewing_set_candPerPage(context, len);
     chewing_set_selKey(context, selKSym, len);
 
-    gboolean verticalLookupTable = mkdg_properties_get_boolean_by_key(
-        iProperties->properties, "vertical-lookup-table");
+    gboolean verticalLookupTable =
+        g_settings_get_boolean(settings, "vertical-lookup-table");
 
     ibus_lookup_table_set_orientation(iTable, verticalLookupTable);
 }
 
-guint ibus_chewing_lookup_table_update(
-    IBusLookupTable *iTable,
-    [[maybe_unused]] IBusChewingProperties *iProperties,
-    ChewingContext *context) {
+guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable,
+                                       ChewingContext *context) {
     IBusText *iText = NULL;
     gint i;
     gint choicePerPage = chewing_cand_ChoicePerPage(context);

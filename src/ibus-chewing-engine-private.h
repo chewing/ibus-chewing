@@ -22,18 +22,8 @@
 
 #pragma once
 
-#include "GSettingsBackend.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingProperties.h"
-#include "IBusChewingUtil.h"
-#include <chewing.h>
-#include <ctype.h>
-#include <glib/gi18n.h>
 #include <ibus.h>
-#include <libintl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "ibus-chewing-engine.h"
 
@@ -53,6 +43,26 @@ struct _IBusChewingEngine {
 
     EngineFlag statusFlags;
     IBusCapabilite capabilite;
+
+    char *prop_kb_type;
+    char *prop_sel_keys;
+    int prop_cand_per_page;
+    gboolean prop_vertical_lookup_table;
+    gboolean prop_auto_shift_cur;
+    gboolean prop_add_phrase_direction;
+    gboolean prop_clean_buffer_focus_out;
+    gboolean prop_easy_symbol_input;
+    gboolean prop_esc_clean_all_buf;
+    gboolean prop_enable_fullwidth_toggle_key;
+    int prop_max_chi_symbol_len;
+    char *prop_default_english_case;
+    char *prop_chi_eng_mode_toggle;
+    gboolean prop_phrase_choice_from_last;
+    gboolean prop_space_as_selection;
+    char *prop_sync_caps_lock;
+    gboolean prop_show_page_number;
+    char *prop_conversion_engine;
+    gboolean prop_ibus_use_system_layout;
 
     IBusText *InputMode_label_chi;
     IBusText *InputMode_label_eng;
@@ -74,13 +84,11 @@ void ibus_chewing_engine_handle_Default(IBusChewingEngine *self, guint keyval,
                                         gboolean shiftPressed);
 #define self_handle_Default ibus_chewing_engine_handle_Default
 
-void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index,
-                                           guint button, guint state);
-void ibus_chewing_engine_property_activate(IBusEngine *engine,
-                                           const gchar *prop_name,
+void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guint button,
+                                           guint state);
+void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop_name,
                                            guint prop_state);
-void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose,
-                                          guint hints);
+void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, guint hints);
 
 void refresh_pre_edit_text(IBusChewingEngine *self);
 void update_pre_edit_text(IBusChewingEngine *self);
@@ -90,10 +98,8 @@ void update_lookup_table(IBusChewingEngine *self);
 void refresh_outgoing_text(IBusChewingEngine *self);
 void commit_text(IBusChewingEngine *self);
 
-void ibus_chewing_engine_use_setting(IBusChewingEngine *self);
 void ibus_chewing_engine_restore_mode(IBusChewingEngine *self);
 void ibus_chewing_engine_update(IBusChewingEngine *self);
-void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
-                                          const gchar *prop_name);
+void ibus_chewing_engine_refresh_property(IBusChewingEngine *self, const gchar *prop_name);
 
 G_END_DECLS

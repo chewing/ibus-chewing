@@ -22,21 +22,11 @@
 
 #pragma once
 
-#include "GSettingsBackend.h"
 #include "IBusChewingPreEdit.h"
-#include "IBusChewingProperties.h"
 #include "IBusChewingUtil.h"
-#include <chewing.h>
-#include <ctype.h>
 #include <glib-object.h>
 #include <glib.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
 #include <ibus.h>
-#include <libintl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 G_BEGIN_DECLS
 
@@ -49,13 +39,6 @@ typedef enum {
 } EngineFlag;
 #define ENGINE_TYPE_FLAG engine_flag_get_type()
 GType engine_flag_get_type(void) G_GNUC_CONST;
-
-extern MkdgPropertySpec propSpecs[];
-extern const gchar *page_labels[];
-extern const gchar *button_labels[];
-extern GtkResponseType button_responses[];
-
-#define cursor_current chewing_cursor_Current(self->icPreEdit->context)
 
 // XXX not defined by ibus
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IBusEngine, g_object_unref)
@@ -74,5 +57,11 @@ void ibus_chewing_engine_focus_in(IBusEngine *self);
 void ibus_chewing_engine_focus_out(IBusEngine *self);
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *self, guint key_sym,
                                                guint keycode, guint modifiers);
+
+char ibus_chewing_engine_get_default_english_case(IBusChewingEngine *self);
+char ibus_chewing_engine_get_chinese_english_toggle_key(
+    IBusChewingEngine *self);
+gboolean ibus_chewing_engine_use_vertical_lookup_table(IBusChewingEngine *self);
+gboolean ibus_chewing_engine_use_system_layout(IBusChewingEngine *self);
 
 G_END_DECLS

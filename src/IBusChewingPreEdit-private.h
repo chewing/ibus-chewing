@@ -24,40 +24,11 @@
  * ibus_chewing_pre_edit private function definitions
  * Put it here so they can be tested.
  */
-#ifndef _IBUS_CHEWING_PRE_EDIT_PRIVATE_H_
-#define _IBUS_CHEWING_PRE_EDIT_PRIVATE_H_
+#pragma once
 
 /*== Frequent used shortcut ==*/
 #define cursor_current chewing_cursor_Current(self->context)
 #define total_choice chewing_cand_TotalChoice(self->context)
-#define default_english_case_short                                             \
-    (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(                  \
-                       self, "default-english-case"),                          \
-                   "lowercase"))                                               \
-        ? 'l'                                                                  \
-        : (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(            \
-                             self, "default-english-case"),                    \
-                         "uppercase")                                          \
-               ? 'u'                                                           \
-               : 'n')
-#define chi_eng_toggle_key                                                     \
-    (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(                  \
-                       self, "chi-eng-mode-toggle"),                           \
-                   "caps_lock"))                                               \
-        ? 'c'                                                                  \
-    : (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(                \
-                         self, "chi-eng-mode-toggle"),                         \
-                     "shift"))                                                 \
-        ? 's'                                                                  \
-    : (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(                \
-                         self, "chi-eng-mode-toggle"),                         \
-                     "shift_l"))                                               \
-        ? 'l'                                                                  \
-        : (STRING_EQUALS(ibus_chewing_pre_edit_get_property_string(            \
-                             self, "chi-eng-mode-toggle"),                     \
-                         "shift_r")                                            \
-               ? 'r'                                                           \
-               : 'n')
 
 /*== Conditional Expression Shortcut ==*/
 #define bpmf_check ibus_chewing_bopomofo_check(self->context)
@@ -120,4 +91,3 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
                                           KeyModifiers unmaskedMod);
 
 void ibus_chewing_pre_edit_update(IBusChewingPreEdit *self);
-#endif /* _IBUS_CHEWING_PRE_EDIT_PRIVATE_H_ */

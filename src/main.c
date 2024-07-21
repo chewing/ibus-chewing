@@ -24,11 +24,10 @@
 #include "IBusChewingUtil.h"
 #include "MakerDialogUtil.h"
 #include "ibus-chewing-engine.h"
-#include <chewing.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <ibus.h>
 #include <locale.h>
-#include <stdlib.h>
 
 static IBusBus *bus = NULL;
 static IBusFactory *factory = NULL;
@@ -40,15 +39,11 @@ static gboolean xml = FALSE;
 gint ibus_chewing_verbose = VERBOSE_LEVEL;
 
 static const GOptionEntry entries[] = {
-    {"show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags,
-     "Show compile flag only", NULL},
-    {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus",
-     NULL},
+    {"show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags, "Show compile flag only", NULL},
+    {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL},
     {"verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
-     "Verbose level. The higher the level, the more the debug messages.",
-     "[integer]"},
-    {"xml", 'x', 0, G_OPTION_ARG_NONE, &xml,
-     "read chewing engine desc from xml file", NULL},
+     "Verbose level. The higher the level, the more the debug messages.", "[integer]"},
+    {"xml", 'x', 0, G_OPTION_ARG_NONE, &xml, "read chewing engine desc from xml file", NULL},
     {}, // null entry
 };
 
@@ -62,8 +57,7 @@ static void start_component(void) {
     IBUS_CHEWING_LOG(INFO, "start_component");
     ibus_init();
     bus = ibus_bus_new();
-    g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb),
-                     NULL);
+    g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb), NULL);
 
     if (!ibus_bus_is_connected(bus)) {
         IBUS_CHEWING_LOG(ERROR, _("Cannot connect to IBus!"));
@@ -73,8 +67,7 @@ static void start_component(void) {
     IBusComponent *component = NULL;
 
     if (xml) {
-        component = ibus_component_new_from_file(
-            QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
+        component = ibus_component_new_from_file(QUOTE_ME(DATA_DIR) "/ibus/component/chewing.xml");
     } else {
         // clang-format off
         component = ibus_component_new(
@@ -114,8 +107,7 @@ static void start_component(void) {
     ibus_factory_add_engine(factory, "chewing", IBUS_TYPE_CHEWING_ENGINE);
 
     if (ibus) {
-        guint32 ret =
-            ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
+        guint32 ret = ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
         IBUS_CHEWING_LOG(INFO, "start_component: request_name: %u", ret);
     } else {
         ibus_bus_register_component(bus, component);
@@ -125,8 +117,7 @@ static void start_component(void) {
     ibus_main();
 }
 
-const char *locale_env_strings[] = {"LC_ALL", "LANG", "LANGUAGE", "GDM_LANG",
-                                    NULL};
+const char *locale_env_strings[] = {"LC_ALL", "LANG", "LANGUAGE", "GDM_LANG", NULL};
 
 void determine_locale() {
 #ifndef STRING_BUFFER_SIZE
@@ -181,6 +172,19 @@ int main(gint argc, gchar *argv[]) {
 
     g_option_context_free(context);
     mkdg_log_set_level(ibus_chewing_verbose);
+
+    g_autoptr(GSettings) settings = g_settings_new(QUOTE_ME(PROJECT_SCHEMA_ID));
+    g_autoptr(GVariant) plain_zhuyin = g_settings_get_user_value(settings, "plain-zhuyin");
+    if (plain_zhuyin != NULL) {
+        // migrate settings
+        gboolean is_plain_zhuyin = g_variant_get_boolean(plain_zhuyin);
+        IBUS_CHEWING_LOG(MSG, "migrate plain-zhuyin(%d) setting to conversion-engine",
+                         is_plain_zhuyin);
+        if (is_plain_zhuyin) {
+            g_settings_set_enum(settings, "conversion-engine", SIMPLE_CONVERSION_ENGINE);
+        }
+        g_settings_reset(settings, "plain-zhuyin");
+    }
 
     if (showFlags) {
         printf("PROJECT_NAME=" QUOTE_ME(PROJECT_NAME) "\n");

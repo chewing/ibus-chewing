@@ -32,10 +32,9 @@
  * while definitions have <emphasis>Mkdg</emphasis> prefix.
  */
 
-#ifndef _MAKER_DIALOG_UTIL_H_
-#define _MAKER_DIALOG_UTIL_H_
-#include <glib-object.h>
-#include <stdio.h>
+#pragma once
+
+#include <glib.h>
 #include <string.h>
 
 /**
@@ -53,32 +52,10 @@ typedef enum { ERROR, WARN, MSG, INFO, DEBUG } MkdgLogLevel;
 
 void mkdg_log_set_level(MkdgLogLevel level);
 
-void mkdg_log_set_file(FILE *file);
-
 void mkdg_log(MkdgLogLevel level, const gchar *format, ...);
 
 void mkdg_log_domain(const gchar *domain, MkdgLogLevel level,
                      const gchar *format, ...);
-
-gchar *mkdg_g_value_to_string(GValue *value);
-
-gboolean mkdg_g_value_reset(GValue *value, GType type, gboolean overwrite);
-
-gboolean mkdg_g_value_from_string(GValue *value, const gchar *str);
-
-gint mkdg_g_ptr_array_find_string(GPtrArray *array, const gchar *str);
-
-#define mkdg_g_value_is_boolean(value) (G_VALUE_TYPE(value) == G_TYPE_BOOLEAN)
-
-#define mkdg_g_value_is_int(value) (G_VALUE_TYPE(value) == G_TYPE_INT)
-
-#define mkdg_g_value_is_uint(value) (G_VALUE_TYPE(value) == G_TYPE_UINT)
-
-#define mkdg_g_value_is_string(value) (G_VALUE_TYPE(value) == G_TYPE_STRING)
-
-void mkdg_g_variant_to_g_value(GVariant *gVar, GValue *value);
-
-GVariant *mkdg_g_value_to_g_variant(GValue *value);
 
 /**************************************
  * String Utility Macros and Functions
@@ -100,5 +77,3 @@ GVariant *mkdg_g_value_to_g_variant(GValue *value);
 #define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
 #define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
 #define mkdg_set_flag(flagSet, flag) (flagSet |= flag)
-#define MAKER_DIALOG_VALUE_LENGTH 200
-#endif /* _MAKER_DIALOG_UTIL_H_ */
