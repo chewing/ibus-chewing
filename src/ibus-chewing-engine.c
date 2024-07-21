@@ -150,7 +150,6 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
     self->preEditText = NULL;
     self->auxText = NULL;
     self->outgoingText = NULL;
-    self->logFile = NULL;
     self->statusFlags = 0;
     self->capabilite = 0;
     self->InputMode = g_object_ref_sink(ibus_property_new(
@@ -168,21 +167,6 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
                      (self->statusFlags & ENGINE_FLAG_INITIALIZED) ? "" : "un");
     if (self->statusFlags & ENGINE_FLAG_INITIALIZED) {
         return;
-    }
-
-    IBUS_CHEWING_LOG(INFO, "init() CHEWING_DATADIR_REAL=%s",
-                     QUOTE_ME(CHEWING_DATADIR_REAL));
-
-    gchar *logFilename = getenv("IBUS_CHEWING_LOGFILE");
-
-    if (logFilename != NULL) {
-        self->logFile = fopen(logFilename, "w+");
-        if (self->logFile == NULL) {
-            IBUS_CHEWING_LOG(WARN, "init() Cannot write to logfile %s, ignored",
-                             logFilename);
-        } else {
-            mkdg_log_set_file(self->logFile);
-        }
     }
 
     MkdgBackend *backend = mkdg_g_settings_backend_new(

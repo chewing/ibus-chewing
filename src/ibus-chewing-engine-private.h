@@ -41,7 +41,6 @@ G_BEGIN_DECLS
 
 struct _IBusChewingEngine {
     IBusEngine __parent__;
-    /*< public > */
     IBusChewingPreEdit *icPreEdit;
     IBusText *preEditText;
     IBusText *auxText;
@@ -50,9 +49,7 @@ struct _IBusChewingEngine {
     IBusProperty *AlnumSize;
     IBusProperty *setup_prop;
     IBusPropList *prop_list;
-    /*< private > */
-    FILE *logFile;         /* protected */
-    IBusKeymap *keymap_us; /* protected */
+    IBusKeymap *keymap_us;
 
     EngineFlag statusFlags;
     IBusCapabilite capabilite;

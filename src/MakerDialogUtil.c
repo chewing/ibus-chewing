@@ -7,46 +7,32 @@ static MkdgLogLevel debugLevel = WARN;
 #define MKDG_LOG_DOMAIN_LEN 20
 static gchar mkdgLogDomain[MKDG_LOG_DOMAIN_LEN] = "MKDG";
 
-static FILE *logFile = NULL;
 void mkdg_log_set_level(MkdgLogLevel level) { debugLevel = level; }
-
-void mkdg_log_set_file(FILE *file) { logFile = file; }
 
 void mkdg_logv_domain(const gchar *domain, MkdgLogLevel level,
                       const gchar *format, va_list argList) {
     if (level > debugLevel)
         return;
     GLogLevelFlags flagSet;
-    gchar *levelStr = NULL;
 
     switch (level) {
     case ERROR:
         flagSet = G_LOG_FLAG_FATAL | G_LOG_LEVEL_ERROR;
-        levelStr = "ERROR";
         break;
     case WARN:
         flagSet = G_LOG_LEVEL_WARNING;
-        levelStr = "WARN";
         break;
     case MSG:
         flagSet = G_LOG_LEVEL_MESSAGE;
-        levelStr = "MSG";
         break;
     case INFO:
         flagSet = G_LOG_LEVEL_INFO;
-        levelStr = "INFO";
         break;
     default:
         flagSet = G_LOG_LEVEL_DEBUG;
-        levelStr = "DEBUG";
         break;
     }
     g_logv(domain, flagSet, format, argList);
-    if (logFile != NULL) {
-        fprintf(logFile, "%s-%s: ", domain, levelStr);
-        vfprintf(logFile, format, argList);
-        fprintf(logFile, "\n");
-    }
 }
 
 void mkdg_log(MkdgLogLevel level, const gchar *format, ...) {
