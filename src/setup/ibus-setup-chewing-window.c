@@ -179,7 +179,7 @@ id_set_mapping(const GValue *value,
 }
 
 static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
-    GSettings *settings;
+    g_autoptr(GSettings) settings;
 
     gtk_widget_init_template(GTK_WIDGET(self));
 

@@ -1,5 +1,5 @@
 <schemalist>
-    <enum id="conversion-engine-enum">
+    <enum id="org.freedesktop.IBus.Chewing.conversion-engine-enum">
         <value nick="simple" value="0"/>
         <value nick="chewing" value="1"/>
         <value nick="fuzzy-chewing" value="2"/>
@@ -49,7 +49,7 @@
         </key>
         <key name="show-systray" type="b">
             <default>true</default>
-            <summary>Show systray icons</summary>
+            <summary>Show systray icons (deprecated)</summary>
             <description>
                 On: Show Chinese/English and Full/Half shape status as a systray icon
                 Off: Do not show the status icon
@@ -158,7 +158,7 @@
                 Deprecated option - use conversion-engine instead.
             </description>
         </key>
-        <key name="conversion-engine" enum="conversion-engine-enum">
+        <key name="conversion-engine" enum="org.freedesktop.IBus.Chewing.conversion-engine-enum">
             <default>"chewing"</default>
             <summary>Conversion mode</summary>
             <description>

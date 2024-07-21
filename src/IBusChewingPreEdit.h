@@ -37,9 +37,7 @@
 #ifndef _IBUS_CHEWING_PRE_EDIT_H_
 #define _IBUS_CHEWING_PRE_EDIT_H_
 #include "IBusChewingLookupTable.h"
-#include "IBusChewingProperties.h"
 #include "IBusChewingUtil.h"
-#include "MakerDialogBackend.h"
 #include <chewing.h>
 #include <glib.h>
 #include <ibus.h>
@@ -76,7 +74,7 @@ typedef enum {
  * An IBusChewingPreEdit.
  */
 typedef struct {
-    IBusChewingProperties *iProperties;
+    // IBusChewingProperties *iProperties;
     /*< public > */
     ChewingContext *context;
     GString *preEdit;
@@ -90,79 +88,9 @@ typedef struct {
     IBusEngine *engine;
 } IBusChewingPreEdit;
 
-IBusChewingPreEdit *ibus_chewing_pre_edit_new(MkdgBackend *backend);
+IBusChewingPreEdit *ibus_chewing_pre_edit_new();
 
 void ibus_chewing_pre_edit_free(IBusChewingPreEdit *self);
-
-#define ibus_chewing_pre_edit_get_property(self, propertyKey)                  \
-    mkdg_properties_find_by_key(self->iProperties->properties, propertyKey)
-
-#define ibus_chewing_pre_edit_get_property_boolean(self, propertyKey)          \
-    mkdg_properties_get_boolean_by_key(self->iProperties->properties,          \
-                                       propertyKey)
-
-#define ibus_chewing_pre_edit_get_property_int(self, propertyKey)              \
-    mkdg_properties_get_int_by_key(self->iProperties->properties, propertyKey)
-
-#define ibus_chewing_pre_edit_get_property_string(self, propertyKey)           \
-    mkdg_properties_get_string_by_key(self->iProperties->properties,           \
-                                      propertyKey)
-
-#define ibus_chewing_pre_edit_set_property_boolean(self, propertyKey,          \
-                                                   boolValue)                  \
-    mkdg_properties_set_boolean_by_key(self->iProperties->properties,          \
-                                       propertyKey, boolValue)
-
-#define ibus_chewing_pre_edit_set_property_int(self, propertyKey, intValue)    \
-    mkdg_properties_set_int_by_key(self->iProperties->properties, propertyKey, \
-                                   intValue)
-
-#define ibus_chewing_pre_edit_set_property_string(self, propertyKey, strValue) \
-    mkdg_properties_set_string_by_key(self->iProperties->properties,           \
-                                      propertyKey, strValue)
-
-#define ibus_chewing_pre_edit_is_system_keyboard_layout(self)                  \
-    ibus_chewing_properties_read_boolean_general(                              \
-        self->iProperties, "ibus/general", "use-system-keyboard-layout", NULL)
-
-#define ibus_chewing_pre_edit_is_vertical_table(self)                          \
-    mkdg_properties_get_boolean_by_key(self->iProperties->properties,          \
-                                       "vertical-lookup-table")
-
-#define ibus_chewing_pre_edit_apply_property(self, propertyKey)                \
-    mkdg_properties_apply_by_key(self->iProperties->properties, propertyKey,   \
-                                 NULL)
-
-#define ibus_chewing_pre_edit_save_property_boolean(self, propertyKey,         \
-                                                    boolValue)                 \
-    mkdg_properties_save_boolean_by_key(self->iProperties->properties,         \
-                                        propertyKey, boolValue, NULL)
-
-#define ibus_chewing_pre_edit_save_property_int(self, propertyKey, intValue)   \
-    mkdg_properties_save_int_by_key(self->iProperties->properties,             \
-                                    propertyKey, intValue, NULL)
-
-#define ibus_chewing_pre_edit_save_property_string(self, propertyKey,          \
-                                                   strValue)                   \
-    mkdg_properties_save_string_by_key(self->iProperties->properties,          \
-                                       propertyKey, strValue, NULL)
-
-#define ibus_chewing_pre_edit_set_apply_property_boolean(self, propertyKey,    \
-                                                         boolValue)            \
-    ibus_chewing_pre_edit_set_property_boolean(self, propertyKey, boolValue);  \
-    ibus_chewing_pre_edit_apply_property(self, propertyKey)
-
-#define ibus_chewing_pre_edit_set_apply_property_int(self, propertyKey,        \
-                                                     intValue)                 \
-    ibus_chewing_pre_edit_set_property_int(self, propertyKey, intValue);       \
-    ibus_chewing_pre_edit_apply_property(self, propertyKey)
-
-#define ibus_chewing_pre_edit_set_apply_property_string(self, propertyKey,     \
-                                                        stringValue)           \
-    ibus_chewing_pre_edit_set_property_string(self, propertyKey, stringValue); \
-    ibus_chewing_pre_edit_apply_property(self, propertyKey)
-
-void ibus_chewing_pre_edit_use_all_configure(IBusChewingPreEdit *self);
 
 guint ibus_chewing_pre_edit_length(IBusChewingPreEdit *self);
 

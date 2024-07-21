@@ -19,35 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  */
-#include "GSettingsBackend.h"
-#include "IBusChewingPreEdit.h"
-#include "IBusChewingProperties.h"
-#include "IBusChewingUtil.h"
-#include <chewing.h>
-#include <ctype.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-#include <ibus.h>
-#include <libintl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
+#pragma once
+
+#include "IBusChewingPreEdit.h"
+#include "IBusChewingUtil.h"
 #include <glib-object.h>
 #include <glib.h>
-#ifndef __IBUS_CHEWING_ENGINE_H__
-#define __IBUS_CHEWING_ENGINE_H__
+#include <ibus.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
-typedef enum {
-    CHEWING_INPUT_STYLE_IN_APPLICATION,
-    CHEWING_INPUT_STYLE_IN_CANDIDATE
-} ChewingInputStyle;
-#define CHEWING_TYPE_INPUT_STYLE chewing_input_style_get_type()
-GType chewing_input_style_get_type(void) G_GNUC_CONST;
+G_BEGIN_DECLS
 
 typedef enum {
     ENGINE_FLAG_INITIALIZED = 0x1,
@@ -59,98 +40,28 @@ typedef enum {
 #define ENGINE_TYPE_FLAG engine_flag_get_type()
 GType engine_flag_get_type(void) G_GNUC_CONST;
 
-extern MkdgPropertySpec propSpecs[];
-extern const gchar *page_labels[];
-extern const gchar *button_labels[];
-extern GtkResponseType button_responses[];
+// XXX not defined by ibus
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(IBusEngine, g_object_unref)
 
-#define cursor_current chewing_cursor_Current(self->icPreEdit->context)
+#define IBUS_TYPE_CHEWING_ENGINE ibus_chewing_engine_get_type()
+G_DECLARE_FINAL_TYPE(IBusChewingEngine, ibus_chewing_engine, IBUS,
+                     CHEWING_ENGINE, IBusEngine)
 
-/*
- * Type checking and casting macros
- */
-#define IBUS_TYPE_CHEWING_ENGINE (ibus_chewing_engine_get_type())
-#define IBUS_CHEWING_ENGINE(obj)                                               \
-    G_TYPE_CHECK_INSTANCE_CAST((obj), ibus_chewing_engine_get_type(),          \
-                               IBusChewingEngine)
-#define IBUS_CHEWING_ENGINE_CONST(obj)                                         \
-    G_TYPE_CHECK_INSTANCE_CAST((obj), ibus_chewing_engine_get_type(),          \
-                               IBusChewingEngine const)
-#define IBUS_CHEWING_ENGINE_CLASS(klass)                                       \
-    G_TYPE_CHECK_CLASS_CAST((klass), ibus_chewing_engine_get_type(),           \
-                            IBusChewingEngineClass)
-#define IBUS_IS_CHEWING_ENGINE(obj)                                            \
-    G_TYPE_CHECK_INSTANCE_TYPE((obj), ibus_chewing_engine_get_type())
-
-#define IBUS_CHEWING_ENGINE_GET_CLASS(obj)                                     \
-    G_TYPE_INSTANCE_GET_CLASS((obj), ibus_chewing_engine_get_type(),           \
-                              IBusChewingEngineClass)
-
-/* Private structure type */
-typedef struct _IBusChewingEnginePrivate IBusChewingEnginePrivate;
-
-/*
- * Main object structure
- */
-#ifndef __TYPEDEF_IBUS_CHEWING_ENGINE__
-#define __TYPEDEF_IBUS_CHEWING_ENGINE__
-typedef struct _IBusChewingEngine IBusChewingEngine;
-#endif
-struct _IBusChewingEngine {
-    IBusEngine __parent__;
-    /*< public > */
-    IBusChewingPreEdit *icPreEdit;
-    GtkWidget *sDialog;
-    IBusText *preEditText;
-    IBusText *auxText;
-    IBusText *outgoingText;
-    IBusProperty *InputMode;
-    IBusProperty *AlnumSize;
-    IBusProperty *setup_prop;
-    IBusPropList *prop_list;
-    /*< private > */
-    FILE *logFile;         /* protected */
-    IBusKeymap *keymap_us; /* protected */
-};
-
-/*
- * Class definition
- */
-typedef struct _IBusChewingEngineClass IBusChewingEngineClass;
-struct _IBusChewingEngineClass {
-    IBusEngineClass __parent__;
-    IBusText *InputMode_label_chi;
-    IBusText *InputMode_label_eng;
-    IBusText *InputMode_tooltip;
-    IBusText *InputMode_symbol_chi;
-    IBusText *InputMode_symbol_eng;
-    IBusText *AlnumSize_label_full;
-    IBusText *AlnumSize_label_half;
-    IBusText *AlnumSize_tooltip;
-    IBusText *AlnumSize_symbol_full;
-    IBusText *AlnumSize_symbol_half;
-    IBusText *setup_prop_label;
-    IBusText *setup_prop_tooltip;
-    IBusText *setup_prop_symbol;
-    IBusText *emptyText;
-};
-
-/*
- * Public methods
- */
-GType ibus_chewing_engine_get_type(void) G_GNUC_CONST;
 void ibus_chewing_engine_refresh_property_list(IBusChewingEngine *self);
 void ibus_chewing_engine_hide_property_list(IBusChewingEngine *self);
 
-void ibus_chewing_engine_reset(IBusChewingEngine *self);
-void ibus_chewing_engine_enable(IBusChewingEngine *self);
-void ibus_chewing_engine_disable(IBusChewingEngine *self);
-void ibus_chewing_engine_focus_in(IBusChewingEngine *self);
-void ibus_chewing_engine_focus_out(IBusChewingEngine *self);
+void ibus_chewing_engine_reset(IBusEngine *self);
+void ibus_chewing_engine_enable(IBusEngine *self);
+void ibus_chewing_engine_disable(IBusEngine *self);
+void ibus_chewing_engine_focus_in(IBusEngine *self);
+void ibus_chewing_engine_focus_out(IBusEngine *self);
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *self, guint key_sym,
                                                guint keycode, guint modifiers);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-#endif
+char ibus_chewing_engine_get_default_english_case(IBusChewingEngine *self);
+char ibus_chewing_engine_get_chinese_english_toggle_key(
+    IBusChewingEngine *self);
+gboolean ibus_chewing_engine_use_vertical_lookup_table(IBusChewingEngine *self);
+gboolean ibus_chewing_engine_use_system_layout(IBusChewingEngine *self);
+
+G_END_DECLS
