@@ -137,6 +137,7 @@ void filter_modifiers_test() {
 }
 
 void self_key_sym_fix_test() {
+    TEST_CASE_INIT();
     ibus_chewing_pre_edit_set_chi_eng_mode(self, FALSE);
 
     g_object_set(G_OBJECT(self->engine), "chi-eng-mode-toggle", "caps_lock", "default-english-case",
@@ -322,6 +323,25 @@ void self_handle_key_sym_default_test() {
 
 /*== Test cases start ==*/
 void free_test() { ibus_chewing_pre_edit_free(self); }
+
+void process_key_default_english_test() {
+    TEST_CASE_INIT();
+    g_object_set(G_OBJECT(self->engine), "default-use-english-mode", TRUE, NULL);
+    g_object_set(G_OBJECT(self->engine), "chi-eng-mode-toggle", "shift", NULL);
+
+    ibus_chewing_engine_enable(self->engine);
+    // English inputs at the beginning bypasses any processing
+    key_press_from_string("ibus-chewing ");
+    key_press_from_key_sym(IBUS_KEY_Shift_L, 0);
+    key_press_from_string("gj bj4z83");
+    key_press_from_key_sym(IBUS_KEY_Return, 0);
+    assert_outgoing_pre_edit("輸入法", "");
+
+    ibus_chewing_pre_edit_clear(self);
+    assert_outgoing_pre_edit("", "");
+
+    g_object_set(G_OBJECT(self->engine), "default-use-english-mode", FALSE, NULL);
+}
 
 /* Chinese mode: "中文" (5j/ jp6) and Enter*/
 void process_key_normal_test() {
@@ -783,6 +803,7 @@ gint main(gint argc, gchar **argv) {
     TEST_RUN_THIS(filter_modifiers_test);
     TEST_RUN_THIS(self_key_sym_fix_test);
     TEST_RUN_THIS(self_handle_key_sym_default_test);
+    TEST_RUN_THIS(process_key_default_english_test);
     TEST_RUN_THIS(process_key_normal_test);
     TEST_RUN_THIS(process_key_text_with_symbol_test);
     TEST_RUN_THIS(process_key_mix_test);

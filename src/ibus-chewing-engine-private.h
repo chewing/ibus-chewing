@@ -56,6 +56,7 @@ struct _IBusChewingEngine {
     gboolean prop_enable_fullwidth_toggle_key;
     int prop_max_chi_symbol_len;
     char *prop_default_english_case;
+    gboolean prop_default_use_english_mode;
     char *prop_chi_eng_mode_toggle;
     gboolean prop_phrase_choice_from_last;
     gboolean prop_space_as_selection;

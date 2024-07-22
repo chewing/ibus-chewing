@@ -106,6 +106,13 @@
                 Maximum Chinese characters in pre-edit buffer, not including inputing Zhuyin symbols.
             </description>
         </key>
+        <key name="default-use-english-mode" type="b">
+            <default>false</default>
+            <summary>Switch to alphanumeric mode after startup</summary>
+            <description>
+                Automatically switch to alphanumeric mode after startup. This mode is sutible when using Chewing as the only IM.
+            </description>
+        </key>
         <key name="chi-eng-mode-toggle" type="s">
             <choices>
                 <choice value="disable"/>
