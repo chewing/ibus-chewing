@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-21 08:44+0900\n"
-"PO-Revision-Date: 2024-07-22 01:09+0000\n"
+"PO-Revision-Date: 2024-07-22 08:43+0000\n"
 "Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/ko/>\n"
@@ -103,7 +103,7 @@ msgstr "Colemak-DH Ortholinear"
 
 #: src/setup/ibus-setup-chewing-window.ui:56
 msgid "Workman"
-msgstr ""
+msgstr "Workman"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:60
@@ -192,11 +192,11 @@ msgstr "Escape 키는 모든 수행되지 않은 텍스트를 삭제합니다"
 
 #: src/setup/ibus-setup-chewing-window.ui:139
 msgid "Enable Fullwidth Toggle Key (Shift+Space)"
-msgstr ""
+msgstr "전각 토글 키 활성화 (Shift+Space)"
 
 #: src/setup/ibus-setup-chewing-window.ui:140
 msgid "Use Shift+Space to switch between fullwdith and halfwidth symbols input"
-msgstr ""
+msgstr "전각 및 반각 기호 입력 사이에서 전환하려면 Shift+Space를 사용하세요"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:153
