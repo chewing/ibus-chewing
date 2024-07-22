@@ -36,6 +36,7 @@ struct _IbusSetupChewingWindow {
     AdwSwitchRow *esc_clean_all_buf;
     AdwSwitchRow *enable_fullwidth_toggle_key;
     AdwSpinRow *max_chi_symbol_len;
+    AdwSpinRow *default_use_english_mode;
     AdwComboRow *chi_eng_mode_toggle;
     AdwComboRow *sync_caps_lock;
     AdwComboRow *default_english_case;
@@ -46,26 +47,21 @@ struct _IbusSetupChewingWindow {
     AdwSwitchRow *vertical_lookup_table;
 };
 
-G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window,
-                    ADW_TYPE_APPLICATION_WINDOW)
+G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window, ADW_TYPE_APPLICATION_WINDOW)
 
-#define bind_child(child_id)                                                   \
-    gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, \
-                                         child_id)
+#define bind_child(child_id)                                                                       \
+    gtk_widget_class_bind_template_child(widget_class, IbusSetupChewingWindow, child_id)
 
-static void action_adaptor_show_about(GtkWidget *widget,
-                                      [[maybe_unused]] const char *action_name,
+static void action_adaptor_show_about(GtkWidget *widget, [[maybe_unused]] const char *action_name,
                                       [[maybe_unused]] GVariant *parameter) {
     show_about(widget);
 }
 
-static void
-ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
+static void ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
     gtk_widget_class_set_template_from_resource(
-        widget_class,
-        "/org/freedesktop/IBus/Chewing/Setup/ibus-setup-chewing-window.ui");
+        widget_class, "/org/freedesktop/IBus/Chewing/Setup/ibus-setup-chewing-window.ui");
 
     bind_child(kb_type);
     bind_child(sel_keys);
@@ -77,6 +73,7 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(esc_clean_all_buf);
     bind_child(enable_fullwidth_toggle_key);
     bind_child(max_chi_symbol_len);
+    bind_child(default_use_english_mode);
     bind_child(chi_eng_mode_toggle);
     bind_child(sync_caps_lock);
     bind_child(default_english_case);
@@ -86,12 +83,11 @@ ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *klass) {
     bind_child(space_as_selection);
     bind_child(vertical_lookup_table);
 
-    gtk_widget_class_install_action(widget_class, "about", NULL,
-                                    action_adaptor_show_about);
-    gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0,
-                                        "window.close", NULL);
+    gtk_widget_class_install_action(widget_class, "about", NULL, action_adaptor_show_about);
+    gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0, "window.close", NULL);
 }
 
+// clang-format off
 const gchar *kb_type_ids[] = {
     "default",
     "hsu",
@@ -111,8 +107,6 @@ const gchar *kb_type_ids[] = {
     "workman",
     NULL,
 };
-
-// clang-format off
 const gchar *sel_key_ids[] = {
     "1234567890",
     "asdfghjkl;",
@@ -151,13 +145,11 @@ const gchar *conversion_engine_ids[] = {
     NULL,
 };
 
-static gboolean id_get_mapping(GValue *value, GVariant *variant,
-                               gpointer user_data) {
+static gboolean id_get_mapping(GValue *value, GVariant *variant, gpointer user_data) {
     const gchar *saved;
     gchar **ids_list = (gchar **)user_data;
 
-    g_return_val_if_fail(g_variant_is_of_type(variant, G_VARIANT_TYPE_STRING),
-                         FALSE);
+    g_return_val_if_fail(g_variant_is_of_type(variant, G_VARIANT_TYPE_STRING), FALSE);
 
     saved = g_variant_get_string(variant, NULL);
     for (int i = 0; ids_list[i] != NULL; i++) {
@@ -169,10 +161,9 @@ static gboolean id_get_mapping(GValue *value, GVariant *variant,
     return FALSE;
 }
 
-static GVariant *
-id_set_mapping(const GValue *value,
-               [[maybe_unused]] const GVariantType *expected_type,
-               gpointer user_data) {
+static GVariant *id_set_mapping(const GValue *value,
+                                [[maybe_unused]] const GVariantType *expected_type,
+                                gpointer user_data) {
     gchar **ids_list = (gchar **)user_data;
 
     return g_variant_new_string(ids_list[g_value_get_uint(value)]);
@@ -186,55 +177,47 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
     settings = g_settings_new("org.freedesktop.IBus.Chewing");
 
     g_settings_bind_with_mapping(settings, "kb-type", self->kb_type, "selected",
-                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
-                                 id_set_mapping, kb_type_ids, NULL);
-    g_settings_bind_with_mapping(settings, "sel-keys", self->sel_keys,
-                                 "selected", G_SETTINGS_BIND_DEFAULT,
-                                 id_get_mapping, id_set_mapping, sel_key_ids,
-                                 NULL);
-    g_settings_bind_with_mapping(settings, "conversion-engine",
-                                 self->conversion_engine, "selected",
-                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
-                                 id_set_mapping, conversion_engine_ids, NULL);
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping, id_set_mapping,
+                                 kb_type_ids, NULL);
+    g_settings_bind_with_mapping(settings, "sel-keys", self->sel_keys, "selected",
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping, id_set_mapping,
+                                 sel_key_ids, NULL);
+    g_settings_bind_with_mapping(settings, "conversion-engine", self->conversion_engine, "selected",
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping, id_set_mapping,
+                                 conversion_engine_ids, NULL);
     g_settings_bind(settings, "auto-shift-cur", self->auto_shift_cur, "active",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "add-phrase-direction",
-                    self->add_phrase_direction, "active",
+    g_settings_bind(settings, "add-phrase-direction", self->add_phrase_direction, "active",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "clean-buffer-focus-out",
-                    self->clean_buffer_focus_out, "active",
+    g_settings_bind(settings, "clean-buffer-focus-out", self->clean_buffer_focus_out, "active",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "easy-symbol-input", self->easy_symbol_input,
+    g_settings_bind(settings, "easy-symbol-input", self->easy_symbol_input, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "esc-clean-all-buf", self->esc_clean_all_buf, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "enable-fullwidth-toggle-key", self->enable_fullwidth_toggle_key,
                     "active", G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "esc-clean-all-buf", self->esc_clean_all_buf,
-                    "active", G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "enable-fullwidth-toggle-key",
-                    self->enable_fullwidth_toggle_key, "active",
+    g_settings_bind(settings, "max-chi-symbol-len", self->max_chi_symbol_len, "value",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "max-chi-symbol-len", self->max_chi_symbol_len,
-                    "value", G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind_with_mapping(settings, "chi-eng-mode-toggle",
-                                 self->chi_eng_mode_toggle, "selected",
-                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
+    g_settings_bind(settings, "default-use-english-mode", self->default_use_english_mode, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind_with_mapping(settings, "chi-eng-mode-toggle", self->chi_eng_mode_toggle,
+                                 "selected", G_SETTINGS_BIND_DEFAULT, id_get_mapping,
                                  id_set_mapping, chi_eng_mode_toggle_ids, NULL);
-    g_settings_bind_with_mapping(settings, "sync-caps-lock",
-                                 self->sync_caps_lock, "selected",
-                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping,
-                                 id_set_mapping, sync_caps_lock_ids, NULL);
-    g_settings_bind_with_mapping(
-        settings, "default-english-case", self->default_english_case,
-        "selected", G_SETTINGS_BIND_DEFAULT, id_get_mapping, id_set_mapping,
-        default_english_case_ids, NULL);
+    g_settings_bind_with_mapping(settings, "sync-caps-lock", self->sync_caps_lock, "selected",
+                                 G_SETTINGS_BIND_DEFAULT, id_get_mapping, id_set_mapping,
+                                 sync_caps_lock_ids, NULL);
+    g_settings_bind_with_mapping(settings, "default-english-case", self->default_english_case,
+                                 "selected", G_SETTINGS_BIND_DEFAULT, id_get_mapping,
+                                 id_set_mapping, default_english_case_ids, NULL);
     g_settings_bind(settings, "cand-per-page", self->cand_per_page, "value",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "show-page-number", self->show_page_number,
-                    "active", G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "phrase-choice-from-last",
-                    self->phrase_choice_from_last, "active",
+    g_settings_bind(settings, "show-page-number", self->show_page_number, "active",
                     G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "space-as-selection", self->space_as_selection,
-                    "active", G_SETTINGS_BIND_DEFAULT);
-    g_settings_bind(settings, "vertical-lookup-table",
-                    self->vertical_lookup_table, "active",
+    g_settings_bind(settings, "phrase-choice-from-last", self->phrase_choice_from_last, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "space-as-selection", self->space_as_selection, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "vertical-lookup-table", self->vertical_lookup_table, "active",
                     G_SETTINGS_BIND_DEFAULT);
 }

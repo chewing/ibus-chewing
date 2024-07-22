@@ -91,6 +91,7 @@ typedef enum {
     PROP_ENABLE_FULLWIDTH_TOGGLE_KEY,
     PROP_MAX_CHI_SYMBOL_LEN,
     PROP_DEFAULT_ENGLISH_CASE,
+    PROP_DEFAULT_USE_ENGLISH_MODE,
     PROP_CHI_ENG_MODE_TOGGLE,
     PROP_PHRASE_CHOICE_FROM_LAST,
     PROP_SPACE_AS_SELECTION,
@@ -209,6 +210,9 @@ static void ibus_chewing_engine_set_property(GObject *object, guint property_id,
         g_free(self->prop_default_english_case);
         self->prop_default_english_case = g_value_dup_string(value);
         break;
+    case PROP_DEFAULT_USE_ENGLISH_MODE:
+        self->prop_default_use_english_mode = g_value_get_boolean(value);
+        break;
     case PROP_CHI_ENG_MODE_TOGGLE:
         g_free(self->prop_chi_eng_mode_toggle);
         self->prop_chi_eng_mode_toggle = g_value_dup_string(value);
@@ -298,6 +302,9 @@ static void ibus_chewing_engine_get_property(GObject *object, guint property_id,
     case PROP_DEFAULT_ENGLISH_CASE:
         g_value_set_string(value, self->prop_default_english_case);
         break;
+    case PROP_DEFAULT_USE_ENGLISH_MODE:
+        g_value_set_boolean(value, self->prop_default_use_english_mode);
+        break;
     case PROP_CHI_ENG_MODE_TOGGLE:
         g_value_set_string(value, self->prop_chi_eng_mode_toggle);
         break;
@@ -377,6 +384,8 @@ static void ibus_chewing_engine_class_init(IBusChewingEngineClass *klass) {
         g_param_spec_int("max-chi-symbol-len", NULL, NULL, 0, 39, 20, G_PARAM_READWRITE);
     obj_properties[PROP_DEFAULT_ENGLISH_CASE] =
         g_param_spec_string("default-english-case", NULL, NULL, NULL, G_PARAM_READWRITE);
+    obj_properties[PROP_DEFAULT_USE_ENGLISH_MODE] =
+        g_param_spec_boolean("default-use-english-mode", NULL, NULL, FALSE, G_PARAM_READWRITE);
     obj_properties[PROP_CHI_ENG_MODE_TOGGLE] =
         g_param_spec_string("chi-eng-mode-toggle", NULL, NULL, NULL, G_PARAM_READWRITE);
     obj_properties[PROP_PHRASE_CHOICE_FROM_LAST] =
@@ -472,6 +481,7 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
     bind_settings("enable-fullwidth-toggle-key");
     bind_settings("max-chi-symbol-len");
     bind_settings("default-english-case");
+    bind_settings("default-use-english-mode");
     bind_settings("chi-eng-mode-toggle");
     bind_settings("phrase-choice-from-last");
     bind_settings("space-as-selection");
@@ -744,6 +754,9 @@ void ibus_chewing_engine_enable(IBusEngine *engine) {
     IBUS_CHEWING_LOG(MSG, "* enable(): statusFlags=%x", self->statusFlags);
     ibus_chewing_engine_start(self);
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_ENABLED);
+    if (self->prop_default_use_english_mode) {
+        ibus_chewing_pre_edit_set_chi_eng_mode(self->icPreEdit, FALSE);
+    }
 }
 
 void ibus_chewing_engine_disable(IBusEngine *engine) {

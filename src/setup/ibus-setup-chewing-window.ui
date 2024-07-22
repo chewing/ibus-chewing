@@ -155,6 +155,12 @@
                   </object>
                 </child>
                 <child>
+                  <object class="AdwSwitchRow" id="default_use_english_mode">
+                    <property name="title" translatable="yes">Default Use Alphanumeric Mode</property>
+                    <property name="subtitle" translatable="yes">Automatically switch to alphanumeric mode after startup.</property>
+                  </object>
+                </child>
+                <child>
                   <object class="AdwComboRow" id="chi_eng_mode_toggle">
                     <property name="title" translatable="yes">Chinese/Alphanumeric Mode Toggle Key</property>
                     <property name="model">
