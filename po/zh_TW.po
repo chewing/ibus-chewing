@@ -11,7 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 17:50+0900\n"
 "PO-Revision-Date: 2024-07-22 09:22+0000\n"
-"Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -35,7 +36,7 @@ msgstr "輸入法"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
-msgstr ""
+msgstr "關於"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: src/setup/ibus-setup-chewing-window.ui:25
@@ -213,9 +214,6 @@ msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "中英模式切換鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:169
-#, fuzzy
-#| msgctxt "Sync"
-#| msgid "disable"
 msgid "Disable"
 msgstr "停用"
 
@@ -277,7 +275,7 @@ msgstr "調整候選字詞選擇行為的組態設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:225
 msgid "Candidates Per Page"
-msgstr "每頁候選字詞數"
+msgstr "候選字詞每頁顯示個數"
 
 #: src/setup/ibus-setup-chewing-window.ui:231
 msgid "Show Page Number"
