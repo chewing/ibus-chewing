@@ -4,10 +4,10 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-21 08:44+0900\n"
-"PO-Revision-Date: 2024-07-08 20:29+0000\n"
+"PO-Revision-Date: 2024-07-22 01:09+0000\n"
 "Last-Translator: 김인수 <simmon@nplob.com>\n"
-"Language-Team: Korean <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/ko/>\n"
+"Language-Team: Korean <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,39 +121,31 @@ msgstr "후보자를 선택하는데 사용되는 키"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:88
-#, fuzzy
-#| msgid "Plain Zhuyin mode"
 msgid "Plain Zhuyin"
-msgstr "Plain Zhuyin 모드 "
+msgstr "Plain Zhuyin"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:89
-#, fuzzy
-#| msgid "Chewing Settings"
 msgid "Chewing (Default)"
-msgstr "Chewing 설정"
+msgstr "Chewing (기본값)"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:90
-#, fuzzy
-#| msgid "IBus Chewing"
 msgid "Fuzzy Chewing"
-msgstr "IBus Chewing"
+msgstr "Fuzzy Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:94
 msgid "Conversion Engine"
-msgstr ""
+msgstr "엔진 변환"
 
 #: src/setup/ibus-setup-chewing-window.ui:95
-#, fuzzy
-#| msgid "Enable or disable automatic candidate selection"
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
-msgstr "자동 후보자 선택을 활성화 또는 비활성화"
+msgstr "자동 후보자 선택, 또는 퍼지 입력을 활성화 또는 비활성화"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author eukim
 #: src/setup/ibus-setup-chewing-window.ui:102
 msgid "Editing"
-msgstr "편집"
+msgstr "편집하기"
 
 #: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Configure the input method behavior"
@@ -220,11 +212,8 @@ msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "중국어/영숫자 방식 토글 키"
 
 #: src/setup/ibus-setup-chewing-window.ui:163
-#, fuzzy
-#| msgctxt "Sync"
-#| msgid "disable"
 msgid "Disable"
-msgstr "비활성화 "
+msgstr "비활성화"
 
 #: src/setup/ibus-setup-chewing-window.ui:164
 msgid "Caps Lock"
