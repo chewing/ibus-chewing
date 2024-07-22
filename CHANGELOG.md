@@ -5,16 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [v2.1.0-rc.1] - 2024-07-22
 
-### Added
+### Features
 
-- Add Carpalx, Colemak-DH ANSI, and Colemak-DH Orth layout.
+- Now requires libchewing 0.9.0 to build.
+- Add Carpalx, Colemak-DH ANSI, Colemak-DH Orth, and Workman layout.
+- Support toneless (fuzzy) conversion modes from libchewiwng.
+- New about dialog in the setup program with easy to access debug-info.
+- Settings schema now has value range.
+- New option to disable Shift+Space as fullwidth toggle key.
+- New option to disable Chi/Eng toggle key.
+- New option to start ibus-chewing in English mode.
 
 ### Changed
 
 - Clear pre-edit buffer before commit it to engine to avoid showing both buffer
   on the screen.
+- Replace deprecated AdwPreferencesWindow with AdwApplicationWindow.
+- Cleanup unused code created by GOB.
+- Use GSettings binding to handle settings update.
+- Miscellaneous compiler warning fixes.
+
+### Removed
+
+- Remove log file support.
+- Remove unused input style code.
 
 ## [v2.0.0] - 2024-02-17
 
@@ -58,4 +74,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [ChangeLog-1.x](./ChangeLog-1.x)
 
+[v2.1.0-rc.1]: https://github.com/chewing/ibus-chewing/compare/v2.0.0...v2.1.0-rc.1
 [v2.0.0]: https://github.com/chewing/ibus-chewing/compare/1.6.2...HEAD

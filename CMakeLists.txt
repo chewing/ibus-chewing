@@ -5,9 +5,9 @@ set(PRJ_SUMMARY "The Chewing engine for IBus input platform")
 set(SUMMARY_TRANSLATIONS "zh_TW" "IBus新酷音輸入法")
 
 set(PRJ_VER_MAJOR 2)
-set(PRJ_VER_MINOR 0)
+set(PRJ_VER_MINOR 1)
 set(PRJ_VER_PATCH 0)
-set(PRJ_VER_EXTRA "")
+set(PRJ_VER_EXTRA "rc.1")
 
 set(PRJ_VER "${PRJ_VER_MAJOR}.${PRJ_VER_MINOR}.${PRJ_VER_PATCH}")
 if(DEFINED PRJ_VER_EXTRA)
