@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-21 08:44+0900\n"
+"POT-Creation-Date: 2024-07-22 17:50+0900\n"
 "PO-Revision-Date: 2024-07-21 13:12+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
-"Language-Team: Turkish <https://translate.fedoraproject.org/projects/"
-"ibus-chewing/master/tr/>\n"
+"Language-Team: Turkish <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,8 +191,8 @@ msgstr "Tam Genişlik Geçiş Tuşunu Etkinleştir (Shift+Boşluk Tuşu)"
 #: src/setup/ibus-setup-chewing-window.ui:140
 msgid "Use Shift+Space to switch between fullwdith and halfwidth symbols input"
 msgstr ""
-"Tam genişlik ve yarım genişlik simge girişi arasında geçiş yapmak için Shift+"
-"Boşluk tuşlarını kullanın"
+"Tam genişlik ve yarım genişlik simge girişi arasında geçiş yapmak için "
+"Shift+Boşluk tuşlarını kullanın"
 
 #: src/setup/ibus-setup-chewing-window.ui:153
 msgid "Maximum Chinese Characters"
@@ -203,94 +203,104 @@ msgid "Until how many characters should trigger auto-commit"
 msgstr "Otomatik kullanım kaç karaktere kadar tetiklenmeli"
 
 #: src/setup/ibus-setup-chewing-window.ui:159
+#, fuzzy
+#| msgid "Switch to Alphanumeric Mode"
+msgid "Default Use Alphanumeric Mode"
+msgstr "Alfasayısal Moda Geç"
+
+#: src/setup/ibus-setup-chewing-window.ui:160
+msgid "Automatically switch to alphanumeric mode after startup."
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "Çince/Alfasayısal Mod Geçiş Tuşu"
 
-#: src/setup/ibus-setup-chewing-window.ui:163
+#: src/setup/ibus-setup-chewing-window.ui:169
 msgid "Disable"
 msgstr "Devre Dışı Bırak"
 
-#: src/setup/ibus-setup-chewing-window.ui:164
+#: src/setup/ibus-setup-chewing-window.ui:170
 msgid "Caps Lock"
 msgstr "Caps Lock"
 
-#: src/setup/ibus-setup-chewing-window.ui:165
+#: src/setup/ibus-setup-chewing-window.ui:171
 msgid "Shift"
 msgstr "Shift"
 
-#: src/setup/ibus-setup-chewing-window.ui:166
+#: src/setup/ibus-setup-chewing-window.ui:172
 msgid "Shift_L"
 msgstr "Shift_L"
 
-#: src/setup/ibus-setup-chewing-window.ui:167
+#: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Shift_R"
 msgstr "Shift_R"
 
-#: src/setup/ibus-setup-chewing-window.ui:179
+#: src/setup/ibus-setup-chewing-window.ui:185
 msgid "Disable Syncing"
 msgstr "Eşzamanlamayı Devre Dışı Bırak"
 
-#: src/setup/ibus-setup-chewing-window.ui:180
+#: src/setup/ibus-setup-chewing-window.ui:186
 msgid "Sync with Keyboard State"
 msgstr "Klavye Durumuyla Eşzamanla"
 
-#: src/setup/ibus-setup-chewing-window.ui:185
+#: src/setup/ibus-setup-chewing-window.ui:191
 msgid "Sync Caps Lock and IM"
 msgstr "Caps Lock ve Giriş Yöntemini Eşzamanla"
 
-#: src/setup/ibus-setup-chewing-window.ui:193
+#: src/setup/ibus-setup-chewing-window.ui:199
 msgid "No Default"
 msgstr "Öntanımlı Yok"
 
-#: src/setup/ibus-setup-chewing-window.ui:194
+#: src/setup/ibus-setup-chewing-window.ui:200
 msgid "Lower Case"
 msgstr "Küçük Harf"
 
-#: src/setup/ibus-setup-chewing-window.ui:195
+#: src/setup/ibus-setup-chewing-window.ui:201
 msgid "Upper Case"
 msgstr "Büyük Harf"
 
-#: src/setup/ibus-setup-chewing-window.ui:199
+#: src/setup/ibus-setup-chewing-window.ui:205
 msgid "Default English Letter Case"
 msgstr "Öntanımlı İngilizce Harf Durumu"
 
-#: src/setup/ibus-setup-chewing-window.ui:200
+#: src/setup/ibus-setup-chewing-window.ui:206
 msgid "The letter case without pressing the Shift key"
 msgstr "Shift tuşuna basmadan harf durumu"
 
-#: src/setup/ibus-setup-chewing-window.ui:207
+#: src/setup/ibus-setup-chewing-window.ui:213
 msgid "Selecting"
 msgstr "Seçim"
 
-#: src/setup/ibus-setup-chewing-window.ui:208
+#: src/setup/ibus-setup-chewing-window.ui:214
 msgid "Configure the candidate selection behavior"
 msgstr "Aday seçim davranışını yapılandırın"
 
-#: src/setup/ibus-setup-chewing-window.ui:219
+#: src/setup/ibus-setup-chewing-window.ui:225
 msgid "Candidates Per Page"
 msgstr "Sayfa Başına Aday"
 
-#: src/setup/ibus-setup-chewing-window.ui:225
+#: src/setup/ibus-setup-chewing-window.ui:231
 msgid "Show Page Number"
 msgstr "Sayfa Numarasını Göster"
 
-#: src/setup/ibus-setup-chewing-window.ui:231
+#: src/setup/ibus-setup-chewing-window.ui:237
 msgid "Choose Phrases Backwards"
 msgstr "İfadeleri Tersten Seç"
 
-#: src/setup/ibus-setup-chewing-window.ui:232
+#: src/setup/ibus-setup-chewing-window.ui:238
 msgid "Open candidate list from the last character of a phrase"
 msgstr "Aday listesini ifadenin son karakterinden itibaren aç"
 
-#: src/setup/ibus-setup-chewing-window.ui:238
+#: src/setup/ibus-setup-chewing-window.ui:244
 msgid "Use Space Key as Selection Key"
 msgstr "Seçim Tuşu Olarak Boşluk Tuşunu Kullan"
 
-#: src/setup/ibus-setup-chewing-window.ui:244
+#: src/setup/ibus-setup-chewing-window.ui:250
 msgid "Use Vertical Candidate Panel"
 msgstr "Dikey Aday Paneli Kullan"
 
-#: src/setup/ibus-setup-chewing-window.ui:245
+#: src/setup/ibus-setup-chewing-window.ui:251
 msgid "Choose from vertical or horizontal panel"
 msgstr "Dikey veya yatay panel arasından seçim yapın"
 
@@ -306,48 +316,48 @@ msgstr "_E-posta listesi"
 msgid "_Chat"
 msgstr "_Sohbet"
 
-#: src/ibus-chewing-engine.c:291
+#: src/ibus-chewing-engine.c:411
 msgid "Switch to Alphanumeric Mode"
 msgstr "Alfasayısal Moda Geç"
 
-#: src/ibus-chewing-engine.c:293
+#: src/ibus-chewing-engine.c:413
 msgid "Switch to Chinese Mode"
 msgstr "Çince Moda Geç"
 
-#: src/ibus-chewing-engine.c:296
+#: src/ibus-chewing-engine.c:415
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "Çince/Alfasayısal mod arasında geçiş yapmak için tıklayın"
 
-#: src/ibus-chewing-engine.c:302
+#: src/ibus-chewing-engine.c:419
 msgid "Fullwidth Form"
 msgstr "Tam Genişlik Biçimi"
 
-#: src/ibus-chewing-engine.c:304
+#: src/ibus-chewing-engine.c:421
 msgid "Halfwidth Form"
 msgstr "Yarım Genişlik Biçimi"
 
-#: src/ibus-chewing-engine.c:307
+#: src/ibus-chewing-engine.c:423
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr ""
 "Yarım Genişlik/Tam Genişlik biçimleri arasında geçiş yapmak için tıklayın"
 
-#: src/ibus-chewing-engine.c:313
+#: src/ibus-chewing-engine.c:427
 msgid "IBus-Chewing Preferences"
 msgstr "IBus-Chewing Tercihleri"
 
-#: src/ibus-chewing-engine.c:315
+#: src/ibus-chewing-engine.c:429
 msgid "Click to configure IBus-Chewing"
 msgstr "IBus-Chewing'i yapılandırmak için tıklayın"
 
-#: src/main.c:69
+#: src/main.c:63
 msgid "Cannot connect to IBus!"
 msgstr "IBus'a bağlanılamıyor!"
 
-#: src/main.c:96
+#: src/main.c:89
 msgid "Chewing"
 msgstr "Chewing"
 
-#: src/main.c:97
+#: src/main.c:90
 msgid "Chinese chewing input method"
 msgstr "Çince chewing giriş yöntemi"
 
