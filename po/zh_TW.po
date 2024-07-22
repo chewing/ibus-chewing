@@ -10,9 +10,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 17:50+0900\n"
-"PO-Revision-Date: 2024-02-10 08:45+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-07-22 09:22+0000\n"
+"Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -20,11 +19,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.3.1\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
-msgstr "設定新酷音"
+msgstr "設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
@@ -41,8 +40,6 @@ msgstr ""
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:147
-#, fuzzy
-#| msgid "Chewing"
 msgid "IBus Chewing"
 msgstr "新酷音"
 
@@ -96,19 +93,19 @@ msgstr "國語注音符號第二式"
 
 #: src/setup/ibus-setup-chewing-window.ui:53
 msgid "Carpalx"
-msgstr ""
+msgstr "Carpalx 鍵盤"
 
 #: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Colemak-DH ANSI"
-msgstr ""
+msgstr "Colemak-DH 標準"
 
 #: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Colemak-DH Ortholinear"
-msgstr ""
+msgstr "Colemak-DH 正交配置"
 
 #: src/setup/ibus-setup-chewing-window.ui:56
 msgid "Workman"
-msgstr ""
+msgstr "Workman 鍵盤"
 
 #: src/setup/ibus-setup-chewing-window.ui:60
 msgid "Keyboard Type"
@@ -123,33 +120,25 @@ msgid "Keys used to select candidate"
 msgstr "選取候選字詞的按鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:88
-#, fuzzy
-#| msgid "Plain Zhuyin mode"
 msgid "Plain Zhuyin"
-msgstr "單純注音模式"
+msgstr "單純注音"
 
 #: src/setup/ibus-setup-chewing-window.ui:89
-#, fuzzy
-#| msgid "Chewing Settings"
 msgid "Chewing (Default)"
-msgstr "設定新酷音"
+msgstr "新酷音"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: src/setup/ibus-setup-chewing-window.ui:90
-#, fuzzy
-#| msgid "Chewing"
 msgid "Fuzzy Chewing"
-msgstr "新酷音"
+msgstr "模糊酷音"
 
 #: src/setup/ibus-setup-chewing-window.ui:94
 msgid "Conversion Engine"
-msgstr ""
+msgstr "智慧選詞模式"
 
 #: src/setup/ibus-setup-chewing-window.ui:95
-#, fuzzy
-#| msgid "Enable or disable automatic candidate selection"
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
-msgstr "啟用或停用自動候選字詞選擇"
+msgstr "啟用或停用自動候選字詞選擇，或是使用模糊輸入"
 
 #: src/setup/ibus-setup-chewing-window.ui:102
 msgid "Editing"
@@ -197,11 +186,11 @@ msgstr "按 Esc 鍵放棄所有未送出的文字"
 
 #: src/setup/ibus-setup-chewing-window.ui:139
 msgid "Enable Fullwidth Toggle Key (Shift+Space)"
-msgstr ""
+msgstr "使用快速鍵切換全形或半形"
 
 #: src/setup/ibus-setup-chewing-window.ui:140
 msgid "Use Shift+Space to switch between fullwdith and halfwidth symbols input"
-msgstr ""
+msgstr "使用 Shift+Space 來切換使用全形或是半形符號輸入"
 
 #: src/setup/ibus-setup-chewing-window.ui:153
 msgid "Maximum Chinese Characters"
@@ -212,14 +201,12 @@ msgid "Until how many characters should trigger auto-commit"
 msgstr "觸發自動送出前的最大容納中文字數"
 
 #: src/setup/ibus-setup-chewing-window.ui:159
-#, fuzzy
-#| msgid "Switch to Alphanumeric Mode"
 msgid "Default Use Alphanumeric Mode"
-msgstr "切換到英數模式"
+msgstr "預設使用英數模式"
 
 #: src/setup/ibus-setup-chewing-window.ui:160
 msgid "Automatically switch to alphanumeric mode after startup."
-msgstr ""
+msgstr "開啟新酷音後預設使用英數模式"
 
 #: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Chinese/Alphanumeric Mode Toggle Key"
@@ -320,14 +307,16 @@ msgstr "選擇垂直或水平式面板"
 #: src/setup/ibus-setup-chewing-about.c:157
 msgid "translator-credits"
 msgstr ""
+"Cheng-Chia Tseng\n"
+"Kan-Ru Chen"
 
 #: src/setup/ibus-setup-chewing-about.c:162
 msgid "_Mailing list"
-msgstr ""
+msgstr "郵件列表(_M)"
 
 #: src/setup/ibus-setup-chewing-about.c:165
 msgid "_Chat"
-msgstr ""
+msgstr "線上聊天(_C)"
 
 #: src/ibus-chewing-engine.c:411
 msgid "Switch to Alphanumeric Mode"
