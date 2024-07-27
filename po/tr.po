@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 17:50+0900\n"
-"PO-Revision-Date: 2024-07-21 13:12+0000\n"
+"PO-Revision-Date: 2024-07-23 11:38+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
-"Language-Team: Turkish <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/tr/>\n"
+"Language-Team: Turkish <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,14 +203,12 @@ msgid "Until how many characters should trigger auto-commit"
 msgstr "Otomatik kullanım kaç karaktere kadar tetiklenmeli"
 
 #: src/setup/ibus-setup-chewing-window.ui:159
-#, fuzzy
-#| msgid "Switch to Alphanumeric Mode"
 msgid "Default Use Alphanumeric Mode"
-msgstr "Alfasayısal Moda Geç"
+msgstr "Öntanımlı Alfasayısal Mod Kullan"
 
 #: src/setup/ibus-setup-chewing-window.ui:160
 msgid "Automatically switch to alphanumeric mode after startup."
-msgstr ""
+msgstr "Başladıktan sonra otomatik olarak alfasayısal moda geç."
 
 #: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Chinese/Alphanumeric Mode Toggle Key"
