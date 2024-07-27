@@ -20,7 +20,7 @@
 
 #include "ibus-setup-chewing-about.h"
 
-#include <chewing/chewing.h>
+#include <chewing.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
 
