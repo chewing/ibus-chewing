@@ -99,6 +99,7 @@ typedef enum {
     PROP_SHOW_PAGE_NUMBER,
     PROP_CONVERSION_ENGINE,
     PROP_IBUS_USE_SYSTEM_LAYOUT,
+    PROP_NOTIFY_MODE_CHANGE,
     N_PROPERTIES
 } IBusChewingEngineProperty;
 
@@ -122,6 +123,7 @@ static void ibus_chewing_engine_property_hide(IBusEngine *engine, const gchar *p
 
 #define is_password(self) ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_IS_PASSWORD)
 #define is_chinese_mode(self) ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
+#define is_fullwidth_mode(self) ibus_chewing_pre_edit_get_full_half_mode(self->icPreEdit)
 
 #define ibus_text_is_empty(iText) ((iText == NULL) || STRING_IS_EMPTY(iText->text))
 
@@ -256,6 +258,9 @@ static void ibus_chewing_engine_set_property(GObject *object, guint property_id,
     case PROP_IBUS_USE_SYSTEM_LAYOUT:
         self->prop_ibus_use_system_layout = g_value_get_boolean(value);
         break;
+    case PROP_NOTIFY_MODE_CHANGE:
+        self->prop_notify_mode_change = g_value_get_boolean(value);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
         break;
@@ -325,6 +330,9 @@ static void ibus_chewing_engine_get_property(GObject *object, guint property_id,
         break;
     case PROP_IBUS_USE_SYSTEM_LAYOUT:
         g_value_set_boolean(value, self->prop_ibus_use_system_layout);
+        break;
+    case PROP_NOTIFY_MODE_CHANGE:
+        g_value_set_boolean(value, self->prop_notify_mode_change);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -400,6 +408,8 @@ static void ibus_chewing_engine_class_init(IBusChewingEngineClass *klass) {
         g_param_spec_string("conversion-engine", NULL, NULL, NULL, G_PARAM_READWRITE);
     obj_properties[PROP_IBUS_USE_SYSTEM_LAYOUT] =
         g_param_spec_boolean("use-system-keyboard-layout", NULL, NULL, FALSE, G_PARAM_READWRITE);
+    obj_properties[PROP_NOTIFY_MODE_CHANGE] =
+        g_param_spec_boolean("notify-mode-change", NULL, NULL, TRUE, G_PARAM_READWRITE);
 
     g_object_class_install_properties(object_class, N_PROPERTIES, obj_properties);
 }
@@ -435,6 +445,8 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
     self->outgoingText = NULL;
     self->statusFlags = 0;
     self->capabilite = 0;
+    self->pending_notify_chinese_english_mode = FALSE;
+    self->pending_notify_fullwidth_mode = FALSE;
     self->InputMode = g_object_ref_sink(
         ibus_property_new("InputMode", PROP_TYPE_NORMAL, self->InputMode_label_chi, NULL,
                           self->InputMode_tooltip, TRUE, TRUE, PROP_STATE_UNCHECKED, NULL));
@@ -488,6 +500,7 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
     bind_settings("sync-caps-lock");
     bind_settings("show-page-number");
     bind_settings("conversion-engine");
+    bind_settings("notify-mode-change");
 
     g_settings_bind(ibus_settings, "use-system-keyboard-layout", self, "use-system-keyboard-layout",
                     G_SETTINGS_BIND_DEFAULT);
@@ -938,6 +951,14 @@ void refresh_aux_text(IBusChewingEngine *self) {
         IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
         self->auxText = g_object_ref_sink(ibus_text_new_from_string(auxStr));
         g_free(auxStr);
+    } else if (self->prop_notify_mode_change && self->pending_notify_chinese_english_mode) {
+        self->pending_notify_chinese_english_mode = FALSE;
+        char *auxStr = is_chinese_mode(self) ? _("Chinese Mode") : _("English Mode");
+        self->auxText = g_object_ref_sink(ibus_text_new_from_static_string(auxStr));
+    } else if (self->prop_notify_mode_change && self->pending_notify_fullwidth_mode) {
+        self->pending_notify_fullwidth_mode = FALSE;
+        char *auxStr = is_fullwidth_mode(self) ? _("Fullwidth Mode") : _("Halfwidth Mode");
+        self->auxText = g_object_ref_sink(ibus_text_new_from_static_string(auxStr));
     } else if (showPageNumber && (chewing_cand_TotalPage(self->icPreEdit->context) > 0)) {
         int TotalPage = chewing_cand_TotalPage(self->icPreEdit->context);
         int currentPage = chewing_cand_CurrentPage(self->icPreEdit->context) + 1;
@@ -1071,8 +1092,8 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
         /* Toggle Full <-> Half */
-        chewing_set_ShapeMode(self->icPreEdit->context,
-                              !chewing_get_ShapeMode(self->icPreEdit->context));
+        ibus_chewing_pre_edit_toggle_full_half_mode(self->icPreEdit);
+        IBUS_CHEWING_LOG(INFO, "property_activate fullwidth=%d", is_fullwidth_mode(self));
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "setup_prop")) {
         /* open preferences window */
@@ -1104,4 +1125,11 @@ gboolean ibus_chewing_engine_use_vertical_lookup_table(IBusChewingEngine *self) 
 
 gboolean ibus_chewing_engine_use_system_layout(IBusChewingEngine *self) {
     return self->prop_ibus_use_system_layout;
+}
+
+void ibus_chewing_engine_notify_chinese_english_mode_change(IBusChewingEngine *self) {
+    self->pending_notify_chinese_english_mode = TRUE;
+}
+void ibus_chewing_engine_notify_fullwidth_mode_change(IBusChewingEngine *self) {
+    self->pending_notify_fullwidth_mode = TRUE;
 }

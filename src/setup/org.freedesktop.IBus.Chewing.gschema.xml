@@ -157,6 +157,13 @@
                 "IM": Keyboard status follows IM status
             </description>
         </key>
+        <key name="notify-mode-change" type="b">
+            <default>true</default>
+            <summary>Notify when Chinese/English or Fullwidth/Halfwidth mode changes</summary>
+            <description>
+                Display a simple notification when an input mode change is triggered by user input.
+            </description>
+        </key>
         <key name="plain-zhuyin" type="b">
             <default>false</default>
             <summary>Plain Zhuyin mode (deprecated)</summary>

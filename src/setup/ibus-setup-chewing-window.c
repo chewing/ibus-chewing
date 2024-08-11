@@ -45,6 +45,7 @@ struct _IbusSetupChewingWindow {
     AdwSwitchRow *phrase_choice_from_last;
     AdwSwitchRow *space_as_selection;
     AdwSwitchRow *vertical_lookup_table;
+    AdwSwitchRow *notify_mode_change;
 };
 
 G_DEFINE_FINAL_TYPE(IbusSetupChewingWindow, ibus_setup_chewing_window, ADW_TYPE_APPLICATION_WINDOW)
@@ -82,6 +83,7 @@ static void ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *kl
     bind_child(phrase_choice_from_last);
     bind_child(space_as_selection);
     bind_child(vertical_lookup_table);
+    bind_child(notify_mode_change);
 
     gtk_widget_class_install_action(widget_class, "about", NULL, action_adaptor_show_about);
     gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0, "window.close", NULL);
@@ -219,5 +221,7 @@ static void ibus_setup_chewing_window_init(IbusSetupChewingWindow *self) {
     g_settings_bind(settings, "space-as-selection", self->space_as_selection, "active",
                     G_SETTINGS_BIND_DEFAULT);
     g_settings_bind(settings, "vertical-lookup-table", self->vertical_lookup_table, "active",
+                    G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind(settings, "notify-mode-change", self->notify_mode_change, "active",
                     G_SETTINGS_BIND_DEFAULT);
 }

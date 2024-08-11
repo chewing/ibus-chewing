@@ -44,8 +44,7 @@ GType engine_flag_get_type(void) G_GNUC_CONST;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IBusEngine, g_object_unref)
 
 #define IBUS_TYPE_CHEWING_ENGINE ibus_chewing_engine_get_type()
-G_DECLARE_FINAL_TYPE(IBusChewingEngine, ibus_chewing_engine, IBUS,
-                     CHEWING_ENGINE, IBusEngine)
+G_DECLARE_FINAL_TYPE(IBusChewingEngine, ibus_chewing_engine, IBUS, CHEWING_ENGINE, IBusEngine)
 
 void ibus_chewing_engine_refresh_property_list(IBusChewingEngine *self);
 void ibus_chewing_engine_hide_property_list(IBusChewingEngine *self);
@@ -55,13 +54,14 @@ void ibus_chewing_engine_enable(IBusEngine *self);
 void ibus_chewing_engine_disable(IBusEngine *self);
 void ibus_chewing_engine_focus_in(IBusEngine *self);
 void ibus_chewing_engine_focus_out(IBusEngine *self);
-gboolean ibus_chewing_engine_process_key_event(IBusEngine *self, guint key_sym,
-                                               guint keycode, guint modifiers);
+gboolean ibus_chewing_engine_process_key_event(IBusEngine *self, guint key_sym, guint keycode,
+                                               guint modifiers);
 
 char ibus_chewing_engine_get_default_english_case(IBusChewingEngine *self);
-char ibus_chewing_engine_get_chinese_english_toggle_key(
-    IBusChewingEngine *self);
+char ibus_chewing_engine_get_chinese_english_toggle_key(IBusChewingEngine *self);
 gboolean ibus_chewing_engine_use_vertical_lookup_table(IBusChewingEngine *self);
 gboolean ibus_chewing_engine_use_system_layout(IBusChewingEngine *self);
+void ibus_chewing_engine_notify_chinese_english_mode_change(IBusChewingEngine *self);
+void ibus_chewing_engine_notify_fullwidth_mode_change(IBusChewingEngine *self);
 
 G_END_DECLS

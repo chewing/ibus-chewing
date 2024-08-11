@@ -381,6 +381,7 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
     }
 
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    ibus_chewing_engine_notify_chinese_english_mode_change(IBUS_CHEWING_ENGINE(self->engine));
     return EVENT_RESPONSE_IGNORE;
 }
 
@@ -408,6 +409,7 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
     }
 
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
+    ibus_chewing_engine_notify_chinese_english_mode_change(IBUS_CHEWING_ENGINE(self->engine));
     return EVENT_RESPONSE_IGNORE;
 }
 
@@ -462,6 +464,7 @@ EventResponse self_handle_space(IBusChewingPreEdit *self, KSym kSym, KeyModifier
     if (is_shift_only) {
         handle_log("Shift+Space");
         chewing_handle_ShiftSpace(self->context);
+        ibus_chewing_engine_notify_fullwidth_mode_change(IBUS_CHEWING_ENGINE(self->engine));
         return EVENT_RESPONSE_PROCESS;
     }
 
