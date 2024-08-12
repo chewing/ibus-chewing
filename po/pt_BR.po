@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 17:50+0900\n"
+"POT-Creation-Date: 2024-08-11 22:52+0900\n"
 "PO-Revision-Date: 2024-02-17 03:37+0000\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.fedoraproject.org/"
@@ -290,42 +290,52 @@ msgstr "Padrão de maiúsculas e minúsculas em inglês"
 msgid "The letter case without pressing the Shift key"
 msgstr "Mostra letra em maiúsculo ou minúsculo sem pressionar a tecla Shift"
 
+#: src/setup/ibus-setup-chewing-window.ui:211
+msgid "Notify Mode Changes"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:212
+msgid ""
+"Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
+"changes"
+msgstr ""
+
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: src/setup/ibus-setup-chewing-window.ui:213
+#: src/setup/ibus-setup-chewing-window.ui:219
 msgid "Selecting"
 msgstr "Selecionando"
 
-#: src/setup/ibus-setup-chewing-window.ui:214
+#: src/setup/ibus-setup-chewing-window.ui:220
 msgid "Configure the candidate selection behavior"
 msgstr "Configure o comportamento de seleção de candidato"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: src/setup/ibus-setup-chewing-window.ui:225
+#: src/setup/ibus-setup-chewing-window.ui:231
 msgid "Candidates Per Page"
 msgstr "Candidatos por página"
 
-#: src/setup/ibus-setup-chewing-window.ui:231
+#: src/setup/ibus-setup-chewing-window.ui:237
 msgid "Show Page Number"
 msgstr "Mostrar número da página"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gcintra
-#: src/setup/ibus-setup-chewing-window.ui:237
+#: src/setup/ibus-setup-chewing-window.ui:243
 msgid "Choose Phrases Backwards"
 msgstr "Escolher frases de trás para frente"
 
-#: src/setup/ibus-setup-chewing-window.ui:238
+#: src/setup/ibus-setup-chewing-window.ui:244
 msgid "Open candidate list from the last character of a phrase"
 msgstr "Abre a lista de candidatos a partir do último caractere da frase"
 
-#: src/setup/ibus-setup-chewing-window.ui:244
+#: src/setup/ibus-setup-chewing-window.ui:250
 msgid "Use Space Key as Selection Key"
 msgstr "Usar tecla Espaço como tecla de seleção"
 
-#: src/setup/ibus-setup-chewing-window.ui:250
+#: src/setup/ibus-setup-chewing-window.ui:256
 msgid "Use Vertical Candidate Panel"
 msgstr "Usar painel de candidatos vertical"
 
-#: src/setup/ibus-setup-chewing-window.ui:251
+#: src/setup/ibus-setup-chewing-window.ui:257
 msgid "Choose from vertical or horizontal panel"
 msgstr "Escolha entre painel vertical ou horizontal"
 
@@ -341,37 +351,59 @@ msgstr ""
 msgid "_Chat"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:411
+#: src/ibus-chewing-engine.c:421
 msgid "Switch to Alphanumeric Mode"
 msgstr "Trocar para modo alfanumérico"
 
-#: src/ibus-chewing-engine.c:413
+#: src/ibus-chewing-engine.c:423
 msgid "Switch to Chinese Mode"
 msgstr "Trocar para modo chinês"
 
-#: src/ibus-chewing-engine.c:415
+#: src/ibus-chewing-engine.c:425
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "Clique para alternar entre modo chinês/alfanumérico"
 
-#: src/ibus-chewing-engine.c:419
+#: src/ibus-chewing-engine.c:429
 msgid "Fullwidth Form"
 msgstr "Forma de largura total"
 
-#: src/ibus-chewing-engine.c:421
+#: src/ibus-chewing-engine.c:431
 msgid "Halfwidth Form"
 msgstr "Forma de meia largura"
 
-#: src/ibus-chewing-engine.c:423
+#: src/ibus-chewing-engine.c:433
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr "Clique para alternar entre formas de meia largura / largura total"
 
-#: src/ibus-chewing-engine.c:427
+#: src/ibus-chewing-engine.c:437
 msgid "IBus-Chewing Preferences"
 msgstr "Preferências do IBus-Chewing"
 
-#: src/ibus-chewing-engine.c:429
+#: src/ibus-chewing-engine.c:439
 msgid "Click to configure IBus-Chewing"
 msgstr "Clique para configurar o IBus-Chewing"
+
+#: src/ibus-chewing-engine.c:956
+#, fuzzy
+#| msgid "Switch to Chinese Mode"
+msgid "Chinese Mode"
+msgstr "Trocar para modo chinês"
+
+#: src/ibus-chewing-engine.c:956
+msgid "English Mode"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:960
+#, fuzzy
+#| msgid "Fullwidth Form"
+msgid "Fullwidth Mode"
+msgstr "Forma de largura total"
+
+#: src/ibus-chewing-engine.c:960
+#, fuzzy
+#| msgid "Halfwidth Form"
+msgid "Halfwidth Mode"
+msgstr "Forma de meia largura"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"

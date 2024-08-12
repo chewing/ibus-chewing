@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 17:50+0900\n"
+"POT-Creation-Date: 2024-08-11 22:52+0900\n"
 "PO-Revision-Date: 2024-02-11 13:34+0000\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <https://translate.fedoraproject.org/projects/ibus-"
@@ -272,39 +272,49 @@ msgstr "Domyślna wielkość znaków angielskiego"
 msgid "The letter case without pressing the Shift key"
 msgstr "Wielkość znaków bez wciśniętego klawisza Shift"
 
-#: src/setup/ibus-setup-chewing-window.ui:213
+#: src/setup/ibus-setup-chewing-window.ui:211
+msgid "Notify Mode Changes"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:212
+msgid ""
+"Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
+"changes"
+msgstr ""
+
+#: src/setup/ibus-setup-chewing-window.ui:219
 msgid "Selecting"
 msgstr "Wybieranie"
 
-#: src/setup/ibus-setup-chewing-window.ui:214
+#: src/setup/ibus-setup-chewing-window.ui:220
 msgid "Configure the candidate selection behavior"
 msgstr "Konfiguracja zachowania wyboru kandydata"
 
-#: src/setup/ibus-setup-chewing-window.ui:225
+#: src/setup/ibus-setup-chewing-window.ui:231
 msgid "Candidates Per Page"
 msgstr "Liczba kandydatów na stronę"
 
-#: src/setup/ibus-setup-chewing-window.ui:231
+#: src/setup/ibus-setup-chewing-window.ui:237
 msgid "Show Page Number"
 msgstr "Wyświetlanie numeru strony"
 
-#: src/setup/ibus-setup-chewing-window.ui:237
+#: src/setup/ibus-setup-chewing-window.ui:243
 msgid "Choose Phrases Backwards"
 msgstr "Wybieranie zdań od tyłu"
 
-#: src/setup/ibus-setup-chewing-window.ui:238
+#: src/setup/ibus-setup-chewing-window.ui:244
 msgid "Open candidate list from the last character of a phrase"
 msgstr "Otwieranie listy kandydatów od ostatniego znaku zdania"
 
-#: src/setup/ibus-setup-chewing-window.ui:244
+#: src/setup/ibus-setup-chewing-window.ui:250
 msgid "Use Space Key as Selection Key"
 msgstr "Spacja wybiera"
 
-#: src/setup/ibus-setup-chewing-window.ui:250
+#: src/setup/ibus-setup-chewing-window.ui:256
 msgid "Use Vertical Candidate Panel"
 msgstr "Pionowy panel kandydatów"
 
-#: src/setup/ibus-setup-chewing-window.ui:251
+#: src/setup/ibus-setup-chewing-window.ui:257
 msgid "Choose from vertical or horizontal panel"
 msgstr "Pionowy lub poziomy panel"
 
@@ -320,37 +330,59 @@ msgstr ""
 msgid "_Chat"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:411
+#: src/ibus-chewing-engine.c:421
 msgid "Switch to Alphanumeric Mode"
 msgstr "Przełącz na tryb alfanumeryczny"
 
-#: src/ibus-chewing-engine.c:413
+#: src/ibus-chewing-engine.c:423
 msgid "Switch to Chinese Mode"
 msgstr "Przełącz na tryb języka chińskiego"
 
-#: src/ibus-chewing-engine.c:415
+#: src/ibus-chewing-engine.c:425
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "Przełącza tryb języka chińskiego/alfanumeryczny"
 
-#: src/ibus-chewing-engine.c:419
+#: src/ibus-chewing-engine.c:429
 msgid "Fullwidth Form"
 msgstr "Forma o pełnej szerokości znaków"
 
-#: src/ibus-chewing-engine.c:421
+#: src/ibus-chewing-engine.c:431
 msgid "Halfwidth Form"
 msgstr "Forma o zmniejszonej szerokości znaków"
 
-#: src/ibus-chewing-engine.c:423
+#: src/ibus-chewing-engine.c:433
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr "Przełącza między pełną a zmniejszoną szerokością znaków"
 
-#: src/ibus-chewing-engine.c:427
+#: src/ibus-chewing-engine.c:437
 msgid "IBus-Chewing Preferences"
 msgstr "Preferencje IBus-Chewing"
 
-#: src/ibus-chewing-engine.c:429
+#: src/ibus-chewing-engine.c:439
 msgid "Click to configure IBus-Chewing"
 msgstr "Konfiguruje IBus-Chewing"
+
+#: src/ibus-chewing-engine.c:956
+#, fuzzy
+#| msgid "Switch to Chinese Mode"
+msgid "Chinese Mode"
+msgstr "Przełącz na tryb języka chińskiego"
+
+#: src/ibus-chewing-engine.c:956
+msgid "English Mode"
+msgstr ""
+
+#: src/ibus-chewing-engine.c:960
+#, fuzzy
+#| msgid "Fullwidth Form"
+msgid "Fullwidth Mode"
+msgstr "Forma o pełnej szerokości znaków"
+
+#: src/ibus-chewing-engine.c:960
+#, fuzzy
+#| msgid "Halfwidth Form"
+msgid "Halfwidth Mode"
+msgstr "Forma o zmniejszonej szerokości znaków"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"
