@@ -43,6 +43,8 @@ struct _IBusChewingEngine {
 
     EngineFlag statusFlags;
     IBusCapabilite capabilite;
+    gboolean pending_notify_chinese_english_mode;
+    gboolean pending_notify_fullwidth_mode;
 
     char *prop_kb_type;
     char *prop_sel_keys;
@@ -64,6 +66,7 @@ struct _IBusChewingEngine {
     gboolean prop_show_page_number;
     char *prop_conversion_engine;
     gboolean prop_ibus_use_system_layout;
+    gboolean prop_notify_mode_change;
 
     IBusText *InputMode_label_chi;
     IBusText *InputMode_label_eng;

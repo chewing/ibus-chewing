@@ -206,6 +206,12 @@
                     <property name="subtitle" translatable="yes">The letter case without pressing the Shift key</property>
                   </object>
                 </child>
+                <child>
+                  <object class="AdwSwitchRow" id="notify_mode_change">
+                    <property name="title" translatable="yes">Notify Mode Changes</property>
+                    <property name="subtitle" translatable="yes">Display a message when the Chinese/English or Fullwidth/Halfwidth mode changes</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
