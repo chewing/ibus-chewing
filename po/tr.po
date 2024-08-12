@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
-"PO-Revision-Date: 2024-07-23 11:38+0000\n"
+"PO-Revision-Date: 2024-08-12 06:39+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
-"Language-Team: Turkish <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/tr/>\n"
+"Language-Team: Turkish <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,13 +268,15 @@ msgstr "Shift tuşuna basmadan harf durumu"
 
 #: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Notify Mode Changes"
-msgstr ""
+msgstr "Mod Değişikliklerini Bildir"
 
 #: src/setup/ibus-setup-chewing-window.ui:212
 msgid ""
 "Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
 "changes"
 msgstr ""
+"Çince/İngilizce veya Tam Genişlik/Yarı Genişlik modu değiştiğinde bir mesaj "
+"görüntüle"
 
 #: src/setup/ibus-setup-chewing-window.ui:219
 msgid "Selecting"
@@ -358,26 +360,20 @@ msgid "Click to configure IBus-Chewing"
 msgstr "IBus-Chewing'i yapılandırmak için tıklayın"
 
 #: src/ibus-chewing-engine.c:956
-#, fuzzy
-#| msgid "Switch to Chinese Mode"
 msgid "Chinese Mode"
-msgstr "Çince Moda Geç"
+msgstr "Çince Modu"
 
 #: src/ibus-chewing-engine.c:956
 msgid "English Mode"
-msgstr ""
+msgstr "İngilizce Modu"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Fullwidth Form"
 msgid "Fullwidth Mode"
-msgstr "Tam Genişlik Biçimi"
+msgstr "Tam Genişlik Modu"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Halfwidth Form"
 msgid "Halfwidth Mode"
-msgstr "Yarım Genişlik Biçimi"
+msgstr "Yarım Genişlik Modu"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"
