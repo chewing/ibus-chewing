@@ -10,9 +10,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
-"PO-Revision-Date: 2024-07-22 09:22+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-08-12 04:35+0000\n"
+"Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -267,13 +266,13 @@ msgstr "未按下 Shift 鍵前的英文字大小寫"
 
 #: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Notify Mode Changes"
-msgstr ""
+msgstr "顯示輸入模式切換通知"
 
 #: src/setup/ibus-setup-chewing-window.ui:212
 msgid ""
 "Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
 "changes"
-msgstr ""
+msgstr "切換英數模式或是全形半形模式時顯示通知"
 
 #: src/setup/ibus-setup-chewing-window.ui:219
 msgid "Selecting"
@@ -359,26 +358,20 @@ msgid "Click to configure IBus-Chewing"
 msgstr "點擊以打開新酷音組態設定"
 
 #: src/ibus-chewing-engine.c:956
-#, fuzzy
-#| msgid "Switch to Chinese Mode"
 msgid "Chinese Mode"
-msgstr "切換到中文模式"
+msgstr "中文模式"
 
 #: src/ibus-chewing-engine.c:956
 msgid "English Mode"
-msgstr ""
+msgstr "英數模式"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Fullwidth Form"
 msgid "Fullwidth Mode"
-msgstr "全形符號"
+msgstr "全形模式"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Halfwidth Form"
 msgid "Halfwidth Mode"
-msgstr "半形符號"
+msgstr "半形模式"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"
