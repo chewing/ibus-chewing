@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
-"PO-Revision-Date: 2024-08-12 04:35+0000\n"
+"PO-Revision-Date: 2024-08-19 12:42+0000\n"
 "Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
@@ -27,7 +27,7 @@ msgstr "設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
-msgstr "調整輸入法組態設定"
+msgstr "調整輸入法偏好設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Input Method"
@@ -146,7 +146,7 @@ msgstr "編輯"
 
 #: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Configure the input method behavior"
-msgstr "調整輸入法行為組態設定"
+msgstr "調整輸入法行為偏好設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:107
 msgid "Auto Move Cursor"
@@ -280,7 +280,7 @@ msgstr "選字詞"
 
 #: src/setup/ibus-setup-chewing-window.ui:220
 msgid "Configure the candidate selection behavior"
-msgstr "調整候選字詞選擇行為的組態設定"
+msgstr "調整候選字詞選擇行為的偏好設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:231
 msgid "Candidates Per Page"
@@ -339,11 +339,11 @@ msgstr "點擊以切換中文或英數模式"
 
 #: src/ibus-chewing-engine.c:429
 msgid "Fullwidth Form"
-msgstr "全形符號"
+msgstr "使用全形符號"
 
 #: src/ibus-chewing-engine.c:431
 msgid "Halfwidth Form"
-msgstr "半形符號"
+msgstr "使用半形符號"
 
 #: src/ibus-chewing-engine.c:433
 msgid "Click to toggle Halfwidth/Fullwidth Form"
@@ -351,11 +351,11 @@ msgstr "點擊以切換全形或半形符號"
 
 #: src/ibus-chewing-engine.c:437
 msgid "IBus-Chewing Preferences"
-msgstr "打開新酷音組態設定"
+msgstr "新酷音偏好設定"
 
 #: src/ibus-chewing-engine.c:439
 msgid "Click to configure IBus-Chewing"
-msgstr "點擊以打開新酷音組態設定"
+msgstr "點擊以打開新酷音偏好設定"
 
 #: src/ibus-chewing-engine.c:956
 msgid "Chinese Mode"
