@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.1] - 2024-08-20
+
+### Fixed
+
+- Revert "Clear pre-edit buffer before commit it to engine to avoid showing
+  both buffer on the screen." which breaks some composition events. (introduced
+  in v2.1.0)
+
 ## [v2.1.0] - 2024-08-12
 
 ### Features
@@ -75,5 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [ChangeLog-1.x](./ChangeLog-1.x)
 
+[v2.1.1]: https://github.com/chewing/ibus-chewing/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/chewing/ibus-chewing/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/chewing/ibus-chewing/compare/1.6.2...HEAD
