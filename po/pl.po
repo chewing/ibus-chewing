@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
 "PO-Revision-Date: 2024-08-24 17:50+0000\n"
-"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Polish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/pl/>\n"
 "Language: pl\n"
@@ -311,7 +312,7 @@ msgstr "Pionowy lub poziomy panel"
 
 #: src/setup/ibus-setup-chewing-about.c:157
 msgid "translator-credits"
-msgstr ""
+msgstr "Piotr Drąg <piotrdrag@gmail.com>, 2009-2024"
 
 #: src/setup/ibus-setup-chewing-about.c:162
 msgid "_Mailing list"
