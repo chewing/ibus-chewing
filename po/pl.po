@@ -4,9 +4,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
-"PO-Revision-Date: 2024-08-24 17:50+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-08-24 17:54+0000\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/pl/>\n"
 "Language: pl\n"
@@ -134,7 +133,7 @@ msgstr "Mechanizm konwersji"
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
 msgstr ""
 "Włączenie lub wyłączenie automatycznego wyboru kandydatów albo wprowadzania "
-"typu „fuzzy”"
+"typu „fuzzy”."
 
 #: src/setup/ibus-setup-chewing-window.ui:102
 msgid "Editing"
@@ -312,15 +311,15 @@ msgstr "Pionowy lub poziomy panel"
 
 #: src/setup/ibus-setup-chewing-about.c:157
 msgid "translator-credits"
-msgstr "Piotr Drąg <piotrdrag@gmail.com>, 2009-2024"
+msgstr "Piotr Drąg <piotrdrag@gmail.com>, 2016-2024"
 
 #: src/setup/ibus-setup-chewing-about.c:162
 msgid "_Mailing list"
-msgstr ""
+msgstr "_Lista pocztowa"
 
 #: src/setup/ibus-setup-chewing-about.c:165
 msgid "_Chat"
-msgstr ""
+msgstr "_Komunikator"
 
 #: src/ibus-chewing-engine.c:421
 msgid "Switch to Alphanumeric Mode"
@@ -355,26 +354,20 @@ msgid "Click to configure IBus-Chewing"
 msgstr "Konfiguruje IBus-Chewing"
 
 #: src/ibus-chewing-engine.c:956
-#, fuzzy
-#| msgid "Switch to Chinese Mode"
 msgid "Chinese Mode"
-msgstr "Przełącz na tryb języka chińskiego"
+msgstr "Tryb języka chińskiego"
 
 #: src/ibus-chewing-engine.c:956
 msgid "English Mode"
-msgstr ""
+msgstr "Tryb języka angielskiego"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Fullwidth Form"
 msgid "Fullwidth Mode"
-msgstr "Forma o pełnej szerokości znaków"
+msgstr "Tryb o pełnej szerokości znaków"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Halfwidth Form"
 msgid "Halfwidth Mode"
-msgstr "Forma o zmniejszonej szerokości znaków"
+msgstr "Tryb o zmniejszonej szerokości znaków"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"
