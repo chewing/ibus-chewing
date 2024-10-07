@@ -4,17 +4,17 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-11 22:52+0900\n"
-"PO-Revision-Date: 2024-02-11 13:34+0000\n"
+"PO-Revision-Date: 2024-08-24 17:54+0000\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/pl/>\n"
+"Language-Team: Polish <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.3.1\n"
+"X-Generator: Weblate 5.7\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
@@ -30,14 +30,12 @@ msgstr "Metoda wprowadzania"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
-msgstr ""
+msgstr "O programie"
 
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:147
-#, fuzzy
-#| msgid "Chewing"
 msgid "IBus Chewing"
-msgstr "Chewing"
+msgstr "Chewing dla IBus"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
@@ -89,19 +87,19 @@ msgstr "MPS2 Pinyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:53
 msgid "Carpalx"
-msgstr ""
+msgstr "Carpalx"
 
 #: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Colemak-DH ANSI"
-msgstr ""
+msgstr "Colemak-DH ANSI"
 
 #: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Colemak-DH Ortholinear"
-msgstr ""
+msgstr "Colemak-DH Ortholinear"
 
 #: src/setup/ibus-setup-chewing-window.ui:56
 msgid "Workman"
-msgstr ""
+msgstr "Workman"
 
 #: src/setup/ibus-setup-chewing-window.ui:60
 msgid "Keyboard Type"
@@ -116,32 +114,26 @@ msgid "Keys used to select candidate"
 msgstr "Klawisze używane do wybierania kandydatów"
 
 #: src/setup/ibus-setup-chewing-window.ui:88
-#, fuzzy
-#| msgid "Plain Zhuyin mode"
 msgid "Plain Zhuyin"
-msgstr "Prosty tryb Zhuyin"
+msgstr "Prosty Zhuyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:89
-#, fuzzy
-#| msgid "Chewing Settings"
 msgid "Chewing (Default)"
-msgstr "Ustawienia „Chewing”"
+msgstr "Chewing (domyślny)"
 
 #: src/setup/ibus-setup-chewing-window.ui:90
-#, fuzzy
-#| msgid "Chewing"
 msgid "Fuzzy Chewing"
-msgstr "Chewing"
+msgstr "Chewing typu „fuzzy”"
 
 #: src/setup/ibus-setup-chewing-window.ui:94
 msgid "Conversion Engine"
-msgstr ""
+msgstr "Mechanizm konwersji"
 
 #: src/setup/ibus-setup-chewing-window.ui:95
-#, fuzzy
-#| msgid "Enable or disable automatic candidate selection"
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
-msgstr "Włączenie lub wyłączenie automatycznego wyboru kandydatów"
+msgstr ""
+"Włączenie lub wyłączenie automatycznego wyboru kandydatów albo wprowadzania "
+"typu „fuzzy”."
 
 #: src/setup/ibus-setup-chewing-window.ui:102
 msgid "Editing"
@@ -189,11 +181,13 @@ msgstr "Klawisz Escape odrzuca cały niezatwierdzony tekst"
 
 #: src/setup/ibus-setup-chewing-window.ui:139
 msgid "Enable Fullwidth Toggle Key (Shift+Space)"
-msgstr ""
+msgstr "Klawisz przełączania pełnej szerokości znaków (Shift+spacja)"
 
 #: src/setup/ibus-setup-chewing-window.ui:140
 msgid "Use Shift+Space to switch between fullwdith and halfwidth symbols input"
 msgstr ""
+"Naciśnięcie Shift+spacja przełącza między wprowadzaniem pełnej a "
+"zmniejszonej szerokości symboli"
 
 #: src/setup/ibus-setup-chewing-window.ui:153
 msgid "Maximum Chinese Characters"
@@ -204,25 +198,20 @@ msgid "Until how many characters should trigger auto-commit"
 msgstr "Do ilu znaków wywoływać automatyczne zatwierdzenie"
 
 #: src/setup/ibus-setup-chewing-window.ui:159
-#, fuzzy
-#| msgid "Switch to Alphanumeric Mode"
 msgid "Default Use Alphanumeric Mode"
-msgstr "Przełącz na tryb alfanumeryczny"
+msgstr "Domyślne używanie trybu alfanumerycznego"
 
 #: src/setup/ibus-setup-chewing-window.ui:160
 msgid "Automatically switch to alphanumeric mode after startup."
-msgstr ""
+msgstr "Automatycznie przełącza na tryb alfanumeryczny po uruchomieniu."
 
 #: src/setup/ibus-setup-chewing-window.ui:165
 msgid "Chinese/Alphanumeric Mode Toggle Key"
 msgstr "Klawisz przełączania trybu języka chińskiego/alfanumerycznego"
 
 #: src/setup/ibus-setup-chewing-window.ui:169
-#, fuzzy
-#| msgctxt "Sync"
-#| msgid "disable"
 msgid "Disable"
-msgstr "wyłączone"
+msgstr "Wyłączone"
 
 #: src/setup/ibus-setup-chewing-window.ui:170
 msgid "Caps Lock"
@@ -274,13 +263,15 @@ msgstr "Wielkość znaków bez wciśniętego klawisza Shift"
 
 #: src/setup/ibus-setup-chewing-window.ui:211
 msgid "Notify Mode Changes"
-msgstr ""
+msgstr "Powiadamianie o zmianie trybu"
 
 #: src/setup/ibus-setup-chewing-window.ui:212
 msgid ""
 "Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
 "changes"
 msgstr ""
+"Wyświetlanie komunikatu po zmianie trybu chińskiego/angielskiego lub o peł"
+"nej/zmniejszonej szerokości znaków"
 
 #: src/setup/ibus-setup-chewing-window.ui:219
 msgid "Selecting"
@@ -320,15 +311,15 @@ msgstr "Pionowy lub poziomy panel"
 
 #: src/setup/ibus-setup-chewing-about.c:157
 msgid "translator-credits"
-msgstr ""
+msgstr "Piotr Drąg <piotrdrag@gmail.com>, 2016-2024"
 
 #: src/setup/ibus-setup-chewing-about.c:162
 msgid "_Mailing list"
-msgstr ""
+msgstr "_Lista pocztowa"
 
 #: src/setup/ibus-setup-chewing-about.c:165
 msgid "_Chat"
-msgstr ""
+msgstr "_Komunikator"
 
 #: src/ibus-chewing-engine.c:421
 msgid "Switch to Alphanumeric Mode"
@@ -363,26 +354,20 @@ msgid "Click to configure IBus-Chewing"
 msgstr "Konfiguruje IBus-Chewing"
 
 #: src/ibus-chewing-engine.c:956
-#, fuzzy
-#| msgid "Switch to Chinese Mode"
 msgid "Chinese Mode"
-msgstr "Przełącz na tryb języka chińskiego"
+msgstr "Tryb języka chińskiego"
 
 #: src/ibus-chewing-engine.c:956
 msgid "English Mode"
-msgstr ""
+msgstr "Tryb języka angielskiego"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Fullwidth Form"
 msgid "Fullwidth Mode"
-msgstr "Forma o pełnej szerokości znaków"
+msgstr "Tryb o pełnej szerokości znaków"
 
 #: src/ibus-chewing-engine.c:960
-#, fuzzy
-#| msgid "Halfwidth Form"
 msgid "Halfwidth Mode"
-msgstr "Forma o zmniejszonej szerokości znaków"
+msgstr "Tryb o zmniejszonej szerokości znaków"
 
 #: src/main.c:63
 msgid "Cannot connect to IBus!"
