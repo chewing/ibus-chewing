@@ -34,7 +34,7 @@
 #define bpmf_check ibus_chewing_bopomofo_check(self->context)
 #define table_is_showing ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW)
 
-#define is_capslock (umaskedMod == IBUS_LOCK_MASK)
+#define is_capslock (unmaskedMod & IBUS_LOCK_MASK)
 #define is_shift_only (maskedMod == IBUS_SHIFT_MASK)
 #define is_shift (unmaskedMod & IBUS_SHIFT_MASK)
 #define is_ctrl_only (maskedMod == IBUS_CONTROL_MASK)
@@ -42,7 +42,7 @@
 
 /*== Event processing ==*/
 /* We only recognize the combination of shift, control and alt */
-#define modifiers_mask(unmaskedMod)                                            \
+#define modifiers_mask(unmaskedMod)                                                                \
     unmaskedMod &(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK | IBUS_MOD1_MASK)
 
 /**
@@ -53,39 +53,36 @@
  * allowed. allowed=IBUS_SHIFT_MASK means both keysym without modifier or shift
  * are allowed.
  */
-#define filter_modifiers(allowed)                                              \
-    KeyModifiers maskedMod = modifiers_mask(unmaskedMod);                      \
-    if ((maskedMod) & (~(allowed))) {                                          \
-        return EVENT_RESPONSE_IGNORE;                                          \
+#define filter_modifiers(allowed)                                                                  \
+    KeyModifiers maskedMod = modifiers_mask(unmaskedMod);                                          \
+    if ((maskedMod) & (~(allowed))) {                                                              \
+        return EVENT_RESPONSE_IGNORE;                                                              \
     }
-#define absorb_when_release                                                    \
-    if (event_is_released(unmaskedMod)) {                                      \
-        return EVENT_RESPONSE_ABSORB;                                          \
+#define absorb_when_release                                                                        \
+    if (event_is_released(unmaskedMod)) {                                                          \
+        return EVENT_RESPONSE_ABSORB;                                                              \
     }
-#define ignore_when_release                                                    \
-    if (event_is_released(unmaskedMod)) {                                      \
-        return EVENT_RESPONSE_IGNORE;                                          \
+#define ignore_when_release                                                                        \
+    if (event_is_released(unmaskedMod)) {                                                          \
+        return EVENT_RESPONSE_IGNORE;                                                              \
     }
-#define ignore_when_buffer_is_empty                                            \
-    if (buffer_is_empty) {                                                     \
-        return EVENT_RESPONSE_IGNORE;                                          \
+#define ignore_when_buffer_is_empty                                                                \
+    if (buffer_is_empty) {                                                                         \
+        return EVENT_RESPONSE_IGNORE;                                                              \
     }
-#define ignore_when_buffer_is_empty_and_table_not_showing                      \
-    if (buffer_is_empty && !table_is_showing) {                                \
-        return EVENT_RESPONSE_IGNORE;                                          \
+#define ignore_when_buffer_is_empty_and_table_not_showing                                          \
+    if (buffer_is_empty && !table_is_showing) {                                                    \
+        return EVENT_RESPONSE_IGNORE;                                                              \
     }
 
 #define event_is_released(unmaskedMod) ((unmaskedMod & IBUS_RELEASE_MASK) != 0)
-#define event_process_or_ignore(cond)                                          \
-    (cond) ? EVENT_RESPONSE_PROCESS : EVENT_RESPONSE_IGNORE
+#define event_process_or_ignore(cond) (cond) ? EVENT_RESPONSE_PROCESS : EVENT_RESPONSE_IGNORE
 
-#define handle_log(funcName)                                                   \
-    IBUS_CHEWING_LOG(INFO, "* self_handle_%s(-,%x(%s),%x(%s))", funcName,      \
-                     kSym, key_sym_get_name(kSym), unmaskedMod,                \
-                     modifiers_to_string(unmaskedMod));
+#define handle_log(funcName)                                                                       \
+    IBUS_CHEWING_LOG(INFO, "* self_handle_%s(-,%x(%s),%x(%s))", funcName, kSym,                    \
+                     key_sym_get_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
 
-KSym self_key_sym_fix(IBusChewingPreEdit *self, KSym kSym,
-                      KeyModifiers unmaskedMod);
+KSym self_key_sym_fix(IBusChewingPreEdit *self, KSym kSym, KeyModifiers unmaskedMod);
 
 EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
                                           KeyModifiers unmaskedMod);

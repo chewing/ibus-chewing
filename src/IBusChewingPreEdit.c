@@ -336,7 +336,7 @@ EventResponse self_handle_num_keypad(IBusChewingPreEdit *self, KSym kSym,
 }
 
 EventResponse self_handle_caps_lock(IBusChewingPreEdit *self, KSym kSym, KeyModifiers unmaskedMod) {
-    filter_modifiers(0);
+    filter_modifiers(IBUS_LOCK_MASK);
 
     IBusChewingEngine *engine = IBUS_CHEWING_ENGINE(self->engine);
     gchar toggleChinese = ibus_chewing_engine_get_chinese_english_toggle_key(engine);
@@ -781,6 +781,7 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
 
     if (!is_full_shape && !is_chinese &&
         !(kSym == IBUS_KEY_space && unmaskedMod == IBUS_SHIFT_MASK) &&
+        !(kSym == IBUS_KEY_Caps_Lock && is_capslock) &&
         !is_shift_toggle(self->keyLast, kSym, unmaskedMod)) {
         /* Users treat English Sub-mode as IM Disabled,
          * So key strokes should be passed to client directly. Github 144.
