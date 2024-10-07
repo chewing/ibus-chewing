@@ -512,7 +512,7 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
 void ibus_chewing_engine_restore_mode(IBusChewingEngine *self) {
     g_return_if_fail(self != NULL);
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
-    {
+    if (ibus_chewing_engine_get_chinese_english_toggle_key(self) == 'c') {
         IBUS_CHEWING_LOG(DEBUG, "restore_mode() statusFlags=%x", self->statusFlags);
         GdkDisplay *display = gdk_display_get_default();
 
