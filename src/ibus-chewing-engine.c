@@ -950,7 +950,7 @@ void refresh_aux_text(IBusChewingEngine *self) {
 
         IBUS_CHEWING_LOG(INFO, "update_aux_text() auxStr=%s", auxStr);
         self->auxText = g_object_ref_sink(ibus_text_new_from_string(auxStr));
-        g_free(auxStr);
+        chewing_free(auxStr);
     } else if (self->prop_notify_mode_change && self->pending_notify_chinese_english_mode) {
         self->pending_notify_chinese_english_mode = FALSE;
         char *auxStr = is_chinese_mode(self) ? _("Chinese Mode") : _("English Mode");
@@ -1073,7 +1073,7 @@ void ibus_chewing_engine_candidate_clicked(IBusEngine *engine, guint index, guin
         KSym k = (KSym)selKeys[index];
 
         ibus_chewing_pre_edit_process_key(self->icPreEdit, k, 0);
-        g_free(selKeys);
+        chewing_free(selKeys);
         ibus_chewing_engine_update(self);
     } else {
         IBUS_CHEWING_LOG(DEBUG, "candidate_clicked() ... candidates are not showing");
