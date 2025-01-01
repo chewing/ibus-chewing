@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.3] - 2025-01-01
+
+### Fixed
+
+- Fix crashes by ensuring always free chewing objects with chewing_free.
+
 ## [v2.1.2] - 2024-10-07
 
 ### Fixed
@@ -91,6 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [ChangeLog-1.x](./ChangeLog-1.x)
 
+[v2.1.3]: https://github.com/chewing/ibus-chewing/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/chewing/ibus-chewing/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/chewing/ibus-chewing/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/chewing/ibus-chewing/compare/v2.0.0...v2.1.0
