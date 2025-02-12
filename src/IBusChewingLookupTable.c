@@ -38,7 +38,7 @@ void ibus_chewing_lookup_table_resize(IBusLookupTable *iTable, ChewingContext *c
         }
     }
     chewing_set_candPerPage(context, len);
-    chewing_set_selKey(context, selKSym, len);
+    chewing_set_selKey(context, selKSym, MAX_SELKEY);
 
     gboolean verticalLookupTable = g_settings_get_boolean(settings, "vertical-lookup-table");
 
