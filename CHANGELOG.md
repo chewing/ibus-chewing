@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v2.1.4] - 2015-02-16
 
 ### Fixed
 
@@ -103,6 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [ChangeLog-1.x](./ChangeLog-1.x)
 
+[v2.1.4]: https://github.com/chewing/ibus-chewing/compare/v2.1.3...v2.1.4
 [v2.1.3]: https://github.com/chewing/ibus-chewing/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/chewing/ibus-chewing/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/chewing/ibus-chewing/compare/v2.1.0...v2.1.1
