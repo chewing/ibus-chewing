@@ -20,6 +20,7 @@
                 <choice value="thl_pinying"/>
                 <choice value="mps2_pinyin"/>
                 <choice value="carpalx"/>
+                <choice value="colemak"/>
                 <choice value="colemak_dh_ansi"/>
                 <choice value="colemak_dh_orth"/>
                 <choice value="workman"/>

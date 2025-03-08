@@ -65,6 +65,7 @@ static ChewingKbType kb_type_get_index(const gchar *kb_type) {
         "colemak_dh_ansi",
         "colemak_dh_orth",
         "workman",
+        "colemak",
         NULL
     };
     // clang-format on

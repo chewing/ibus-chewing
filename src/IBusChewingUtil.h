@@ -63,6 +63,7 @@ typedef enum {
     CHEWING_KBTYPE_COLEMAK_DH_ANSI,
     CHEWING_KBTYPE_COLEMAK_DH_ORTH,
     CHEWING_KBTYPE_WORKMAN,
+    CHEWING_KBTYPE_COLEMAK,
 } ChewingKbType;
 
 KSym key_sym_KP_to_normal(KSym k);

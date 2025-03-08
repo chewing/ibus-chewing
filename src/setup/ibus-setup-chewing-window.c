@@ -107,6 +107,7 @@ const gchar *kb_type_ids[] = {
     "colemak_dh_ansi",
     "colemak_dh_orth",
     "workman",
+    "colemak",
     NULL,
 };
 const gchar *sel_key_ids[] = {
