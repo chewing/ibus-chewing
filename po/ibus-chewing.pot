@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 13:47+0900\n"
+"POT-Creation-Date: 2025-03-09 14:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -320,51 +320,51 @@ msgstr ""
 msgid "_Chat"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:422
+#: src/ibus-chewing-engine.c:424
 msgid "Switch to Alphanumeric Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:424
+#: src/ibus-chewing-engine.c:426
 msgid "Switch to Chinese Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:426
+#: src/ibus-chewing-engine.c:428
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:430
+#: src/ibus-chewing-engine.c:432
 msgid "Fullwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:432
+#: src/ibus-chewing-engine.c:434
 msgid "Halfwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:434
+#: src/ibus-chewing-engine.c:436
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:438
+#: src/ibus-chewing-engine.c:440
 msgid "IBus-Chewing Preferences"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:440
+#: src/ibus-chewing-engine.c:442
 msgid "Click to configure IBus-Chewing"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:959
 msgid "Chinese Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:959
 msgid "English Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:963
 msgid "Fullwidth Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:963
 msgid "Halfwidth Mode"
 msgstr ""
 
