@@ -105,7 +105,7 @@ msgid "Carpalx"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:54
-msgid "Colemak-DH ANSI"
+msgid "Colemak"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:54
