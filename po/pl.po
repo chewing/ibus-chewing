@@ -90,6 +90,10 @@ msgid "Carpalx"
 msgstr "Carpalx"
 
 #: src/setup/ibus-setup-chewing-window.ui:54
+msgid "Colemak"
+msgstr "Colemak"
+
+#: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Colemak-DH ANSI"
 msgstr "Colemak-DH ANSI"
 

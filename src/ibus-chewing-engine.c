@@ -47,6 +47,8 @@ GType engine_flag_get_type(void) {
 }
 
 static ChewingKbType kb_type_get_index(const gchar *kb_type) {
+    // The order of this list should match libchewing's KB enum
+    //
     // clang-format off
     const gchar *kb_type_ids[] = {
         "default",
@@ -65,6 +67,7 @@ static ChewingKbType kb_type_get_index(const gchar *kb_type) {
         "colemak_dh_ansi",
         "colemak_dh_orth",
         "workman",
+        "colemak",
         NULL
     };
     // clang-format on

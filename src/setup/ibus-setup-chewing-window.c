@@ -89,6 +89,8 @@ static void ibus_setup_chewing_window_class_init(IbusSetupChewingWindowClass *kl
     gtk_widget_class_add_binding_action(widget_class, GDK_KEY_Escape, 0, "window.close", NULL);
 }
 
+// The order of this list should match the one in ibus-setup-chewing-window.ui
+//
 // clang-format off
 const gchar *kb_type_ids[] = {
     "default",
@@ -104,6 +106,7 @@ const gchar *kb_type_ids[] = {
     "thl_pinying",
     "mps2_pinyin",
     "carpalx",
+    "colemak",
     "colemak_dh_ansi",
     "colemak_dh_orth",
     "workman",
