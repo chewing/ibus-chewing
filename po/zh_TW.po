@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2024-08-19 12:42+0000\n"
-"Last-Translator: Kan-Ru Chen <kanru@kanru.info>\n"
+"PO-Revision-Date: 2025-03-21 02:38+0000\n"
+"Last-Translator: hsu zangmen <chzang55@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
-msgstr "設定"
+msgstr "注音設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
@@ -142,7 +142,7 @@ msgstr "智慧選詞模式"
 
 #: src/setup/ibus-setup-chewing-window.ui:96
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
-msgstr "啟用或停用自動候選字詞選擇，或是使用模糊輸入"
+msgstr "啟用或停用自動候選字詞選擇，或是使用模糊輸入。"
 
 #: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Editing"
@@ -210,7 +210,7 @@ msgstr "預設使用英數模式"
 
 #: src/setup/ibus-setup-chewing-window.ui:161
 msgid "Automatically switch to alphanumeric mode after startup."
-msgstr "開啟新酷音後預設使用英數模式"
+msgstr "開啟新酷音後預設使用英數模式。"
 
 #: src/setup/ibus-setup-chewing-window.ui:166
 msgid "Chinese/Alphanumeric Mode Toggle Key"
@@ -317,9 +317,7 @@ msgstr "選擇垂直或水平式面板"
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr ""
-"Cheng-Chia Tseng\n"
-"Kan-Ru Chen"
+msgstr "譯者名譽"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
