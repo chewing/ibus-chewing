@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2025-04-10 23:25+0000\n"
+"PO-Revision-Date: 2025-04-11 23:53+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
@@ -46,7 +46,7 @@ msgstr "Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
-msgstr ""
+msgstr "Estándar"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:42
@@ -56,7 +56,7 @@ msgstr "hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/setup/ibus-setup-chewing-window.ui:44
 msgid "Gin-Yieh"
