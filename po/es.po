@@ -5,8 +5,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
 "PO-Revision-Date: 2025-04-11 23:53+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Javier Francisco <fserrador@gmail.com>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/es/>\n"
 "Language: es\n"
@@ -34,7 +33,7 @@ msgstr "método de entrada"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
-msgstr ""
+msgstr "Acerca de"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:25
@@ -269,11 +268,11 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:186
 msgid "Disable Syncing"
-msgstr ""
+msgstr "Desactivar Sincronía"
 
 #: src/setup/ibus-setup-chewing-window.ui:187
 msgid "Sync with Keyboard State"
-msgstr ""
+msgstr "Sincronizar con Estado del Teclado"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:192
@@ -297,21 +296,23 @@ msgstr "Mayúsculas"
 
 #: src/setup/ibus-setup-chewing-window.ui:206
 msgid "Default English Letter Case"
-msgstr ""
+msgstr "Por defecto tipo de letra inglesa"
 
 #: src/setup/ibus-setup-chewing-window.ui:207
 msgid "The letter case without pressing the Shift key"
-msgstr ""
+msgstr "El tipo de letra sin presionar la tecla Mayús"
 
 #: src/setup/ibus-setup-chewing-window.ui:212
 msgid "Notify Mode Changes"
-msgstr ""
+msgstr "Notificar cambios del modo"
 
 #: src/setup/ibus-setup-chewing-window.ui:213
 msgid ""
 "Display a message when the Chinese/English or Fullwidth/Halfwidth mode "
 "changes"
 msgstr ""
+"Exhibe un mensaje cuando el modo chino/inglés o anchura completa/media "
+"anchura cambia"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:220
@@ -340,11 +341,11 @@ msgstr "Elija frases desde atrás"
 
 #: src/setup/ibus-setup-chewing-window.ui:245
 msgid "Open candidate list from the last character of a phrase"
-msgstr ""
+msgstr "Abre listado de candidatos desde el último carácter de una frase"
 
 #: src/setup/ibus-setup-chewing-window.ui:251
 msgid "Use Space Key as Selection Key"
-msgstr ""
+msgstr "Utilizar Tecla de Espacio como Tecla de Selección"
 
 #: src/setup/ibus-setup-chewing-window.ui:257
 msgid "Use Vertical Candidate Panel"
@@ -356,11 +357,11 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr ""
+msgstr "Fco. Javier F. Serrador <serrador@tecknolabs.com>"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
-msgstr "Lista de correo"
+msgstr "_Listado de correo"
 
 #: src/setup/ibus-setup-chewing-about.c:145
 msgid "_Chat"
@@ -368,7 +369,7 @@ msgstr ""
 
 #: src/ibus-chewing-engine.c:422
 msgid "Switch to Alphanumeric Mode"
-msgstr ""
+msgstr "Intercambiar a Modo Alfanumérico"
 
 #: src/ibus-chewing-engine.c:424
 #, fuzzy
@@ -382,11 +383,11 @@ msgstr "Tecla Shift para cambiar modo de Chino"
 
 #: src/ibus-chewing-engine.c:430
 msgid "Fullwidth Form"
-msgstr ""
+msgstr "Formulario de Anchura completa"
 
 #: src/ibus-chewing-engine.c:432
 msgid "Halfwidth Form"
-msgstr ""
+msgstr "Formulario de Mitad de anchura"
 
 #: src/ibus-chewing-engine.c:434
 msgid "Click to toggle Halfwidth/Fullwidth Form"
@@ -411,7 +412,7 @@ msgstr ""
 
 #: src/ibus-chewing-engine.c:961
 msgid "Fullwidth Mode"
-msgstr ""
+msgstr "Modo Anchura Comleta"
 
 #: src/ibus-chewing-engine.c:961
 msgid "Halfwidth Mode"
