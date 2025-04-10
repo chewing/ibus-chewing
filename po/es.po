@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
 "PO-Revision-Date: 2025-04-10 23:25+0000\n"
-"Last-Translator: Javier Francisco <fserrador@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/es/>\n"
 "Language: es\n"
@@ -359,7 +360,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
-msgstr ""
+msgstr "Lista de correo"
 
 #: src/setup/ibus-setup-chewing-about.c:145
 msgid "_Chat"
