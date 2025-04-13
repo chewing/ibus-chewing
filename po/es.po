@@ -4,9 +4,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2025-04-13 17:25+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2025-04-14 17:53+0000\n"
+"Last-Translator: Javier Francisco <fserrador@gmail.com>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/es/>\n"
 "Language: es\n"
@@ -18,14 +17,12 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:8
-#, fuzzy
 msgid "Chewing Settings"
-msgstr "Configuración"
+msgstr "Opciones Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
-#, fuzzy
 msgid "Configure the input method"
-msgstr "Método de entrada de Chino"
+msgstr "Configure el método de entrada"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 #, fuzzy
@@ -39,10 +36,8 @@ msgstr "Acerca de"
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:127
-#, fuzzy
-#| msgid "Chewing"
 msgid "IBus Chewing"
-msgstr "Chewing"
+msgstr "Chewing IBus"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
@@ -50,9 +45,8 @@ msgstr "Estándar"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:42
-#, fuzzy
 msgid "Hsu"
-msgstr "hsu"
+msgstr "Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
@@ -68,27 +62,25 @@ msgstr "Eten"
 
 #: src/setup/ibus-setup-chewing-window.ui:46
 msgid "Eten 26"
-msgstr ""
+msgstr "Eten 26"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:47
-#, fuzzy
 msgid "Dvorak"
-msgstr "dvorak"
+msgstr "Dvorak"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:48
-#, fuzzy
 msgid "Dvorak-Hsu"
-msgstr "dvorak_hsu"
+msgstr "Dvorak-Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "DaChen 26"
-msgstr ""
+msgstr "DaChen 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:50
 msgid "Hanyu Pinyin"
-msgstr ""
+msgstr "Hanyu Pinyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:51
 msgid "THL Pinyin"
@@ -267,15 +259,13 @@ msgstr "Sincronizar con Estado del Teclado"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:192
-#, fuzzy
 msgid "Sync Caps Lock and IM"
-msgstr "Sincronización entre MAYÚS e IM"
+msgstr "Sincr. Bloq Mayús e IM"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:200
-#, fuzzy
 msgid "No Default"
-msgstr "Predeterminado"
+msgstr "No Predeterminado"
 
 #: src/setup/ibus-setup-chewing-window.ui:201
 msgid "Lower Case"
@@ -361,9 +351,8 @@ msgid "Switch to Alphanumeric Mode"
 msgstr "Intercambiar a Modo Alfanumérico"
 
 #: src/ibus-chewing-engine.c:424
-#, fuzzy
 msgid "Switch to Chinese Mode"
-msgstr "Shift intercambia el modo de Chino"
+msgstr "Intercambia a Modo Chino"
 
 #: src/ibus-chewing-engine.c:426
 msgid "Click to toggle Chinese/Alphanumeric Mode"
