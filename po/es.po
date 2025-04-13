@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
 "PO-Revision-Date: 2025-04-13 17:25+0000\n"
-"Last-Translator: Javier Francisco <fserrador@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/es/>\n"
 "Language: es\n"
@@ -63,7 +64,7 @@ msgstr "Gin-Yieh"
 
 #: src/setup/ibus-setup-chewing-window.ui:45
 msgid "Eten"
-msgstr ""
+msgstr "Eten"
 
 #: src/setup/ibus-setup-chewing-window.ui:46
 msgid "Eten 26"
@@ -165,7 +166,6 @@ msgstr "Configurar el comportamiento del método de entrada"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:108
-#, fuzzy
 msgid "Auto Move Cursor"
 msgstr "Desplace el cursor de forma automática"
 
@@ -190,7 +190,6 @@ msgstr "Vaciar tampón de pre-edición cuando el foco no apunte"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:128
-#, fuzzy
 msgid "Easy Symbol Input"
 msgstr "Fácil entrada de símbolo"
 
@@ -219,7 +218,6 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:154
-#, fuzzy
 msgid "Maximum Chinese Characters"
 msgstr "Número máximo de caracteres chinos"
 
@@ -392,9 +390,8 @@ msgid "Click to configure IBus-Chewing"
 msgstr "Pulse para configurar IBus-Chewing"
 
 #: src/ibus-chewing-engine.c:957
-#, fuzzy
 msgid "Chinese Mode"
-msgstr "Shift intercambia el modo de Chino"
+msgstr "Modo chino"
 
 #: src/ibus-chewing-engine.c:957
 msgid "English Mode"
