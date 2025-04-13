@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
 "PO-Revision-Date: 2025-04-14 17:53+0000\n"
-"Last-Translator: Javier Francisco <fserrador@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/es/>\n"
 "Language: es\n"
@@ -25,9 +26,8 @@ msgid "Configure the input method"
 msgstr "Configure el método de entrada"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
-#, fuzzy
 msgid "Input Method"
-msgstr "método de entrada"
+msgstr "Métodos de Entrada"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
