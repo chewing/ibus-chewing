@@ -1,23 +1,28 @@
-# A S Alam <aalam@fedoraproject.org>, 2014. #zanata
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: ibus-chewing 1.5.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2014-11-13 09:28-0500\n"
-"Last-Translator: A S Alam <aalam@fedoraproject.org>\n"
-"Language-Team: Punjabi\n"
-"Language: pa\n"
+"PO-Revision-Date: 2024-12-10 09:40+0000\n"
+"Last-Translator: ButterflyOfFire <butterflyoffire@users.noreply.translate."
+"fedoraproject.org>\n"
+"Language-Team: Kabyle <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/kab/>\n"
+"Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
-#, fuzzy
 msgid "Chewing Settings"
-msgstr "ਸੈਟਿੰਗ"
+msgstr "Iɣewwaṛen n Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
@@ -25,7 +30,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Input Method"
-msgstr ""
+msgstr "Tarrayt n usekcem"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
@@ -34,59 +39,59 @@ msgstr ""
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:127
 msgid "IBus Chewing"
-msgstr ""
+msgstr "IBus Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
-msgstr ""
+msgstr "Anaway"
 
 #: src/setup/ibus-setup-chewing-window.ui:42
 msgid "Hsu"
-msgstr ""
+msgstr "Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/setup/ibus-setup-chewing-window.ui:44
 msgid "Gin-Yieh"
-msgstr ""
+msgstr "Gin-Yieh"
 
 #: src/setup/ibus-setup-chewing-window.ui:45
 msgid "Eten"
-msgstr ""
+msgstr "Eten"
 
 #: src/setup/ibus-setup-chewing-window.ui:46
 msgid "Eten 26"
-msgstr ""
+msgstr "Eten 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:47
 msgid "Dvorak"
-msgstr ""
+msgstr "Dvorak"
 
 #: src/setup/ibus-setup-chewing-window.ui:48
 msgid "Dvorak-Hsu"
-msgstr ""
+msgstr "Dvorak-Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "DaChen 26"
-msgstr ""
+msgstr "DaChen 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:50
 msgid "Hanyu Pinyin"
-msgstr ""
+msgstr "Hanyu Pinyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:51
 msgid "THL Pinyin"
-msgstr ""
+msgstr "THL Pinyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:52
 msgid "MPS2 Pinyin"
-msgstr ""
+msgstr "MPS2 Pinyin"
 
 #: src/setup/ibus-setup-chewing-window.ui:53
 msgid "Carpalx"
-msgstr ""
+msgstr "Carpalx"
 
 #: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Colemak"
@@ -102,16 +107,15 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:57
 msgid "Workman"
-msgstr ""
+msgstr "Workman"
 
 #: src/setup/ibus-setup-chewing-window.ui:61
 msgid "Keyboard Type"
-msgstr ""
+msgstr "Anaw n unasiw"
 
 #: src/setup/ibus-setup-chewing-window.ui:80
-#, fuzzy
 msgid "Selection Keys"
-msgstr "ਚੋਣ"
+msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:81
 msgid "Keys used to select candidate"
@@ -122,9 +126,8 @@ msgid "Plain Zhuyin"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:90
-#, fuzzy
 msgid "Chewing (Default)"
-msgstr "ਸੈਟਿੰਗ"
+msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:91
 msgid "Fuzzy Chewing"
@@ -140,7 +143,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Editing"
-msgstr "ਸੋਧ"
+msgstr "Ẓreg"
 
 #: src/setup/ibus-setup-chewing-window.ui:104
 msgid "Configure the input method behavior"
@@ -212,7 +215,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:170
 msgid "Disable"
-msgstr ""
+msgstr "Kkes armad"
 
 #: src/setup/ibus-setup-chewing-window.ui:171
 msgid "Caps Lock"
@@ -243,9 +246,8 @@ msgid "Sync Caps Lock and IM"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:200
-#, fuzzy
 msgid "No Default"
-msgstr "ਮੂਲ"
+msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:201
 msgid "Lower Case"
@@ -275,7 +277,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:220
 msgid "Selecting"
-msgstr "ਚੋਣ"
+msgstr "Afran"
 
 #: src/setup/ibus-setup-chewing-window.ui:221
 msgid "Configure the candidate selection behavior"
@@ -311,7 +313,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr ""
+msgstr "Athmane Mokraoui <butterflyoffire@protonmail.com>"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
@@ -319,7 +321,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-about.c:145
 msgid "_Chat"
-msgstr ""
+msgstr "Asqerde_c"
 
 #: src/ibus-chewing-engine.c:422
 msgid "Switch to Alphanumeric Mode"
@@ -375,11 +377,8 @@ msgstr ""
 
 #: src/main.c:89
 msgid "Chewing"
-msgstr ""
+msgstr "Chewing"
 
 #: src/main.c:90
 msgid "Chinese chewing input method"
 msgstr ""
-
-#~ msgid "Keyboard"
-#~ msgstr "ਕੀਬੋਰਡ"
