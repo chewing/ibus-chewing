@@ -5,7 +5,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
 "PO-Revision-Date: 2025-05-07 17:10+0000\n"
-"Last-Translator: Salvatore Cocuzza <info@salvatorecocuzza.it>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Italian <https://translate.fedoraproject.org/projects/"
 "ibus-chewing/master/it/>\n"
 "Language: it\n"
@@ -210,7 +211,6 @@ msgstr ""
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author fvalen
 #: src/setup/ibus-setup-chewing-window.ui:154
-#, fuzzy
 msgid "Maximum Chinese Characters"
 msgstr "Numero massimo di caratteri cinesi"
 
