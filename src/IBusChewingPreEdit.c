@@ -609,7 +609,7 @@ EventResponse self_handle_down(IBusChewingPreEdit *self, KSym kSym, KeyModifiers
 
     if (table_is_showing) {
         IBusChewingEngine *engine = IBUS_CHEWING_ENGINE(self->engine);
-        if (!ibus_chewing_engine_use_vertical_lookup_table(engine)) {
+        if (ibus_chewing_engine_use_vertical_lookup_table(engine)) {
             /* vertical look-up table */
             int numberCand = ibus_lookup_table_get_number_of_candidates(self->iTable);
             int cursorInPage = ibus_lookup_table_get_cursor_in_page(self->iTable) + 1;
