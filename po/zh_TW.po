@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2025-06-25 11:01+0000\n"
+"PO-Revision-Date: 2025-06-25 11:17+0000\n"
 "Last-Translator: taijuin lee <taijuin@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
@@ -27,7 +27,7 @@ msgstr "新酷音設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
-msgstr "調整輸入法偏好設定"
+msgstr "設定輸入法"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Input Method"
@@ -150,7 +150,7 @@ msgstr "編輯"
 
 #: src/setup/ibus-setup-chewing-window.ui:104
 msgid "Configure the input method behavior"
-msgstr "調整輸入法行為偏好設定"
+msgstr "設定輸入法行為"
 
 #: src/setup/ibus-setup-chewing-window.ui:108
 msgid "Auto Move Cursor"
@@ -317,7 +317,9 @@ msgstr "選擇垂直或水平式面板"
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr "譯者名譽"
+msgstr ""
+"Cheng-Chia Tseng\n"
+"Kan-Ru Chen"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
