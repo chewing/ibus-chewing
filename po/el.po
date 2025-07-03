@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2024-09-08 10:38+0000\n"
-"Last-Translator: Giannis Antypas <gianni.antypas@gmail.com>\n"
-"Language-Team: Greek <https://translate.fedoraproject.org/projects/ibus-"
-"chewing/master/el/>\n"
+"PO-Revision-Date: 2025-06-22 11:03+0000\n"
+"Last-Translator: Jim Spentzos <jimspentzos2000@gmail.com>\n"
+"Language-Team: Greek <https://translate.fedoraproject.org/projects/"
+"ibus-chewing/master/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
@@ -33,12 +33,12 @@ msgstr "Μέθοδος εισαγωγής"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
-msgstr "Σχετικά"
+msgstr "Πληροφορίες"
 
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:127
 msgid "IBus Chewing"
-msgstr ""
+msgstr "IBus Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
@@ -46,35 +46,35 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:42
 msgid "Hsu"
-msgstr ""
+msgstr "Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/setup/ibus-setup-chewing-window.ui:44
 msgid "Gin-Yieh"
-msgstr ""
+msgstr "Gin-Yieh"
 
 #: src/setup/ibus-setup-chewing-window.ui:45
 msgid "Eten"
-msgstr ""
+msgstr "Eten"
 
 #: src/setup/ibus-setup-chewing-window.ui:46
 msgid "Eten 26"
-msgstr ""
+msgstr "Eten 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:47
 msgid "Dvorak"
-msgstr ""
+msgstr "Dvorak"
 
 #: src/setup/ibus-setup-chewing-window.ui:48
 msgid "Dvorak-Hsu"
-msgstr ""
+msgstr "Dvorak-Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "DaChen 26"
-msgstr ""
+msgstr "DaChen 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:50
 msgid "Hanyu Pinyin"
@@ -150,7 +150,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:108
 msgid "Auto Move Cursor"
-msgstr ""
+msgstr "Αυτόματη μετακίνηση κέρσορα"
 
 #: src/setup/ibus-setup-chewing-window.ui:109
 msgid "Automatically move the cursor to the next character after selection"
@@ -218,11 +218,11 @@ msgstr "Απενεργοποίηση"
 
 #: src/setup/ibus-setup-chewing-window.ui:171
 msgid "Caps Lock"
-msgstr ""
+msgstr "Caps Lock"
 
 #: src/setup/ibus-setup-chewing-window.ui:172
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Shift_L"
@@ -234,7 +234,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:186
 msgid "Disable Syncing"
-msgstr ""
+msgstr "Απενεργοποίηση συγχρονισμού"
 
 #: src/setup/ibus-setup-chewing-window.ui:187
 msgid "Sync with Keyboard State"
@@ -312,7 +312,7 @@ msgstr "Επιλογή από κάθετο ή οριζόντιο πίνακα"
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr ""
+msgstr "Δημήτρης Σπέντζος <jimspentzos2000@gmail.com>"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
@@ -376,7 +376,7 @@ msgstr "Αδυναμία σύνδεσης στο IBus!"
 
 #: src/main.c:89
 msgid "Chewing"
-msgstr ""
+msgstr "Chewing"
 
 #: src/main.c:90
 msgid "Chinese chewing input method"

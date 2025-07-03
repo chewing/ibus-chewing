@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-09 13:47+0900\n"
-"PO-Revision-Date: 2025-03-21 02:38+0000\n"
-"Last-Translator: hsu zangmen <chzang55@gmail.com>\n"
+"PO-Revision-Date: 2025-06-25 11:22+0000\n"
+"Last-Translator: taijuin lee <taijuin@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
 "projects/ibus-chewing/master/zh_TW/>\n"
 "Language: zh_TW\n"
@@ -19,15 +19,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
-msgstr "注音設定"
+msgstr "新酷音設定"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
-msgstr "調整輸入法偏好設定"
+msgstr "設定輸入法"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Input Method"
@@ -125,16 +125,16 @@ msgstr "選取候選字詞的按鍵"
 
 #: src/setup/ibus-setup-chewing-window.ui:89
 msgid "Plain Zhuyin"
-msgstr "單純注音"
+msgstr "簡單注音"
 
 #: src/setup/ibus-setup-chewing-window.ui:90
 msgid "Chewing (Default)"
-msgstr "新酷音"
+msgstr "新酷音（預設）"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
 #: src/setup/ibus-setup-chewing-window.ui:91
 msgid "Fuzzy Chewing"
-msgstr "模糊酷音"
+msgstr "模糊注音"
 
 #: src/setup/ibus-setup-chewing-window.ui:95
 msgid "Conversion Engine"
@@ -150,7 +150,7 @@ msgstr "編輯"
 
 #: src/setup/ibus-setup-chewing-window.ui:104
 msgid "Configure the input method behavior"
-msgstr "調整輸入法行為偏好設定"
+msgstr "設定輸入法行為"
 
 #: src/setup/ibus-setup-chewing-window.ui:108
 msgid "Auto Move Cursor"
@@ -317,7 +317,11 @@ msgstr "選擇垂直或水平式面板"
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr "譯者名譽"
+msgstr ""
+"Cheng-Chia Tseng\n"
+"Kan-Ru Chen\n"
+"neko0xff\n"
+"taijuin"
 
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
