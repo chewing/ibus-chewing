@@ -450,7 +450,7 @@ EventResponse self_handle_page_down(IBusChewingPreEdit *self, KSym kSym, KeyModi
 }
 
 EventResponse self_handle_space(IBusChewingPreEdit *self, KSym kSym, KeyModifiers unmaskedMod) {
-    filter_modifiers(IBUS_SHIFT_MASK | IBUS_CONTROL_MASK);
+    filter_modifiers(IBUS_SHIFT_MASK);
 
     if (!is_shift_only && !is_chinese && !is_full_shape) {
         /* Let libchewing handles Keypad keys only when needed.
