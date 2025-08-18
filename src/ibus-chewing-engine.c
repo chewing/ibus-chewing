@@ -25,6 +25,7 @@
 #include "MakerDialogUtil.h"
 #include "ibus-chewing-engine-private.h"
 #include <chewing.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <ibus.h>
@@ -1100,7 +1101,8 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (STRING_EQUALS(prop_name, "setup_prop")) {
         /* open preferences window */
-        system(QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing");
+        char *argv[] = { QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing", NULL };
+        g_spawn_async(NULL, argv, NULL, G_SPAWN_DEFAULT, NULL, NULL, NULL, NULL);
     } else {
         IBUS_CHEWING_LOG(DEBUG, "property_activate(-, %s, %u) not recognized", prop_name,
                          prop_state);
