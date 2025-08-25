@@ -4,6 +4,7 @@
 #include "MakerDialogUtil.h"
 #include "ibus-chewing-engine.h"
 #include <chewing.h>
+#include <glib.h>
 
 /**************************************
  * Methods
@@ -16,6 +17,7 @@ IBusChewingPreEdit *ibus_chewing_pre_edit_new() {
     self->preEdit = g_string_sized_new(IBUS_CHEWING_MAX_BYTES);
     self->outgoing = g_string_sized_new(IBUS_CHEWING_MAX_BYTES);
     self->keyLast = 0;
+    self->keyLastTs = 0;
     self->bpmfLen = 0;
     self->wordLen = 0;
     self->engine = NULL;
@@ -378,6 +380,12 @@ EventResponse self_handle_shift_left(IBusChewingPreEdit *self, KSym kSym,
         return EVENT_RESPONSE_IGNORE;
     }
 
+    /* Ignore the Shift key if hold more than 100 ms */
+    gint64 currTs = g_get_monotonic_time();
+    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
     ibus_chewing_engine_notify_chinese_english_mode_change(IBUS_CHEWING_ENGINE(self->engine));
     return EVENT_RESPONSE_IGNORE;
@@ -403,6 +411,12 @@ EventResponse self_handle_shift_right(IBusChewingPreEdit *self, KSym kSym,
      * thus should not be recognized as single Shift key
      */
     if (self->keyLast != IBUS_KEY_Shift_L && self->keyLast != IBUS_KEY_Shift_R) {
+        return EVENT_RESPONSE_IGNORE;
+    }
+
+    /* Ignore the Shift key if hold more than 100 ms */
+    gint64 currTs = g_get_monotonic_time();
+    if (currTs - self->keyLastTs > 200 * G_TIME_SPAN_MILLISECOND) {
         return EVENT_RESPONSE_IGNORE;
     }
 
@@ -771,6 +785,7 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
         if (((ibus_chewing_pre_edit_length(self) == 0)) &&
             !((self->flags & FLAG_TABLE_SHOW) == FLAG_TABLE_SHOW)) {
             self->keyLast = kSym;
+            self->keyLastTs = g_get_monotonic_time();
             return FALSE;
         };
     }
@@ -783,9 +798,11 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
 
     response = handle_key(kSym, unmaskedMod);
 
+    self->keyLast = kSym;
+    self->keyLastTs = g_get_monotonic_time();
+
     IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_process_key() response=%x", response);
     process_key_debug("After response");
-    self->keyLast = kSym;
     switch (response) {
     case EVENT_RESPONSE_ABSORB:
         return TRUE;

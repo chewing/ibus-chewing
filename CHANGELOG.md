@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Shift key now only triggers mode change if it is released immediately after key press.
+
 ### Fixed
 
-- Erroneously repeated Backspace key by ignore key release unless it is a Shift key (#266)
+- Erroneously repeated Backspace key by ignore key release unless it is a Shift key. (#266)
 
 ## [v2.1.6] - 2025-08-24
 

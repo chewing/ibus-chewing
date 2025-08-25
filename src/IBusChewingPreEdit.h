@@ -68,6 +68,7 @@ typedef enum {
  * string).
  * @flags:     Misc flags.
  * @keyLast:   Last effective key.
+ * @keyLastTs: Monotonic timestamp in microseconds of the last effective key press.
  * @bpmfLen:   Length of bopomofo chars in unicode characters.
  * @wordLen:   Length of preEdit in unicode characters.
  *
@@ -83,6 +84,7 @@ typedef struct {
     IBusLookupTable *iTable;
     IBusChewingPreEditFlag flags;
     KSym keyLast;
+    gint64 keyLastTs;
     gint bpmfLen;
     gint wordLen;
     IBusEngine *engine;
