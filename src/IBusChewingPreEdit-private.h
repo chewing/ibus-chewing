@@ -62,10 +62,6 @@
     if (event_is_released(unmaskedMod)) {                                                          \
         return EVENT_RESPONSE_ABSORB;                                                              \
     }
-#define ignore_when_release                                                                        \
-    if (event_is_released(unmaskedMod)) {                                                          \
-        return EVENT_RESPONSE_IGNORE;                                                              \
-    }
 #define ignore_when_buffer_is_empty                                                                \
     if (buffer_is_empty) {                                                                         \
         return EVENT_RESPONSE_IGNORE;                                                              \
