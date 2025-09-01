@@ -1,9 +1,9 @@
 add_library(common STATIC
-    IBusChewingLookupTable.c
-    MakerDialogUtil.c
+    ibus-chewing-lookup-table.c
+    maker-dialog-util.c
 
-    IBusChewingLookupTable.h
-    MakerDialogUtil.h
+    ibus-chewing-lookup-table.h
+    maker-dialog-util.h
     ibus-chewing-engine.h
 )
 target_link_libraries(common PUBLIC
@@ -52,12 +52,12 @@ target_link_libraries(ibus-setup-chewing
 add_executable(ibus-engine-chewing
     ibus-chewing-engine.c
     ibus-chewing-engine.h
-    IBusChewingLookupTable.c
-    IBusChewingLookupTable.h
-    IBusChewingPreEdit.c
-    IBusChewingPreEdit.h
-    IBusChewingUtil.c
-    IBusChewingUtil.h
+    ibus-chewing-lookup-table.c
+    ibus-chewing-lookup-table.h
+    ibus-chewing-preedit.c
+    ibus-chewing-preedit.h
+    ibus-chewing-util.c
+    ibus-chewing-util.h
     main.c
 )
 target_compile_definitions(ibus-engine-chewing

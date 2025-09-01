@@ -1,4 +1,4 @@
-#include "MakerDialogUtil.h"
+#include "maker-dialog-util.h"
 #include "test-util.h"
 #include <glib.h>
 #define TEST_RUN_THIS(f) add_test_case("MakerDialogUtil", f)

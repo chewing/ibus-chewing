@@ -1,8 +1,9 @@
-#include "IBusChewingPreEdit.h"
-#include "IBusChewingPreEdit-private.h"
-#include "IBusChewingUtil.h"
-#include "MakerDialogUtil.h"
 #include "ibus-chewing-engine.h"
+#include "ibus-chewing-preedit.h"
+#include "ibus-chewing-lookup-table.h"
+#include "ibus-chewing-util.h"
+#include "maker-dialog-util.h"
+#include "ibus-chewing-preedit-private.h"
 #include <chewing.h>
 #include <glib.h>
 

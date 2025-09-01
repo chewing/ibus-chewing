@@ -1,4 +1,4 @@
-#include "IBusChewingUtil.h"
+#include "ibus-chewing-util.h"
 #include "test-util.h"
 #include <ctype.h>
 #include <glib.h>

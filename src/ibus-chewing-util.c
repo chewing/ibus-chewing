@@ -3,7 +3,7 @@
  * IBusChewingEngine
  */
 
-#include "IBusChewingUtil.h"
+#include "ibus-chewing-util.h"
 
 /*=====================================
  * Tone

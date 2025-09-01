@@ -22,6 +22,7 @@
 
 #ifndef _IBUS_CHEWING_UTIL_H_
 #define _IBUS_CHEWING_UTIL_H_
+#include "maker-dialog-util.h"
 #include <chewing.h>
 #include <ctype.h>
 #include <glib.h>

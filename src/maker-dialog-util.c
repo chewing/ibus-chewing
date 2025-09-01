@@ -1,4 +1,4 @@
-#include "MakerDialogUtil.h"
+#include "maker-dialog-util.h"
 #include <glib.h>
 #include <stdarg.h>
 

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "IBusChewingPreEdit.h"
+#include "ibus-chewing-preedit.h"
 #include <ibus.h>
 
 #include "ibus-chewing-engine.h"

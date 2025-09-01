@@ -36,8 +36,7 @@
 
 #ifndef _IBUS_CHEWING_PRE_EDIT_H_
 #define _IBUS_CHEWING_PRE_EDIT_H_
-#include "IBusChewingLookupTable.h"
-#include "IBusChewingUtil.h"
+#include "ibus-chewing-util.h"
 #include <chewing.h>
 #include <glib.h>
 #include <ibus.h>

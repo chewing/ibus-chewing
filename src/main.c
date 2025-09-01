@@ -21,8 +21,8 @@
  * USA.
  */
 
-#include "IBusChewingUtil.h"
-#include "MakerDialogUtil.h"
+#include "ibus-chewing-util.h"
+#include "maker-dialog-util.h"
 #include "ibus-chewing-engine.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>

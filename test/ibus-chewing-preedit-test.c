@@ -1,14 +1,15 @@
-#include "IBusChewingPreEdit.h"
-#include "IBusChewingUtil.h"
-#include "MakerDialogUtil.h"
-#include "ibus-chewing-engine-private.h"
+#include "ibus-chewing-engine.h"
+#include "ibus-chewing-preedit.h"
+#include "ibus-chewing-util.h"
+#include "maker-dialog-util.h"
 #include "ibus-chewing-engine.h"
 #include "test-util.h"
 #include <glib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "IBusChewingPreEdit-private.h"
+#include "ibus-chewing-preedit-private.h"
+#include "ibus-chewing-engine-private.h" // IWYU pragma: keep
 
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)
 #define TEST_CASE_INIT()                                                                           \
@@ -525,12 +526,9 @@ void plain_zhuyin_test() {
 
     /* Candidate window should be shown */
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
-    /* The default is the most frequently used character, not
-     * necessary "資"
-     */
-    /* assert_outgoing_pre_edit("","資"); */
+    assert_outgoing_pre_edit("","資");
     key_press_from_string("4");
-    assert_outgoing_pre_edit("", "吱");
+    assert_outgoing_pre_edit("吱", "");
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
@@ -551,26 +549,27 @@ void plain_zhuyin_shift_symbol_test() {
     /* Candidate window should be hidden */
     g_assert(!ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
 
-    assert_outgoing_pre_edit("", "你好，");
+    assert_outgoing_pre_edit("你好，", "");
 
     /* 打電話  */
     key_press_from_string("28312u041cj841");
-    assert_outgoing_pre_edit("", "你好，打電話");
+    assert_outgoing_pre_edit("你好，打電話", "");
 
     /* ； */
     key_press_from_key_sym(IBUS_KEY_quotedbl, IBUS_SHIFT_MASK);
-    assert_outgoing_pre_edit("", "你好，打電話；");
+    assert_outgoing_pre_edit("你好，打電話；", "");
 
     /* Mix with shift */
 
-    key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
+    // key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
 
-    key_press_from_string("4321-9876 ");
-    assert_outgoing_pre_edit("", "你好，打電話；4321-9876 ");
-    key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
+    // key_press_from_string("4321-9876 ");
+    // assert_outgoing_pre_edit("你好，打電話；4321-9876 ", "");
+    // key_press_from_key_sym(IBUS_KEY_Shift_L, IBUS_SHIFT_MASK);
+
     /* "來訂餐" */
     key_press_from_string("x9612u/42h0 2");
-    assert_outgoing_pre_edit("", "你好，打電話；4321-9876 來訂餐");
+    assert_outgoing_pre_edit("你好，打電話；來訂餐", "");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");

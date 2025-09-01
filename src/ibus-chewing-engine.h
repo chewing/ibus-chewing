@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "IBusChewingPreEdit.h"
-#include "IBusChewingUtil.h"
+#include "ibus-chewing-preedit.h"
+#include "ibus-chewing-util.h"
 #include <glib-object.h>
 #include <glib.h>
 #include <ibus.h>
