@@ -15,7 +15,7 @@ jobs:
     container: quay.io/fedora/fedora:41
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install build dependencies
         run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston
@@ -40,7 +40,7 @@ jobs:
     container: quay.io/fedora/fedora:41
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install build dependencies
         run: sudo dnf -y install clang cmake gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston
