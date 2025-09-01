@@ -33,7 +33,7 @@ jobs:
         run: |
           glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless cmake --build --preset c23-release-ci -t test --verbose
+          WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
 
   coverage:
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless cmake --build --preset c23-coverage -t test --verbose
+          WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov
