@@ -68,6 +68,7 @@ jobs:
         env:
           XDG_RUNTIME_DIR: /tmp
           GSETTINGS_BACKEND: keyfile
+          LLVM_PROFILE_FILE: "default_%p_%m.profraw"
         run: |
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=build/bin
