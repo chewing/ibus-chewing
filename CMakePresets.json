@@ -23,9 +23,6 @@
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-fprofile-instr-generate -fcoverage-mapping"
-            },
-            "environment": {
-                "LLVM_PROFILE_FILE": "default_%p_%m.profraw"
             }
         },
         {
