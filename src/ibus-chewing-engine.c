@@ -838,7 +838,7 @@ static void parent_commit_text(IBusEngine *iEngine) {
 
     IBUS_CHEWING_LOG(MSG, "* parent_commit_text(-): outgoingText=%s", self->outgoingText->text);
 #ifdef UNIT_TEST
-    printf("* parent_commit_text(-, %s)\n", self->outgoingText->text);
+    printf("# * parent_commit_text(-, %s)\n", self->outgoingText->text);
 #else
     ibus_engine_commit_text(iEngine, self->outgoingText);
 #endif
@@ -848,7 +848,7 @@ static void parent_update_pre_edit_text_with_mode([[maybe_unused]] IBusEngine *i
                                                   IBusText *iText, guint cursor_pos,
                                                   gboolean visible, IBusPreeditFocusMode mode) {
 #ifdef UNIT_TEST
-    printf("* parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n", iText->text, cursor_pos,
+    printf("# * parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n", iText->text, cursor_pos,
            visible, mode);
 #else
     ibus_engine_update_preedit_text_with_mode(iEngine, iText, cursor_pos, visible, mode);
@@ -858,7 +858,7 @@ static void parent_update_pre_edit_text_with_mode([[maybe_unused]] IBusEngine *i
 static void parent_update_auxiliary_text([[maybe_unused]] IBusEngine *iEngine, IBusText *iText,
                                          gboolean visible) {
 #ifdef UNIT_TEST
-    printf("* parent_update_auxiliary_text(-, %s, %x)\n", (iText) ? iText->text : "NULL", visible);
+    printf("# * parent_update_auxiliary_text(-, %s, %x)\n", (iText) ? iText->text : "NULL", visible);
 #else
     if (!visible || ibus_text_is_empty(iText)) {
         ibus_engine_hide_auxiliary_text(iEngine);

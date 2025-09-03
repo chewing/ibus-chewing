@@ -64,6 +64,8 @@ target_compile_definitions(ibus-engine-chewing
     PRIVATE VERBOSE_LEVEL=$<IF:$<CONFIG:Debug>,DEBUG,WARN>)
 target_include_directories(ibus-engine-chewing
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ibus-engine-chewing
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(ibus-engine-chewing
     common

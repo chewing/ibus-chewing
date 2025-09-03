@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Shift key now only triggers mode change if it is released immediately after key press.
+- Introduce meson build system. CMake support will be removed in future.
 
 ### Fixed
 

@@ -1,0 +1,170 @@
+        -:    0:Source:/usr/include/glib-2.0/gio/gio-autocleanups.h
+        -:    0:Graph:_build/src/ibus-engine-chewing.p/ibus-chewing-engine.c.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*
+        -:    2: * Copyright © 2015 Canonical Limited
+        -:    3: *
+        -:    4: * SPDX-License-Identifier: LGPL-2.1-or-later
+        -:    5: *
+        -:    6: * This library is free software; you can redistribute it and/or
+        -:    7: * modify it under the terms of the GNU Lesser General Public
+        -:    8: * License as published by the Free Software Foundation; either
+        -:    9: * version 2.1 of the License, or (at your option) any later version.
+        -:   10: *
+        -:   11: * This library is distributed in the hope that it will be useful,
+        -:   12: * but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13: * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+        -:   14: * Lesser General Public License for more details.
+        -:   15: *
+        -:   16: * You should have received a copy of the GNU Lesser General Public
+        -:   17: * License along with this library; if not, see <http://www.gnu.org/licenses/>.
+        -:   18: *
+        -:   19: * Author: Ryan Lortie <desrt@desrt.ca>
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined (__GIO_GIO_H_INSIDE__) && !defined (GIO_COMPILATION)
+        -:   23:#error "Only <gio/gio.h> can be included directly."
+        -:   24:#endif
+        -:   25:
+        -:   26:#ifndef __GI_SCANNER__
+        -:   27:
+        -:   28:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAction, g_object_unref)
+        -:   29:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GActionMap, g_object_unref)
+        -:   30:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAppInfo, g_object_unref)
+        -:   31:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAppLaunchContext, g_object_unref)
+        -:   32:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAppInfoMonitor, g_object_unref)
+        -:   33:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GApplicationCommandLine, g_object_unref)
+        -:   34:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GApplication, g_object_unref)
+        -:   35:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAsyncInitable, g_object_unref)
+        -:   36:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GAsyncResult, g_object_unref)
+        -:   37:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GBufferedInputStream, g_object_unref)
+        -:   38:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GBufferedOutputStream, g_object_unref)
+        -:   39:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GBytesIcon, g_object_unref)
+        -:   40:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GCancellable, g_object_unref)
+        -:   41:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GCharsetConverter, g_object_unref)
+        -:   42:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GConverter, g_object_unref)
+        -:   43:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GConverterInputStream, g_object_unref)
+        -:   44:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GConverterOutputStream, g_object_unref)
+        -:   45:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GCredentials, g_object_unref)
+        -:   46:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDatagramBased, g_object_unref)
+        -:   47:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDataInputStream, g_object_unref)
+        -:   48:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDataOutputStream, g_object_unref)
+        -:   49:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusActionGroup, g_object_unref)
+        -:   50:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusAuthObserver, g_object_unref)
+        -:   51:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusConnection, g_object_unref)
+        -:   52:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusInterface, g_object_unref)
+        -:   53:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusInterfaceSkeleton, g_object_unref)
+        -:   54:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusMenuModel, g_object_unref)
+        -:   55:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusMessage, g_object_unref)
+        -:   56:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusMethodInvocation, g_object_unref)
+        -:   57:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusNodeInfo, g_dbus_node_info_unref)
+        -:   58:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObject, g_object_unref)
+        -:   59:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObjectManagerClient, g_object_unref)
+        -:   60:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObjectManager, g_object_unref)
+        -:   61:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObjectManagerServer, g_object_unref)
+        -:   62:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObjectProxy, g_object_unref)
+        -:   63:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusObjectSkeleton, g_object_unref)
+        -:   64:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusProxy, g_object_unref)
+        -:   65:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDBusServer, g_object_unref)
+        -:   66:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GDrive, g_object_unref)
+        -:   67:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GEmblemedIcon, g_object_unref)
+        -:   68:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GEmblem, g_object_unref)
+        -:   69:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileEnumerator, g_object_unref)
+        -:   70:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFile, g_object_unref)
+        -:   71:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileAttributeInfoList, g_file_attribute_info_list_unref)
+        -:   72:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileIcon, g_object_unref)
+        -:   73:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileInfo, g_object_unref)
+        -:   74:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileInputStream, g_object_unref)
+        -:   75:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileIOStream, g_object_unref)
+        -:   76:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileMonitor, g_object_unref)
+        -:   77:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFilenameCompleter, g_object_unref)
+        -:   78:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFileOutputStream, g_object_unref)
+        -:   79:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFilterInputStream, g_object_unref)
+        -:   80:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GFilterOutputStream, g_object_unref)
+        -:   81:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GIcon, g_object_unref)
+        -:   82:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GInetAddress, g_object_unref)
+        -:   83:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GInetAddressMask, g_object_unref)
+        -:   84:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GInetSocketAddress, g_object_unref)
+        -:   85:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GInitable, g_object_unref)
+        -:   86:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GInputStream, g_object_unref)
+        -:   87:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GIOModule, g_object_unref)
+        -:   88:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GIOStream, g_object_unref)
+        -:   89:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GLoadableIcon, g_object_unref)
+        -:   90:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMemoryInputStream, g_object_unref)
+        -:   91:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMemoryOutputStream, g_object_unref)
+        -:   92:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMenu, g_object_unref)
+        -:   93:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMenuItem, g_object_unref)
+        -:   94:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMenuModel, g_object_unref)
+        -:   95:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMenuAttributeIter, g_object_unref)
+        -:   96:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMenuLinkIter, g_object_unref)
+        -:   97:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMount, g_object_unref)
+        -:   98:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GMountOperation, g_object_unref)
+        -:   99:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GNativeVolumeMonitor, g_object_unref)
+        -:  100:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GNetworkAddress, g_object_unref)
+        -:  101:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GNetworkMonitor, g_object_unref)
+        -:  102:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GNetworkService, g_object_unref)
+        -:  103:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GNotification, g_object_unref)
+        -:  104:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GOutputStream, g_object_unref)
+        -:  105:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GPermission, g_object_unref)
+        -:  106:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GPollableInputStream, g_object_unref)
+        -:  107:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GPollableOutputStream, g_object_unref)
+        -:  108:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GPropertyAction, g_object_unref)
+        -:  109:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GProxyAddressEnumerator, g_object_unref)
+        -:  110:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GProxyAddress, g_object_unref)
+        -:  111:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GProxy, g_object_unref)
+        -:  112:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GProxyResolver, g_object_unref)
+        -:  113:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GRemoteActionGroup, g_object_unref)
+        -:  114:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GResolver, g_object_unref)
+        -:  115:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GResource, g_resource_unref)
+        -:  116:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSeekable, g_object_unref)
+        -:  117:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettingsBackend, g_object_unref)
+        -:  118:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettingsSchema, g_settings_schema_unref)
+        -:  119:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettingsSchemaKey, g_settings_schema_key_unref)
+        -:  120:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettingsSchemaSource, g_settings_schema_source_unref)
+    #####:  121:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettings, g_object_unref)
+------------------
+glib_autoptr_cleanup_GSettings:
+    #####:  121:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettings, g_object_unref)
+------------------
+glib_autoptr_clear_GSettings:
+    #####:  121:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSettings, g_object_unref)
+------------------
+        -:  122:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSimpleActionGroup, g_object_unref)
+        -:  123:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSimpleAction, g_object_unref)
+        -:  124:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSimpleAsyncResult, g_object_unref)
+        -:  125:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSimplePermission, g_object_unref)
+        -:  126:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSimpleProxyResolver, g_object_unref)
+        -:  127:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketAddressEnumerator, g_object_unref)
+        -:  128:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketAddress, g_object_unref)
+        -:  129:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketClient, g_object_unref)
+        -:  130:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketConnectable, g_object_unref)
+        -:  131:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketConnection, g_object_unref)
+        -:  132:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketControlMessage, g_object_unref)
+        -:  133:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocket, g_object_unref)
+        -:  134:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketListener, g_object_unref)
+        -:  135:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSocketService, g_object_unref)
+        -:  136:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSubprocess, g_object_unref)
+        -:  137:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GSubprocessLauncher, g_object_unref)
+        -:  138:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTask, g_object_unref)
+        -:  139:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTcpConnection, g_object_unref)
+        -:  140:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTcpWrapperConnection, g_object_unref)
+        -:  141:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTestDBus, g_object_unref)
+        -:  142:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GThemedIcon, g_object_unref)
+        -:  143:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GThreadedSocketService, g_object_unref)
+        -:  144:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsBackend, g_object_unref)
+        -:  145:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsCertificate, g_object_unref)
+        -:  146:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsClientConnection, g_object_unref)
+        -:  147:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsConnection, g_object_unref)
+        -:  148:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsDatabase, g_object_unref)
+        -:  149:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsFileDatabase, g_object_unref)
+        -:  150:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsInteraction, g_object_unref)
+        -:  151:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsPassword, g_object_unref)
+        -:  152:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GTlsServerConnection, g_object_unref)
+        -:  153:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GVfs, g_object_unref)
+        -:  154:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GVolume, g_object_unref)
+        -:  155:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GVolumeMonitor, g_object_unref)
+        -:  156:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GZlibCompressor, g_object_unref)
+        -:  157:G_DEFINE_AUTOPTR_CLEANUP_FUNC(GZlibDecompressor, g_object_unref)
+        -:  158:
+        -:  159:#endif /* __GI_SCANNER__ */

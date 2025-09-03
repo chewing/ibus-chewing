@@ -35,6 +35,30 @@ jobs:
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
 
+  build-meson:
+    runs-on: ubuntu-latest
+    container: quay.io/fedora/fedora:43
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install build dependencies
+        run: sudo dnf -y install gcc meson gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston
+
+      - name: Build
+        run: |
+          meson setup build
+          meson compile -C build
+          meson install -n -C build
+
+      - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
+          GSETTINGS_BACKEND: keyfile
+        run: |
+          weston --no-config --socket=wl-headless --backend=headless &
+          WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
+
   coverage:
     runs-on: ubuntu-latest
     container: quay.io/fedora/fedora:43
@@ -75,6 +99,35 @@ jobs:
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  coverage-meson:
+    runs-on: ubuntu-latest
+    container: quay.io/fedora/fedora:43
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install build dependencies
+        run: sudo dnf -y install gcc gcovr meson gtk4-devel ibus-devel libadwaita-devel libchewing-devel ibus gettext weston git
+
+      - name: Build
+        run: |
+          meson setup -Db_coverage=true build
+          meson compile -C build
+
+      - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp
+          GSETTINGS_BACKEND: keyfile
+        run: |
+          weston --no-config --socket=wl-headless --backend=headless &
+          WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
+          ninja -C build coverage-xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

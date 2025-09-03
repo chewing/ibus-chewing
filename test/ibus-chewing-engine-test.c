@@ -16,11 +16,11 @@ IBusChewingEngine *ibus_chewing_engine_new() {
 void check_output(const gchar *outgoing, const gchar *preEdit, const gchar *aux) {
     g_assert(engine->outgoingText);
     g_assert(engine->outgoingText->text);
-    printf("outgoingText->text=%s\n", engine->outgoingText->text);
+    printf("# outgoingText->text=%s\n", engine->outgoingText->text);
     g_assert_cmpstr(outgoing, ==, engine->outgoingText->text);
-    printf("preEditText->text=%s\n", engine->preEditText->text);
+    printf("# preEditText->text=%s\n", engine->preEditText->text);
     g_assert_cmpstr(preEdit, ==, engine->preEditText->text);
-    printf("auxText->text=%s\n", engine->auxText->text);
+    printf("# auxText->text=%s\n", engine->auxText->text);
     g_assert_cmpint(strlen(aux), ==, strlen(engine->auxText->text));
 }
 

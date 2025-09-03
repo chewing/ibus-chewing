@@ -1,0 +1,11 @@
+src/setup/ibus-setup-chewing-window.ui
+src/setup/ibus-setup-chewing-about.c
+src/setup/ibus-setup-chewing-application.c
+src/setup/ibus-setup-chewing-window.c
+src/setup/main.c
+src/ibus-chewing-engine.c
+src/ibus-chewing-lookup-table.c
+src/ibus-chewing-preedit.c
+src/ibus-chewing-util.c
+src/main.c
+src/maker-dialog-util.c

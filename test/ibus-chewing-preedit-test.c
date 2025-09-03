@@ -57,7 +57,7 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers) {
         break;
     }
 
-    printf("key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n", keySym,
+    printf("# key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n", keySym,
            key_sym_get_name(keySym), modifiers, ibus_chewing_pre_edit_get_pre_edit(self),
            ibus_chewing_pre_edit_get_outgoing(self));
 }
