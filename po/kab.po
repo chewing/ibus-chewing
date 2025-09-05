@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 13:47+0900\n"
+"POT-Creation-Date: 2025-09-04 21:24+0900\n"
 "PO-Revision-Date: 2024-12-10 09:40+0000\n"
 "Last-Translator: ButterflyOfFire <butterflyoffire@users.noreply.translate."
 "fedoraproject.org>\n"
@@ -315,6 +315,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Athmane Mokraoui <butterflyoffire@protonmail.com>"
 
+#. clang-format on
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
 msgstr ""
@@ -323,62 +324,62 @@ msgstr ""
 msgid "_Chat"
 msgstr "Asqerde_c"
 
-#: src/ibus-chewing-engine.c:422
+#: src/ibus-chewing-engine.c:427
 msgid "Switch to Alphanumeric Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:424
+#: src/ibus-chewing-engine.c:429
 msgid "Switch to Chinese Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:426
+#: src/ibus-chewing-engine.c:431
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:430
+#: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:432
+#: src/ibus-chewing-engine.c:437
 msgid "Halfwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:434
+#: src/ibus-chewing-engine.c:439
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:438
+#: src/ibus-chewing-engine.c:443
 msgid "IBus-Chewing Preferences"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:440
+#: src/ibus-chewing-engine.c:445
 msgid "Click to configure IBus-Chewing"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "Chinese Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "English Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Fullwidth Mode"
 msgstr ""
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Halfwidth Mode"
 msgstr ""
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Cannot connect to IBus!"
 msgstr ""
 
-#: src/main.c:89
+#: src/main.c:90
 msgid "Chewing"
 msgstr "Chewing"
 
-#: src/main.c:90
+#: src/main.c:91
 msgid "Chinese chewing input method"
 msgstr ""
