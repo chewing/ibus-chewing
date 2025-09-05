@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 13:47+0900\n"
+"POT-Creation-Date: 2025-09-04 21:24+0900\n"
 "PO-Revision-Date: 2025-06-25 11:22+0000\n"
 "Last-Translator: taijuin lee <taijuin@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
@@ -323,6 +323,7 @@ msgstr ""
 "neko0xff\n"
 "taijuin"
 
+#. clang-format on
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
 msgstr "郵件列表(_M)"
@@ -331,64 +332,64 @@ msgstr "郵件列表(_M)"
 msgid "_Chat"
 msgstr "線上聊天(_C)"
 
-#: src/ibus-chewing-engine.c:422
+#: src/ibus-chewing-engine.c:427
 msgid "Switch to Alphanumeric Mode"
 msgstr "切換到英數模式"
 
-#: src/ibus-chewing-engine.c:424
+#: src/ibus-chewing-engine.c:429
 msgid "Switch to Chinese Mode"
 msgstr "切換到中文模式"
 
-#: src/ibus-chewing-engine.c:426
+#: src/ibus-chewing-engine.c:431
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "點擊以切換中文或英數模式"
 
-#: src/ibus-chewing-engine.c:430
+#: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
 msgstr "使用全形符號"
 
-#: src/ibus-chewing-engine.c:432
+#: src/ibus-chewing-engine.c:437
 msgid "Halfwidth Form"
 msgstr "使用半形符號"
 
-#: src/ibus-chewing-engine.c:434
+#: src/ibus-chewing-engine.c:439
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr "點擊以切換全形或半形符號"
 
-#: src/ibus-chewing-engine.c:438
+#: src/ibus-chewing-engine.c:443
 msgid "IBus-Chewing Preferences"
 msgstr "新酷音偏好設定"
 
-#: src/ibus-chewing-engine.c:440
+#: src/ibus-chewing-engine.c:445
 msgid "Click to configure IBus-Chewing"
 msgstr "點擊以打開新酷音偏好設定"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "Chinese Mode"
 msgstr "中文模式"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "English Mode"
 msgstr "英數模式"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Fullwidth Mode"
 msgstr "全形模式"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Halfwidth Mode"
 msgstr "半形模式"
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Cannot connect to IBus!"
 msgstr "不能連到 IBus!"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author dchen
-#: src/main.c:89
+#: src/main.c:90
 msgid "Chewing"
 msgstr "新酷音"
 
-#: src/main.c:90
+#: src/main.c:91
 msgid "Chinese chewing input method"
 msgstr "中文新酷音輸入法"
 

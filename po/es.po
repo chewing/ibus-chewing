@@ -3,12 +3,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 13:47+0900\n"
+"POT-Creation-Date: 2025-09-04 21:24+0900\n"
 "PO-Revision-Date: 2025-04-14 17:53+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
-"Language-Team: Spanish <https://translate.fedoraproject.org/projects/"
-"ibus-chewing/master/es/>\n"
+"Language-Team: Spanish <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +145,8 @@ msgstr "Motor de conversión"
 
 #: src/setup/ibus-setup-chewing-window.ui:96
 msgid "Enable or disable automatic candidate selection, or fuzzy input."
-msgstr "Activa o desactiva selección automática de candidato, o entrada difusa."
+msgstr ""
+"Activa o desactiva selección automática de candidato, o entrada difusa."
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
 #: src/setup/ibus-setup-chewing-window.ui:103
@@ -338,6 +339,7 @@ msgstr "Elegir desde panel vertical u horizontal"
 msgid "translator-credits"
 msgstr "Fco. Javier F. Serrador <serrador@tecknolabs.com>"
 
+#. clang-format on
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
 msgstr "_Listado de correo"
@@ -346,64 +348,64 @@ msgstr "_Listado de correo"
 msgid "_Chat"
 msgstr "_Charla"
 
-#: src/ibus-chewing-engine.c:422
+#: src/ibus-chewing-engine.c:427
 msgid "Switch to Alphanumeric Mode"
 msgstr "Intercambiar a Modo Alfanumérico"
 
-#: src/ibus-chewing-engine.c:424
+#: src/ibus-chewing-engine.c:429
 msgid "Switch to Chinese Mode"
 msgstr "Intercambia a Modo Chino"
 
-#: src/ibus-chewing-engine.c:426
+#: src/ibus-chewing-engine.c:431
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "Pulse para conmutar Modo Chino/Alfanumérico"
 
-#: src/ibus-chewing-engine.c:430
+#: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
 msgstr "Formulario de ancho completo"
 
-#: src/ibus-chewing-engine.c:432
+#: src/ibus-chewing-engine.c:437
 msgid "Halfwidth Form"
 msgstr "Formulario de mitad de anchura"
 
-#: src/ibus-chewing-engine.c:434
+#: src/ibus-chewing-engine.c:439
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr "Pulse para conmutar Formulario de mitad anchura/Anchura completa"
 
-#: src/ibus-chewing-engine.c:438
+#: src/ibus-chewing-engine.c:443
 msgid "IBus-Chewing Preferences"
 msgstr "Preferencias de Ibus-Chewing"
 
-#: src/ibus-chewing-engine.c:440
+#: src/ibus-chewing-engine.c:445
 msgid "Click to configure IBus-Chewing"
 msgstr "Pulse para configurar IBus-Chewing"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "Chinese Mode"
 msgstr "Modo chino"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "English Mode"
 msgstr "Modo inglés"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Fullwidth Mode"
 msgstr "Modo Anchura Completa"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Halfwidth Mode"
 msgstr "Modo Mitad de Anchura"
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Cannot connect to IBus!"
 msgstr "¡No puede conectar al IBus!"
 
 # translation auto-copied from project ibus-chewing, version 1.3.10, document ibus-chewing, author gguerrer
-#: src/main.c:89
+#: src/main.c:90
 msgid "Chewing"
 msgstr "Chewing"
 
-#: src/main.c:90
+#: src/main.c:91
 msgid "Chinese chewing input method"
 msgstr "Método de entrada de chino chewing"
 

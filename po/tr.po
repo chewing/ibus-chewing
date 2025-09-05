@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-09 13:47+0900\n"
+"POT-Creation-Date: 2025-09-04 21:24+0900\n"
 "PO-Revision-Date: 2024-08-12 06:39+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://translate.fedoraproject.org/projects/ibus-"
@@ -322,6 +322,7 @@ msgstr "Dikey veya yatay panel arasından seçim yapın"
 msgid "translator-credits"
 msgstr "Oğuz Ersen"
 
+#. clang-format on
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
 msgstr "_E-posta listesi"
@@ -330,64 +331,64 @@ msgstr "_E-posta listesi"
 msgid "_Chat"
 msgstr "_Sohbet"
 
-#: src/ibus-chewing-engine.c:422
+#: src/ibus-chewing-engine.c:427
 msgid "Switch to Alphanumeric Mode"
 msgstr "Alfasayısal Moda Geç"
 
-#: src/ibus-chewing-engine.c:424
+#: src/ibus-chewing-engine.c:429
 msgid "Switch to Chinese Mode"
 msgstr "Çince Moda Geç"
 
-#: src/ibus-chewing-engine.c:426
+#: src/ibus-chewing-engine.c:431
 msgid "Click to toggle Chinese/Alphanumeric Mode"
 msgstr "Çince/Alfasayısal mod arasında geçiş yapmak için tıklayın"
 
-#: src/ibus-chewing-engine.c:430
+#: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
 msgstr "Tam Genişlik Biçimi"
 
-#: src/ibus-chewing-engine.c:432
+#: src/ibus-chewing-engine.c:437
 msgid "Halfwidth Form"
 msgstr "Yarım Genişlik Biçimi"
 
-#: src/ibus-chewing-engine.c:434
+#: src/ibus-chewing-engine.c:439
 msgid "Click to toggle Halfwidth/Fullwidth Form"
 msgstr ""
 "Yarım Genişlik/Tam Genişlik biçimleri arasında geçiş yapmak için tıklayın"
 
-#: src/ibus-chewing-engine.c:438
+#: src/ibus-chewing-engine.c:443
 msgid "IBus-Chewing Preferences"
 msgstr "IBus-Chewing Tercihleri"
 
-#: src/ibus-chewing-engine.c:440
+#: src/ibus-chewing-engine.c:445
 msgid "Click to configure IBus-Chewing"
 msgstr "IBus-Chewing'i yapılandırmak için tıklayın"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "Chinese Mode"
 msgstr "Çince Modu"
 
-#: src/ibus-chewing-engine.c:957
+#: src/ibus-chewing-engine.c:953
 msgid "English Mode"
 msgstr "İngilizce Modu"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Fullwidth Mode"
 msgstr "Tam Genişlik Modu"
 
-#: src/ibus-chewing-engine.c:961
+#: src/ibus-chewing-engine.c:957
 msgid "Halfwidth Mode"
 msgstr "Yarım Genişlik Modu"
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Cannot connect to IBus!"
 msgstr "IBus'a bağlanılamıyor!"
 
-#: src/main.c:89
+#: src/main.c:90
 msgid "Chewing"
 msgstr "Chewing"
 
-#: src/main.c:90
+#: src/main.c:91
 msgid "Chinese chewing input method"
 msgstr "Çince chewing giriş yöntemi"
 
