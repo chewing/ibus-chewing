@@ -35,7 +35,7 @@ conf.set('PRJ_URL', 'https://github.com/chewing/ibus-chewing')
 conf.set('LIBEXEC_DIR', ibus_chewing_libexecdir)
 conf.set('LICENSE', 'GPLv2+')
 
-ibus_dep = dependency('ibus-1.0', version: '>= 1.3')
+ibus_dep = dependency('ibus-1.0', version: '>= 1.5.4')
 chewing_dep = dependency('chewing', version: '>= 0.9.0')
 glib_dep = dependency('glib-2.0')
 gtk_dep = dependency('gtk4')

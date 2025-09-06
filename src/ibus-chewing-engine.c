@@ -351,9 +351,7 @@ static void ibus_chewing_engine_class_init(IBusChewingEngineClass *klass) {
     ibus_engine_class->property_activate = ibus_chewing_engine_property_activate;
     ibus_engine_class->process_key_event = ibus_chewing_engine_process_key_event;
     ibus_engine_class->candidate_clicked = ibus_chewing_engine_candidate_clicked;
-#if IBUS_CHECK_VERSION(1, 5, 4)
     ibus_engine_class->set_content_type = ibus_chewing_engine_set_content_type;
-#endif
 
     obj_properties[PROP_KB_TYPE] =
         g_param_spec_string("kb-type", NULL, NULL, NULL, G_PARAM_READWRITE);
@@ -555,12 +553,10 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
                                         ? self->InputMode_label_chi
                                         : self->InputMode_label_eng);
 
-#if IBUS_CHECK_VERSION(1, 5, 0)
             ibus_property_set_symbol(self->InputMode,
                                      ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
                                          ? self->InputMode_symbol_chi
                                          : self->InputMode_symbol_eng);
-#endif
 
             ibus_engine_update_property(IBUS_ENGINE(self), self->InputMode);
 
@@ -570,20 +566,17 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
                                                          ? self->AlnumSize_label_full
                                                          : self->AlnumSize_label_half);
 
-#if IBUS_CHECK_VERSION(1, 5, 0)
             ibus_property_set_symbol(self->AlnumSize,
                                      chewing_get_ShapeMode(self->icPreEdit->context)
                                          ? self->AlnumSize_symbol_full
                                          : self->AlnumSize_symbol_half);
-#endif
 
             if (self->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
                 ibus_engine_update_property(IBUS_ENGINE(self), self->AlnumSize);
 
         } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
-#if IBUS_CHECK_VERSION(1, 5, 0)
             ibus_property_set_symbol(self->setup_prop, self->setup_prop_symbol);
-#endif
+#ifndef UNIT_TEST
             ibus_engine_update_property(IBUS_ENGINE(self), self->setup_prop);
         }
 #endif
@@ -793,7 +786,6 @@ void ibus_chewing_engine_focus_out(IBusEngine *engine) {
     g_debug("focus_out(): return");
 }
 
-#if IBUS_CHECK_VERSION(1, 5, 4)
 void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, guint hints) {
     g_debug("ibus_chewing_set_content_type(%d, %d)", purpose, hints);
 
@@ -805,7 +797,6 @@ void ibus_chewing_engine_set_content_type(IBusEngine *engine, guint purpose, gui
         ibus_chewing_engine_clear_status_flag(self, ENGINE_FLAG_IS_PASSWORD);
     }
 }
-#endif
 
 /*=================================================
  * Display text update routines
