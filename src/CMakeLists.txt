@@ -1,9 +1,7 @@
 add_library(common STATIC
     ibus-chewing-lookup-table.c
-    maker-dialog-util.c
 
     ibus-chewing-lookup-table.h
-    maker-dialog-util.h
     ibus-chewing-engine.h
 )
 target_link_libraries(common PUBLIC

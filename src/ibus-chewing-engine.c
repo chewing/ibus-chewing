@@ -20,11 +20,10 @@
  * USA.
  */
 #include "ibus-chewing-engine.h"
-#include "ibus-chewing-preedit.h"
-#include "ibus-chewing-lookup-table.h"
-#include "ibus-chewing-util.h"
-#include "maker-dialog-util.h"
 #include "ibus-chewing-engine-private.h"
+#include "ibus-chewing-lookup-table.h"
+#include "ibus-chewing-preedit.h"
+#include "ibus-chewing-util.h"
 #include <chewing.h>
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -569,7 +568,7 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
 #ifndef UNIT_TEST
         IBUS_CHEWING_LOG(DEBUG, "refresh_property(%s) status=%x", prop_name, self->statusFlags);
 
-        if (STRING_EQUALS(prop_name, "InputMode")) {
+        if (g_strcmp0(prop_name, "InputMode") == 0) {
 
             ibus_property_set_label(self->InputMode,
                                     ibus_chewing_pre_edit_get_chi_eng_mode(self->icPreEdit)
@@ -585,7 +584,7 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
 
             ibus_engine_update_property(IBUS_ENGINE(self), self->InputMode);
 
-        } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
+        } else if (g_strcmp0(prop_name, "AlnumSize") == 0) {
 
             ibus_property_set_label(self->AlnumSize, chewing_get_ShapeMode(self->icPreEdit->context)
                                                          ? self->AlnumSize_label_full
@@ -601,7 +600,7 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
             if (self->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
                 ibus_engine_update_property(IBUS_ENGINE(self), self->AlnumSize);
 
-        } else if (STRING_EQUALS(prop_name, "setup_prop")) {
+        } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
 #if IBUS_CHECK_VERSION(1, 5, 0)
             ibus_property_set_symbol(self->setup_prop, self->setup_prop_symbol);
 #endif
@@ -650,11 +649,11 @@ static IBusProperty *ibus_chewing_engine_get_ibus_property_by_name(IBusChewingEn
     g_return_val_if_fail(self != NULL, (IBusProperty *)0);
     g_return_val_if_fail(IBUS_IS_CHEWING_ENGINE(self), (IBusProperty *)0);
     {
-        if (STRING_EQUALS(prop_name, "InputMode")) {
+        if (g_strcmp0(prop_name, "InputMode") == 0) {
             return self->InputMode;
-        } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
+        } else if (g_strcmp0(prop_name, "AlnumSize") == 0) {
             return self->AlnumSize;
-        } else if (STRING_EQUALS(prop_name, "setup_prop")) {
+        } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
             return self->setup_prop;
         }
         IBUS_CHEWING_LOG(MSG, "get_ibus_property_by_name(%s): NULL is returned", prop_name);
@@ -848,8 +847,8 @@ static void parent_update_pre_edit_text_with_mode([[maybe_unused]] IBusEngine *i
                                                   IBusText *iText, guint cursor_pos,
                                                   gboolean visible, IBusPreeditFocusMode mode) {
 #ifdef UNIT_TEST
-    printf("# * parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n", iText->text, cursor_pos,
-           visible, mode);
+    printf("# * parent_update_pre_edit_text_with_mode(-, %s, %u, %x, %x)\n", iText->text,
+           cursor_pos, visible, mode);
 #else
     ibus_engine_update_preedit_text_with_mode(iEngine, iText, cursor_pos, visible, mode);
 #endif
@@ -858,7 +857,8 @@ static void parent_update_pre_edit_text_with_mode([[maybe_unused]] IBusEngine *i
 static void parent_update_auxiliary_text([[maybe_unused]] IBusEngine *iEngine, IBusText *iText,
                                          gboolean visible) {
 #ifdef UNIT_TEST
-    printf("# * parent_update_auxiliary_text(-, %s, %x)\n", (iText) ? iText->text : "NULL", visible);
+    printf("# * parent_update_auxiliary_text(-, %s, %x)\n", (iText) ? iText->text : "NULL",
+           visible);
 #else
     if (!visible || ibus_text_is_empty(iText)) {
         ibus_engine_hide_auxiliary_text(iEngine);
@@ -1017,7 +1017,7 @@ void commit_text(IBusChewingEngine *self) {
 gboolean ibus_chewing_engine_process_key_event(IBusEngine *engine, KSym keySym, guint keycode,
                                                KeyModifiers unmaskedMod) {
     IBUS_CHEWING_LOG(MSG, "******** process_key_event(-,%x(%s),%x,%x) %s", keySym,
-                     key_sym_get_name(keySym), keycode, unmaskedMod,
+                     ibus_keyval_name(keySym), keycode, unmaskedMod,
                      modifiers_to_string(unmaskedMod));
 
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
@@ -1081,17 +1081,17 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop
     IBUS_CHEWING_LOG(INFO, "property_activate(-, %s, %u)", prop_name, prop_state);
     IBusChewingEngine *self = IBUS_CHEWING_ENGINE(engine);
 
-    if (STRING_EQUALS(prop_name, "InputMode")) {
+    if (g_strcmp0(prop_name, "InputMode") == 0) {
         /* Toggle Chinese <-> English */
         ibus_chewing_pre_edit_toggle_chi_eng_mode(self->icPreEdit);
         IBUS_CHEWING_LOG(INFO, "property_activate chinese=%d", is_chinese_mode(self));
         ibus_chewing_engine_refresh_property(self, prop_name);
-    } else if (STRING_EQUALS(prop_name, "AlnumSize")) {
+    } else if (g_strcmp0(prop_name, "AlnumSize") == 0) {
         /* Toggle Full <-> Half */
         ibus_chewing_pre_edit_toggle_full_half_mode(self->icPreEdit);
         IBUS_CHEWING_LOG(INFO, "property_activate fullwidth=%d", is_fullwidth_mode(self));
         ibus_chewing_engine_refresh_property(self, prop_name);
-    } else if (STRING_EQUALS(prop_name, "setup_prop")) {
+    } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
         /* open preferences window */
         char *argv[] = {QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing", NULL};
         g_spawn_async(NULL, argv, NULL, G_SPAWN_DEFAULT, NULL, NULL, NULL, NULL);
@@ -1103,16 +1103,16 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop
 
 char ibus_chewing_engine_get_default_english_case(IBusChewingEngine *self) {
     char *prop = self->prop_default_english_case;
-    return STRING_EQUALS(prop, "lowercase") ? 'l' : STRING_EQUALS(prop, "uppercase") ? 'u' : 'n';
+    return g_strcmp0(prop, "lowercase") == 0 ? 'l' : g_strcmp0(prop, "uppercase") == 0 ? 'u' : 'n';
 }
 
 char ibus_chewing_engine_get_chinese_english_toggle_key(IBusChewingEngine *self) {
     char *prop = self->prop_chi_eng_mode_toggle;
-    return STRING_EQUALS(prop, "caps_lock") ? 'c'
-           : STRING_EQUALS(prop, "shift")   ? 's'
-           : STRING_EQUALS(prop, "shift_l") ? 'l'
-           : STRING_EQUALS(prop, "shift_r") ? 'r'
-                                            : 'n';
+    return g_strcmp0(prop, "caps_lock") == 0 ? 'c'
+           : g_strcmp0(prop, "shift") == 0   ? 's'
+           : g_strcmp0(prop, "shift_l") == 0 ? 'l'
+           : g_strcmp0(prop, "shift_r") == 0 ? 'r'
+                                             : 'n';
     return 'n';
 }
 

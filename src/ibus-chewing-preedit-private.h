@@ -76,7 +76,7 @@
 
 #define handle_log(funcName)                                                                       \
     IBUS_CHEWING_LOG(INFO, "* self_handle_%s(-,%x(%s),%x(%s))", funcName, kSym,                    \
-                     key_sym_get_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+                     ibus_keyval_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
 
 KSym self_key_sym_fix(IBusChewingPreEdit *self, KSym kSym, KeyModifiers unmaskedMod);
 

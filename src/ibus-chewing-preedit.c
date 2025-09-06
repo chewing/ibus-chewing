@@ -1,10 +1,11 @@
-#include "ibus-chewing-engine.h"
 #include "ibus-chewing-preedit.h"
+#include "ibus-chewing-engine.h"
 #include "ibus-chewing-lookup-table.h"
-#include "ibus-chewing-util.h"
-#include "maker-dialog-util.h"
 #include "ibus-chewing-preedit-private.h"
+#include "ibus-chewing-util.h"
+#include "ibus.h"
 #include <chewing.h>
+#include <ctype.h>
 #include <glib.h>
 
 /**************************************
@@ -258,7 +259,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
     KSym fixedKSym = self_key_sym_fix(self, kSym, unmaskedMod);
 
     IBUS_CHEWING_LOG(DEBUG, "* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)", fixedKSym,
-                     key_sym_get_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+                     ibus_keyval_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
     gint ret = chewing_handle_Default(self->context, fixedKSym);
 
     /* Handle quick commit */
@@ -770,7 +771,7 @@ gboolean is_shift_toggle(KSym keyLast, KSym kSym, KeyModifiers unmaskedMod) {
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
                                            KeyModifiers unmaskedMod) {
     IBUS_CHEWING_LOG(INFO, "***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))", kSym,
-                     key_sym_get_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+                     ibus_keyval_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
     process_key_debug("Before response");
 
     /* Find corresponding rule */

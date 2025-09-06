@@ -20,27 +20,19 @@
  * USA.
  */
 
-#ifndef _IBUS_CHEWING_UTIL_H_
-#define _IBUS_CHEWING_UTIL_H_
-#include "maker-dialog-util.h"
+#pragma once
+
 #include <chewing.h>
-#include <ctype.h>
 #include <glib.h>
 #include <ibus.h>
-#include <string.h>
 
-#define ZHUYIN_BUFFER_SIZE 12
-
-#define CHEWING_CHECK_VERSION(major, minor, patch)                             \
-    (CHEWING_VERSION_MAJOR > (major) ||                                        \
-     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR > (minor)) ||  \
-     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR == (minor) &&  \
+#define CHEWING_CHECK_VERSION(major, minor, patch)                                                 \
+    (CHEWING_VERSION_MAJOR > (major) ||                                                            \
+     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR > (minor)) ||                      \
+     (CHEWING_VERSION_MAJOR == (major) && CHEWING_VERSION_MINOR == (minor) &&                      \
       CHEWING_VERSION_PATCH >= (patch)))
 
-#define IBUS_CHEWING_LOG_DOMAIN "ibus-chewing"
-
-#define IBUS_CHEWING_LOG(level, msg, args...)                                  \
-    mkdg_log_domain(IBUS_CHEWING_LOG_DOMAIN, level, msg, ##args)
+#define IBUS_CHEWING_LOG(level, msg, args...) mkdg_log_domain("ibus-chewing", level, msg, ##args)
 
 typedef guint KSym;
 
@@ -69,10 +61,40 @@ typedef enum {
 
 KSym key_sym_KP_to_normal(KSym k);
 
-const char *key_sym_get_name(KSym k);
-
-const gchar *modifier_get_string(guint modifier);
-
 const gchar *modifiers_to_string(guint modifier);
 
-#endif /* _IBUS_CHEWING_UTIL_H_ */
+/**
+ * MkdgLogLevel:
+ * @ERROR: Show auses of failure, the program should stop
+ * @WARN:  Show issues to be address, the program will still run.
+ * @MSG:   Show normal message
+ * @INFO:  Show information message
+ * @DEBUG: Show debug message
+ *
+ * Message verbose level, from low to high. Similar to Log level of Gtk.
+ *
+ */
+typedef enum { ERROR, WARN, MSG, INFO, DEBUG } MkdgLogLevel;
+
+void mkdg_log_set_level(MkdgLogLevel level);
+
+void mkdg_log(MkdgLogLevel level, const char *format, ...);
+
+void mkdg_log_domain(const char *domain, MkdgLogLevel level, const char *format, ...);
+
+/**************************************
+ * String Utility Macros and Functions
+ */
+
+#define QUOTE_ME_INNER(s) #s
+#define QUOTE_ME(s) QUOTE_ME_INNER(s)
+
+#define STRING_IS_EMPTY(str) (!str || (str[0] == '\0'))
+
+/**************************************
+ * Flag Utility Macros
+ */
+
+#define mkdg_clear_flag(flagSet, flag) (flagSet &= ~(flag))
+#define mkdg_has_flag(flagSet, flag) ((flagSet & flag) == flag)
+#define mkdg_set_flag(flagSet, flag) (flagSet |= flag)

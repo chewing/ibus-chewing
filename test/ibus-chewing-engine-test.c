@@ -1,4 +1,3 @@
-#include "maker-dialog-util.h"
 #include "ibus-chewing-engine-private.h"
 #include "ibus-chewing-engine.h"
 #include "test-util.h"

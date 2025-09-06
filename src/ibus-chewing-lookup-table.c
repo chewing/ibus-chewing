@@ -1,6 +1,6 @@
 #include "ibus-chewing-lookup-table.h"
 #include "ibus-chewing-util.h"
-#include "maker-dialog-util.h"
+#include <ctype.h>
 
 IBusLookupTable *ibus_chewing_lookup_table_new(ChewingContext *context) {
     guint size = 10;

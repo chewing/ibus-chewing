@@ -8,4 +8,3 @@ src/ibus-chewing-lookup-table.c
 src/ibus-chewing-preedit.c
 src/ibus-chewing-util.c
 src/main.c
-src/maker-dialog-util.c

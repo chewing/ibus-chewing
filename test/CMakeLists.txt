@@ -2,12 +2,6 @@ add_compile_definitions(UNIT_TEST)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # ==================
-add_executable(maker-dialog-util-test maker-dialog-util-test.c)
-target_link_libraries(maker-dialog-util-test common)
-add_test(NAME maker-dialog-util
-    COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/maker-dialog-util-test)
-
-# ==================
 add_executable(ibus-chewing-util-test ibus-chewing-util-test.c
     ../src/ibus-chewing-util.c
     ../src/ibus-chewing-util.h

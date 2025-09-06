@@ -11,7 +11,6 @@ ibus_engine_chewing = executable(
     'ibus-chewing-lookup-table.c',
     'ibus-chewing-preedit.c',
     'ibus-chewing-util.c',
-    'maker-dialog-util.c',
     dependencies: [ibus_dep, chewing_dep, glib_dep, gtk_dep],
     c_args: chewing_c_args,
     install: true,

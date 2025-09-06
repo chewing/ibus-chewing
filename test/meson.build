@@ -3,7 +3,6 @@ inc = include_directories('../src', '../src/setup')
 
 chewing_test_common_src = [
     '../src/ibus-chewing-lookup-table.c',
-    '../src/maker-dialog-util.c',
 ]
 
 chewing_test_common_dep = [chewing_dep, glib_dep, ibus_dep]
@@ -13,24 +12,6 @@ chewing_test_common = static_library(
     chewing_test_common_src,
     dependencies: chewing_test_common_dep,
     include_directories: inc,
-)
-
-# ==================
-maker_dialog_util_test = executable(
-    'maker-dialog-util-test',
-    'maker-dialog-util-test.c',
-    dependencies: chewing_test_common_dep,
-    link_with: chewing_test_common,
-    c_args: test_c_args,
-    include_directories: inc,
-)
-test(
-    'maker-dialog-util',
-    maker_dialog_util_test,
-    env: 'GSETTINGS_SCHEMA_DIR=@0@'.format(
-        meson.project_build_root() / 'src/setup',
-    ),
-    protocol: 'tap',
 )
 
 # ==================

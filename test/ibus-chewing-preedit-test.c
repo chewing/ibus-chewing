@@ -1,7 +1,6 @@
 #include "ibus-chewing-engine.h"
 #include "ibus-chewing-preedit.h"
 #include "ibus-chewing-util.h"
-#include "maker-dialog-util.h"
 #include "ibus-chewing-engine.h"
 #include "test-util.h"
 #include <glib.h>
@@ -58,7 +57,7 @@ void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers) {
     }
 
     printf("# key_press_from_key_sym(%x(%s),%x), buffer=|%s| outgoing=|%s|\n", keySym,
-           key_sym_get_name(keySym), modifiers, ibus_chewing_pre_edit_get_pre_edit(self),
+           ibus_keyval_name(keySym), modifiers, ibus_chewing_pre_edit_get_pre_edit(self),
            ibus_chewing_pre_edit_get_outgoing(self));
 }
 

@@ -99,10 +99,9 @@ guint ibus_chewing_pre_edit_word_length(IBusChewingPreEdit *self);
 
 guint ibus_chewing_pre_edit_word_limit(IBusChewingPreEdit *self);
 
-#define ibus_chewing_pre_edit_is_empty(self)                                   \
-    (ibus_chewing_pre_edit_length(self) == 0)
+#define ibus_chewing_pre_edit_is_empty(self) (ibus_chewing_pre_edit_length(self) == 0)
 
-#define ibus_chewing_pre_edit_is_full(self)                                    \
+#define ibus_chewing_pre_edit_is_full(self)                                                        \
     (self->wordLen >= ibus_chewing_pre_edit_word_limit(self))
 
 #define ibus_chewing_pre_edit_is_outgoing_empty(self) (self->outgoing->len == 0)
@@ -129,8 +128,7 @@ gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit *self);
 
 #define ibus_chewing_pre_edit_has_flag(self, f) mkdg_has_flag(self->flags, f)
 #define ibus_chewing_pre_edit_set_flag(self, f) mkdg_set_flag(self->flags, f)
-#define ibus_chewing_pre_edit_clear_flag(self, f)                              \
-    mkdg_clear_flag(self->flags, f)
+#define ibus_chewing_pre_edit_clear_flag(self, f) mkdg_clear_flag(self->flags, f)
 
 void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit *self);
 void ibus_chewing_pre_edit_clear(IBusChewingPreEdit *self);
@@ -141,17 +139,13 @@ void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit *self);
 gboolean ibus_chewing_pre_edit_get_chi_eng_mode(IBusChewingPreEdit *self);
 gboolean ibus_chewing_pre_edit_get_full_half_mode(IBusChewingPreEdit *self);
 
-void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit *self,
-                                            gboolean chineseMode);
-void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit *self,
-                                              gboolean fullShapeMode);
+void ibus_chewing_pre_edit_set_chi_eng_mode(IBusChewingPreEdit *self, gboolean chineseMode);
+void ibus_chewing_pre_edit_set_full_half_mode(IBusChewingPreEdit *self, gboolean fullShapeMode);
 
-#define ibus_chewing_pre_edit_toggle_chi_eng_mode(self)                        \
-    ibus_chewing_pre_edit_set_chi_eng_mode(                                    \
-        self, !ibus_chewing_pre_edit_get_chi_eng_mode(self))
-#define ibus_chewing_pre_edit_toggle_full_half_mode(self)                      \
-    ibus_chewing_pre_edit_set_full_half_mode(                                  \
-        self, !ibus_chewing_pre_edit_get_full_half_mode(self))
+#define ibus_chewing_pre_edit_toggle_chi_eng_mode(self)                                            \
+    ibus_chewing_pre_edit_set_chi_eng_mode(self, !ibus_chewing_pre_edit_get_chi_eng_mode(self))
+#define ibus_chewing_pre_edit_toggle_full_half_mode(self)                                          \
+    ibus_chewing_pre_edit_set_full_half_mode(self, !ibus_chewing_pre_edit_get_full_half_mode(self))
 
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
                                            KeyModifiers unmaskedMod);
@@ -161,8 +155,7 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
  *
  * Convert keycode to key_sym.
  */
-KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit *self,
-                                               KSym keySym, guint keyCode,
+KSym ibus_chewing_pre_edit_key_code_to_key_sym(IBusChewingPreEdit *self, KSym keySym, guint keyCode,
                                                KeyModifiers unmaskedMod);
 
 /**
@@ -175,9 +168,9 @@ gchar *ibus_chewing_pre_edit_get_bopomofo_string(IBusChewingPreEdit *self);
 
 typedef enum {
     EVENT_RESPONSE_PROCESS = 0, /* Event process by IM */
-    EVENT_RESPONSE_ABSORB, /* Event throw away by IM (e.g. Release event) */
-    EVENT_RESPONSE_IGNORE, /* Event that should be passed to application, but
-                              not process by IM */
+    EVENT_RESPONSE_ABSORB,      /* Event throw away by IM (e.g. Release event) */
+    EVENT_RESPONSE_IGNORE,      /* Event that should be passed to application, but
+                                   not process by IM */
     EVENT_RESPONSE_UNDECIDED,
 } EventResponse;
 
