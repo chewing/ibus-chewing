@@ -1,3 +1,4 @@
+#include "glib-object.h"
 #include "ibus-chewing-engine-private.h"
 #include "ibus-chewing-engine.h"
 #include "test-util.h"
@@ -64,21 +65,31 @@ void focus_out_then_focus_in_with_aux_text_test() {
 }
 
 void focus_out_then_focus_in_with_aux_text_clean_buffer_on_test() {
+    engine = ibus_chewing_engine_new();
+
+    g_object_set(G_OBJECT(engine), "max-chi-symbol-len", 8, NULL);
     g_object_set(G_OBJECT(engine), "clean-buffer-focus-out", TRUE, NULL);
+
     focus_out_then_focus_in_with_aux_text_test();
+
+    g_object_unref(engine);
 }
 
 void focus_out_then_focus_in_with_aux_text_clean_buffer_off_test() {
+    engine = ibus_chewing_engine_new();
+
+    g_object_set(G_OBJECT(engine), "max-chi-symbol-len", 8, NULL);
     g_object_set(G_OBJECT(engine), "clean-buffer-focus-out", FALSE, NULL);
+
     focus_out_then_focus_in_with_aux_text_test();
+
+    g_object_unref(engine);
 }
 
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
     mkdg_log_set_level(DEBUG);
-    engine = ibus_chewing_engine_new();
 
-    g_object_set(G_OBJECT(engine), "max-chi-symbol-len", 8, NULL);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
 
