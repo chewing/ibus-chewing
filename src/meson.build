@@ -1,9 +1,3 @@
-if get_option('buildtype') == 'debug'
-    chewing_c_args = '-DVERBOSE_LEVEL=DEBUG'
-else
-    chewing_c_args = '-DVERBOSE_LEVEL=WARN'
-endif
-
 ibus_engine_chewing = executable(
     'ibus-engine-chewing',
     'main.c',
@@ -12,7 +6,7 @@ ibus_engine_chewing = executable(
     'ibus-chewing-preedit.c',
     'ibus-chewing-util.c',
     dependencies: [ibus_dep, chewing_dep, glib_dep, gtk_dep],
-    c_args: chewing_c_args,
+    c_args: ['-DG_LOG_DOMAIN="ibus-chewing"'],
     install: true,
     install_dir: ibus_chewing_libexecdir,
 )

@@ -95,10 +95,6 @@ void ibus_chewing_pre_edit_free(IBusChewingPreEdit *self);
 
 guint ibus_chewing_pre_edit_length(IBusChewingPreEdit *self);
 
-guint ibus_chewing_pre_edit_word_length(IBusChewingPreEdit *self);
-
-guint ibus_chewing_pre_edit_word_limit(IBusChewingPreEdit *self);
-
 #define ibus_chewing_pre_edit_is_empty(self) (ibus_chewing_pre_edit_length(self) == 0)
 
 #define ibus_chewing_pre_edit_is_full(self)                                                        \

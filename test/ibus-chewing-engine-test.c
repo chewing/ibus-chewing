@@ -88,7 +88,6 @@ void focus_out_then_focus_in_with_aux_text_clean_buffer_off_test() {
 
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
-    mkdg_log_set_level(DEBUG);
 
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);

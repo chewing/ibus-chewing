@@ -74,10 +74,6 @@
 #define event_is_released(unmaskedMod) ((unmaskedMod & IBUS_RELEASE_MASK) != 0)
 #define event_process_or_ignore(cond) (cond) ? EVENT_RESPONSE_PROCESS : EVENT_RESPONSE_IGNORE
 
-#define handle_log(funcName)                                                                       \
-    IBUS_CHEWING_LOG(INFO, "* self_handle_%s(-,%x(%s),%x(%s))", funcName, kSym,                    \
-                     ibus_keyval_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
-
 KSym self_key_sym_fix(IBusChewingPreEdit *self, KSym kSym, KeyModifiers unmaskedMod);
 
 EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,

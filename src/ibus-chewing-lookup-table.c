@@ -52,10 +52,9 @@ guint ibus_chewing_lookup_table_update(IBusLookupTable *iTable, ChewingContext *
     gint totalChoice = chewing_cand_TotalChoice(context);
     gint currentPage = chewing_cand_CurrentPage(context);
 
-    IBUS_CHEWING_LOG(INFO,
-                     "***** ibus_chewing_lookup_table_update(): "
-                     "choicePerPage=%d, totalChoice=%d, currentPage=%d",
-                     choicePerPage, totalChoice, currentPage);
+    g_info("***** ibus_chewing_lookup_table_update(): "
+           "choicePerPage=%d, totalChoice=%d, currentPage=%d",
+           choicePerPage, totalChoice, currentPage);
 
     ibus_lookup_table_clear(iTable);
     chewing_cand_Enumerate(context);

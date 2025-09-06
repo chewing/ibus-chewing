@@ -59,7 +59,9 @@ add_executable(ibus-engine-chewing
     main.c
 )
 target_compile_definitions(ibus-engine-chewing
-    PRIVATE VERBOSE_LEVEL=$<IF:$<CONFIG:Debug>,DEBUG,WARN>)
+    PRIVATE
+        G_LOG_DOMAIN="ibus-chewing"
+)
 target_include_directories(ibus-engine-chewing
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(ibus-engine-chewing

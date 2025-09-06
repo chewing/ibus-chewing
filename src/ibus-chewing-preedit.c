@@ -8,6 +8,10 @@
 #include <ctype.h>
 #include <glib.h>
 
+#define handle_log(funcName)                                                                       \
+    g_info("* self_handle_%s(-,%x(%s),%x(%s))", funcName, kSym, ibus_keyval_name(kSym),            \
+           unmaskedMod, modifiers_to_string(unmaskedMod));
+
 /**************************************
  * Methods
  */
@@ -54,19 +58,18 @@ void ibus_chewing_pre_edit_update_outgoing(IBusChewingPreEdit *self) {
         /* commit_Check=1 means new commit available */
         gchar *commitStr = chewing_commit_String(self->context);
 
-        IBUS_CHEWING_LOG(INFO, "commitStr=|%s|\n", commitStr);
+        g_info("commitStr=|%s|\n", commitStr);
         g_string_append(self->outgoing, commitStr);
 
         chewing_free(commitStr);
         chewing_ack(self->context);
     }
-    IBUS_CHEWING_LOG(INFO, "outgoing=|%s|\n", self->outgoing->str);
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|",
-                     self->outgoing->str);
+    g_info("outgoing=|%s|\n", self->outgoing->str);
+    g_debug("ibus_chewing_pre_edit_update_outgoing(-): return: outgoing=|%s|", self->outgoing->str);
 }
 
 void ibus_chewing_pre_edit_update(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(DEBUG, "* ibus_chewing_pre_edit_update(-)");
+    g_debug("* ibus_chewing_pre_edit_update(-)");
 
     /* Make preEdit */
     gchar *bufferStr = chewing_buffer_String(self->context);
@@ -79,10 +82,9 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit *self) {
     gchar *cP = bufferStr;
     gunichar uniCh;
 
-    IBUS_CHEWING_LOG(INFO,
-                     "* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, "
-                     "bpmfStr=|%s| bpmfLen=%d cursor=%d",
-                     bufferStr, bpmfStr, self->bpmfLen, cursor_current);
+    g_info("* ibus_chewing_pre_edit_update(-)  bufferStr=|%s|, "
+           "bpmfStr=|%s| bpmfLen=%d cursor=%d",
+           bufferStr, bpmfStr, self->bpmfLen, cursor_current);
 
     for (i = 0; i < chewing_buffer_Len(self->context) && cP != NULL; i++) {
         if (i == cursor_current) {
@@ -107,12 +109,6 @@ void ibus_chewing_pre_edit_update(IBusChewingPreEdit *self) {
 
 guint ibus_chewing_pre_edit_length(IBusChewingPreEdit *self) { return self->preEdit->len; }
 
-guint ibus_chewing_pre_edit_word_length(IBusChewingPreEdit *self) { return self->wordLen; }
-
-guint ibus_chewing_pre_edit_word_limit(IBusChewingPreEdit *self) {
-    return chewing_get_maxChiSymbolLen(self->context);
-}
-
 gchar *ibus_chewing_pre_edit_get_pre_edit(IBusChewingPreEdit *self) { return self->preEdit->str; }
 
 gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit *self) { return self->outgoing->str; }
@@ -120,8 +116,8 @@ gchar *ibus_chewing_pre_edit_get_outgoing(IBusChewingPreEdit *self) { return sel
 /* currently, ibus_chewing_pre_edit_force_commit() is called only by test cases.
  */
 void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(INFO, "ibus_chewing_pre_edit_force_commit(-) bpmf_check=%d buffer_check=%d",
-                     bpmf_check, chewing_buffer_Check(self->context));
+    g_info("ibus_chewing_pre_edit_force_commit(-) bpmf_check=%d buffer_check=%d", bpmf_check,
+           chewing_buffer_Check(self->context));
 
     /* Ignore the context and commit whatever in preedit buffer */
     g_string_append(self->outgoing, self->preEdit->str);
@@ -130,13 +126,13 @@ void ibus_chewing_pre_edit_force_commit(IBusChewingPreEdit *self) {
 }
 
 void ibus_chewing_pre_edit_clear(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(INFO, "ibus_chewing_pre_edit_clear(-)");
+    g_info("ibus_chewing_pre_edit_clear(-)");
     ibus_chewing_pre_edit_clear_outgoing(self);
     ibus_chewing_pre_edit_clear_pre_edit(self);
 }
 
 void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_bopomofo(-)");
+    g_debug("ibus_chewing_pre_edit_clear_bopomofo(-)");
 
     /* Esc key can close candidate list, clear bopomofo, and clear
      * the whole pre-edit buffer. Make sure it acts as we expected.
@@ -151,7 +147,7 @@ void ibus_chewing_pre_edit_clear_bopomofo(IBusChewingPreEdit *self) {
 }
 
 void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_pre_edit(-)");
+    g_debug("ibus_chewing_pre_edit_clear_pre_edit(-)");
 
     ibus_chewing_pre_edit_clear_bopomofo(self);
 
@@ -167,7 +163,7 @@ void ibus_chewing_pre_edit_clear_pre_edit(IBusChewingPreEdit *self) {
 }
 
 void ibus_chewing_pre_edit_clear_outgoing(IBusChewingPreEdit *self) {
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_clear_outgoing(-)");
+    g_debug("ibus_chewing_pre_edit_clear_outgoing(-)");
     g_string_assign(self->outgoing, "");
 }
 
@@ -258,8 +254,8 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
     EventResponse response = EVENT_RESPONSE_UNDECIDED;
     KSym fixedKSym = self_key_sym_fix(self, kSym, unmaskedMod);
 
-    IBUS_CHEWING_LOG(DEBUG, "* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)", fixedKSym,
-                     ibus_keyval_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+    g_debug("* self_handle_key_sym_default(): new kSym %x(%s), %x(%s)", fixedKSym,
+            ibus_keyval_name(fixedKSym), unmaskedMod, modifiers_to_string(unmaskedMod));
     gint ret = chewing_handle_Default(self->context, fixedKSym);
 
     /* Handle quick commit */
@@ -280,7 +276,7 @@ EventResponse self_handle_key_sym_default(IBusChewingPreEdit *self, KSym kSym,
         break;
     }
 
-    IBUS_CHEWING_LOG(DEBUG, "self_handle_key_sym_default() ret=%d response=%d", ret, response);
+    g_debug("self_handle_key_sym_default() ret=%d response=%d", ret, response);
     /* Restore easySymbolInput */
     chewing_set_easySymbolInput(self->context, easySymbolInput);
     return response;
@@ -655,7 +651,7 @@ EventResponse self_handle_special([[maybe_unused]] IBusChewingPreEdit *self,
                                   [[maybe_unused]] KSym kSym,
                                   [[maybe_unused]] KeyModifiers unmaskedMod) {
     /* KSym >=128 is special key, which IM ignore. */
-    IBUS_CHEWING_LOG(MSG, "ignore special key");
+    g_message("ignore special key");
     return EVENT_RESPONSE_IGNORE;
 }
 
@@ -749,12 +745,11 @@ static KeyHandlingRule *self_key_sym_find_key_handling_rule(KSym kSym) {
     (self_key_sym_find_key_handling_rule(kSym))->keyFunc(self, kSym, unmaskedMod)
 
 #define process_key_debug(prompt)                                                                  \
-    IBUS_CHEWING_LOG(DEBUG,                                                                        \
-                     "ibus_chewing_pre_edit_process_key(): %s flags=%x "                           \
-                     "buff_check=%d bpmf_check=%d cursor=%d total_choice=%d "                      \
-                     "is_chinese=%d is_full_shape=%d",                                             \
-                     prompt, self->flags, chewing_buffer_Check(self->context), bpmf_check,         \
-                     cursor_current, total_choice, is_chinese, is_full_shape)
+    g_debug("ibus_chewing_pre_edit_process_key(): %s flags=%x "                                    \
+            "buff_check=%d bpmf_check=%d cursor=%d total_choice=%d "                               \
+            "is_chinese=%d is_full_shape=%d",                                                      \
+            prompt, self->flags, chewing_buffer_Check(self->context), bpmf_check, cursor_current,  \
+            total_choice, is_chinese, is_full_shape)
 
 gboolean is_shift_key(KSym kSym) { return kSym == IBUS_KEY_Shift_L || kSym == IBUS_KEY_Shift_R; }
 
@@ -770,8 +765,8 @@ gboolean is_shift_toggle(KSym keyLast, KSym kSym, KeyModifiers unmaskedMod) {
 /* keyCode should be converted to kSym already */
 gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
                                            KeyModifiers unmaskedMod) {
-    IBUS_CHEWING_LOG(INFO, "***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))", kSym,
-                     ibus_keyval_name(kSym), unmaskedMod, modifiers_to_string(unmaskedMod));
+    g_info("***** ibus_chewing_pre_edit_process_key(-,%x(%s),%x(%s))", kSym, ibus_keyval_name(kSym),
+           unmaskedMod, modifiers_to_string(unmaskedMod));
     process_key_debug("Before response");
 
     /* Find corresponding rule */
@@ -803,7 +798,7 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
     self->keyLast = kSym;
     self->keyLastTs = g_get_monotonic_time();
 
-    IBUS_CHEWING_LOG(DEBUG, "ibus_chewing_pre_edit_process_key() response=%x", response);
+    g_debug("ibus_chewing_pre_edit_process_key() response=%x", response);
     process_key_debug("After response");
     switch (response) {
     case EVENT_RESPONSE_ABSORB:
@@ -818,7 +813,7 @@ gboolean ibus_chewing_pre_edit_process_key(IBusChewingPreEdit *self, KSym kSym,
 
     guint candidateCount = ibus_chewing_lookup_table_update(self->iTable, self->context);
 
-    IBUS_CHEWING_LOG(INFO, "ibus_chewing_pre_edit_process_key() candidateCount=%d", candidateCount);
+    g_info("ibus_chewing_pre_edit_process_key() candidateCount=%d", candidateCount);
 
     if (candidateCount) {
         ibus_chewing_pre_edit_set_flag(self, FLAG_TABLE_SHOW);

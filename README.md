@@ -50,7 +50,7 @@ ln -s ../../pre-commit .git/hooks/pre-commit
 
 Run ibus-chewing in command line with verbose debug logging:
 
-    G_MESSAGES_DEBUG=ibus-chewing /usr/libexec/ibus-engine-chewing -v 4
+    G_MESSAGES_DEBUG=ibus-chewing /usr/libexec/ibus-engine-chewing
 
 This will temporarily replace the current ibus-chewing engine with
 the one launched from the command line.

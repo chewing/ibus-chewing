@@ -791,7 +791,6 @@ void test_keypad() {
 
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
-    mkdg_log_set_level(DEBUG);
     IBusChewingEngine *engine = g_object_new(IBUS_TYPE_CHEWING_ENGINE, NULL);
     self = engine->icPreEdit;
     g_assert(self != NULL);

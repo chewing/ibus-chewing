@@ -35,13 +35,10 @@ static IBusFactory *factory = NULL;
 static gboolean showFlags = FALSE;
 static gboolean ibus = FALSE;
 static gboolean xml = FALSE;
-gint ibus_chewing_verbose = VERBOSE_LEVEL;
 
 static const GOptionEntry entries[] = {
     {"show_flags", 's', 0, G_OPTION_ARG_NONE, &showFlags, "Show compile flag only", NULL},
     {"ibus", 'i', 0, G_OPTION_ARG_NONE, &ibus, "component is executed by ibus", NULL},
-    {"verbose", 'v', 0, G_OPTION_ARG_INT, &ibus_chewing_verbose,
-     "Verbose level. The higher the level, the more the debug messages.", "[integer]"},
     {"xml", 'x', 0, G_OPTION_ARG_NONE, &xml, "read chewing engine desc from xml file", NULL},
     {}, // null entry
 };
@@ -53,13 +50,13 @@ static void ibus_disconnected_cb([[maybe_unused]] IBusBus *bus,
 }
 
 static void start_component(void) {
-    IBUS_CHEWING_LOG(INFO, "start_component");
+    g_info("start_component");
     ibus_init();
     bus = ibus_bus_new();
     g_signal_connect(bus, "disconnected", G_CALLBACK(ibus_disconnected_cb), NULL);
 
     if (!ibus_bus_is_connected(bus)) {
-        IBUS_CHEWING_LOG(ERROR, _("Cannot connect to IBus!"));
+        g_error(_("Cannot connect to IBus!"));
         exit(2);
     }
 
@@ -107,7 +104,7 @@ static void start_component(void) {
 
     if (ibus) {
         guint32 ret = ibus_bus_request_name(bus, QUOTE_ME(PROJECT_SCHEMA_ID), 0);
-        IBUS_CHEWING_LOG(INFO, "start_component: request_name: %u", ret);
+        g_info("start_component: request_name: %u", ret);
     } else {
         ibus_bus_register_component(bus, component);
     }
@@ -145,7 +142,7 @@ void determine_locale() {
     g_strlcat(localeStr, ".utf8", STRING_BUFFER_SIZE);
 #undef STRING_BUFFER_SIZE
     setlocale(LC_ALL, localeStr);
-    IBUS_CHEWING_LOG(INFO, "determine_locale %s", localeStr);
+    g_info("determine_locale %s", localeStr);
 }
 
 int main(gint argc, gchar *argv[]) {
@@ -170,15 +167,13 @@ int main(gint argc, gchar *argv[]) {
     }
 
     g_option_context_free(context);
-    mkdg_log_set_level(ibus_chewing_verbose);
 
     g_autoptr(GSettings) settings = g_settings_new(QUOTE_ME(PROJECT_SCHEMA_ID));
     g_autoptr(GVariant) plain_zhuyin = g_settings_get_user_value(settings, "plain-zhuyin");
     if (plain_zhuyin != NULL) {
         // migrate settings
         gboolean is_plain_zhuyin = g_variant_get_boolean(plain_zhuyin);
-        IBUS_CHEWING_LOG(MSG, "migrate plain-zhuyin(%d) setting to conversion-engine",
-                         is_plain_zhuyin);
+        g_message("migrate plain-zhuyin(%d) setting to conversion-engine", is_plain_zhuyin);
         if (is_plain_zhuyin) {
             g_settings_set_enum(settings, "conversion-engine", SIMPLE_CONVERSION_ENGINE);
         }

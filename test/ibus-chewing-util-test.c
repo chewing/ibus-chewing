@@ -26,7 +26,6 @@ void modifiers_to_string_test() {
 
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
-    mkdg_log_set_level(INFO);
     TEST_RUN_THIS(QUOTE_ME_test);
     TEST_RUN_THIS(STRING_IS_EMPTY_test);
     TEST_RUN_THIS(modifiers_to_string_test);
