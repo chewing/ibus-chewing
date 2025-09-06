@@ -30,23 +30,6 @@
 #include <gtk/gtk.h>
 #include <ibus.h>
 
-static const GEnumValue _engine_flag_values[] = {
-    {ENGINE_FLAG_INITIALIZED, (char *)"ENGINE_FLAG_INITIALIZED", (char *)"initialized"},
-    {ENGINE_FLAG_ENABLED, (char *)"ENGINE_FLAG_ENABLED", (char *)"enabled"},
-    {ENGINE_FLAG_FOCUS_IN, (char *)"ENGINE_FLAG_FOCUS_IN", (char *)"focus-in"},
-    {ENGINE_FLAG_IS_PASSWORD, (char *)"ENGINE_FLAG_IS_PASSWORD", (char *)"is-password"},
-    {ENGINE_FLAG_PROPERTIES_REGISTERED, (char *)"ENGINE_FLAG_PROPERTIES_REGISTERED",
-     (char *)"properties-registered"},
-    {0, NULL, NULL}};
-
-GType engine_flag_get_type(void) {
-    static GType type = 0;
-
-    if G_UNLIKELY (type == 0)
-        type = g_enum_register_static("EngineFlag", _engine_flag_values);
-    return type;
-}
-
 static ChewingKbType kb_type_get_index(const gchar *kb_type) {
     // The order of this list should match libchewing's KB enum
     //
@@ -481,7 +464,6 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
 
     ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_INITIALIZED);
 
-#ifndef UNIT_TEST
     g_autoptr(GSettings) settings = g_settings_new(QUOTE_ME(PROJECT_SCHEMA_ID));
     g_autoptr(GSettings) ibus_settings = g_settings_new("org.freedesktop.ibus.general");
 
@@ -508,7 +490,6 @@ static void ibus_chewing_engine_init(IBusChewingEngine *self) {
 
     g_settings_bind(ibus_settings, "use-system-keyboard-layout", self, "use-system-keyboard-layout",
                     G_SETTINGS_BIND_DEFAULT);
-#endif
 
     IBUS_CHEWING_LOG(DEBUG, "init() Done");
 }

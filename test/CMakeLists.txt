@@ -22,6 +22,10 @@ add_executable(ibus-chewing-preedit-test ibus-chewing-preedit-test.c
 target_link_libraries(ibus-chewing-preedit-test common PkgConfig::GTK4)
 add_test(NAME ibus-chewing-preedit
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-preedit-test)
+set_tests_properties(ibus-chewing-preedit PROPERTIES
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
+    ENVIRONMENT "GSETTINGS_BACKEND=memory"
+)
 
 # ==================
 add_executable(ibus-chewing-engine-test ibus-chewing-engine-test.c
@@ -38,14 +42,20 @@ target_link_libraries(ibus-chewing-engine-test common PkgConfig::GTK4)
 add_test(NAME ibus-chewing-engine
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-engine-test)
 set_tests_properties(ibus-chewing-engine PROPERTIES
-    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
+    ENVIRONMENT "GSETTINGS_BACKEND=memory"
+)
 
 # ==================
 add_test(NAME ibus-setup-chewing
     COMMAND ${CMAKE_BINARY_DIR}/bin/ibus-setup-chewing -q)
 set_tests_properties(ibus-setup-chewing PROPERTIES
-    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
+    ENVIRONMENT "GSETTINGS_BACKEND=memory"
+)
 add_test(NAME ibus-setup-chewing-about
     COMMAND ${CMAKE_BINARY_DIR}/bin/ibus-setup-chewing --about -q)
 set_tests_properties(ibus-setup-chewing-about PROPERTIES
-    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin")
+    ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
+    ENVIRONMENT "GSETTINGS_BACKEND=memory"
+)

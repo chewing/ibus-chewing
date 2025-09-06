@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include "ibus-chewing-preedit.h"
-#include "ibus-chewing-util.h"
 #include <glib-object.h>
 #include <glib.h>
 #include <ibus.h>
@@ -37,8 +35,6 @@ typedef enum {
     ENGINE_FLAG_IS_PASSWORD = 0x8,
     ENGINE_FLAG_PROPERTIES_REGISTERED = 0x10
 } EngineFlag;
-#define ENGINE_TYPE_FLAG engine_flag_get_type()
-GType engine_flag_get_type(void) G_GNUC_CONST;
 
 // XXX not defined by ibus
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IBusEngine, g_object_unref)

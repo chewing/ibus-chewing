@@ -366,6 +366,7 @@ void process_key_text_with_symbol_test() {
 
     key_press_from_string("1j65j/4");
     key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
     key_press_from_string("3");
 
     key_press_from_key_sym(IBUS_KEY_less, IBUS_SHIFT_MASK);

@@ -29,7 +29,6 @@ jobs:
       - name: Test
         env:
           XDG_RUNTIME_DIR: /tmp
-          GSETTINGS_BACKEND: keyfile
         run: |
           glib-compile-schemas src/setup --targetdir=build/bin
           weston --no-config --socket=wl-headless --backend=headless &
@@ -54,7 +53,6 @@ jobs:
       - name: Test
         env:
           XDG_RUNTIME_DIR: /tmp
-          GSETTINGS_BACKEND: keyfile
         run: |
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
@@ -91,7 +89,6 @@ jobs:
       - name: Test
         env:
           XDG_RUNTIME_DIR: /tmp
-          GSETTINGS_BACKEND: keyfile
           LLVM_PROFILE_FILE: "default_%p_%m.profraw"
         run: |
           source "$HOME/.cargo/env"
@@ -123,7 +120,6 @@ jobs:
       - name: Test
         env:
           XDG_RUNTIME_DIR: /tmp
-          GSETTINGS_BACKEND: keyfile
         run: |
           weston --no-config --socket=wl-headless --backend=headless &
           WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
