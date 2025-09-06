@@ -52,8 +52,6 @@ KSym key_sym_KP_to_normal(KSym k) {
 
 static const gchar *modifier_get_string(guint modifier) {
     switch (modifier) {
-    case 0:
-        return "";
     case IBUS_SHIFT_MASK:
         return "SHIFT";
     case IBUS_LOCK_MASK:
@@ -85,7 +83,7 @@ static const gchar *modifier_get_string(guint modifier) {
     default:
         break;
     }
-    return "UNRECOGNIZED_MASK";
+    return "UNKN";
 }
 
 #define MODIFIER_BUFFER_SIZE 128

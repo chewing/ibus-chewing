@@ -1,6 +1,7 @@
 #include "ibus-chewing-util.h"
 #include "test-util.h"
 #include <glib.h>
+
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingUtil", f)
 
 void QUOTE_ME_test() {
@@ -17,10 +18,17 @@ void STRING_IS_EMPTY_test() {
     g_assert(!STRING_IS_EMPTY("NULL"));
 }
 
+void modifiers_to_string_test() {
+    const char *modifiers = modifiers_to_string(0xFFFFFFFF);
+    g_assert(!STRING_IS_EMPTY(modifiers));
+    g_assert(STRING_IS_EMPTY(modifiers_to_string(0)));
+}
+
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
     mkdg_log_set_level(INFO);
     TEST_RUN_THIS(QUOTE_ME_test);
     TEST_RUN_THIS(STRING_IS_EMPTY_test);
+    TEST_RUN_THIS(modifiers_to_string_test);
     return g_test_run();
 }
