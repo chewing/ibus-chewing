@@ -1,14 +1,15 @@
+#include "glib-object.h"
 #include "ibus-chewing-engine.h"
 #include "ibus-chewing-preedit.h"
 #include "ibus-chewing-util.h"
-#include "ibus-chewing-engine.h"
+#include "ibus.h"
 #include "test-util.h"
 #include <glib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "ibus-chewing-preedit-private.h"
 #include "ibus-chewing-engine-private.h" // IWYU pragma: keep
+#include "ibus-chewing-preedit-private.h"
 
 #define TEST_RUN_THIS(f) add_test_case("IBusChewingPreEdit", f)
 #define TEST_CASE_INIT()                                                                           \
@@ -17,23 +18,24 @@
     ibus_chewing_pre_edit_set_full_half_mode(self, FALSE);                                         \
     ibus_chewing_pre_edit_set_chi_eng_mode(self, TRUE)
 
-static IBusChewingPreEdit *self = NULL;
-
 /*== Utility functions start ==*/
 #define assert_pre_edit_substring(needle, begin, length)                                           \
     assert_substring(ibus_chewing_pre_edit_get_pre_edit(self), needle, begin, length)
 
-void assert_outgoing_pre_edit(const gchar *outgoing, const gchar *pre_edit) {
-    g_assert_cmpstr(outgoing, ==, ibus_chewing_pre_edit_get_outgoing(self));
-    g_assert_cmpstr(pre_edit, ==, ibus_chewing_pre_edit_get_pre_edit(self));
-}
+#define assert_outgoing_pre_edit(outgoing, pre_edit)                                               \
+    {                                                                                              \
+        g_assert_cmpstr(outgoing, ==, ibus_chewing_pre_edit_get_outgoing(self));                   \
+        g_assert_cmpstr(pre_edit, ==, ibus_chewing_pre_edit_get_pre_edit(self));                   \
+    }
 
-void assert_substring(const gchar *haystack, const gchar *needle, gint begin, gint length) {
-    gchar *subStr = g_utf8_substring(haystack, begin, begin + length);
+#define assert_substring(haystack, needle, begin, length)                                          \
+    {                                                                                              \
+        gchar *subStr = g_utf8_substring(haystack, begin, begin + length);                         \
+        g_assert_cmpstr(subStr, ==, needle);                                                       \
+        g_free(subStr);                                                                            \
+    }
 
-    g_assert_cmpstr(subStr, ==, needle);
-    g_free(subStr);
-}
+static IBusChewingPreEdit *self = NULL;
 
 void key_press_from_key_sym(KSym keySym, KeyModifiers modifiers) {
     switch (keySym) {
@@ -423,7 +425,7 @@ void process_key_buffer_full_handling_test() {
 }
 
 /* 程式 */
-void process_key_down_arrow_test() {
+void process_key_down_up_arrow_test() {
     TEST_CASE_INIT();
 
     g_object_set(G_OBJECT(self->engine), "phrase-choice-from-last", TRUE, NULL);
@@ -435,10 +437,37 @@ void process_key_down_arrow_test() {
     key_press_from_string("2");
     assert_outgoing_pre_edit("", "程式");
 
-    // key_press_from_key_sym(IBUS_KEY_Down, 0);
-    // key_press_from_key_sym(IBUS_KEY_Down, 0);
-    // key_press_from_string("4");
-    // assert_pre_edit_substring("世", 1, 1);
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_Up, 0);
+    g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_Escape, 0);
+    g_assert_false(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+    key_press_from_key_sym(IBUS_KEY_Up, 0);
+    g_assert_false(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
+
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_string("4");
+    assert_pre_edit_substring("世", 1, 1);
+
+    ibus_chewing_pre_edit_clear(self);
+    assert_outgoing_pre_edit("", "");
+}
+
+void process_key_home_end_delete_test() {
+    TEST_CASE_INIT();
+
+    key_press_from_string("t/6g4");
+    key_press_from_key_sym(IBUS_KEY_Down, 0);
+    key_press_from_key_sym(IBUS_KEY_1, 0);
+    assert_outgoing_pre_edit("", "城市");
+    key_press_from_key_sym(IBUS_KEY_Home, 0);
+    assert_outgoing_pre_edit("", "城市");
+    key_press_from_key_sym(IBUS_KEY_Delete, 0);
+    key_press_from_key_sym(IBUS_KEY_End, 0);
+    key_press_from_string("u06");
+    assert_outgoing_pre_edit("", "誓言");
 
     ibus_chewing_pre_edit_clear(self);
     assert_outgoing_pre_edit("", "");
@@ -450,20 +479,13 @@ void process_key_down_arrow_test() {
 /* Should be okay to remove this since we force users to choose between caps and
  * shift */
 void process_key_shift_and_caps_test() {
-#if 0
-
     TEST_CASE_INIT();
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-                                                     "space-as-selection",
-                                                     FALSE);
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-                                                     "shift-toggle-chinese",
-                                                     TRUE);
-    ibus_chewing_pre_edit_set_apply_property_boolean(self,
-                                                     "capslock-toggle-chinese",
-                                                     TRUE);
-    ibus_chewing_pre_edit_set_apply_property_int(self,
-                                                 "max-chi-symbol-len", 33);
+#if 0
+    g_object_set(G_OBJECT(self), "space-as-selection", FALSE, NULL);
+    g_object_set(G_OBJECT(self), "shift-toggle-chinese", FALSE, NULL);
+    g_object_set(G_OBJECT(self), "capslock-toggle-chinese", FALSE, NULL);
+    g_object_set(G_OBJECT(self), "max-chi-symbol-len", 33, NULL);
+
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
 
     key_press_from_string("ji3ul4fm4 ");
@@ -500,6 +522,15 @@ void process_key_shift_and_caps_test() {
 #endif
 }
 
+void process_key_special_test() {
+    TEST_CASE_INIT();
+
+    key_press_from_key_sym(IBUS_KEY_Copy, 0);
+
+    ibus_chewing_pre_edit_clear(self);
+    assert_outgoing_pre_edit("", "");
+}
+
 void full_half_shape_test() {
     g_assert(ibus_chewing_pre_edit_get_chi_eng_mode(self));
     ibus_chewing_pre_edit_toggle_chi_eng_mode(self);
@@ -526,7 +557,7 @@ void plain_zhuyin_test() {
 
     /* Candidate window should be shown */
     g_assert(ibus_chewing_pre_edit_has_flag(self, FLAG_TABLE_SHOW));
-    assert_outgoing_pre_edit("","資");
+    assert_outgoing_pre_edit("", "資");
     key_press_from_string("4");
     assert_outgoing_pre_edit("吱", "");
     /* Candidate window should be hidden */
@@ -807,8 +838,10 @@ gint main(gint argc, gchar **argv) {
     TEST_RUN_THIS(process_key_mix_test);
     TEST_RUN_THIS(process_key_incomplete_char_test);
     TEST_RUN_THIS(process_key_buffer_full_handling_test);
-    TEST_RUN_THIS(process_key_down_arrow_test);
+    TEST_RUN_THIS(process_key_down_up_arrow_test);
+    TEST_RUN_THIS(process_key_home_end_delete_test);
     TEST_RUN_THIS(process_key_shift_and_caps_test);
+    TEST_RUN_THIS(process_key_special_test);
     TEST_RUN_THIS(full_half_shape_test);
     TEST_RUN_THIS(plain_zhuyin_test);
     TEST_RUN_THIS(plain_zhuyin_shift_symbol_test);
