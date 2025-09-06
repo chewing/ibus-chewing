@@ -543,7 +543,6 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
     g_return_if_fail(self != NULL);
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
     {
-#ifndef UNIT_TEST
         g_debug("refresh_property(%s) status=%x", prop_name, self->statusFlags);
 
         if (g_strcmp0(prop_name, "InputMode") == 0) {
@@ -558,7 +557,9 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
                                          ? self->InputMode_symbol_chi
                                          : self->InputMode_symbol_eng);
 
+#ifndef UNIT_TEST
             ibus_engine_update_property(IBUS_ENGINE(self), self->InputMode);
+#endif
 
         } else if (g_strcmp0(prop_name, "AlnumSize") == 0) {
 
@@ -571,15 +572,18 @@ void ibus_chewing_engine_refresh_property(IBusChewingEngine *self,
                                          ? self->AlnumSize_symbol_full
                                          : self->AlnumSize_symbol_half);
 
-            if (self->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED)
+            if (self->statusFlags & ENGINE_FLAG_PROPERTIES_REGISTERED) {
+#ifndef UNIT_TEST
                 ibus_engine_update_property(IBUS_ENGINE(self), self->AlnumSize);
+#endif
+            }
 
         } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
             ibus_property_set_symbol(self->setup_prop, self->setup_prop_symbol);
 #ifndef UNIT_TEST
             ibus_engine_update_property(IBUS_ENGINE(self), self->setup_prop);
-        }
 #endif
+        }
     }
 }
 
@@ -593,11 +597,9 @@ void ibus_chewing_engine_refresh_property_list(IBusChewingEngine *self) {
     g_return_if_fail(self != NULL);
     g_return_if_fail(IBUS_IS_CHEWING_ENGINE(self));
     {
-#ifndef UNIT_TEST
         ibus_chewing_engine_refresh_property(self, "InputMode");
         ibus_chewing_engine_refresh_property(self, "AlnumSize");
         ibus_chewing_engine_refresh_property(self, "setup_prop");
-#endif
     }
 }
 
@@ -703,15 +705,15 @@ static void ibus_chewing_engine_property_hide(IBusEngine *engine G_GNUC_UNUSED,
  * beginning of reset, enable, and focus_in for setup.
  */
 void ibus_chewing_engine_start(IBusChewingEngine *self) {
-#ifndef UNIT_TEST
     if (!ibus_chewing_engine_has_status_flag(self, ENGINE_FLAG_PROPERTIES_REGISTERED)) {
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self), "InputMode");
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self), "AlnumSize");
         IBUS_ENGINE_GET_CLASS(self)->property_show(IBUS_ENGINE(self), "setup_prop");
+#ifndef UNIT_TEST
         ibus_engine_register_properties(IBUS_ENGINE(self), self->prop_list);
+#endif
         ibus_chewing_engine_set_status_flag(self, ENGINE_FLAG_PROPERTIES_REGISTERED);
     }
-#endif
     ibus_chewing_engine_restore_mode(self);
     ibus_chewing_engine_refresh_property_list(self);
 }
@@ -1061,8 +1063,10 @@ void ibus_chewing_engine_property_activate(IBusEngine *engine, const gchar *prop
         ibus_chewing_engine_refresh_property(self, prop_name);
     } else if (g_strcmp0(prop_name, "setup_prop") == 0) {
         /* open preferences window */
+#ifndef UNIT_TEST
         char *argv[] = {QUOTE_ME(LIBEXEC_DIR) "/ibus-setup-chewing", NULL};
         g_spawn_async(NULL, argv, NULL, G_SPAWN_DEFAULT, NULL, NULL, NULL, NULL);
+#endif
     } else {
         g_debug("property_activate(-, %s, %u) not recognized", prop_name, prop_state);
     }

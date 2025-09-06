@@ -86,11 +86,45 @@ void focus_out_then_focus_in_with_aux_text_clean_buffer_off_test() {
     g_object_unref(engine);
 }
 
+void show_hide_property() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    IBUS_ENGINE_GET_CLASS(engine)->property_show(IBUS_ENGINE(engine), "InputMode");
+    IBUS_ENGINE_GET_CLASS(engine)->property_hide(IBUS_ENGINE(engine), "InputMode");
+    IBUS_ENGINE_GET_CLASS(engine)->property_show(IBUS_ENGINE(engine), "AlnumSize");
+    IBUS_ENGINE_GET_CLASS(engine)->property_hide(IBUS_ENGINE(engine), "AlnumSize");
+    IBUS_ENGINE_GET_CLASS(engine)->property_show(IBUS_ENGINE(engine), "setup_prop");
+    IBUS_ENGINE_GET_CLASS(engine)->property_hide(IBUS_ENGINE(engine), "setup_prop");
+}
+
+void enable_disable() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    IBUS_ENGINE_GET_CLASS(engine)->enable(IBUS_ENGINE(engine));
+    IBUS_ENGINE_GET_CLASS(engine)->reset(IBUS_ENGINE(engine));
+    IBUS_ENGINE_GET_CLASS(engine)->disable(IBUS_ENGINE(engine));
+}
+
+void activate_property() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    IBUS_ENGINE_GET_CLASS(engine)->property_activate(IBUS_ENGINE(engine), "InputMode", 0);
+    IBUS_ENGINE_GET_CLASS(engine)->property_activate(IBUS_ENGINE(engine), "AlnumSize", 0);
+    IBUS_ENGINE_GET_CLASS(engine)->property_activate(IBUS_ENGINE(engine), "setup_prop", 0);
+    IBUS_ENGINE_GET_CLASS(engine)->property_activate(IBUS_ENGINE(engine), "UNKNOWN_PROP", 0);
+}
+
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
 
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
+    TEST_RUN_THIS(show_hide_property);
+    TEST_RUN_THIS(enable_disable);
+    TEST_RUN_THIS(activate_property);
 
     return g_test_run();
 }
