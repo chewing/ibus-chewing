@@ -1,5 +1,8 @@
 # IBus-Chewing
 
+[![CI](https://github.com/chewing/ibus-chewing/actions/workflows/ci.yml/badge.svg)](https://github.com/chewing/ibus-chewing/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/chewing/ibus-chewing/graph/badge.svg?token=r1piKsG5uF)](https://codecov.io/gh/chewing/ibus-chewing)
+
 IBus-Chewing is an IBus front-end of Chewing, an intelligent Chinese input
 method for Zhuyin (BoPoMoFo) users.
 
@@ -14,14 +17,24 @@ Bugs and enhancement can be filed to:
  * [GitHub](https://github.com/chewing/ibus-chewing/issues)
 
 
-ibus-chewing releases can be verified with the following [minisign][] public key
+ibus-chewing releases can be verified with the following OpenPGP public key
 
-    RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
+&emsp;[083B3CAB64267E5BAB7159673EF0C673DADCC30C][pgp_key] Libchewing Signing Key &lt;release@chewing.im&gt;
+
+or the following [minisign][] public key
+
+&emsp;RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
 
 For example, to verify the 2.0.0 release
 
-    minisign -Vm ibus-chewing-2.0.0-Source.tar.xz -P RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
+    gpgv ibus-chewing-2.1.7.tar.xz.asc ibus-chewing-2.1.7.tar.xz
 
+or
+
+    minisign -Vm ibus-chewing-2.1.7.tar.xz \
+        -P RWRzJFnXiLZleAyCIv1talBjyRewelcy9gzYQq9pd3SKSFBPoy57sf5s
+
+[pgp_key]: https://chewing.im/.well-known/openpgpkey/hu/y84sdmnksfqswe7fxf5mzjg53tbdz8f5?l=release
 [minisign]: https://jedisct1.github.io/minisign/
 
 # Development
@@ -33,20 +46,14 @@ contribute, please install clang-format and set the git pre-commit hook by:
 ln -s ../../pre-commit .git/hooks/pre-commit
 ```
 
-## For debugging ibus-chewing
+## Debug ibus-chewing
 
-1. Quit existing ibus-daemon
-	* By right click on IBus systray icon, then quit, or
-	* kill the process, or
-	* with command: `ibus exit`
+Run ibus-chewing in command line with verbose debug logging:
 
-2. Edit `/usr/share/ibus/component/chewing.xml`, add `-v 7` to turn verbose level 7
+    G_MESSAGES_DEBUG=ibus-chewing /usr/libexec/ibus-engine-chewing -v 4
 
-3. Run ibus-daemon in command line with following command:
-```
-export G_MESSAGES_DEBUG=all
-ibus-daemon -rvx
-```
+This will temporarily replace the current ibus-chewing engine with
+the one launched from the command line.
 
 # Translation
 

@@ -1,35 +1,31 @@
 Installation Instructions
 *************************
+
 0. Required: 
-    cmake      >= 3.21.0
-    ibus       >= 1.3
-    glib       >= 2
-    gob        >= 2.0.16
-    gtk        >= 3
-    libchewing >= 0.5.1
+
+    meson         >= 0.57.0
+    ibus-1.0      >= 1.3
+    glib-2.0      >= 2
+    gtk4          >= 4
+    libadwaita-1
+    libchewing    >= 0.9.0
    
-1. Remove the old build cache:
-  
-  If you have previous ibus-chewing, or change between ibus 1.1 and ibus 1.2,
-  You may need to remove CMakeCache.txt
+1. Extract source and enter the extracted directory, then:
 
-2. Extract source and enter the extracted directory, then:
+    meson setup build --buildtype release --prefix /usr
+    meson compile -C build
 
-    cmake -B build . --install-prefix /usr
-    cmake --build build
+2. Install and register schemas:
 
-3. Install and register schemas:
-
-    sudo cmake --build build -t install
+    sudo meson install -C build
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
+3. Use iBus UI or run ibus-setup to add ibus-chewing.
 
-4. Use iBus UI or run ibus-setup to add ibus-chewing.
-
-5. Restart iBus and Enjoy!
+4. Restart iBus and Enjoy!
 
     ibus restart
 
-To see other available build targets, use
+To see other available build options, use
 
-    cmake --build build -t help
+    meson configure build
