@@ -104,6 +104,8 @@ static void ibus_chewing_engine_set_capabilities(IBusEngine *engine, guint caps)
 static void ibus_chewing_engine_property_show(IBusEngine *engine, const gchar *prop_name);
 static void ibus_chewing_engine_property_hide(IBusEngine *engine, const gchar *prop_name);
 
+void commit_text(IBusChewingEngine *self);
+
 #define ibus_chewing_engine_has_status_flag(self, f) mkdg_has_flag(self->statusFlags, f)
 #define ibus_chewing_engine_set_status_flag(self, f) mkdg_set_flag(self->statusFlags, f)
 #define ibus_chewing_engine_clear_status_flag(self, f) mkdg_clear_flag(self->statusFlags, f)

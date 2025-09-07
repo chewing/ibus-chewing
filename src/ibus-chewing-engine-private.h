@@ -100,7 +100,6 @@ void refresh_aux_text(IBusChewingEngine *self);
 void update_aux_text(IBusChewingEngine *self);
 void update_lookup_table(IBusChewingEngine *self);
 void refresh_outgoing_text(IBusChewingEngine *self);
-void commit_text(IBusChewingEngine *self);
 
 void ibus_chewing_engine_restore_mode(IBusChewingEngine *self);
 void ibus_chewing_engine_update(IBusChewingEngine *self);

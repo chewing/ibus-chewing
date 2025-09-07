@@ -1,6 +1,7 @@
 #include "glib-object.h"
 #include "ibus-chewing-engine-private.h"
 #include "ibus-chewing-engine.h"
+#include "ibus.h"
 #include "test-util.h"
 #include <glib.h>
 #include <stdio.h>
@@ -13,15 +14,37 @@ IBusChewingEngine *ibus_chewing_engine_new() {
     return (IBusChewingEngine *)g_object_new(IBUS_TYPE_CHEWING_ENGINE, NULL);
 }
 
-void check_output(const gchar *outgoing, const gchar *preEdit, const gchar *aux) {
-    g_assert(engine->outgoingText);
-    g_assert(engine->outgoingText->text);
-    printf("# outgoingText->text=%s\n", engine->outgoingText->text);
-    g_assert_cmpstr(outgoing, ==, engine->outgoingText->text);
-    printf("# preEditText->text=%s\n", engine->preEditText->text);
-    g_assert_cmpstr(preEdit, ==, engine->preEditText->text);
-    printf("# auxText->text=%s\n", engine->auxText->text);
-    g_assert_cmpint(strlen(aux), ==, strlen(engine->auxText->text));
+#define check_output(outgoing, preedit, aux)                                                       \
+    {                                                                                              \
+        g_assert(engine->outgoingText);                                                            \
+        g_assert(engine->outgoingText->text);                                                      \
+        printf("# outgoingText->text=%s\n", engine->outgoingText->text);                           \
+        g_assert_cmpstr(outgoing, ==, engine->outgoingText->text);                                 \
+        printf("# preEditText->text=%s\n", engine->preEditText->text);                             \
+        g_assert_cmpstr(preedit, ==, engine->preEditText->text);                                   \
+        printf("# auxText->text=%s\n", engine->auxText->text);                                     \
+        g_assert_cmpint(strlen(aux), ==, strlen(engine->auxText->text));                           \
+    }
+
+void commit_text_test() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    ibus_chewing_engine_focus_in(IBUS_ENGINE(engine));
+    ibus_chewing_engine_enable(IBUS_ENGINE(engine));
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Return, 28, 0);
+    check_output("五五", "", "");
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Return, 28,
+                                          IBUS_RELEASE_MASK);
+    check_output("", "", "");
 }
 
 void focus_out_then_focus_in_with_aux_text_test() {
@@ -117,14 +140,25 @@ void activate_property() {
     IBUS_ENGINE_GET_CLASS(engine)->property_activate(IBUS_ENGINE(engine), "UNKNOWN_PROP", 0);
 }
 
+void content_type() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    ibus_chewing_engine_set_content_type(IBUS_ENGINE(engine), IBUS_INPUT_PURPOSE_PASSWORD, 0);
+    ibus_chewing_engine_set_content_type(IBUS_ENGINE(engine), IBUS_INPUT_PURPOSE_PIN, 0);
+    ibus_chewing_engine_set_content_type(IBUS_ENGINE(engine), IBUS_INPUT_PURPOSE_DIGITS, 0);
+}
+
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
 
+    TEST_RUN_THIS(commit_text_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_off_test);
     TEST_RUN_THIS(focus_out_then_focus_in_with_aux_text_clean_buffer_on_test);
     TEST_RUN_THIS(show_hide_property);
     TEST_RUN_THIS(enable_disable);
     TEST_RUN_THIS(activate_property);
+    TEST_RUN_THIS(content_type);
 
     return g_test_run();
 }
