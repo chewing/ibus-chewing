@@ -149,6 +149,48 @@ void content_type() {
     ibus_chewing_engine_set_content_type(IBUS_ENGINE(engine), IBUS_INPUT_PURPOSE_DIGITS, 0);
 }
 
+void page_up_down() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    ibus_chewing_engine_focus_in(IBUS_ENGINE(engine));
+    ibus_chewing_engine_enable(IBUS_ENGINE(engine));
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Down, 0x6c, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Down, 0x6c,
+                                          IBUS_RELEASE_MASK);
+    IBUS_ENGINE_GET_CLASS(engine)->page_down(IBUS_ENGINE(engine));
+    IBUS_ENGINE_GET_CLASS(engine)->page_up(IBUS_ENGINE(engine));
+}
+
+void cursor_up_down() {
+    engine = ibus_chewing_engine_new();
+    g_test_queue_unref(engine);
+
+    ibus_chewing_engine_focus_in(IBUS_ENGINE(engine));
+    ibus_chewing_engine_enable(IBUS_ENGINE(engine));
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), 'j', 0x24, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), '3', 0x04, IBUS_RELEASE_MASK);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Down, 0x6c, 0);
+    ibus_chewing_engine_process_key_event(IBUS_ENGINE(engine), IBUS_KEY_Down, 0x6c,
+                                          IBUS_RELEASE_MASK);
+    IBUS_ENGINE_GET_CLASS(engine)->cursor_down(IBUS_ENGINE(engine));
+    IBUS_ENGINE_GET_CLASS(engine)->cursor_up(IBUS_ENGINE(engine));
+}
+
 gint main(gint argc, gchar **argv) {
     g_test_init(&argc, &argv, NULL);
 
@@ -159,6 +201,8 @@ gint main(gint argc, gchar **argv) {
     TEST_RUN_THIS(enable_disable);
     TEST_RUN_THIS(activate_property);
     TEST_RUN_THIS(content_type);
+    TEST_RUN_THIS(page_up_down);
+    TEST_RUN_THIS(cursor_up_down);
 
     return g_test_run();
 }
