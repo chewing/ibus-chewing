@@ -24,7 +24,6 @@ add_test(NAME ibus-chewing-preedit
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-preedit-test)
 set_tests_properties(ibus-chewing-preedit PROPERTIES
     ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
-    ENVIRONMENT "GSETTINGS_BACKEND=memory"
 )
 
 # ==================
@@ -43,7 +42,6 @@ add_test(NAME ibus-chewing-engine
     COMMAND gtester ${CMAKE_CURRENT_BINARY_DIR}/ibus-chewing-engine-test)
 set_tests_properties(ibus-chewing-engine PROPERTIES
     ENVIRONMENT "GSETTINGS_SCHEMA_DIR=${CMAKE_BINARY_DIR}/bin"
-    ENVIRONMENT "GSETTINGS_BACKEND=memory"
 )
 
 # ==================

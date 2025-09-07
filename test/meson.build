@@ -32,7 +32,6 @@ test(
         'GSETTINGS_SCHEMA_DIR=@0@'.format(
             meson.project_build_root() / 'src/setup',
         ),
-        'GSETTINGS_BACKEND=memory',
     ],
     protocol: 'tap',
 )
@@ -59,7 +58,6 @@ test(
         'GSETTINGS_SCHEMA_DIR=@0@'.format(
             meson.project_build_root() / 'src/setup',
         ),
-        'GSETTINGS_BACKEND=memory',
     ],
     protocol: 'tap',
 )
@@ -87,7 +85,6 @@ test(
         'GSETTINGS_SCHEMA_DIR=@0@'.format(
             meson.project_build_root() / 'src/setup',
         ),
-        'GSETTINGS_BACKEND=memory',
     ],
     protocol: 'tap',
 )

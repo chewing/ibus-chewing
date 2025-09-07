@@ -1,4 +1,5 @@
 #include "glib-object.h"
+#include "gtk/gtk.h"
 #include "ibus-chewing-engine-private.h"
 #include "ibus-chewing-engine.h"
 #include "ibus.h"
@@ -192,6 +193,9 @@ void cursor_up_down() {
 }
 
 gint main(gint argc, gchar **argv) {
+    g_setenv("GSETTINGS_BACKEND", "memory", TRUE);
+    g_setenv("CHEWING_USER_PATH", "/dev/null", TRUE);
+    gtk_init();
     g_test_init(&argc, &argv, NULL);
 
     TEST_RUN_THIS(commit_text_test);

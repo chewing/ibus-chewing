@@ -1,4 +1,5 @@
 #include "glib-object.h"
+#include "gtk/gtk.h"
 #include "ibus-chewing-engine.h"
 #include "ibus-chewing-preedit.h"
 #include "ibus-chewing-util.h"
@@ -821,7 +822,11 @@ void test_keypad() {
 }
 
 gint main(gint argc, gchar **argv) {
+    g_setenv("GSETTINGS_BACKEND", "memory", TRUE);
+    g_setenv("CHEWING_USER_PATH", "/dev/null", TRUE);
+    gtk_init();
     g_test_init(&argc, &argv, NULL);
+
     IBusChewingEngine *engine = g_object_new(IBUS_TYPE_CHEWING_ENGINE, NULL);
     self = engine->icPreEdit;
     g_assert(self != NULL);
