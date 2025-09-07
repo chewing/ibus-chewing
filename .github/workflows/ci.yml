@@ -31,8 +31,7 @@ jobs:
           XDG_RUNTIME_DIR: /tmp
         run: |
           glib-compile-schemas src/setup --targetdir=build/bin
-          weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
+          weston -Bheadless -- ctest --test-dir build --verbose
 
   build-meson:
     runs-on: ubuntu-latest
@@ -54,8 +53,7 @@ jobs:
         env:
           XDG_RUNTIME_DIR: /tmp
         run: |
-          weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
+          weston -Bheadless -- meson test -C build --print-errorlogs
 
   coverage:
     runs-on: ubuntu-latest
@@ -93,8 +91,7 @@ jobs:
         run: |
           source "$HOME/.cargo/env"
           glib-compile-schemas src/setup --targetdir=build/bin
-          weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless ctest --test-dir build --verbose
+          weston -Bheadless -- ctest --test-dir build --verbose
           ./grcov . -s . -b . --keep-only 'src/*' --llvm  -t lcov -o coverage.lcov
 
       - name: Upload coverage reports to Codecov
@@ -121,8 +118,7 @@ jobs:
         env:
           XDG_RUNTIME_DIR: /tmp
         run: |
-          weston --no-config --socket=wl-headless --backend=headless &
-          WAYLAND_DISPLAY=wl-headless meson test -C build --print-errorlogs
+          weston -Bheadless -- meson test -C build --print-errorlogs
           ninja -C build coverage-xml
 
       - name: Upload coverage reports to Codecov
