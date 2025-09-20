@@ -556,7 +556,7 @@ EventResponse self_handle_up(IBusChewingPreEdit *self, KSym kSym, KeyModifiers u
 
     if (table_is_showing) {
         IBusChewingEngine *engine = IBUS_CHEWING_ENGINE(self->engine);
-        if (!ibus_chewing_engine_use_vertical_lookup_table(engine)) {
+        if (ibus_chewing_engine_use_vertical_lookup_table(engine)) {
             /* vertical look-up table */
             int pos = ibus_lookup_table_get_cursor_in_page(self->iTable);
 
