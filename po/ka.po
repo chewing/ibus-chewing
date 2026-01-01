@@ -8,18 +8,20 @@ msgstr ""
 "Project-Id-Version: ibus-chewing\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-04 21:24+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-01-02 17:58+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
 msgid "Chewing Settings"
-msgstr ""
+msgstr "Chewing-ის მორგება"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
 msgid "Configure the input method"
@@ -27,88 +29,88 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:21
 msgid "Input Method"
-msgstr ""
+msgstr "შეტანის მეთოდი"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
-msgstr ""
+msgstr "შესახებ"
 
 #: src/setup/ibus-setup-chewing-window.ui:25
 #: src/setup/ibus-setup-chewing-about.c:127
 msgid "IBus Chewing"
-msgstr ""
+msgstr "IBus Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:41
 msgid "Standard"
-msgstr ""
+msgstr "სტანდარტული"
 
 #: src/setup/ibus-setup-chewing-window.ui:42
 msgid "Hsu"
-msgstr ""
+msgstr "Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
-msgstr ""
+msgstr "IBM"
 
 #: src/setup/ibus-setup-chewing-window.ui:44
 msgid "Gin-Yieh"
-msgstr ""
+msgstr "Gin-Yieh"
 
 #: src/setup/ibus-setup-chewing-window.ui:45
 msgid "Eten"
-msgstr ""
+msgstr "Eten"
 
 #: src/setup/ibus-setup-chewing-window.ui:46
 msgid "Eten 26"
-msgstr ""
+msgstr "Eten 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:47
 msgid "Dvorak"
-msgstr ""
+msgstr "Dvorak"
 
 #: src/setup/ibus-setup-chewing-window.ui:48
 msgid "Dvorak-Hsu"
-msgstr ""
+msgstr "Dvorak-Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "DaChen 26"
-msgstr ""
+msgstr "DaChen 26"
 
 #: src/setup/ibus-setup-chewing-window.ui:50
 msgid "Hanyu Pinyin"
-msgstr ""
+msgstr "ჰანიუ ფინინი"
 
 #: src/setup/ibus-setup-chewing-window.ui:51
 msgid "THL Pinyin"
-msgstr ""
+msgstr "THL ფინინი"
 
 #: src/setup/ibus-setup-chewing-window.ui:52
 msgid "MPS2 Pinyin"
-msgstr ""
+msgstr "MPS2 ფინინი"
 
 #: src/setup/ibus-setup-chewing-window.ui:53
 msgid "Carpalx"
-msgstr ""
+msgstr "Carpalx"
 
 #: src/setup/ibus-setup-chewing-window.ui:54
 msgid "Colemak"
-msgstr ""
+msgstr "Colemak"
 
 #: src/setup/ibus-setup-chewing-window.ui:55
 msgid "Colemak-DH ANSI"
-msgstr ""
+msgstr "Colemak-DH ANSI"
 
 #: src/setup/ibus-setup-chewing-window.ui:56
 msgid "Colemak-DH Ortholinear"
-msgstr ""
+msgstr "Colemak-DH ორთოხაზოვანი"
 
 #: src/setup/ibus-setup-chewing-window.ui:57
 msgid "Workman"
-msgstr ""
+msgstr "Workman"
 
 #: src/setup/ibus-setup-chewing-window.ui:61
 msgid "Keyboard Type"
-msgstr ""
+msgstr "კლავიატურის ტიპი"
 
 #: src/setup/ibus-setup-chewing-window.ui:80
 msgid "Selection Keys"
@@ -120,7 +122,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:89
 msgid "Plain Zhuyin"
-msgstr ""
+msgstr "უბრალო ჟუინი"
 
 #: src/setup/ibus-setup-chewing-window.ui:90
 msgid "Chewing (Default)"
@@ -140,7 +142,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:103
 msgid "Editing"
-msgstr ""
+msgstr "ჩასწორება"
 
 #: src/setup/ibus-setup-chewing-window.ui:104
 msgid "Configure the input method behavior"
@@ -212,27 +214,27 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:170
 msgid "Disable"
-msgstr ""
+msgstr "გამორთვა"
 
 #: src/setup/ibus-setup-chewing-window.ui:171
 msgid "Caps Lock"
-msgstr ""
+msgstr "Caps Lock"
 
 #: src/setup/ibus-setup-chewing-window.ui:172
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: src/setup/ibus-setup-chewing-window.ui:173
 msgid "Shift_L"
-msgstr ""
+msgstr "Shift_L"
 
 #: src/setup/ibus-setup-chewing-window.ui:174
 msgid "Shift_R"
-msgstr ""
+msgstr "Shift_R"
 
 #: src/setup/ibus-setup-chewing-window.ui:186
 msgid "Disable Syncing"
-msgstr ""
+msgstr "სინქრონიზაციის გათიშვა"
 
 #: src/setup/ibus-setup-chewing-window.ui:187
 msgid "Sync with Keyboard State"
@@ -244,15 +246,15 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:200
 msgid "No Default"
-msgstr ""
+msgstr "ნაგულისხმევის გარეშე"
 
 #: src/setup/ibus-setup-chewing-window.ui:201
 msgid "Lower Case"
-msgstr ""
+msgstr "ქვედა რეგისტრი"
 
 #: src/setup/ibus-setup-chewing-window.ui:202
 msgid "Upper Case"
-msgstr ""
+msgstr "მაღალი რეგისტრი"
 
 #: src/setup/ibus-setup-chewing-window.ui:206
 msgid "Default English Letter Case"
@@ -274,7 +276,7 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:220
 msgid "Selecting"
-msgstr ""
+msgstr "არჩევა"
 
 #: src/setup/ibus-setup-chewing-window.ui:221
 msgid "Configure the candidate selection behavior"
@@ -286,11 +288,11 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:238
 msgid "Show Page Number"
-msgstr ""
+msgstr "გვერდის ნომრის ჩვენება"
 
 #: src/setup/ibus-setup-chewing-window.ui:244
 msgid "Choose Phrases Backwards"
-msgstr ""
+msgstr "ფრაზების უკუღმა არჩევა"
 
 #: src/setup/ibus-setup-chewing-window.ui:245
 msgid "Open candidate list from the last character of a phrase"
@@ -310,24 +312,24 @@ msgstr ""
 
 #: src/setup/ibus-setup-chewing-about.c:137
 msgid "translator-credits"
-msgstr ""
+msgstr "ეკატერინე პაპავა"
 
 #. clang-format on
 #: src/setup/ibus-setup-chewing-about.c:142
 msgid "_Mailing list"
-msgstr ""
+msgstr "დაგზავ_ნის სია"
 
 #: src/setup/ibus-setup-chewing-about.c:145
 msgid "_Chat"
-msgstr ""
+msgstr "_ჩატი"
 
 #: src/ibus-chewing-engine.c:427
 msgid "Switch to Alphanumeric Mode"
-msgstr ""
+msgstr "ალფარიცხვით რეჟიმზე გადართვა"
 
 #: src/ibus-chewing-engine.c:429
 msgid "Switch to Chinese Mode"
-msgstr ""
+msgstr "ჩინურ რეჟიმზე გადართვა"
 
 #: src/ibus-chewing-engine.c:431
 msgid "Click to toggle Chinese/Alphanumeric Mode"
@@ -335,11 +337,11 @@ msgstr ""
 
 #: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
-msgstr ""
+msgstr "სრულსიგანიანი ფორმა"
 
 #: src/ibus-chewing-engine.c:437
 msgid "Halfwidth Form"
-msgstr ""
+msgstr "ნახევარსიგანიანი ფორმა"
 
 #: src/ibus-chewing-engine.c:439
 msgid "Click to toggle Halfwidth/Fullwidth Form"
@@ -355,27 +357,27 @@ msgstr ""
 
 #: src/ibus-chewing-engine.c:953
 msgid "Chinese Mode"
-msgstr ""
+msgstr "ჩინური რეჟიმი"
 
 #: src/ibus-chewing-engine.c:953
 msgid "English Mode"
-msgstr ""
+msgstr "ინგლისური რეჟიმი"
 
 #: src/ibus-chewing-engine.c:957
 msgid "Fullwidth Mode"
-msgstr ""
+msgstr "სრულსიგანიანი რეჟიმი"
 
 #: src/ibus-chewing-engine.c:957
 msgid "Halfwidth Mode"
-msgstr ""
+msgstr "ნახევარსიგანიანი რეჟიმი"
 
 #: src/main.c:64
 msgid "Cannot connect to IBus!"
-msgstr ""
+msgstr "IBus-თან მიერთების პრობლემა!"
 
 #: src/main.c:90
 msgid "Chewing"
-msgstr ""
+msgstr "Chewing"
 
 #: src/main.c:91
 msgid "Chinese chewing input method"
