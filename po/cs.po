@@ -311,7 +311,6 @@ msgid "Configure the candidate selection behavior"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:232
-#, fuzzy
 msgid "Candidates Per Page"
 msgstr "Kandidát na stránku"
 
