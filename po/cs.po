@@ -357,9 +357,8 @@ msgid "Switch to Alphanumeric Mode"
 msgstr ""
 
 #: src/ibus-chewing-engine.c:429
-#, fuzzy
 msgid "Switch to Chinese Mode"
-msgstr "Shift přepíná režim čínštiny"
+msgstr "Přepnout do čínského módu"
 
 #: src/ibus-chewing-engine.c:431
 #, fuzzy
