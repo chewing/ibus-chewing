@@ -5,30 +5,28 @@ msgstr ""
 "Project-Id-Version: ibus-chewing 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-04 21:24+0900\n"
-"PO-Revision-Date: 2016-10-23 01:21-0400\n"
-"Last-Translator: Zdenek <chmelarz@gmail.com>\n"
-"Language-Team: Czech\n"
+"PO-Revision-Date: 2026-03-27 11:45+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
+"Language-Team: Czech <https://translate.fedoraproject.org/projects/ibus-"
+"chewing/master/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: src/setup/ibus-setup-chewing-window.ui:8
-#, fuzzy
 msgid "Chewing Settings"
-msgstr "Nastavení"
+msgstr "Nastavení pro Chewing"
 
 #: src/setup/ibus-setup-chewing-window.ui:20
-#, fuzzy
 msgid "Configure the input method"
-msgstr "Metoda zadávání čínštiny"
+msgstr "Nastavit vstupní metodu"
 
 #: src/setup/ibus-setup-chewing-window.ui:21
-#, fuzzy
 msgid "Input Method"
-msgstr "metoda vstupu"
+msgstr "Vstupní metoda"
 
 #: src/setup/ibus-setup-chewing-window.ui:24
 msgid "About"
@@ -46,9 +44,8 @@ msgid "Standard"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:42
-#, fuzzy
 msgid "Hsu"
-msgstr "hsu"
+msgstr "Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:43
 msgid "IBM"
@@ -67,14 +64,12 @@ msgid "Eten 26"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:47
-#, fuzzy
 msgid "Dvorak"
-msgstr "dvořák"
+msgstr "Dvorak"
 
 #: src/setup/ibus-setup-chewing-window.ui:48
-#, fuzzy
 msgid "Dvorak-Hsu"
-msgstr "dvořák_hsu"
+msgstr "Dvorak-Hsu"
 
 #: src/setup/ibus-setup-chewing-window.ui:49
 msgid "DaChen 26"
@@ -117,7 +112,6 @@ msgid "Keyboard Type"
 msgstr "Typ klávesnice"
 
 #: src/setup/ibus-setup-chewing-window.ui:80
-#, fuzzy
 msgid "Selection Keys"
 msgstr "Výběrové klávesy"
 
@@ -155,24 +149,20 @@ msgid "Editing"
 msgstr "Editace"
 
 #: src/setup/ibus-setup-chewing-window.ui:104
-#, fuzzy
 msgid "Configure the input method behavior"
-msgstr "Metoda zadávání čínštiny"
+msgstr "Nastavit chování vstupní metody"
 
 #: src/setup/ibus-setup-chewing-window.ui:108
-#, fuzzy
 msgid "Auto Move Cursor"
-msgstr "Automatický pohyb kurzoru"
+msgstr "Automatický přesun kurzoru"
 
 #: src/setup/ibus-setup-chewing-window.ui:109
-#, fuzzy
 msgid "Automatically move the cursor to the next character after selection"
-msgstr "Automaticky přesunout kurzor na další znak"
+msgstr "Po výběru automaticky přesunout kurzor na další znak"
 
 #: src/setup/ibus-setup-chewing-window.ui:115
-#, fuzzy
 msgid "Add Phrase Before Cursor"
-msgstr "Přidat sousloví do popředí"
+msgstr "Přidat frázi před kurzor"
 
 #: src/setup/ibus-setup-chewing-window.ui:116
 msgid "Use Ctrl + Numbers (2-9) to save new phrase before or after the cursor"
@@ -184,17 +174,14 @@ msgid "Clear Pre-Edit Buffer When Focus Out"
 msgstr "Vyčistit přededitační vyrovnávací paměť jakmile vyjde z fokusu"
 
 #: src/setup/ibus-setup-chewing-window.ui:128
-#, fuzzy
 msgid "Easy Symbol Input"
-msgstr "Snadný vstup symbolů"
+msgstr "Snadné zadávání symbolů"
 
 #: src/setup/ibus-setup-chewing-window.ui:129
-#, fuzzy
 msgid "Press Shift + keys to input Chinese punctuation symbols"
-msgstr "Stisknout shift pro vložení čínského interpunkčního znaménka"
+msgstr "Čínská interpunkční znaménka zadávejte stisknutím Shift + klávesy"
 
 #: src/setup/ibus-setup-chewing-window.ui:134
-#, fuzzy
 msgid "Esc Clean All Buffer"
 msgstr "Esc vyčistí celou vyrovnávací paměť"
 
@@ -264,24 +251,20 @@ msgid "Sync with Keyboard State"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:192
-#, fuzzy
 msgid "Sync Caps Lock and IM"
-msgstr "Sync mezi CapsLock a IM"
+msgstr "Synchronizovat CapsLock a IM"
 
 #: src/setup/ibus-setup-chewing-window.ui:200
-#, fuzzy
 msgid "No Default"
-msgstr "žádné výchozí"
+msgstr "Žádné výchozí"
 
 #: src/setup/ibus-setup-chewing-window.ui:201
-#, fuzzy
 msgid "Lower Case"
-msgstr "malá písmena"
+msgstr "Malá písmena"
 
 #: src/setup/ibus-setup-chewing-window.ui:202
-#, fuzzy
 msgid "Upper Case"
-msgstr "velká písmena"
+msgstr "Velká písmena"
 
 #: src/setup/ibus-setup-chewing-window.ui:206
 msgid "Default English Letter Case"
@@ -310,9 +293,8 @@ msgid "Configure the candidate selection behavior"
 msgstr ""
 
 #: src/setup/ibus-setup-chewing-window.ui:232
-#, fuzzy
 msgid "Candidates Per Page"
-msgstr "Kandidát na stránku"
+msgstr "Kandidátů na stránku"
 
 #: src/setup/ibus-setup-chewing-window.ui:238
 msgid "Show Page Number"
@@ -357,14 +339,12 @@ msgid "Switch to Alphanumeric Mode"
 msgstr ""
 
 #: src/ibus-chewing-engine.c:429
-#, fuzzy
 msgid "Switch to Chinese Mode"
-msgstr "Shift přepíná režim čínštiny"
+msgstr "Přepnout do režimu čínštiny"
 
 #: src/ibus-chewing-engine.c:431
-#, fuzzy
 msgid "Click to toggle Chinese/Alphanumeric Mode"
-msgstr "Shift klávesa přepíná čínský režim"
+msgstr "Kliknutím přepnete mezi režimy čínština a písmeny a číslicemi"
 
 #: src/ibus-chewing-engine.c:435
 msgid "Fullwidth Form"
@@ -412,9 +392,8 @@ msgid "Chewing"
 msgstr "Chewing"
 
 #: src/main.c:91
-#, fuzzy
 msgid "Chinese chewing input method"
-msgstr "Metoda zadávání čínštiny"
+msgstr "Metoda zadávání čínštiny chewing"
 
 #, fuzzy
 #~| msgid "Show systray icons"
